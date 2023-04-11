@@ -109,7 +109,6 @@ class ProfessionalController extends Controller
     public function show($user_id)
     {
         $profesional = Professional::where('user_id', $user_id)->first();
-        
         return response()->json($profesional);
     }
 

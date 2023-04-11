@@ -117,7 +117,7 @@
                             <hr class="my-1" />
 
 
-                            <p class="slogan">Tu bienestar personal es lo mas importante</p>
+                            <p class="slogan">Tu bienestar personal es lo más importante</p>
                         </div>
                     </div>
                 </div>

@@ -170,12 +170,11 @@
                     <h2>NOTA DE VENTA</h2>
                     <h2>E002-00{{$extra_payment->id}}</h2>
                     <div class="main-data">
-                        <p>EMISIÓN: {{date('d/m/Y h:i:s A')}}</p>
-                        <p>USUARIO: </p>
+											<p>EMISIÓN: {{date('d/m/Y h:i:s A')}}</p>
+												<p class="name">CLIENTE: {{$extra_payment->customer}}</p>
+												<p>USUARIO: -</p>
                         {{-- <p>DNI: {{$patient[0]->dni}}</p> --}}
-                        <p class="name">CLIENTE: {{$extra_payment->customer}}</p>
                         {{-- <p>DIRECCIÓN: {{$patient[0]->address->address}}</p> --}}
-                        {{-- <p style="margin-top:10px;"><strong>Observación: </strong>{{ $extra_payment->observation}}</p> --}}
                     </div>
                     <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
                         <thead>
@@ -203,6 +202,9 @@
                                     {{$extra_payment->price}}
                                 </td>
                             </tr>
+														@if($extra_payment->observation <>'')
+														<tr><td><strong>Obs.:</strong> {{$extra_payment->observation}}</td></tr>
+														@endif
                         </tbody>
                     </table>
                     <hr style="width: 100%; margin-top:5px;">
@@ -210,7 +212,7 @@
                         <thead>
                             <tr>
                                 <td>DESCUENTO</td>
-                                <td style="text-align: right;">S./ .00</td>
+                                <td style="text-align: right;">S./ 0.00</td>
                             </tr>
                             <tr>
                                 <td>OP.GRAVADA</td>
@@ -227,8 +229,8 @@
                         </thead>
                     </table>
             </div>
-            <p class="slogan" style="margin-top:10px;">Tu salud mental es lo mas importante</p>
-            <p class="note_slogan">NOTA: Este documento es intercambiable por una boleta de venta o factura.</p>
+            <p class="slogan" style="margin-top:10px;">Tu salud mental es lo más importante</p>
+            <p class="note_slogan">NOTA: Este documento es intercambiable por una Boleta de venta o Factura</p>
         </div>
     </div>
 

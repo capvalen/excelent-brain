@@ -14,6 +14,7 @@
                 <td>Cliente</td>
                 <td>Monto</td>
                 <td>Fecha</td>
+                <td>Observación</td>
                 <td>Ticket</td>
             </tr>
         </thead>
@@ -25,6 +26,7 @@
                 <td v-else-if="payment.pay_status == 2">Cancelado</td> -->
                 <td>S./ {{payment.price}}</td>
                 <td>{{payment.created_at | formatedDate}}</td>
+								<td>{{ payment.observation }}</td>
                 <td><a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm">Generar PDF</a></td>
             </tr>
         </tbody>

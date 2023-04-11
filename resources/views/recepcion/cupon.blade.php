@@ -171,11 +171,10 @@
                     <h2>E001-00{{$appointment->id}}</h2>
                     <div class="main-data">
                         <p>EMISIÓN: {{date('d/m/Y h:i:s A')}}</p>
-                        <p>USUARIO: </p>
                         <p>DNI: {{$patient[0]->dni}}</p>
                         <p class="name">CLIENTE: {{$patient[0]->name}}</p>
                         <p>DIRECCIÓN: {{$patient[0]->address->address}}</p>
-                        <p style="margin-top:10px;"><strong>Observación: </strong>{{ $appointment->payment->observation}}</p>
+                        <p>USUARIO: -</p>
                     </div>
                     <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
                         <thead>
@@ -222,7 +221,10 @@
                                 <td style="text-align: right;">
                                     {{$appointment->payment->price}}
                                 </td>
-                            </tr>
+														</tr>
+														@if($appointment->payment->observation <>'')
+														<tr><td><strong>Obs.:</strong> {{$appointment->payment->observation}}</td></tr>
+														@endif
                         </tbody>
                     </table>
                     <hr style="width: 100%; margin-top:5px;">
@@ -247,8 +249,8 @@
                         </thead>
                     </table>
             </div>
-            <p class="slogan" style="margin-top:10px;">Tu salud mental es lo mas importante</p>
-            <p class="note_slogan">NOTA: Este documento es intercambiable por una boleta de venta o factura.</p>
+            <p class="slogan" style="margin-top:10px;">Tu salud mental es lo más importante</p>
+            <p class="note_slogan">NOTA: Este documento es intercambiable por una Boleta de venta o Factura</p>
         </div>
     </div>
 

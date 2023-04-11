@@ -44,14 +44,14 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="date">Fecha</label>
-                  <input type="date" class="form-control" required name="date" id="date" v-model="form.date">
+                  <input type="date" class="form-control" required name="date" id="date" v-model="form.date" readonly="true">
                 </div>
               </div>
             </div>
 
             <div class="form-group">
               <div class="form-group">
-                <label for="name">Observacion</label>
+                <label for="name">Observación</label>
                 <textarea name="observation" class="form-control" id="observation" rows="5"
                   v-model="form.observation"></textarea>
               </div>
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: 'PagosExtras',
 
@@ -76,32 +77,41 @@ export default {
     return {
       form: {
         customer: null,
-        price: null,
+        price: 0,
         type: null,
         observation: null,
-        date: null
+        date: moment().format('YYYY-MM-DD')
       }
     }
   },
 
   methods: {
     async saveData() {
-      if (!this.form.customer || !this.form.price || !this.form.type || !this.form.date)
-        return this.$swal("Datos incompletos")
-
-      this.$swal("Guardando datos")
-
-      this.axios.post('/api/paymentExtra', this.form)
-        .then(res => {
-          for (let value in this.form) {
-            this.form[value] = ''
-          }
-
-          this.$swal(res.data)
-        })
-        .catch(err => {
-          this.$swal('Hubo un error')
-        })
+			console.log('pago',this.form.price);
+			if(this.form.price < 0){
+				return this.$swal({
+					icon:'error',
+					title: 'El precio no puede ser 0 o negativo'
+				});
+			}else if (!this.form.customer || !this.form.type || !this.form.date){
+        return this.$swal({
+					icon:'error',
+					title: 'Faltan rellenar datos'
+				});
+			}else{
+				this.$swal("Guardando datos")
+	
+				this.axios.post('/api/paymentExtra', this.form)
+				.then(res => {
+					for (let value in this.form) {
+						this.form[value] = ''
+					}
+					this.$swal(res.data)
+				})
+				.catch(err => {
+					this.$swal('Hubo un error')
+				})
+			}
     }
   }
 }

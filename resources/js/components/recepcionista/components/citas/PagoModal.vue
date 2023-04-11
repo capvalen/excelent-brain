@@ -76,7 +76,7 @@
             </div>                                                      
           </div>
           <div class="form-group">
-                <label for="">Observacion</label>
+                <label for="">Observación</label>
                 <textarea class="form-control" name="observation" id="observation" cols="10" rows="3" v-model="dataCit.payment.observation"></textarea>
           </div>
           </form>

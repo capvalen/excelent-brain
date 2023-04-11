@@ -85,10 +85,11 @@ class PaymentController extends Controller
     }
 
     public function getAllExtraPayments(){
+			//Por defecto obtiene el día actual
         $payments = Extra_payment::whereMonth('date', '=', date('m'))
                             ->whereYear('date', '=', date('Y'))
                             ->whereDay('date', '=', date('d'))
-                                        ->get();
+                            ->get();
         return response()->json($payments);
     }
 

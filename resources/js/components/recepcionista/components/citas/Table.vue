@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="container p-0">
+    <div class="container-fluid">
       <div class="d-sm-flex align-items-center justify-content-around mt-4 px-3" style="gap: 10px;">
           <div class="d-none d-sm-inline-block form-inline w-75">
             <div class="input-group">
@@ -12,10 +12,10 @@
               <input
               type="text"
               class="form-control bg-white shadow-sm border-0 small"
-              placeholder="Nombre / Profesional / YYYY-mm-dd"
+              placeholder="Nombre / Profesional"
               aria-label="Search"
               aria-describedby="basic-addon2"
-              id="searchInputAppointment"
+              id="searchInputAppointment" @keyup.enter="searchHistoria()"
               >
             </div>
           </div>
@@ -29,7 +29,7 @@
           </div>
           
           <div class="d-flex justify-content-start" style="flex-shrink: 0;">
-              <button data-toggle="modal" data-target="#addCitaModal" class="btn btn-success"><i class="fas fa-plus"></i> Agregar Cita</button>
+              <button data-toggle="modal" data-target="#addCitaModal" class="btn btn-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
               <modal-cita
               :profes="profesionales"
               :horas="horarios"
@@ -39,7 +39,7 @@
           </div>
 
           <div class="d-flex justify-content-start" style="flex-shrink: 0;">
-              <button data-toggle="modal" data-target="#pagoExtras" class="btn btn-success"><i class="fas fa-plus"></i> Pagos extras</button>
+              <button data-toggle="modal" data-target="#pagoExtras" class="btn btn-secondary"><i class="fas fa-plus"></i> Pagos extras</button>
           </div>
 
       </div>
@@ -62,17 +62,17 @@
           v-for="(cita, index) in citas"
           :key="index"
           >
-            <td class="text-capitalize" :title="cita.patient ? cita.patient.name : '...'">{{ cita.patient ? maxStringCharacter(lowerCase(cita.patient.name), 15) : '..' }}</td>
+            <td class="text-capitalize puntero" :title="cita.patient ? cita.patient.name : '...'" @click="modalInfo(cita)" data-toggle="modal" data-target="#patientModal"><i class="fas fa-brain"></i> {{ cita.patient ? lowerCase(cita.patient.name) : '..' }}</td>
             <td class="text-capitalize" :title="cita.professional ? cita.professional.name : '...'">{{ cita.professional ? maxStringCharacter(lowerCase(cita.professional.name), 15) : '...' }}</td>
-            <td>{{ cita.date ? cita.date : '...' }}</td>
-            <td>
+            <td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">{{ cita.date ? fechaLatam(cita.date) : '...' }}</td>
+            <td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">
                 <span>{{ cita.schedule ? horaHumana(cita.schedule.check_time) : '...'}}</span>
                 <br>
                 <span>{{ cita.schedule ? horaHumana(cita.schedule.departure_date) : '...'}}</span> 
             </td>
-            <td>
-              <a @click="changeMode(cita.id)" v-if="cita.mode == 1" class="btn btn-info btn-sm">Presencial</a>
-              <a @click="changeMode(cita.id)" v-else class="btn btn-primary btn-sm">Virtual</a>
+            <td :title="cita.mode == 1 ? 'Presencial':'Virtual'">
+              <a @click="changeMode(cita.id)" v-if="cita.mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></a>
+              <a @click="changeMode(cita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
             </td>
             <td>
               <a @click="modalInfo(cita)" data-toggle="modal" data-target="#pagoModal"
@@ -115,12 +115,12 @@
             </td>
             <td>
               <div class="row d-flex align-items-center justify-content-around gap-5">
-                  <a @click="modalInfo(cita)" title="Actualizar paciente" data-toggle="modal" data-target="#patientModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a>
+                  <!-- <a @click="modalInfo(cita)" title="Actualizar paciente" data-toggle="modal" data-target="#patientModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a> -->
                   
                   <a v-if="cita.status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
                   <a v-else @click="modalInfo(cita)" title="Reprogramar cita" data-target="#reprogModal" data-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
                   
-                  <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a>
+                  <!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
                   <a @click="eliminar(cita.id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
 
                   <!-- Sin numero -->
@@ -163,7 +163,7 @@
                   >
                   <i class="fa fa-align-justify"></i>
                   </a>
-                  <a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${cita.id}`">
+                  <a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${cita.id}`" target="_blank">
                     <i class="fas fa-file"></i>
                   </a>
               </div>
@@ -189,6 +189,8 @@ import ModalPatient from './ModalPatient.vue'
 import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
 import ModalPagosExtras from './ModalPagosExtras.vue'
+import moment from 'moment'
+
 
 export default {
   name: 'table-cita',
@@ -265,6 +267,7 @@ export default {
       await this.axios.get('/api/profesional')
       .then(response => {
         this.profesionales=response.data;
+				console.log(response.data);
       })
     },
 
@@ -420,18 +423,21 @@ export default {
       let minutos = parseInt(hora.substring(3,5))
       hora = parseInt(hora.substring(0,2))
       if (hora > 12) {
-          return `${hora - 12}:${minutos.toString().length === 1 ? '0' + minutos : minutos} PM`
+          return `${hora - 12}:${minutos.toString().length === 1 ? '0' + minutos : minutos} p.m.`
       } else {
           if (hora === 12 && minutos >= 0) {
-              return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} PM`
+              return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} p.m.`
           }
 
           if (hora === 0) {
-              return `12:${minutos.toString().length === 1 ? '0' + minutos : minutos} AM`
+              return `12:${minutos.toString().length === 1 ? '0' + minutos : minutos} a.m.`
           }
-          return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} AM`
+          return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} a.m.`
       }
     },
+		fechaLatam(fecha){
+			return moment(fecha).format('DD/MM/YYYY');
+		},
 
     maxCharacter (character, num) {
       let characterArray = character.split(' ');
@@ -474,4 +480,7 @@ export default {
     word-break: break-all;
     font-size: 12px; 
   }
+	.puntero{
+		cursor: pointer;
+	}
 </style>

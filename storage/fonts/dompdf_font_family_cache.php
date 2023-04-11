@@ -91,7 +91,7 @@ return array (
     'normal' => $fontDir . '/montserrat_light_normal_67665b4bcadb5c43deb3ec5d9323cc12',
   ),
   'roboto\', sans-serif' => array(
-    'normal' => $fontDir . '/roboto___sans_serif_normal_4add943bea5d8063bd9c13e6d5052c6b',
+    'normal' => $fontDir . '/roboto___sans_serif_normal_f5282ec5fa0762a4b8f2537ae295bc00',
   ),
 );
 }; ?>
