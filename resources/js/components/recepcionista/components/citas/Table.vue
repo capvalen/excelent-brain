@@ -267,7 +267,6 @@ export default {
       await this.axios.get('/api/profesional')
       .then(response => {
         this.profesionales=response.data;
-				console.log(response.data);
       })
     },
 
@@ -358,6 +357,7 @@ export default {
       })
 
       this.horariosAll.forEach(el => {
+        console.log('dia', el.day)
         if (el.day === this.dayWeek(new Date(info).getDay())) {
           if (arraySchedulesInvalid.includes(el.id)) {
             // Hay cita
@@ -387,7 +387,7 @@ export default {
           return "Martes"
         break;
         case 2:
-          return "Miércoles"
+          return "Miercoles"
         break;
         case 3:
           return "Jueves"
@@ -396,7 +396,7 @@ export default {
           return "Viernes"
         break;
         case 5:
-          return "Sábado"
+          return "Sabado"
         break;
         case 6:
           return "Domingo"
