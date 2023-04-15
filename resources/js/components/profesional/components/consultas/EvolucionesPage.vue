@@ -610,9 +610,9 @@
     <!-- Card -->
     <div class="row">
 			<div class="col-md-4 mb-3" v-for="(evolution, index) in datosConsulta.medical_evolutions" :key="index">
-					<div class="card shadow mb-4 tarjeta" @mouseover="colorear(index)" @mouseleave="descolorear(index)" @click="mostrarCard(index)" data-toggle="modal" data-target="#modalVerDetalle">
+					<div class="card shadow mb-4 tarjeta" @mouseover="colorear(index)" @mouseleave="descolorear(index)" >
 							<!-- Card Header - Dropdown -->
-							<div class="card-header bg-secondary py-3 d-flex flex-row align-items-center justify-content-between" >
+							<div class="card-header bg-secondary py-3 d-flex flex-row align-items-center justify-content-between" @click="mostrarCard(index)" data-toggle="modal" data-target="#modalVerDetalle">
 								<h6 class="m-0 font-weight-bold text-white text-capitalize">Consulta #{{evolution.id}} - {{ fechaLectura(evolution.date) }}</h6>
 							</div>
 							<!-- Card Body -->
@@ -687,34 +687,6 @@
       </div>
     </div>
 
-		<!-- Modal -->
-		<div class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header border-0">
-						<h5 class="modal-title" id="exampleModalLabel">Detalles de la consulta</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="text-center mb-2" >
-							<img v-if="miniRespuesta.foto!=''" :src="'/storage/'+miniRespuesta.foto" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="100px" height="100px" style="object-fit:cover;">
-							<img v-else src="/img/nadie.jpg" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="200px" height="200px" style="object-fit:cover;">
-						</div>
-						<p><strong>Fecha:</strong> <span class="text-capitalize">{{fechaLectura(miniRespuesta.fecha)}}</span></p>
-						<p><strong>Profesional:</strong> <span>{{miniRespuesta.nombre}}</span></p>
-						<p><strong>Comentario:</strong> <span>{{miniRespuesta.contenido}}</span></p>
-						<div class="text-center" v-if="miniRespuesta.firma!=''">
-							<img :src="`/storage/${miniRespuesta.firma}`" class="w-75">
-						</div>
-						<div v-else>
-							<p>Sin firma</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
     <!-- Modal de recetas -->
     <div class="modal fade" id="recetasModal" tabindex="-1" aria-labelledby="modalEvolution" aria-hidden="true">
@@ -754,6 +726,7 @@
 
     <!-- Modal editar -->
     <edit-modal :datosModal="dataModal"></edit-modal>
+    <modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
   </div>
 </template>
 
@@ -763,12 +736,13 @@ import updatedModal from './updatedEvolutionModal.vue';
 import ExamResult from './ExamResult.vue';
 import ExamTable from './ExamTable.vue';
 import { dateNow } from '../../../../helpers/Time.js'
-import moment from 'moment'
+import moment from 'moment';
+import modalVerDetalle from './ModalVerDetalle.vue';
 
 export default {
   name: 'evolucionPaciente',
 
-  components: { updatedModal, ExamResult, ExamTable, editModal },
+  components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle },
 
   data () {
     return {
@@ -1273,7 +1247,7 @@ export default {
 </script>
 
 <style scoped>
-.tarjeta:hover{
+.tarjeta .card-header:hover{
 	cursor:pointer;
 }
   h4 {

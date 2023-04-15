@@ -13,7 +13,7 @@
             <div v-if="this.mostrarHorarios" class="col-md-4 d-flex flex-column">
                 <button v-on:click="day='Lunes'" class="btn btn-success mt-3">Lunes</button>
                 <button v-on:click="day='Martes'" class="btn btn-success mt-3">Martes</button>
-                <button v-on:click="day='Miercoles'" class="btn btn-success mt-3">Miercoles</button>
+                <button v-on:click="day='Miercoles'" class="btn btn-success mt-3">Miércoles</button>
                 <button v-on:click="day='Jueves'" class="btn btn-success mt-3">Jueves</button>
                 <button v-on:click="day='Viernes'" class="btn btn-success mt-3">Viernes</button>
                 <button v-on:click="day='Sabado'" class="btn btn-success mt-3">Sábado</button>
