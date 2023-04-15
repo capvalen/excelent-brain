@@ -19,11 +19,13 @@
             </div>
         </div>
     </div>
+		<p class="mt-3 mb-1">Últimos 20 pacientes registrados</p>
     <table class="table table-striped mt-4">
       <thead>
         <tr>
           <th>#</th>
           <th>Nombre y apellidos</th>
+          <th>Triaje</th>
           <th>Faltas</th>
           <th>Recetas</th>
           <th>Editar</th>
@@ -36,6 +38,9 @@
         >
           <th>{{ patients.id }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
+					<td>
+						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
+					</td>
           <td>
             <button
             class="btn btn-info btn-circle btn-md"
@@ -70,6 +75,7 @@
     <modal-edit-patient v-if="data" :dataPatient="data"></modal-edit-patient>
     <modal-recetas v-if="data" :dataPatient="data"></modal-recetas>
     <modal-faltas v-if="data" :dataPatient="data"></modal-faltas>
+    <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales"></modal-triaje>
   </main>
 </template>
 
@@ -77,6 +83,7 @@
 import ModalEditPatient from './ModalEditPatients.vue';
 import ModalRecetas from './ModalRecetas.vue';
 import ModalFaltas from './ModalFaltas.vue';
+import ModalTriaje from './ModalTriaje.vue';
 
 export default {
   name: 'Pacientes',
@@ -86,11 +93,11 @@ export default {
       dataPatients: [],
       data: null,
       busqueda: [],
-      totalPatients:[]
+      totalPatients:[], profesionales:[]
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas },
+  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje },
 
   props: {
     dataPatient: Object
@@ -108,16 +115,16 @@ export default {
     },
     async getPatients () {
       this.busqueda = []
-      await this.axios.get(`/api/getPatient`)
+      await this.axios.get(`/api/getLast10Patients`)
       .then(res => {
         this.dataPatients = res.data;
         this.busqueda = this.dataPatients;
 
         this.busqueda = [];
         this.dataPatients.forEach((el, index) => {
-          if (index < 5) {
+          //if (index < 5) {
             this.busqueda.push(el);
-          }
+          //}
         })
 
       })
@@ -163,11 +170,18 @@ export default {
     lowerCase (text = '...') {
       return text.toLowerCase();
     },
+		async listarprofesional(){
+      await this.axios.get('/api/profesional')
+      .then(response => {
+        this.profesionales=response.data;
+      })
+    },
   },
 
 
   created () {
     this.getPatients();
+		this.listarprofesional();
   }
 }
 </script>

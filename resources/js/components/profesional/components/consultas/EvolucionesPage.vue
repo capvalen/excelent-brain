@@ -3,35 +3,37 @@
     <div class="d-flex justify-content-between align-items-center">
       <h4>Historia clínica del paciente</h4>
       
-      <div> 
+      <div>
+				<router-link
+					:to="{ path: `/profesional/recetas/${datosConsulta.id}` }"
+					class="btn btn-outline-secondary"
+					title="Generar receta"
+					>Generar nueva receta
+				</router-link>
       <button
       v-if="datosConsulta.discharge != 1"
-      class="btn btn-success"
-      @click="toDischarge"
-      >
+      class="btn btn-outline-success"
+      @click="toDischarge">
         Dar de alta
       </button>
       <button
       v-else
-      class="btn btn-success"
-      disabled
-      >
+      class="btn btn-outline-success"
+      disabled>
         Dado de alta
       </button>
         <button
         data-toggle="modal"
         data-target="#examenModal"
-        class="bg-warning px-4 py-2 rounded border-0 text-light btn--iteration"
-        >
+        class="btn btn-outline-warning  px-4 py-2 rounded ">
         Exámenes
         </button>
 
         <button
         data-toggle="modal"
         data-target="#recetasModal"
-        class="bg-warning px-4 py-2 rounded border-0 text-light btn--iteration"
-        >
-        Recetas
+        class="btn btn-outline-warning px-4 py-2 rounded ">
+        Recetas anteriores
         </button>
       </div>
     </div>
@@ -47,7 +49,6 @@
                 <div class="card-body">
                     <div class="historia-info">
                       <p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta ? lowerCase(datosConsulta.name) : '...' }}</p>
-                      <p><b>Edad:</b> {{ datosConsulta ? calculateAge(datosConsulta.birth_date) : '...' }}</p>
                       <p><b>DNI:</b> {{ datosConsulta ? datosConsulta.dni : '...' }}</p>
                       <p><b>Número de celular:</b> {{ datosConsulta ? datosConsulta.phone : '...'}}</p>
                       <p><b>Ocupación:</b> {{ datosConsulta ? datosConsulta.occupation : '...'}}</p>
@@ -59,7 +60,8 @@
                         <span v-else-if="datosConsulta.instruction_degree == 5">Técnico</span>
                         <span v-else-if="datosConsulta.instruction_degree == 6">Sin Instrucción</span>
                       </p>
-                      <p><b>Fecha de cumpleaños:</b> {{ datosConsulta ? datosConsulta.birth_date : '...'}}</p>
+                      <p><b>Fecha de cumpleaños:</b> {{ datosConsulta ? fechaLatam(datosConsulta.birth_date) : '...'}}</p>
+											<p><b>Edad:</b> {{ datosConsulta ? calculateAge(datosConsulta.birth_date) : '...' }}</p>
                       <p><b>Estado civil:</b> 
                         <span v-if="datosConsulta.marital_status == 1">Soltero</span>
                         <span v-else-if="datosConsulta.marital_status == 2">Casado</span>
@@ -606,64 +608,61 @@
     </div>
 
     <!-- Card -->
-    <div class="row mt-3" v-for="(evolution, index) in datosConsulta.medical_evolutions" :key="index">
-      <div class="col-md-12">
-          <div class="card shadow mb-4">
-              <!-- Card Header - Dropdown -->
-              <div class="card-header bg-warning py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-white">Consulta {{evolution.id}} {{ evolution.date }}</h6>
-              </div>
-              <!-- Card Body -->
-              <div class="card-body">
-                  <div class="card-evolution">
-                    <div class="historia-info">
-                      <p><b>Profesional:</b> {{ evolution.professional ? evolution.professional.name : '...'}} </p>
-                      <p><b>Comentario</b></p>
-                      <p>{{ evolution ? evolution.content : '...'}}</p>
-                    </div>
-
-                    <div class="card-evolution__image">
-                      <img :src="`/storage/${evolution.professional ? evolution.professional.signing : null}`" class="card-evolution-image" :alt="evolution.professional ? evolution.professional.signing : null ? 'Firma del doctor': 'Sin firma'">
-                    </div>
-                  </div>
-
-                  <div class="d-flex flex-gap">
-                    <button
-                    @click="updateModal(evolution)"
-                    data-toggle="modal"
-                    data-target="#updatedModal"
-                    class="btn--edit btn--iteration"
-                    v-if="evolution.professional_id == dataUser.id && 
-                      evolution.date === getDateNow() ||
-                      evolution.auth == 1"
-                    >
-                    Redactar evolución
-                    </button>
-                    <button
-                    @click="editEvolution(evolution)"
-                    class="btn btn-success"
-                    v-if="evolution.professional_id == dataUser.id"
-                    data-toggle="modal"
-                    data-target="#editModal"
-                    >
-                    <i class="fas fa-edit"></i>
-                    </button>
-                    <div 
-                    v-if="evolution.professional_id == dataUser.id && 
-                      evolution.date === getDateNow()"
-                    class="btn-group">
-                      <button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)" class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                        <i class="fas fa-save"></i>
-                      </button>
-                      <ul class="dropdown-menu px-2 py-2" aria-labelledby="dropdownMenuClickableInside">
-                        <span>{{autoSaveInfo}}</span>
-                      </ul>
-                    </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-    </div>
+    <div class="row">
+			<div class="col-md-4 mb-3" v-for="(evolution, index) in datosConsulta.medical_evolutions" :key="index">
+					<div class="card shadow mb-4 tarjeta" @mouseover="colorear(index)" @mouseleave="descolorear(index)" @click="mostrarCard(index)" data-toggle="modal" data-target="#modalVerDetalle">
+							<!-- Card Header - Dropdown -->
+							<div class="card-header bg-secondary py-3 d-flex flex-row align-items-center justify-content-between" >
+								<h6 class="m-0 font-weight-bold text-white text-capitalize">Consulta #{{evolution.id}} - {{ fechaLectura(evolution.date) }}</h6>
+							</div>
+							<!-- Card Body -->
+							<div class="card-body">
+									<div class="card-evolution">
+										<div class="historia-info">
+											<p><b>Profesional:</b> {{ evolution.professional ? evolution.professional.name : 'Sin asignar'}} </p>
+											<p ><b>Comentario: </b> {{ evolution ? maxStringCharacter(evolution.content, 50) : '...'}} </p>
+										</div>
+										<div class="card-evolution__image d-none">
+											<img :src="`/storage/${evolution.professional ? evolution.professional.signing : null}`" class="card-evolution-image" :alt="evolution.professional ? evolution.professional.signing : null ? 'Firma del doctor': 'Sin firma'">
+										</div>
+									</div>
+									<div class="d-flex flex-gap">
+										<button
+										@click="updateModal(evolution)"
+										data-toggle="modal"
+										data-target="#updatedModal"
+										class="btn--edit btn--iteration"
+										v-if="evolution.professional_id == dataUser.id &&
+											evolution.date === getDateNow() ||
+											evolution.auth == 1"
+										>
+										Redactar evolución
+										</button>
+										<button
+										@click="editEvolution(evolution)"
+										class="btn btn-success"
+										v-if="evolution.professional_id == dataUser.id"
+										data-toggle="modal"
+										data-target="#editModal"
+										>
+										<i class="fas fa-edit"></i>
+										</button>
+										<div
+										v-if="evolution.professional_id == dataUser.id &&
+											evolution.date === getDateNow()"
+										class="btn-group">
+											<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)" class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+												<i class="fas fa-save"></i>
+											</button>
+											<ul class="dropdown-menu px-2 py-2" aria-labelledby="dropdownMenuClickableInside">
+												<span>{{autoSaveInfo}}</span>
+											</ul>
+										</div>
+									</div>
+							</div>
+					</div>
+			</div>
+		</div>
 
     <!-- Modal de examenes -->
     <div class="modal fade" id="examenModal" tabindex="-1" aria-labelledby="modalEvolution" aria-hidden="true">
@@ -687,6 +686,35 @@
         </div>
       </div>
     </div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header border-0">
+						<h5 class="modal-title" id="exampleModalLabel">Detalles de la consulta</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="text-center mb-2" >
+							<img v-if="miniRespuesta.foto!=''" :src="'/storage/'+miniRespuesta.foto" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="100px" height="100px" style="object-fit:cover;">
+							<img v-else src="/img/nadie.jpg" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="200px" height="200px" style="object-fit:cover;">
+						</div>
+						<p><strong>Fecha:</strong> <span class="text-capitalize">{{fechaLectura(miniRespuesta.fecha)}}</span></p>
+						<p><strong>Profesional:</strong> <span>{{miniRespuesta.nombre}}</span></p>
+						<p><strong>Comentario:</strong> <span>{{miniRespuesta.contenido}}</span></p>
+						<div class="text-center" v-if="miniRespuesta.firma!=''">
+							<img :src="`/storage/${miniRespuesta.firma}`" class="w-75">
+						</div>
+						<div v-else>
+							<p>Sin firma</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
     <!-- Modal de recetas -->
     <div class="modal fade" id="recetasModal" tabindex="-1" aria-labelledby="modalEvolution" aria-hidden="true">
@@ -754,7 +782,7 @@ export default {
       consultaHoy: false,
       dataCies: null,
       searchCie: '',
-      cieAdd: [],
+      cieAdd: [], indexGlobal:-1, miniRespuesta:{nombre:'', contenido:'', firma:''},
 
       component: "ExamTable",
       datosExamenes: [],
@@ -1162,7 +1190,48 @@ export default {
 
     getDateNow () {
       return dateNow()
-    }
+    },
+		maxStringCharacter (character, num) {
+			character === null ? character = '...' : character
+			if (character.length > num) {
+				return character.substring(0, num) + '...';
+			} else {
+				return character;
+			}
+		},
+		fechaLatam(fecha){
+			return moment(fecha).format('DD/MM/YYYY');
+		},
+		fechaLectura(fecha){
+			moment.locale('es')
+			return moment(fecha).format('dddd, DD [de] MMMM YYYY');
+		},
+		colorear(index){
+			let cabecera = document.querySelectorAll('.tarjeta .card-header')[index]
+			cabecera.classList.remove('bg-secondary');
+			cabecera.classList.add('bg-success');
+		},
+		descolorear(index){
+			let cabecera = document.querySelectorAll('.tarjeta .card-header')[index]
+			cabecera.classList.remove('bg-success');
+			cabecera.classList.add('bg-secondary');
+		},
+		mostrarCard(index){
+			this.indexGlobal=index;
+			if(this.datosConsulta.medical_evolutions[index].professional){
+				this.miniRespuesta.nombre = this.datosConsulta.medical_evolutions[index].professional.name;
+				this.miniRespuesta.firma = this.datosConsulta.medical_evolutions[index].professional.signing;
+				this.miniRespuesta.foto = this.datosConsulta.medical_evolutions[index].professional.photo;
+				if(this.miniRespuesta.firma=='-'){
+					this.miniRespuesta.firma='';
+				}
+			}else{
+				this.miniRespuesta.nombre = 'Sin asignar';
+				this.miniRespuesta.firma = '';
+				this.miniRespuesta.foto = '';
+			}
+			this.miniRespuesta.contenido = this.datosConsulta.medical_evolutions[index].content;
+		}
   },
 
   computed: {
@@ -1204,6 +1273,9 @@ export default {
 </script>
 
 <style scoped>
+.tarjeta:hover{
+	cursor:pointer;
+}
   h4 {
     font-weight: 500;
   }
@@ -1257,10 +1329,10 @@ export default {
   }
 
   .card-evolution {
-    display: grid;
+    /* display: grid;
     grid-template-columns: 70% 1fr;
     place-items: center;
-    grid-gap: 25px;
+    grid-gap: 25px; */
   }
 
   .card-evolution__image {

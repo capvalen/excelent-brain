@@ -77,6 +77,7 @@ Route::get('updateModeAppoinment/{id}', [AppointmentController::class, 'updateMo
 Route::resource('appointment/payment', PaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('patient', PatientController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::get('getPatient', [PatientController::class, 'getPatient']);
+Route::get('getLast10Patients', [PatientController::class, 'getLast10Patients']);
 Route::get('returnTotalPatients', [PatientController::class, 'returnTotalPatients']);
 
 Route::resource('kairos', KairoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
@@ -93,6 +94,7 @@ Route::resource('schedule', ScheduleController::class)->only(['index', 'store', 
 Route::resource('initialPsychiatric', Initial_psychiatric_historyController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('initialPsychological', Initial_psychological_historyController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('medicalExam', Medical_examController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
+Route::get('departamentos',[AppointmentController::class,'getDepartamentos']);
 
 Route::resource('evolution', Medical_evolutionController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::get('pdfEvolution/{id}', [Medical_evolutionController::class, 'pdfEvolution']);
@@ -100,6 +102,7 @@ Route::get('pdfEvolution/{id}', [Medical_evolutionController::class, 'pdfEvoluti
 Route::get('getNamePatient/{id}', [PatientController::class, 'getNamePatient']);
 
 Route::get('getNameExam/{id}', [PatientController::class, 'getNameExam']);
+Route::post('insertarTriaje/{id}', [PatientController::class, 'insertarTriaje']);
 
 Route::get('getNames',[PatientController::class, 'getNames']);
 

@@ -17,6 +17,10 @@ import Vue from 'vue'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
 
+//importando los css de alertify
+import 'alertifyjs/build/css/alertify.min.css';
+import 'alertifyjs/build/css/themes/semantic.css';
+
 
 Vue.use(VueSweetalert2)
 Vue.use(VueRouter)

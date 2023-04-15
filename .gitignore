@@ -4,11 +4,11 @@
 /storage/*.key
 /storage/*
 /storage/fonts/*
+/storage/fonts/*.php
 /public/js/*
 /public/css/*
 /public/fonts
 /vendor
-
 .env.backup
 .phpunit.result.cache
 docker-compose.override.yml
@@ -18,3 +18,4 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+.env

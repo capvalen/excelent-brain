@@ -102,13 +102,13 @@
             </li>
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item nav__list" @click="activeSidebar()">
+            <!-- <li class="nav-item nav__list" @click="activeSidebar()">
                 <router-link :to="{name:'recetas',params:{patientId:0}}" class="nav-link">
                     <i class="fas fa-home"></i>
                     <span>Recetas</span>
                 </router-link>
             </li>
-
+ -->
             <!-- <li class="nav-item nav__list" @click="activeSidebar()">
                 <router-link  to="/profesional/kurame" class="nav-link">
                     <i class="fas fa-home"></i>

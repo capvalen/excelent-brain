@@ -2,42 +2,54 @@
 <div class="modal fade bd-example-modal-lg" id="addCitaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header border-0">
       <h5 class="modal-title" id="addCitaModalLabel">Registrar Nueva Cita</h5>
 
       <button type="button" id="closeModal" @click="limpiarInputs(true)" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
         <form class="user" @submit="insertar" @keydown="prevenirEvent">
+         
+          <div class="form-group row">
+           <div class="col-sm-6">
+              <label for="name">Tipo de documento</label>
+              <select class="form-control" id="type_dni" v-model="cita.type_dni">
+								<option value="1">D.N.I.</option>
+								<option value="2">Carnet de extranjería</option>
+								<option value="3">Pasaporte</option>
+							</select>
+            </div>           
+          </div>
           <div class="form-group row">
             <div class="col-sm-6">
-              <label for="name">DNI</label>
+              <label v-if="cita.type_dni==1" for="name">D.N.I.</label>
+              <label v-else for="name">Doc. Extranjero</label>
               <div class="form-inline">
-                <input type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="DNI del paciente">
+                <input v-if="cita.type_dni==1" type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="DNI del paciente">
+                <input v-else type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="Código de extranjería">
                 <a @click="reniec" class="btnReniec btn btn-info"><i class="fas fa-search"></i></a>
               </div>  
             </div>
 
             <div class="col-sm-6">
-              <label for="name">Teléfono</label>
-              <input v-if="patientNew" readonly type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Teléfono del paciente">
-              <input v-else type="text" class="form-control" name="phone" id="phone" v-model="cita.phone" placeholder="Teléfono del paciente">
+              <label for="name">Celular</label>
+              <input v-if="patientNew" readonly type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Celular del paciente">
+              <input v-else type="text" class="form-control" name="phone" id="phone" v-model="cita.phone" placeholder="Celular del paciente">
             </div>           
           </div>
 
           <div class="form-group">
               <label for="name">Paciente</label>
-              <input v-if="patientNew" readonly type="text" class="form-control" id="name" v-model="cita.name" placeholder="Nombre del paciente">
-              <input v-else type="text" class="form-control"  name="name" id="name" v-model="cita.name" placeholder="Nombre del paciente">
+              <input  type="text" class="form-control" id="name" v-model="cita.name" placeholder="Nombre del paciente">
+              <!-- <input v-else type="text" class="form-control"  name="name" id="name" v-model="cita.name" placeholder="Nombre del paciente"> -->
           </div>
 
           <div class="form-group row">                   
-            <div class="col-sm-6">
-              <label for="name">Direccion de paciente</label>
-              <input v-if="patientNew" readonly type="text" class="form-control" name="address" id="address" v-model="cita.address" placeholder="Dirección del paciente">
-              <input v-else type="text" class="form-control" name="address" id="address" v-model="cita.address" placeholder="Dirección del paciente">
+            <div class="col-sm-12">
+              <label for="name">Dirección de paciente</label>
+              <input type="text" class="form-control" name="address" id="address" v-model="cita.address" placeholder="Dirección del paciente">
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 d-none">
               <label for="name">Email de paciente</label>
               <input v-if="patientNew" readonly type="email" class="form-control" id="email" v-model="cita.email"  placeholder="Email de paciente"> 
               <input v-else type="email" class="form-control" name="email" id="email" v-model="cita.email"  placeholder="Email de paciente"> 
@@ -45,20 +57,24 @@
           </div>
 
           <div class="form-group row">
-            <div class="col-sm-4">
-                <label for="name">Distrito</label>
-                <input v-if="patientNew" readonly type="text" class="form-control" id="district" v-model="cita.district" placeholder="Distrito">
-                <input v-else type="text" class="form-control" name="district" id="district" v-model="cita.district" placeholder="Distrito">
-            </div>
-            <div class="col-sm-4">
-                <label for="name">Provincia</label>
-                <input v-if="patientNew" readonly type="text" class="form-control" id="province" v-model="cita.province"  placeholder="Provincia"> 
-                <input v-else type="text" class="form-control" name="province" id="province" v-model="cita.province"  placeholder="Provincia"> 
-            </div>
-            <div class="col-sm-4">
+          
+						<div class="col-sm-4">
                 <label for="name">Departamento</label>
-                <input v-if="patientNew" readonly type="text" class="form-control" id="department" v-model="cita.department"  placeholder="Departamento"> 
-                <input v-else type="text" class="form-control" name="department" id="department" v-model="cita.department"  placeholder="Departamento"> 
+								<select v-model="cita.department" class="form-control" id="department" @change="moverProvincias()">
+									<option v-for="departamento in ubigeo.departamentos" :value="departamento.idDepa">{{ departamento.departamento }}</option>
+								</select>
+            </div>
+						<div class="col-sm-4">
+                <label for="name">Provincia</label>
+								<select v-model="cita.province" class="form-control" id="provincia" @change="moverDistritos()">
+									<option v-for="provincia in provincias" :value="provincia.idProv">{{ provincia.provincia }}</option>
+								</select>
+            </div>
+						<div class="col-sm-4">
+                <label for="name">Distrito</label>
+								<select v-model="cita.district" class="form-control" id="distrito">
+									<option v-for="distrito in distritos" :value="distrito.idDist">{{ distrito.distrito }}</option>
+								</select>
             </div>
           </div>
           
@@ -80,19 +96,19 @@
               <div class="form-group">
                 <label for="marital_status">Estado Civil</label>
                 <select v-if="patientNew" disabled readonly class="form-control" name="marital_status" id="marital_status" v-model="cita.marital_status">
-                  <option value="1">Soltero</option>
                   <option value="2">Casado</option>
-                  <option value="3">Viudo</option>
-                  <option value="4">Divorciado</option>
                   <option value="5">Conviviente</option>
+                  <option value="4">Divorciado</option>
+                  <option value="1">Soltero</option>
+                  <option value="3">Viudo</option>
                 </select>
 
                 <select v-else class="form-control" name="marital_status" id="marital_status" v-model="cita.marital_status">
-                  <option value="1">Soltero</option>
                   <option value="2">Casado</option>
-                  <option value="3">Viudo</option>
-                  <option value="4">Divorciado</option>
                   <option value="5">Conviviente</option>
+                  <option value="4">Divorciado</option>
+                  <option value="1">Soltero</option>
+                  <option value="3">Viudo</option>
                 </select>
               </div>
             </div>
@@ -105,7 +121,7 @@
                   <option value="2">Primaria</option>
                   <option value="3">Secundaria</option>
                   <option value="4">Superior</option>
-                  <option value="5">Tecnico</option>
+                  <option value="5">Técnico</option>
                   <option value="6">Sin instrucción</option>
                 </select>
 
@@ -114,7 +130,7 @@
                   <option value="2">Primaria</option>
                   <option value="3">Secundaria</option>
                   <option value="4">Superior</option>
-                  <option value="5">Tecnico</option>
+                  <option value="5">Técnico</option>
                   <option value="6">Sin instrucción</option>
                 </select>
               </div>
@@ -177,7 +193,7 @@
           <div class="form-group row">
               <div class="col-sm-6">
               <div class="form-group">
-                <label for="">Clasificacion de Consulta</label>
+                <label for="">Clasificación de Consulta</label>
                 <select 
                 class="form-control" 
                 name="clasification" 
@@ -262,16 +278,12 @@
               </div>
             </div>  
 
-            <div class="col-sm-6">
-              <label for="name">Precio</label>
-              <p>S./ {{ cita.price }}</p>
-              <!-- <input type="text" class="form-control" name="price" id="price" v-model="cita.price"> -->
-            </div>
+            
           </div>
 
           <div class="form-group row">
             <div class="col-sm-6">
-              <label for="name">Recomendacion</label>
+              <label for="name">Recomendación</label>
               <input type="text" class="form-control" name="recomendation" id="recomendation" v-model="cita.recomendation">
             </div>   
 
@@ -279,7 +291,13 @@
               <label for="name">Link</label>
               <input type="text" class="form-control" name="link" id="link" v-model="cita.link">
             </div>        
-          </div>     
+          </div>
+					<div class="row">
+						<div class="col-sm-6">
+              <p class="lead"><small>Precio de consulta</small>	S/ {{ parseFloat(cita.price).toFixed(2) }}</p>
+              <!-- <input type="text" class="form-control" name="price" id="price" v-model="cita.price"> -->
+            </div>
+					</div>
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -294,6 +312,7 @@
 
 <script>
 import { dateNow } from '../../../../helpers/Time.js'
+import alertify from 'alertifyjs'
 
 export default {
   name: "form-prof",
@@ -322,7 +341,8 @@ export default {
       ],
       priceCiteOld: [
         [ //--- Psiquitrica
-          [190, 160, 190, 190, 150, 110, 200, 200, null, null, null], // --- Presencial
+          //[190, 160, 190, 190, 150, 110, 200, 200, null, null, null], // --- Presencial
+          [666, 555, 444, 333, 222, 111, 999, 888, null, null, null], // --- Presencial
           [200, 170, 150, 150, 120, 90, 120, 120, null, null, null] // --- Virtual 
         ],
         [ //--- Psicologica
@@ -344,12 +364,12 @@ export default {
         name:'',
         email:'',
         address:'',
-        district:'',
-        province:'',
-        department:'',
+        department:12,
+        province:103,
+        district:1006,
         birth_date:'',
         occupation:'',
-        marital_status:'',
+        marital_status:1,
         instruction_degree:'',
         relative_name:'',
         relatine_phone:'',
@@ -358,7 +378,7 @@ export default {
         schedule_id:'',
         date: dateNow(),
         clasification:'',
-        price:'',
+        price:0,
         type:'',
         patient_condition:'',
         recomendation:'',
@@ -368,8 +388,11 @@ export default {
         bank:'',
         pay_status:'1',
         status:'',
-        type_amount:''
+        type_amount:1,
+				type_dni:1
       },
+			ubigeo: {departamentos:[], provincias:[], distritos:[]},
+			provincias:[], distritos:[],
       token:'087d16c0688f5150268342d085a55d54b5064c7649596011f03b35b935899a50',          
       horario:[],
     }
@@ -384,42 +407,48 @@ export default {
       const config = {
         headers: { 'content-type': 'multipart/form-data' }
       }
-
-      let formData = new FormData();
-      formData.append('dni', this.cita.dni);
-      formData.append('phone', this.cita.phone);
-      formData.append('name', this.cita.name || 'Sin nombre' );
-      formData.append('email',this.cita.email);
-      formData.append('address', this.cita.address);
-      formData.append('district', this.cita.district);
-      formData.append('province', this.cita.province);
-      formData.append('department', this.cita.department);
-      formData.append('birth_date', this.cita.birth_date);
-      formData.append('occupation', this.cita.occupation);
-      formData.append('marital_status', this.cita.marital_status);
-      formData.append('instruction_degree', this.cita.instruction_degree);
-      formData.append('professional_id', this.cita.professional_id);
-      formData.append('schedule_id', this.cita.schedule_id);
-      formData.append('date', this.cita.date);
-      formData.append('clasification', this.cita.clasification);
-      formData.append('price', this.cita.price);
-      formData.append('type', this.cita.type);
-      formData.append('patient_condition', this.cita.patient_condition);
-      formData.append('recomendation', this.cita.recomendation);
-      formData.append('mode', this.cita.mode);
-      formData.append('link', this.cita.link);
-      await this.axios.post('/api/appointment', formData, config)
-      .then(response => {
-        console.log(response.data)
-        this.closeModal()
-        this.$swal('Cita inserdata con éxito')
-        this.$parent.listar()  
-        this.$emit('actualizarArray', true)              
-        this.clearModal()
-      })
-      .catch(error => {
-          console.log(error)
-      })
+			if( this.cita.type_dni==1 && (this.cita.dni =='' || this.cita.dni.length<8) ){
+				alertify.notify('Todo paciente debe tener un DNI válido', 'danger', 10);
+			}else if( this.cita.type_dni!=1 && (this.cita.dni =='' || this.cita.dni.length<8) ){
+				alertify.notify('Todo extranjero debe tener un documento de identidad válido', 'danger', 10);
+			}else{
+				let formData = new FormData();
+				formData.append('dni', this.cita.dni);
+				formData.append('phone', this.cita.phone);
+				formData.append('name', this.cita.name || 'Sin nombre' );
+				formData.append('email',this.cita.email);
+				formData.append('address', this.cita.address);
+				formData.append('department', this.cita.department);
+				formData.append('province', this.cita.province);
+				formData.append('district', this.cita.district);
+				formData.append('birth_date', this.cita.birth_date);
+				formData.append('occupation', this.cita.occupation);
+				formData.append('marital_status', this.cita.marital_status);
+				formData.append('instruction_degree', this.cita.instruction_degree);
+				formData.append('professional_id', this.cita.professional_id);
+				formData.append('schedule_id', this.cita.schedule_id);
+				formData.append('date', this.cita.date);
+				formData.append('clasification', this.cita.clasification);
+				formData.append('price', this.cita.price);
+				formData.append('type', this.cita.type);
+				formData.append('patient_condition', this.cita.patient_condition);
+				formData.append('recomendation', this.cita.recomendation);
+				formData.append('mode', this.cita.mode);
+				formData.append('link', this.cita.link);
+				formData.append('type_dni', this.cita.type_dni);
+				await this.axios.post('/api/appointment', formData, config)
+				.then(response => {
+					console.log(response.data)
+					this.closeModal()
+					this.$swal('Cita inserdata con éxito')
+					this.$parent.listar()  
+					this.$emit('actualizarArray', true)              
+					this.clearModal()
+				})
+				.catch(error => {
+						console.log(error)
+				})
+			}
     },
 
     prevenirEvent() {
@@ -430,35 +459,37 @@ export default {
     },
 
     clearModal(){
-      this.cita.phone= '',
-      this.cita.dni= '',
-      this.cita.name= '',
-      this.cita.address= '',
-      this.cita.district= '',
-      this.cita.email='',
-      this.cita.province= '',
-      this.cita.department= '',
-      this.cita.birth_date= '',
-      this.cita.occupation= '',
-      this.cita.instruction_degree= '',
-      this.cita.marital_status= '',
-      this.cita.relative_name= '',
-      this.cita.relatine_phone= '',
-      this.cita.kinship= '',
-      this.cita.professional_id='',
-      this.cita.schedule_id='',
-      this.cita.date=''
-      this.cita.clasification='',
-      this.cita.price='',
-      this.cita.type= '',
-      this.cita.patient_condition= '',
-      this.cita.recomendation= '',
-      this.cita.mode= '',
-      this.cita.voucher= '',
-      this.cita.link= '',
-      this.cita.bank= '',
-      this.cita.pay_status= '',
-      this.cita.status= ''
+			this.cita.phone= '';
+			this.cita.dni= '';
+			this.cita.name= '';
+			this.cita.address= '';
+			this.cita.email='';
+			this.cita.department= 12;
+			this.cita.province= 103;
+			this.cita.district= 1006;
+			this.cita.birth_date= '';
+			this.cita.occupation= '';
+			this.cita.instruction_degree= '';
+			this.cita.marital_status= 1;
+			this.cita.relative_name= '';
+			this.cita.relatine_phone= '';
+			this.cita.kinship= '';
+			this.cita.professional_id='';
+			this.cita.schedule_id='';
+			this.cita.date= dateNow();
+			this.cita.clasification='';
+			this.cita.price=0;
+			this.cita.type= '';
+			this.cita.patient_condition= '';
+			this.cita.recomendation= '';
+			this.cita.mode= '';
+			this.cita.voucher= '';
+			this.cita.link= '';
+			this.cita.bank= '';
+			this.cita.pay_status= '';
+      this.cita.status= '';
+			this.cita.type_amount=1;
+
     },
 
     closeModal() {
@@ -484,31 +515,33 @@ export default {
       this.axios.get("/api/buscar/"+this.cita.dni)
       .then(res => {
         if (res.data.patient == null) {
-          window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-          this.axios.get(`https://apiperu.dev/api/dni/${this.cita.dni}`)
-          .then(response => {
-            console.log(response.data)
-            this.cita.name = response.data.message || `${response.data.data.apellido_paterno} ${response.data.data.apellido_materno} ${response.data.data.nombres}`;
-            if (response.data.success) {
-              this.patientNew = false
-
-              this.$swal.fire({
-                icon: 'success',
-                title: 'Okey',
-                text: 'Paciente nuevo',
-              })
-            } else {
-              this.$swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'DNI no encontrado!',
-                footer: 'Vuelve a intentarlo'
-              })
-            }
-          })
-          .catch(err => {
-            console.error(err)
-          })
+					if(this.cita.type_dni==1){
+						window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+						this.axios.get(`https://apiperu.dev/api/dni/${this.cita.dni}`)
+						.then(response => {
+							console.log(response.data)
+							this.cita.name = response.data.message || `${response.data.data.apellido_paterno} ${response.data.data.apellido_materno} ${response.data.data.nombres}`;
+							if (response.data.success) {
+								this.patientNew = false
+	
+								this.$swal.fire({
+									icon: 'success',
+									title: 'Okey',
+									text: 'Paciente nuevo',
+								})
+							} else {
+								this.$swal.fire({
+									icon: 'error',
+									title: 'Oops...',
+									text: 'DNI no encontrado!',
+									footer: 'Vuelve a intentarlo'
+								})
+							}
+						})
+						.catch(err => {
+							console.error(err)
+						})
+					}
         }else{
           this.$swal.fire({
             title: 'Buscando paciente',
@@ -547,6 +580,13 @@ export default {
 
     emitirProf () {
       this.$emit("emitIdProf", event.target.value);
+			let profesion = this.profes.filter(x => x.id == event.target.value)[0].profession;
+
+			switch (profesion) {
+				case 'Psicólogo': this.cita.clasification = 2; break;
+				case 'Psiquiatra': this.cita.clasification = 1; break;
+				default: this.cita.clasification = ''; break;
+			}
     },
 
     emitirFecha () {
@@ -561,9 +601,9 @@ export default {
       this.cita.name = '';
       this.cita.email = '';
       this.cita.address = '';
-      this.cita.district = '';
-      this.cita.province = '';
-      this.cita.department = '';
+      this.cita.department = 12;
+      this.cita.province = 103;
+      this.cita.district = 1006;
       this.cita.birth_date = '';
       this.cita.occupation = '';
       this.cita.marital_status = '';
@@ -573,12 +613,14 @@ export default {
       this.cita.kinship = '';
       this.cita.professional_id =  '';
       this.cita.schedule_id = '';
-      this.cita.date =  dateNow();
+      this.cita.date = dateNow();
       this.cita.clasification = '';
-      this.cita.price = '';
+      this.cita.price = 0;
       this.cita.type = '';
       this.cita.patient_condition = '';
       this.cita.recomendation = '';
+			this.cita.type_amount=1;
+
       
       // value ? this.cita.mode = '' : false;
       
@@ -605,8 +647,37 @@ export default {
           }
         
       }
-    }
+    },
+		async listarDepartamentos(){
+      await this.axios.get('/api/departamentos')
+      .then(response => {
+				this.ubigeo.departamentos = response.data['departamentos'];
+				this.ubigeo.provincias = response.data['provincias'];
+				this.ubigeo.distritos = response.data['distritos'];
+
+				this.cita.department = 12;
+				this.moverProvincias();
+				this.cita.province = 103;
+				this.moverDistritos();
+				this.cita.district = 1006;
+      })
+    },
+		moverProvincias(){
+			let idDepa= this.cita.department;
+			this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == idDepa)
+		},
+		moverDistritos(){
+			let idProv= this.cita.province;
+			this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == idProv)
+		}
   },
+	created (){
+		this.listarDepartamentos();
+	},
+	updated(){
+		//this.cita.department = 12;
+		
+	},
 
   props:{
     profes:Array,
@@ -623,6 +694,8 @@ export default {
 }
 </script>
 
-
-
-
+<style>
+.ajs-message{border-radius: 5px!important;}
+.ajs-success { background-color: rgb(33, 201, 89)!important; }
+.ajs-danger { background-color: rgb(232, 27, 0)!important; color:white!important; }
+</style>

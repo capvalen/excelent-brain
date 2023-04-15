@@ -158,7 +158,7 @@ export default {
 
     closeModal() {
       document.getElementById('cerrModalPatient').click();
-    },
+    }
   },
 
   computed: {

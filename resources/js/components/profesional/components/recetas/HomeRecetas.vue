@@ -40,7 +40,7 @@
     <div class="form-row">
         <div class="col-md-12">
             <label for="">Paciente</label>
-            <input type="text" class="form-control" v-model="name_patient" placeholder="Nombre del Paciente">
+            <input type="text" class="form-control text-capitalize" v-model="name_patient" placeholder="Nombre del Paciente" readonly>
         </div>
     </div>
     <div class="form-row">

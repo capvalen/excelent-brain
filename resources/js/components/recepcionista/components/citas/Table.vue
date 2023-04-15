@@ -190,6 +190,7 @@ import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
 import ModalPagosExtras from './ModalPagosExtras.vue'
 import moment from 'moment'
+import alertify from 'alertifyjs'
 
 
 export default {
@@ -451,14 +452,19 @@ export default {
 
     maxStringCharacter (character, num) {
       return character.substring(0, num) + '...';
-    }
+    },
+		
   },
 
   created () {
     this.listar();
     this.listarprofesional();
   //  this.listarhorario();
+	
+
   },
+	mounted(){
+	},
 
   updated () {
     // this.modalInfo()
@@ -483,4 +489,11 @@ export default {
 	.puntero{
 		cursor: pointer;
 	}
+	
+</style>
+
+<style>
+.ajs-message{border-radius: 5px!important;}
+.ajs-success { background-color: rgb(33, 201, 89)!important; }
+.ajs-danger { background-color: rgb(232, 27, 0)!important; color:white!important; }
 </style>

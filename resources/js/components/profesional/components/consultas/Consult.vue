@@ -16,7 +16,9 @@
                         <span v-if="dataConsult.status" :class='{ "text-success": estadoConsulta.status}'>{{ dataConsult.status != 3 ? 'Pendiente' : 'Anulada' }}</span>
                         <span v-else :class='{ "text-danger": estadoConsulta.status === 3 }'>Cancelado</span>
                       </div>
-                      <router-link class="mb-0 text-capitalize" :to="`/profesional/evoluciones/${dataConsult.patient ? dataConsult.patient.id : null}`">{{ dataConsult.patient ? maxStringCharacter(lowerCase(dataConsult.patient.name), 15) : false}}</router-link>
+                      <router-link class="mb-0 text-capitalize" :to="`/profesional/evoluciones/${dataConsult.patient ? dataConsult.patient.id : null}`">
+												{{dataConsult.patient.name.toLowerCase()}}
+											</router-link>
                       
                       <p class="mb-0" :class="{ 'text-decoration-through': dataConsult.status == 3 }">{{ dataConsult.schedule ? horaHumanaMin(dataConsult.schedule.check_time) : '- : ' }} - {{ dataConsult.schedule ? horaHumanaMin(dataConsult.schedule.departure_date) : '' }} </p>
                   </div>
@@ -37,7 +39,7 @@
                 </a>
                 
                 <!-- Boton de videollamada -->
-                <a :href="dataConsult.link" target="_blank" class="btn btn-consult btn-action" :title="dataConsult.link ? 'Videollamada': 'Sin videollamada'"><i class="fas fa-video"></i></a>
+                <a v-if="dataConsult.link" :href="dataConsult.link" target="_blank" class="btn btn-consult btn-action" :title="dataConsult.link ? 'Videollamada': 'Sin videollamada'"><i class="fas fa-video"></i></a>
 
                 <!-- Boton pdf para generar receta -->
                 <router-link
@@ -148,16 +150,16 @@ export default {
       let minutos = parseInt(hora.substring(3,5))
       hora = parseInt(hora.substring(0,2))
       if (hora > 12) {
-          return `${hora - 12}:${minutos.toString().length === 1 ? '0' + minutos : minutos} PM`
+          return `${hora - 12}:${minutos.toString().length === 1 ? '0' + minutos : minutos} p.m.`
       } else {
         if (hora === 12 && minutos >= 0) {
-            return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} PM`
+            return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} p.m.`
         }
 
         if (hora === 0) {
-            return `12:${minutos.toString().length === 1 ? '0' + minutos : minutos} AM`
+            return `12:${minutos.toString().length === 1 ? '0' + minutos : minutos} a.m.`
         }
-        return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} AM`
+        return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} a.m.`
       }
     },
 

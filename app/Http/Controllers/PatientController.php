@@ -7,8 +7,10 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Prescription;
+use App\Models\Triaje;
 use App\Models\Relative;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class PatientController extends Controller
 {
@@ -32,6 +34,13 @@ class PatientController extends Controller
     public function getPatient ()
     {
         $patient = Patient::with('relative', 'address', 'prescriptions')
+        ->get();
+
+        return response()->json($patient);
+    }
+    public function getLast10Patients (){
+        $patient = Patient::latest('created_at')->take(20)
+				->with('relative', 'address', 'prescriptions')
         ->get();
 
         return response()->json($patient);
@@ -230,4 +239,31 @@ class PatientController extends Controller
             'msg' => 'success'
         ]);
     }
+
+		public function insertarTriaje(Request $request, $id){
+			//print_r($request[0]['campo']);
+			//var_dump( $request[0]);
+			//$temp = $request->all();
+			$paciente = Patient::find($id);
+			$paciente ->update($request[0]);
+
+
+			/* $triaje = new Triaje();
+			$triaje->patient_id = $request[1]['patient_id'];
+			$triaje->motivo = $request[1]['motivo'];
+			$triaje->sintomatologia = $request[1]['sintomatologia'];
+			$triaje->antecedentes = $request[1]['antecedentes'];
+			$triaje->prioridad = $request[1]['prioridad'];
+			$triaje->especialista = $request[1]['especialista']; 
+			$triaje->save(); */
+
+			$triaje = DB::insert('INSERT INTO `triaje`(`patient_id`, `motivo`, `sintomatologia`, `antecedentes`, `prioridad`, `especialista`) VALUES (?,?,?,?,?,?)',
+			[ $request[1]['patient_id'],$request[1]['motivo'],$request[1]['sintomatologia'],$request[1]['antecedentes'],$request[1]['prioridad'], $request[1]['especialista'] ]);
+		
+			$ultimoID = DB::getPdo()->lastInsertId();
+			return response()->json([
+				'mensaje' => $ultimoID
+			]);
+
+		}
 }

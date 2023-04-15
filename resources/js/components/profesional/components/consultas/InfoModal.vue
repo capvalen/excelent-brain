@@ -2,13 +2,13 @@
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header border-0">
                     <h5 class="modal-title" id="infoModalLabel">Consulta Pendiente</h5>
                     <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
                 </div>
 
                 <div class="modal-body">
-                    <table class="table table-striped">
+                    <table class="table table-hover">
                         <tbody v-if="dataModal">
                             <tr>
                                 <td scope="row">ID:</td>
@@ -17,12 +17,12 @@
                             
                             <tr>
                                 <td scope="row">PACIENTE:</td>
-                                <td>{{ dataModal.patient.name }}</td>
+                                <td class="text-capitalize">{{ dataModal.patient.name }}</td>
                             </tr>
 
                             <tr>
                                 <td scope="row">FECHA:</td>
-                                <td>{{ dataModal.date }}</td>
+                                <td>{{ fechaLatam(dataModal.date) }}</td>
                             </tr>
 
                             <tr>
@@ -38,16 +38,13 @@
                         </tbody>
                     </table>
                 </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import moment from 'moment'
     export default {
         data () {
             return {
@@ -56,22 +53,25 @@
         },
 
         methods: {
-            horaHumana (hora) {
-                let minutos = parseInt(hora.substring(3,5))
-                hora = parseInt(hora.substring(0,2))
-                if (hora > 12) {
-                    return `${hora - 12}:${minutos.toString().length === 1 ? '0' + minutos : minutos} PM`
-                } else {
-                    if (hora === 12 && minutos >= 0) {
-                        return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} PM`
-                    }
+					horaHumana (hora) {
+							let minutos = parseInt(hora.substring(3,5))
+							hora = parseInt(hora.substring(0,2))
+							if (hora > 12) {
+									return `${hora - 12}:${minutos.toString().length === 1 ? '0' + minutos : minutos} p.m.`
+							} else {
+									if (hora === 12 && minutos >= 0) {
+											return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} p.m.`
+									}
 
-                    if (hora === 0) {
-                        return `12:${minutos.toString().length === 1 ? '0' + minutos : minutos} AM`
-                    }
-                    return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} AM`
-                }
-            },
+									if (hora === 0) {
+											return `12:${minutos.toString().length === 1 ? '0' + minutos : minutos} a.m.`
+									}
+									return `${hora}:${minutos.toString().length === 1 ? '0' + minutos : minutos} a.m.`
+							}
+					},
+					fechaLatam(fecha){
+						return moment(fecha).format('DD/MM/YYYY');
+					},
         },
 
         props: {

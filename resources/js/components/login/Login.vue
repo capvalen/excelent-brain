@@ -2,7 +2,7 @@
 <div class="container">
 
         <!-- Outer Row -->
-        <div class="row">
+        <div class="row mt-5">
 
             <div class="col-xl-12 col-lg-12 col-md-9">
 
@@ -31,6 +31,7 @@
                                         </div>
                                         <button @click="login" class="btn btn-warning btn-user btn-block">Login</button>
                                         <hr>
+																				<p><small>Versión: {{ version }}</small></p>
                                     </form>
                                 </div>
                             </div>
@@ -50,7 +51,8 @@ export default {
             password:'',
             device_name:'browser'
             },
-            errors:{}
+            errors:{},
+						version: '4.05 Build 23.0415'
         }
     },
     methods: {
@@ -68,3 +70,11 @@ export default {
     }
 }
 </script>
+<style>
+.bg-login-image{
+	background: url('/img/sesion.jpg');
+	background-size: 96%;
+	background-position-x: 20px;
+	background-repeat: no-repeat;
+}
+</style>

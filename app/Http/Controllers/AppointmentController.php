@@ -82,7 +82,9 @@ class AppointmentController extends Controller
 
     public function getprof(){
          return Professional::with('schedules')->where('profession','Psicólogo')
-         ->orWhere('profession','Psiquiatra')->get();
+         ->orWhere('profession','Psiquiatra')
+				 ->orderBy('name', 'asc')
+				 ->get();
     }
 
     public function getschedules(){
@@ -96,6 +98,8 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
+			try {
+
         $paciente_prueba = Patient::where('dni',$request->get('dni'))->first();
 
         $condition = Patient::where('dni', '=', $request->dni)
@@ -111,18 +115,21 @@ class AppointmentController extends Controller
         }
 
         if(!$paciente_prueba){
-            if($request->get('name') != null){
-                $patient = Patient::create([
-                    'name' => $request->get('name'),
-                    'email'=>$request->get('email'),
-                    'dni' => $request->get('dni'),
-                    'phone' => $request->get('phone'),
-                    'birth_date'=>$request->get('birth_date'),
-                    'occupation'=>$request->get('occupation'),
-                    'instruction_degree'=>$request->get('instruction_degree'),
-                    'marital_status'=>$request->get('marital_status')
-                ]);
-            }
+						if($request->get('name') != null){
+							$patient = Patient::create([
+									'name' => trim('  ', ' ' , $request->get('name')),
+									'email'=>$request->get('email'),
+									'dni' => $request->get('dni'),
+									'phone' => $request->get('phone'),
+									'birth_date'=>$request->get('birth_date'),
+									'occupation'=>$request->get('occupation'),
+									'instruction_degree'=>$request->get('instruction_degree'),
+									'marital_status'=>$request->get('marital_status'),
+									'type_dni'=>$request->get('type_dni')
+							]);
+					}
+				
+           
             
             $relative = Relative::create([
               'name'=>'',
@@ -162,6 +169,8 @@ class AppointmentController extends Controller
                 'appointment_id' => $appointment->id
             ]);
         }else{
+				
+
             $appointment = Appointment::create([
                 'professional_id' => $request->get('professional_id'),
                 'date' => $request->get('date'),
@@ -185,10 +194,28 @@ class AppointmentController extends Controller
                 'appointment_id' => $appointment->id
               ]);
 
+						$paciente_actualizar = Patient::find($paciente_prueba->id);
+						$paciente_actualizar->name = trim(str_replace('  ', ' ' , $request->get('name')));
+						$paciente_actualizar->save();
+
+						$direccion = $request->get('address') ?? '';
+						$direccion_paciente = Address::where('patient_id',$paciente_prueba->id)->first();
+						$direccion_paciente->address= $direccion;
+						$direccion_paciente->district= $request->get('district');
+						$direccion_paciente->province= $request->get('province');
+						$direccion_paciente->department= $request->get('department');
+						$direccion_paciente->save();
+						
+
+
         }
+				//echo 'nombre: '. trim(str_replace('  ', ' ' , $request->get('name')));
         return response()->json([
             'cita'=>$appointment
         ]);
+			} catch (\Throwable $th) {
+				echo $th;
+			}
     }
 
     /**
@@ -658,6 +685,13 @@ class AppointmentController extends Controller
             'prices' => $prices
         ]);
     }
+
+		public function getDepartamentos(){
+			$departamentos = DB::table('ubdepartamento')->select('idDepa', 'departamento' )->get();
+			$provincias = DB::table('ubprovincia')->select('idDepa', 'provincia', 'idProv' )->get();
+			$distritos = DB::table('ubdistrito')->select('idDist', 'distrito', 'idProv' )->get();
+			return array( 'departamentos'=>$departamentos, 'provincias' => $provincias, 'distritos'=>$distritos);
+		}
 }
 
 function object_sorter($clave,$orden=null) {
