@@ -117,7 +117,7 @@ class AppointmentController extends Controller
         if(!$paciente_prueba){
 						if($request->get('name') != null){
 							$patient = Patient::create([
-									'name' => trim('  ', ' ' , $request->get('name')),
+									'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
 									'email'=>$request->get('email'),
 									'dni' => $request->get('dni'),
 									'phone' => $request->get('phone'),
