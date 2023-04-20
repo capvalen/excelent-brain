@@ -156,7 +156,7 @@
                   <i class="fab fa-whatsapp"></i>
                   </a>
                   <a 
-                  :href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. https://forms.gle/VbnwkK85sXyoiVN5A`"
+                  :href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
                   target="_blank" 
                   title="Enviar mensaje" 
                   class="btn btn-primary btn-circle btn-sm"
