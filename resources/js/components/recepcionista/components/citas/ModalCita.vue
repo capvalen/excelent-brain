@@ -10,6 +10,8 @@
       <div class="modal-body">
         <form class="user" @submit="insertar" @keydown="prevenirEvent">
          
+					<p class="mb-0"><strong>Datos Personales</strong></p>
+
           <div class="form-group row">
            <div class="col-sm-6">
               <label for="name">Tipo de documento</label>
@@ -33,8 +35,7 @@
 
             <div class="col-sm-6">
               <label for="name">Celular</label>
-              <input v-if="patientNew" readonly type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Celular del paciente">
-              <input v-else type="text" class="form-control" name="phone" id="phone" v-model="cita.phone" placeholder="Celular del paciente">
+              <input type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Celular del paciente">
             </div>           
           </div>
 
@@ -60,7 +61,7 @@
           
 						<div class="col-sm-4">
                 <label for="name">Departamento</label>
-								<select v-model="cita.department" class="form-control" id="department" @change="moverProvincias()">
+								<select v-model="cita.department" class="form-control" id="department" @change="moverProvincias(true)">
 									<option v-for="departamento in ubigeo.departamentos" :value="departamento.idDepa">{{ departamento.departamento }}</option>
 								</select>
             </div>
@@ -81,13 +82,11 @@
           <div class="form-group row">
             <div class="col-sm-6">
                 <label for="name">Fecha de nacimiento</label>
-                <input v-if="patientNew" readonly type="date" class="form-control" name="birth_date" id="birth_date" v-model="cita.birth_date">
-                <input v-else type="date" class="form-control" name="birth_date" id="birth_date" v-model="cita.birth_date">
+                <input type="date" class="form-control" name="birth_date" id="birth_date" v-model="cita.birth_date">
             </div>
             <div class="col-sm-6">
                 <label for="name">Ocupación</label>
-                <input v-if="patientNew" readonly type="text" class="form-control" name="occupation" id="occupation" v-model="cita.occupation"  placeholder="Ocupación del paciente"> 
-                <input v-else type="text" class="form-control" name="occupation" id="occupation" v-model="cita.occupation"  placeholder="Ocupación del paciente"> 
+                <input type="text" class="form-control" name="occupation" id="occupation" v-model="cita.occupation"  placeholder="Ocupación del paciente"> 
             </div>
           </div>
 
@@ -95,15 +94,7 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="marital_status">Estado Civil</label>
-                <select v-if="patientNew" disabled readonly class="form-control" name="marital_status" id="marital_status" v-model="cita.marital_status">
-                  <option value="2">Casado</option>
-                  <option value="5">Conviviente</option>
-                  <option value="4">Divorciado</option>
-                  <option value="1">Soltero</option>
-                  <option value="3">Viudo</option>
-                </select>
-
-                <select v-else class="form-control" name="marital_status" id="marital_status" v-model="cita.marital_status">
+                <select class="form-control" name="marital_status" id="marital_status" v-model="cita.marital_status">
                   <option value="2">Casado</option>
                   <option value="5">Conviviente</option>
                   <option value="4">Divorciado</option>
@@ -116,16 +107,7 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="">Grado de instrucción</label>
-                <select v-if="patientNew" disabled readonly class="form-control" name="instruction_degree" id="instruction_degree" v-model="cita.instruction_degree">
-                  <option value="1">Inicial</option>
-                  <option value="2">Primaria</option>
-                  <option value="3">Secundaria</option>
-                  <option value="4">Superior</option>
-                  <option value="5">Técnico</option>
-                  <option value="6">Sin instrucción</option>
-                </select>
-
-                <select v-else class="form-control" name="instruction_degree" id="instruction_degree" v-model="cita.instruction_degree">
+             		<select class="form-control" name="instruction_degree" id="instruction_degree" v-model="cita.instruction_degree">
                   <option value="1">Inicial</option>
                   <option value="2">Primaria</option>
                   <option value="3">Secundaria</option>
@@ -135,7 +117,9 @@
                 </select>
               </div>
             </div>
-          </div>  
+          </div>
+					<hr>
+					<p class="mb-0"><strong>Datos de la Nueva Cita</strong></p>
 
           <div class="form-group">
             <div class="form-group">
@@ -514,7 +498,7 @@ export default {
 
       this.axios.get("/api/buscar/"+this.cita.dni)
       .then(res => {
-        if (res.data.patient == null) {
+        if (res.data.patient == null) { //Buscar en reniec
 					if(this.cita.type_dni==1){
 						window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
 						this.axios.get(`https://apiperu.dev/api/dni/${this.cita.dni}`)
@@ -542,7 +526,7 @@ export default {
 							console.error(err)
 						})
 					}
-        }else{
+        }else{ //encontro en la DB
           this.$swal.fire({
             title: 'Buscando paciente',
             timer: 10,
@@ -565,7 +549,9 @@ export default {
           this.cita.district = res.data.patient.address.district;
           this.cita.province = res.data.patient.address.province;
           this.cita.department = res.data.patient.address.department;
-          this.patientNew = true
+          this.patientNew = true;
+					this.moverProvincias(false)
+					this.moverDistritos()
         }
       })
       .catch(err => {
@@ -655,16 +641,18 @@ export default {
 				this.ubigeo.provincias = response.data['provincias'];
 				this.ubigeo.distritos = response.data['distritos'];
 
+				this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == 12)
+				this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == 103)
+
 				this.cita.department = 12;
-				this.moverProvincias();
 				this.cita.province = 103;
-				this.moverDistritos();
 				this.cita.district = 1006;
       })
     },
-		moverProvincias(){
+		moverProvincias(borrar){
 			let idDepa= this.cita.department;
 			this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == idDepa)
+			if(borrar) this.cita.district=-1;
 		},
 		moverDistritos(){
 			let idProv= this.cita.province;

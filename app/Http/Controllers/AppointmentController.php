@@ -169,8 +169,6 @@ class AppointmentController extends Controller
                 'appointment_id' => $appointment->id
             ]);
         }else{
-				
-
             $appointment = Appointment::create([
                 'professional_id' => $request->get('professional_id'),
                 'date' => $request->get('date'),
@@ -196,6 +194,18 @@ class AppointmentController extends Controller
 
 						$paciente_actualizar = Patient::find($paciente_prueba->id);
 						$paciente_actualizar->name = trim(str_replace('  ', ' ' , $request->get('name')));
+						$paciente_actualizar->instruction_degree= $request->get('instruction_degree');
+						$paciente_actualizar->phone= $request->get('phone');
+						$paciente_actualizar->birth_date= $request->get('birth_date');
+						$paciente_actualizar->occupation= $request->get('occupation');
+						$paciente_actualizar->marital_status= $request->get('marital_status');
+
+						
+
+
+
+
+
 						$paciente_actualizar->save();
 
 						$direccion = $request->get('address') ?? '';
