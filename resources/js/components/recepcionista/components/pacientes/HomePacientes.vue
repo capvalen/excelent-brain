@@ -133,33 +133,41 @@ export default {
       })
     },
 
-    searchPatients () {
+    async searchPatients () {
       let valueInput = document.getElementById("searchNamePatient").value; 
       if(valueInput === ''){
         this.getPatients()
       }else{
         let coincidenceDni = []
 
-        this.totalPatients = this.dataPatients
-        coincidenceDni = this.totalPatients.filter(el => el.dni == valueInput)        
+				await this.axios.get(`/api/searchPatientByNameDni/${valueInput}`)
+				.then(res => {
+					console.log(res.data);
+					this.totalPatients = res.data;
 
-        if(coincidenceDni.length > 0){
-          this.busqueda = coincidenceDni
-        }else{
-        const words = valueInput.split(' ')
-        words.forEach((word)=>{
-          if(/[0-9]/.test(word)){
-            this.totalPatients = this.totalPatients.filter(el => el.dni != null && el.dni.matches(word) ? el : null)
-            this.busqueda.push(...this.totalPatients)
-          }
-          this.totalPatients = this.totalPatients.filter(el => el.name.match(new RegExp(`${word}`,'ig')) ? el : null)
-          console.log(this.totalPatients)
-          this.busqueda.push(...this.totalPatients)
-          //const coincidence = this.dataPatients.filter(el => el.name.match(new RegExp(`${word}`,'ig')).split(' ') ? el : null)
-          //
-        })        
-        this.busqueda = this.totalPatients    
-        }
+					coincidenceDni = this.totalPatients.filter(el => el.dni == valueInput)        
+
+					if(coincidenceDni.length > 0){
+						this.busqueda = coincidenceDni
+					}else{
+					const words = valueInput.split(' ')
+					words.forEach((word)=>{
+						if(/[0-9]/.test(word)){
+							this.totalPatients = this.totalPatients.filter(el => el.dni != null && el.dni.matches(word) ? el : null)
+							this.busqueda.push(...this.totalPatients)
+						}
+						this.totalPatients = this.totalPatients.filter(el => el.name.match(new RegExp(`${word}`,'ig')) ? el : null)
+						console.log(this.totalPatients)
+						this.busqueda.push(...this.totalPatients)
+						//const coincidence = this.dataPatients.filter(el => el.name.match(new RegExp(`${word}`,'ig')).split(' ') ? el : null)
+						//
+					})        
+					this.busqueda = this.totalPatients    
+					}
+				})
+				.catch(err => {
+					console.error(err)
+				})
       }
     },
 

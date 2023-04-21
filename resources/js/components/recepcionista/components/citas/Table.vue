@@ -294,14 +294,18 @@ export default {
       let search = document.getElementById("searchInputAppointment").value.split('/'),
         nombre = search[0],
         profesional = search[1] || null,
-        fecha = search[2] || null;
+        fecha = search[2] || null,
+				dni = search[0]
+				;
 
       if (nombre === '') return this.listar();
       if (profesional) profesional = profesional.trim();
       if (fecha) fecha = fecha.trim();
+      if (dni) dni = dni.trim();
 
-      await this.axios.get(`/api/searchAppointment/${nombre}/${profesional}/${fecha}`)
+      await this.axios.get(`/api/searchAppointment/${nombre}/${profesional}/${fecha}/${dni}`)
       .then(res => {
+				console.log(res.data);
         this.citas = res.data;
       })
       .catch(err => {

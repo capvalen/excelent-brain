@@ -132,9 +132,9 @@ class AppointmentController extends Controller
            
             
             $relative = Relative::create([
-              'name'=>'',
-              'phone'=>'',
-              'kinship'=>'',
+              'name'=>$request->get('contacto'),
+              'phone'=>$request->get('contacto_celular'),
+              'kinship'=>$request->get('parentenzco'),
               'patient_id' => $patient->id
             ]);
 
@@ -169,7 +169,7 @@ class AppointmentController extends Controller
                 'appointment_id' => $appointment->id
             ]);
         }else{
-            $appointment = Appointment::create([
+					/* $appointment = Appointment::create([
                 'professional_id' => $request->get('professional_id'),
                 'date' => $request->get('date'),
                 'schedule_id' => $request->get('schedule_id'),
@@ -190,23 +190,22 @@ class AppointmentController extends Controller
                 'pay_status'=> 1,
                 'price' => $request->get('price'),
                 'appointment_id' => $appointment->id
-              ]);
-
+              ]); */
+							
 						$paciente_actualizar = Patient::find($paciente_prueba->id);
+						$paciente_actualizar->phone=  $request->get('phone') ?? '';
 						$paciente_actualizar->name = trim(str_replace('  ', ' ' , $request->get('name')));
 						$paciente_actualizar->instruction_degree= $request->get('instruction_degree');
-						$paciente_actualizar->phone= $request->get('phone');
+						$paciente_actualizar->gender= $request->get('gender');
 						$paciente_actualizar->birth_date= $request->get('birth_date');
 						$paciente_actualizar->occupation= $request->get('occupation');
 						$paciente_actualizar->marital_status= $request->get('marital_status');
-
-						
-
-
-
-
-
 						$paciente_actualizar->save();
+
+						$parentezco = Relative::where('patient_id',$paciente_prueba->id)->first();
+						$parentezco->name = $request->get('contacto');
+						$parentezco->phone = $request->get('contacto_celular');
+						$parentezco->kinship = $request->get('parentezco');
 
 						$direccion = $request->get('address') ?? '';
 						$direccion_paciente = Address::where('patient_id',$paciente_prueba->id)->first();
@@ -293,13 +292,12 @@ class AppointmentController extends Controller
      * @param character
      */
 
-    public function searchAppointment ($nombre, $profesional, $fecha)
+    public function searchAppointment ($nombre, $profesional, $fecha, $dni)
     {
 
         $queryAppointments = [];
         $appointments = Appointment::with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
         ->get();
-
 
         foreach($appointments as $appointment) {
             if (preg_match("/$nombre/i", $appointment->patient->name)) {
@@ -321,6 +319,10 @@ class AppointmentController extends Controller
                     array_push($queryAppointments, $appointment);
                 }
             }
+						//comparar si el DNI coincide
+						if( preg_match("/$dni/", $appointment->patient->dni ) ){
+							array_push($queryAppointments, $appointment);
+						}
         }
 
         return response()->json($queryAppointments);

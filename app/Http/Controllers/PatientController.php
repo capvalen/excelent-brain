@@ -45,6 +45,13 @@ class PatientController extends Controller
 
         return response()->json($patient);
     }
+    public function searchPatientByNameDni ($nombre){
+        $patient = Patient::where('name', 'LIKE', $nombre ."%")
+				->with('relative', 'address', 'prescriptions')
+        ->get();
+
+        return response()->json($patient);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -113,8 +120,11 @@ class PatientController extends Controller
     public function buscar($dni)
     {
       $paciente = Patient::where('dni',$dni)->with('address')->first();
+			$relaciones = Relative::where('patient_id', $paciente->id)->first();
+
       return response()->json([
-        'patient'=>$paciente
+        'patient'=>$paciente,
+				'relacion' => $relaciones
       ]);
     }
 

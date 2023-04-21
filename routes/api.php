@@ -67,7 +67,7 @@ Route::resource('appointment', AppointmentController::class)->only(['index', 'st
 Route::get('appointmentKurame/{id}', [AppointmentController::class, 'showKurame']);
 Route::get('appoitmentShow/{idUser}/{idDate}', [AppointmentController::class, 'showConsult']);
 Route::get('appoitmentsReception', [AppointmentController::class, 'indexAppointments']);
-Route::get('searchAppointment/{nombre}/{profesional?}/{fecha?}', [AppointmentController::class, 'searchAppointment']);
+Route::get('searchAppointment/{nombre}/{profesional?}/{fecha?}/{dni}', [AppointmentController::class, 'searchAppointment']);
 Route::get('searchByDateAppointment/{date}',[AppointmentController::class, 'searchByDateAppointment']);
 Route::get('reportsAppointments/{date}', [AppointmentController::class, 'reportsAppointments']);
 Route::get('getPatientsMonth/{date}', [AppointmentController::class, 'getPatientsMonth']);
@@ -78,6 +78,7 @@ Route::resource('appointment/payment', PaymentController::class)->only(['index',
 Route::resource('patient', PatientController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::get('getPatient', [PatientController::class, 'getPatient']);
 Route::get('getLast10Patients', [PatientController::class, 'getLast10Patients']);
+Route::get('searchPatientByNameDni/{nombre}', [PatientController::class, 'searchPatientByNameDni']);
 Route::get('returnTotalPatients', [PatientController::class, 'returnTotalPatients']);
 
 Route::resource('kairos', KairoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);

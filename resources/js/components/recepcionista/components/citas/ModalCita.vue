@@ -35,25 +35,20 @@
 
             <div class="col-sm-6">
               <label for="name">Celular</label>
-              <input type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Celular del paciente">
+              <input type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Celular del paciente" autocomplete="off">
             </div>           
           </div>
 
           <div class="form-group">
               <label for="name">Paciente</label>
-              <input  type="text" class="form-control" id="name" v-model="cita.name" placeholder="Nombre del paciente">
+              <input  type="text" class="form-control" id="name" v-model="cita.name" placeholder="Nombre del paciente" autocomplete="off">
               <!-- <input v-else type="text" class="form-control"  name="name" id="name" v-model="cita.name" placeholder="Nombre del paciente"> -->
           </div>
 
           <div class="form-group row">                   
             <div class="col-sm-12">
               <label for="name">Dirección de paciente</label>
-              <input type="text" class="form-control" name="address" id="address" v-model="cita.address" placeholder="Dirección del paciente">
-            </div>
-            <div class="col-sm-6 d-none">
-              <label for="name">Email de paciente</label>
-              <input v-if="patientNew" readonly type="email" class="form-control" id="email" v-model="cita.email"  placeholder="Email de paciente"> 
-              <input v-else type="email" class="form-control" name="email" id="email" v-model="cita.email"  placeholder="Email de paciente"> 
+              <input type="text" class="form-control" name="address" id="address" v-model="cita.address" placeholder="Dirección del paciente" autocomplete="off">
             </div>
           </div>
 
@@ -80,19 +75,11 @@
           </div>
           
           <div class="form-group row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <label for="name">Fecha de nacimiento</label>
                 <input type="date" class="form-control" name="birth_date" id="birth_date" v-model="cita.birth_date">
             </div>
-            <div class="col-sm-6">
-                <label for="name">Ocupación</label>
-                <input type="text" class="form-control" name="occupation" id="occupation" v-model="cita.occupation"  placeholder="Ocupación del paciente"> 
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <div class="col-sm-6">
-              <div class="form-group">
+						<div class="col-sm-4">
                 <label for="marital_status">Estado Civil</label>
                 <select class="form-control" name="marital_status" id="marital_status" v-model="cita.marital_status">
                   <option value="2">Casado</option>
@@ -101,11 +88,8 @@
                   <option value="1">Soltero</option>
                   <option value="3">Viudo</option>
                 </select>
-              </div>
             </div>
-            
-            <div class="col-sm-6">
-              <div class="form-group">
+             <div class="col-sm-4">
                 <label for="">Grado de instrucción</label>
              		<select class="form-control" name="instruction_degree" id="instruction_degree" v-model="cita.instruction_degree">
                   <option value="1">Inicial</option>
@@ -115,7 +99,37 @@
                   <option value="5">Técnico</option>
                   <option value="6">Sin instrucción</option>
                 </select>
-              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="name">Ocupación</label>
+                <input type="text" class="form-control" name="occupation" id="occupation" v-model="cita.occupation"  placeholder="Ocupación del paciente" autocomplete="off"> 
+            </div>
+            <div class="col-sm-6">
+              <label for="name">Género</label>
+							<select class="form-control" id="sexo" v-model="cita.gender">
+								<option value="2">Sin definir</option>
+								<option value="0">Femenino</option>
+								<option value="1">Masculino</option>
+							</select>
+            </div>
+          </div>
+					<hr>
+					<p class="mb-0"><strong>Datos de Contacto</strong></p>
+					<div class="form-group row">
+            <div class="col-sm-4">
+							<label for="name">Contacto</label>
+							<input type="text" class="form-control" name="contacto" id="contacto" v-model="cita.contacto"  placeholder="Contacto"> 
+            </div>
+            <div class="col-sm-4">
+							<label for="name">Celular</label>
+							<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="cita.contacto_celular"  placeholder="Celular">
+            </div>
+            <div class="col-sm-4">
+							<label for="name">Parentenzco</label>
+							<input type="text" class="form-control" name="parentenzco" id="parentenzco" v-model="cita.parentenzco"  placeholder="Celular">
             </div>
           </div>
 					<hr>
@@ -354,7 +368,7 @@ export default {
         birth_date:'',
         occupation:'',
         marital_status:1,
-        instruction_degree:'',
+        instruction_degree: 6,
         relative_name:'',
         relatine_phone:'',
         kinship:'',
@@ -362,6 +376,7 @@ export default {
         schedule_id:'',
         date: dateNow(),
         clasification:'',
+				gender:2,
         price:0,
         type:'',
         patient_condition:'',
@@ -373,7 +388,8 @@ export default {
         pay_status:'1',
         status:'',
         type_amount:1,
-				type_dni:1
+				type_dni:1,
+				contacto: '', contacto_celular: '', parentenzco:''
       },
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
 			provincias:[], distritos:[],
@@ -406,6 +422,7 @@ export default {
 				formData.append('province', this.cita.province);
 				formData.append('district', this.cita.district);
 				formData.append('birth_date', this.cita.birth_date);
+				formData.append('gender', parseInt(this.cita.gender));
 				formData.append('occupation', this.cita.occupation);
 				formData.append('marital_status', this.cita.marital_status);
 				formData.append('instruction_degree', this.cita.instruction_degree);
@@ -453,7 +470,8 @@ export default {
 			this.cita.district= 1006;
 			this.cita.birth_date= '';
 			this.cita.occupation= '';
-			this.cita.instruction_degree= '';
+			this.cita.instruction_degree= 6;
+			this.cita.gender= 2;
 			this.cita.marital_status= 1;
 			this.cita.relative_name= '';
 			this.cita.relatine_phone= '';
@@ -473,6 +491,7 @@ export default {
 			this.cita.pay_status= '';
       this.cita.status= '';
 			this.cita.type_amount=1;
+			this.contacto= ''; this.contacto_celular= '';; this.parentenzco='';
 
     },
 
@@ -544,11 +563,15 @@ export default {
           this.cita.birth_date = res.data.patient.birth_date;
           this.cita.marital_status = res.data.patient.marital_status;
           this.cita.instruction_degree = res.data.patient.instruction_degree;
+          this.cita.gender = res.data.patient.gender;
           this.cita.occupation = res.data.patient.occupation;
           this.cita.address = res.data.patient.address.address;
-          this.cita.district = res.data.patient.address.district;
-          this.cita.province = res.data.patient.address.province;
           this.cita.department = res.data.patient.address.department;
+          this.cita.province = res.data.patient.address.province;
+          this.cita.district = res.data.patient.address.district;
+					this.cita.contacto = res.data.relacion.name;
+					this.cita.contacto_celular = res.data.relacion.phone;
+					this.cita.parentenzco = res.data.relacion.kinship;
           this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()
@@ -593,7 +616,8 @@ export default {
       this.cita.birth_date = '';
       this.cita.occupation = '';
       this.cita.marital_status = '';
-      this.cita.instruction_degree = '';
+      this.cita.instruction_degree = 6;
+      this.cita.gender = 2;
       this.cita.relative_name = '';
       this.cita.relatine_phone = '';
       this.cita.kinship = '';
@@ -606,8 +630,10 @@ export default {
       this.cita.patient_condition = '';
       this.cita.recomendation = '';
 			this.cita.type_amount=1;
+			this.contacto= ''; this.contacto_celular= ''; this.parentenzco='';
 
-      
+      this.moverProvincias(false)
+			this.moverDistritos()
       // value ? this.cita.mode = '' : false;
       
       this.cita.voucher = '';
@@ -647,6 +673,8 @@ export default {
 				this.cita.department = 12;
 				this.cita.province = 103;
 				this.cita.district = 1006;
+				this.moverProvincias(false)
+				this.moverDistritos()
       })
     },
 		moverProvincias(borrar){
