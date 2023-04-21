@@ -120,7 +120,7 @@
 					<p class="mb-0"><strong>Datos de Contacto</strong></p>
 					<div class="form-group row">
             <div class="col-sm-4">
-							<label for="name">Contacto</label>
+							<label for="name">Nombre</label>
 							<input type="text" class="form-control" name="contacto" id="contacto" v-model="cita.contacto"  placeholder="Contacto"> 
             </div>
             <div class="col-sm-4">
@@ -274,9 +274,7 @@
                     <option value="2">Antiguo</option>
                   </select>
               </div>
-            </div>  
-
-            
+            </div>
           </div>
 
           <div class="form-group row">
@@ -298,8 +296,8 @@
 					</div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Registrar</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Registrar</button>
           </div>
         </form>
       </div>

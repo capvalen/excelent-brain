@@ -62,7 +62,9 @@
           v-for="(cita, index) in citas"
           :key="index"
           >
-            <td class="text-capitalize puntero" :title="cita.patient ? cita.patient.name : '...'" @click="modalInfo(cita)" data-toggle="modal" data-target="#patientModal"><i class="fas fa-brain"></i> {{ cita.patient ? lowerCase(cita.patient.name) : '..' }}</td>
+            <td class="text-capitalize puntero" :title="cita.patient ? cita.patient.name : '...'" @click="modalInfo(cita)" data-toggle="modal" data-target="#patientModal">
+							<span><i class="fas fa-brain"></i>  {{index+1}}.</span> <span>{{ cita.patient ? lowerCase(cita.patient.name) : '..' }}</span>
+						</td>
             <td class="text-capitalize" :title="cita.professional ? cita.professional.name : '...'">{{ cita.professional ? maxStringCharacter(lowerCase(cita.professional.name), 15) : '...' }}</td>
             <td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">{{ cita.date ? fechaLatam(cita.date) : '...' }}</td>
             <td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">

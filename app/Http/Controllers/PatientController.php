@@ -46,8 +46,10 @@ class PatientController extends Controller
         return response()->json($patient);
     }
     public function searchPatientByNameDni ($nombre){
-        $patient = Patient::where('name', 'LIKE', $nombre ."%")
+        $patient = Patient::where('name', 'LIKE', "%".$nombre ."%")
+				->orWhere('dni', $nombre )
 				->with('relative', 'address', 'prescriptions')
+				->orderBy('name', 'asc')
         ->get();
 
         return response()->json($patient);

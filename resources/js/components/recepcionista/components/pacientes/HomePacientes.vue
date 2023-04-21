@@ -12,9 +12,8 @@
                 type="text"
                 class="form-control bg-white shadow-sm border-0 small"
                 id="searchNamePatient"
-                placeholder="Buscar..."
-                aria-label="Search"
-                aria-describedby="basic-addon2"
+                placeholder="Buscar por apellidos, nombres o DNI..."
+                aria-describedby="basic-addon2" @keyup.enter="searchPatients()"
                 >
             </div>
         </div>
@@ -23,7 +22,7 @@
     <table class="table table-striped mt-4">
       <thead>
         <tr>
-          <th>#</th>
+          <th>N°</th>
           <th>Nombre y apellidos</th>
           <th>Triaje</th>
           <th>Faltas</th>
@@ -36,7 +35,7 @@
         v-for="(patients, index) in busqueda"
         :key = "index"
         >
-          <th>{{ patients.id }}</th>
+          <th>{{ index+1 }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
 					<td>
 						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
