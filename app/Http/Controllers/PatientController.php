@@ -14,243 +14,252 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $patient = Patient::with('initial_psychiatric_history', 'initial_psychological_history')
-            ->whereNotNull('dni')
-            ->get();
-        return response()->json($patient);
-    }
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
+		$patient = Patient::with('initial_psychiatric_history', 'initial_psychological_history')
+			->whereNotNull('dni')
+			->get();
+		return response()->json($patient);
+	}
 
-    /**
-     * Return all patient with recipes and addrres
-     */
+	/**
+	 * Return all patient with recipes and addrres
+	 */
 
-    public function getPatient ()
-    {
-        $patient = Patient::with('relative', 'address', 'prescriptions')
-        ->get();
+	public function getPatient ()
+	{
+		$patient = Patient::with('relative', 'address', 'prescriptions')
+		->get();
 
-        return response()->json($patient);
-    }
-    public function getLast10Patients (){
-        $patient = Patient::latest('created_at')->take(20)
-				->with('relative', 'address', 'prescriptions')
-        ->get();
+		return response()->json($patient);
+	}
+	public function getLast10Patients (){
+		$patient = Patient::with('relative', 'address', 'prescriptions')
+		->latest('created_at')->take(20)
+		->get();
 
-        return response()->json($patient);
-    }
-    public function searchPatientByNameDni ($nombre){
-        $patient = Patient::where('name', 'LIKE', "%".$nombre ."%")
+		return response()->json($patient);
+	}
+	public function searchPatientByNameDni ($nombre){
+		$patient = Patient::where('name', 'LIKE', "%".$nombre ."%")
 				->orWhere('dni', $nombre )
 				->with('relative', 'address', 'prescriptions')
 				->orderBy('name', 'asc')
-        ->get();
+		->get();
 
-        return response()->json($patient);
-    }
+		return response()->json($patient);
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
 
-    }
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $patient = Patient::find($id);
-        return response()->json($patient);
-    }
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$patient = Patient::find($id);
+		return response()->json($patient);
+	}
 
-    /**
-     * Search patients take 6
-     */
+	/**
+	 * Search patients take 6
+	 */
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request,  Patient $patient)
-    {
-        $patient->update($request->all());
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request,  Patient $patient)
+	{
+		$patient->update($request->all());
 
-        // $patient->relative->update([
-        //     'name' => $request->input('relative.name'),
-        //     'phone' => $request->input('relative.phone'),
-        //     'kinship' => $request->input('relative.kinship'),
-        // ]);
+		// $patient->relative->update([
+		//     'name' => $request->input('relative.name'),
+		//     'phone' => $request->input('relative.phone'),
+		//     'kinship' => $request->input('relative.kinship'),
+		// ]);
 
-        $patient->address->update([
-            'district' => $request->input('address.district'),
-            'address' => $request->input('address.address'),
-            'province' => $request->input('address.province'),
-            'department' => $request->input('address.department'),
-        ]);
+		$patient->address->update([
+			'district' => $request->input('address.district'),
+			'address' => $request->input('address.address'),
+			'province' => $request->input('address.province'),
+			'department' => $request->input('address.department'),
+		]);
 
-        return response()->json(['mensaje' => 'success']);
-    }
+		return response()->json(['mensaje' => 'success']);
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-    public function buscar($dni)
-    {
-      $paciente = Patient::where('dni',$dni)->with('address')->first();
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		//
+	}
+	public function buscar($dni)
+	{
+	  $paciente = Patient::where('dni',$dni)->with('address')->first();
+	 
+		//code...
+		if( $paciente ){
 			$relaciones = Relative::where('patient_id', $paciente->id)->first();
-
-      return response()->json([
-        'patient'=>$paciente,
+			return response()->json([
+				'patient'=>$paciente,
 				'relacion' => $relaciones
-      ]);
-    }
+				]);
+		}else{
+			return response()->json([ 'patient'=>$paciente ]);
+		}
+	
+			
 
-    public function showEvolution ($idPaciente) {
-        $evoluciones = Patient::where('id',$idPaciente)
-        ->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'medical_evolutions', 'appointments', 'prescriptions')
-        ->with('medical_evolutions.professional')
-        ->first();
+	  
+	}
 
-        return response()->json($evoluciones);
-    }
+	public function showEvolution ($idPaciente) {
+		$evoluciones = Patient::where('id',$idPaciente)
+		->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'medical_evolutions', 'appointments', 'prescriptions')
+		->with('medical_evolutions.professional')
+		->first();
 
-    public function getNamePatient($id){
-        $patient = Patient::find($id);
-        $last_recipe = Prescription::where('patient_id',$id)->orderBy('id','desc')->first();
-        if($last_recipe){
-            $data_last_recipe = $last_recipe->kairos()->withPivot('amount','way','indications')->get();
-                        return response()->json([
-                            'patient' => $patient,
-                            'last_recipe' => $data_last_recipe
-                        ]);
-        }else{
-            return response()->json($patient);
-        }
-    }
+		return response()->json($evoluciones);
+	}
 
-    public function getNames(){
-        $patients = Patient::all();
-        return $patients;
-    }
+	public function getNamePatient($id){
+		$patient = Patient::find($id);
+		$last_recipe = Prescription::where('patient_id',$id)->orderBy('id','desc')->first();
+		if($last_recipe){
+			$data_last_recipe = $last_recipe->kairos()->withPivot('amount','way','indications')->get();
+						return response()->json([
+							'patient' => $patient,
+							'last_recipe' => $data_last_recipe
+						]);
+		}else{
+			return response()->json($patient);
+		}
+	}
 
-    public function getNameExam($id){
-        $appointment = Appointment::where('id',$id)->first();
-        $patient = $appointment->patient()->first();
+	public function getNames(){
+		$patients = Patient::all();
+		return $patients;
+	}
 
-        return $patient;
-    }
+	public function getNameExam($id){
+		$appointment = Appointment::where('id',$id)->first();
+		$patient = $appointment->patient()->first();
 
-    /**
-     * Generate Xlsx for patient, in the rol recepcion
-     * @param date
-     */
+		return $patient;
+	}
 
-    public function createXlsx ($date)
-    {
-        
-        $dataPatients = Appointment::where('date', '=', $date)
-        ->with('professional','patient','schedule', 'payment', 'patient.address','patient.relative')
-        ->get();
-        // return $dataPatients;
+	/**
+	 * Generate Xlsx for patient, in the rol recepcion
+	 * @param date
+	 */
 
-        return view('recepcion.excel', compact('dataPatients'));
-    }
+	public function createXlsx ($date)
+	{
+		
+		$dataPatients = Appointment::where('date', '=', $date)
+		->with('professional','patient','schedule', 'payment', 'patient.address','patient.relative')
+		->get();
+		// return $dataPatients;
 
-    public function monthXlsx ($date){
-        $dataPatients = Appointment::where('date', 'like', $date.'%')
-        ->with('professional','patient','schedule', 'payment', 'patient.address','patient.relative')
-        ->get();
+		return view('recepcion.excel', compact('dataPatients'));
+	}
 
-        return view('recepcion.excel', compact('dataPatients'));
-    }
+	public function monthXlsx ($date){
+		$dataPatients = Appointment::where('date', 'like', $date.'%')
+		->with('professional','patient','schedule', 'payment', 'patient.address','patient.relative')
+		->get();
 
-    /**
-     * Return patients total cant 
-     * @param any
-     */
+		return view('recepcion.excel', compact('dataPatients'));
+	}
 
-    public function returnTotalPatients () {
-        $month = date('m');
-        $cantTotal = DB::table('appointments')
-            ->distinct('patient_id')
-            ->where('date', 'like','%-'.$month.'-%')
-            ->pluck('patient_id')
-            ->count();
-            
-        return response()->json($cantTotal);
-    }
+	/**
+	 * Return patients total cant 
+	 * @param any
+	 */
 
-    public function discharge($id){
-        $patient = Patient::find($id);
-        $patient->update([
-            'discharge' => 1
-        ]);
-        return response()->json([
-            'msg'=> 'success'
-        ]);
-    }
+	public function returnTotalPatients () {
+		$month = date('m');
+		$cantTotal = DB::table('appointments')
+			->distinct('patient_id')
+			->where('date', 'like','%-'.$month.'-%')
+			->pluck('patient_id')
+			->count();
+			
+		return response()->json($cantTotal);
+	}
 
-    public function agePerMonth($month){
-        $patients = Patient::where('created_at','like','%2022-'.$month.'%')
-                            //->where('birth_date','<','2004-01-01')
-                            ->where('birth_date','>','2010-01-01')
-                            ->get();
-        return $patients->count();
-    }
+	public function discharge($id){
+		$patient = Patient::find($id);
+		$patient->update([
+			'discharge' => 1
+		]);
+		return response()->json([
+			'msg'=> 'success'
+		]);
+	}
 
-    public function noBirthday(){
-        $noBirthdays = Patient::where('birth_date',null)
-                                ->with('initial_psychiatric_history')
-                                ->with('initial_psychological_history')
-                                ->with('medical_evolutions')
-                                ->get();
+	public function agePerMonth($month){
+		$patients = Patient::where('created_at','like','%2022-'.$month.'%')
+							//->where('birth_date','<','2004-01-01')
+							->where('birth_date','>','2010-01-01')
+							->get();
+		return $patients->count();
+	}
 
-        return $noBirthdays;
-    }
+	public function noBirthday(){
+		$noBirthdays = Patient::where('birth_date',null)
+								->with('initial_psychiatric_history')
+								->with('initial_psychological_history')
+								->with('medical_evolutions')
+								->get();
 
-    public function test(){
-        $patients = Patient::withCount('medical_evolutions')
-                            ->orderBy('medical_evolutions_count','desc')
-                            ->get();
-        
-        return $patients;
-    }
+		return $noBirthdays;
+	}
 
-    public function updateFaults($id,$faults){
-        $patient = Patient::find($id);
-        $patient->update([
-            'faults' => $faults+1
-        ]);
+	public function test(){
+		$patients = Patient::withCount('medical_evolutions')
+							->orderBy('medical_evolutions_count','desc')
+							->get();
+		
+		return $patients;
+	}
 
-        return response()->json([
-            'msg' => 'success'
-        ]);
-    }
+	public function updateFaults($id,$faults){
+		$patient = Patient::find($id);
+		$patient->update([
+			'faults' => $faults+1
+		]);
+
+		return response()->json([
+			'msg' => 'success'
+		]);
+	}
 
 		public function insertarTriaje(Request $request, $id){
 			//print_r($request[0]['campo']);

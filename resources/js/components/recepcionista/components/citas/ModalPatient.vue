@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"> Datos del Paciente</h5>
+          <h5 class="modal-title" id="exampleModalLabel"> Datos del Paciente para actualizar</h5>
           <button type="button" id="cerrModalPatient" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
