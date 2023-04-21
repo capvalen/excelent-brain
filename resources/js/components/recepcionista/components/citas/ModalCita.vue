@@ -27,8 +27,8 @@
               <label v-if="cita.type_dni==1" for="name">D.N.I.</label>
               <label v-else for="name">Doc. Extranjero</label>
               <div class="form-inline">
-                <input v-if="cita.type_dni==1" type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="DNI del paciente">
-                <input v-else type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="Código de extranjería">
+                <input v-if="cita.type_dni==1" type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="DNI del paciente" autocomplete="off">
+                <input v-else type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="Código de extranjería" autocomplete="off">
                 <a @click="reniec" class="btnReniec btn btn-info"><i class="fas fa-search"></i></a>
               </div>  
             </div>
@@ -121,15 +121,15 @@
 					<div class="form-group row">
             <div class="col-sm-4">
 							<label for="name">Nombre</label>
-							<input type="text" class="form-control" name="contacto" id="contacto" v-model="cita.contacto"  placeholder="Contacto"> 
+							<input type="text" class="form-control" name="contacto" id="contacto" v-model="cita.contacto"  placeholder="Contacto" autocomplete="off">
             </div>
             <div class="col-sm-4">
 							<label for="name">Celular</label>
-							<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="cita.contacto_celular"  placeholder="Celular">
+							<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="cita.contacto_celular"  placeholder="Celular" autocomplete="off">
             </div>
             <div class="col-sm-4">
-							<label for="name">Parentenzco</label>
-							<input type="text" class="form-control" name="parentenzco" id="parentenzco" v-model="cita.parentenzco"  placeholder="Celular">
+							<label for="name">parentezco</label>
+							<input type="text" class="form-control" name="parentezco" id="parentezco" v-model="cita.parentezco"  placeholder="Parentezco" autocomplete="off">
             </div>
           </div>
 					<hr>
@@ -172,39 +172,35 @@
             </div>
               
             <div class="col-sm-6">
-              <div class="form-group">                            
-                <label for="">Horario del profesional</label>
-                <select class="form-control" name="schedule_id" id="schedule_id" v-model="cita.schedule_id">
-                  <option value="" disabled selected>Seleccione Horario</option>
-                  <option 
-                  v-for="hora in horas" :key="hora.id" 
-                  v-if="hora" 
-                  :value="hora.id"
-                  >
-                  {{ hora.check_time }} - {{ hora.departure_date }}
-                  </option>
-                </select>
-              </div>
+							<label for="">Horario del profesional</label>
+							<select class="form-control" name="schedule_id" id="schedule_id" v-model="cita.schedule_id">
+								<option value="" disabled selected>Seleccione Horario</option>
+								<option 
+								v-for="hora in horas" :key="hora.id" 
+								v-if="hora" 
+								:value="hora.id"
+								>
+								{{ hora.check_time }} - {{ hora.departure_date }}
+								</option>
+							</select>
             </div>
           </div>
 
           <div class="form-group row">
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label for="">Clasificación de Consulta</label>
-                <select 
-                class="form-control" 
-                name="clasification" 
-                id="clasification" 
-                v-model="cita.clasification"
-                @change="dynamicPrice()"
-                >
-                  <option value="1">Psiquiatrica</option>
-                  <option value="2">Psicológica</option>
-                  <option value="3">Certificado</option>
-                  <option value="4">Kurame</option>
-                </select>
-              </div>
+					<div class="col-sm-6">
+							<label for="">Clasificación de Consulta</label>
+							<select 
+							class="form-control" 
+							name="clasification" 
+							id="clasification" 
+							v-model="cita.clasification"
+							@change="dynamicPrice()"
+							>
+								<option value="1">Psiquiatrica</option>
+								<option value="2">Psicológica</option>
+								<option value="3">Certificado</option>
+								<option value="4">Kurame</option>
+							</select>
             </div>
 
             <!-- <div class="col-sm-6">
@@ -217,63 +213,57 @@
               </div>
             </div> -->
             <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="">Tipo</label>
-                  <select 
-                  class="form-control" 
-                  name="type" 
-                  id="type" 
-                  v-model="cita.type"
-                  @change="dynamicPrice()"
-                  >
-                    <option value="1">Terapia inicial niño / adolescente</option>
-                    <option value="2">Terapia inicial adulto</option>
-                    <option value="3">Terapia inicial pareja</option>
-                    <option value="4">Terapia inicial familiar</option>
-                    <option value="5">Terapia continua niño / adolescente</option>
-                    <option value="6">Terapia continua adulto</option>
-                    <option value="7">Terapia continua pareja</option>
-                    <option value="8">Terapia continua familiar</option>
-                    <option value="9">Orientación vocacional</option>
-                    <option value="10">Sucamec inicial</option>
-                    <option value="11">Sucamec renovación</option>
-                    <option value="12">Kurame</option>
-                  </select>
-                </div>
+							<label for="">Tipo</label>
+							<select 
+							class="form-control" 
+							name="type" 
+							id="type" 
+							v-model="cita.type"
+							@change="dynamicPrice()"
+							>
+								<option value="1">Terapia inicial niño / adolescente</option>
+								<option value="2">Terapia inicial adulto</option>
+								<option value="3">Terapia inicial pareja</option>
+								<option value="4">Terapia inicial familiar</option>
+								<option value="5">Terapia continua niño / adolescente</option>
+								<option value="6">Terapia continua adulto</option>
+								<option value="7">Terapia continua pareja</option>
+								<option value="8">Terapia continua familiar</option>
+								<option value="9">Orientación vocacional</option>
+								<option value="10">Sucamec inicial</option>
+								<option value="11">Sucamec renovación</option>
+								<option value="12">Kurame</option>
+							</select>
             </div>
           </div>
 
           <div class="form-group row">
             <div class="col-sm-6">
-              <div class="form-group">
-                  <label for="">Modo</label>
-                  <select 
-                  class="form-control" 
-                  name="mode" 
-                  id="mode" 
-                  v-model="cita.mode"
-                  @change="dynamicPrice()"
-                  >
-                    <option value="1" selected>Presencial</option>
-                    <option value="2">Virtual</option>
-                  </select>
-              </div>
+							<label for="">Modo</label>
+							<select 
+							class="form-control" 
+							name="mode" 
+							id="mode" 
+							v-model="cita.mode"
+							@change="dynamicPrice()"
+							>
+								<option value="1" selected>Presencial</option>
+								<option value="2">Virtual</option>
+							</select>
             </div>
             
             <div class="col-sm-6">
-              <div class="form-group">
-                  <label for="">Tipo de Monto</label>
-                  <select 
-                  class="form-control" 
-                  name="mode" 
-                  id="type_amount" 
-                  v-model="cita.type_amount"
-                  @change="dynamicPrice()"
-                  >
-                    <option value="1" selected>Nuevo</option>
-                    <option value="2">Antiguo</option>
+							<label for="">Tipo de Monto</label>
+							<select 
+							class="form-control" 
+							name="mode" 
+							id="type_amount" 
+							v-model="cita.type_amount"
+							@change="dynamicPrice()"
+							>
+								<option value="1" selected>Nuevo</option>
+								<option value="2">Antiguo</option>
                   </select>
-              </div>
             </div>
           </div>
 
@@ -387,7 +377,7 @@ export default {
         status:'',
         type_amount:1,
 				type_dni:1,
-				contacto: '', contacto_celular: '', parentenzco:''
+				contacto: '', contacto_celular: '', parentezco:''
       },
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
 			provincias:[], distritos:[],
@@ -435,6 +425,9 @@ export default {
 				formData.append('mode', this.cita.mode);
 				formData.append('link', this.cita.link);
 				formData.append('type_dni', this.cita.type_dni);
+				formData.append('contacto', this.cita.contacto);
+				formData.append('contacto_celular', this.cita.contacto_celular);
+				formData.append('parentezco', this.cita.parentezco);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => {
 					console.log(response.data)
@@ -489,7 +482,7 @@ export default {
 			this.cita.pay_status= '';
       this.cita.status= '';
 			this.cita.type_amount=1;
-			this.contacto= ''; this.contacto_celular= '';; this.parentenzco='';
+			this.contacto= ''; this.contacto_celular= '';; this.parentezco='';
 
     },
 
@@ -561,7 +554,7 @@ export default {
           this.cita.birth_date = res.data.patient.birth_date;
           this.cita.marital_status = res.data.patient.marital_status;
           this.cita.instruction_degree = res.data.patient.instruction_degree;
-          this.cita.gender = res.data.patient.gender;
+          this.cita.gender = isNaN(res.data.patient.gender) ? res.data.patient.gender : 2;
           this.cita.occupation = res.data.patient.occupation;
           this.cita.address = res.data.patient.address.address;
           this.cita.department = res.data.patient.address.department;
@@ -569,7 +562,7 @@ export default {
           this.cita.district = res.data.patient.address.district;
 					this.cita.contacto = res.data.relacion.name;
 					this.cita.contacto_celular = res.data.relacion.phone;
-					this.cita.parentenzco = res.data.relacion.kinship;
+					this.cita.parentezco = res.data.relacion.kinship;
           this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()
@@ -628,7 +621,7 @@ export default {
       this.cita.patient_condition = '';
       this.cita.recomendation = '';
 			this.cita.type_amount=1;
-			this.contacto= ''; this.contacto_celular= ''; this.parentenzco='';
+			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 
       this.moverProvincias(false)
 			this.moverDistritos()

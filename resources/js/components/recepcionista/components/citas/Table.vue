@@ -175,7 +175,7 @@
       </table>
     </div>
 
-    <pago-modal  v-if="cita" :dataCit="cita"></pago-modal>
+    <pago-modal  v-if="cita" :cita="cita"></pago-modal>
     <modal-estado  v-if="cita" :dataCit="cita"></modal-estado>
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <info-modal v-if="cita" :dataCit="cita"></info-modal>

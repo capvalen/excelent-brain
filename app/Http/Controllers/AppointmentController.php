@@ -193,20 +193,21 @@ class AppointmentController extends Controller
               ]);
 							
 						$paciente_actualizar = Patient::find($paciente_prueba->id);
-						$paciente_actualizar->phone=  $request->get('phone') ?? '';
+						$paciente_actualizar->phone=  $request->get('phone') =='' ? $request->get('phone') : null;
 						$paciente_actualizar->name = trim(str_replace('  ', ' ' , $request->get('name')));
-						$paciente_actualizar->instruction_degree= $request->get('instruction_degree');
-						$genero = $request->get('gender') || $request->get('gender')=='' ?? 2;
+						$paciente_actualizar->instruction_degree= $request->get('instruction_degree') ?? 6;
+						$genero = $request->get('gender') ?? 2;
 						$paciente_actualizar->gender= $genero;
-						$paciente_actualizar->birth_date= $request->get('birth_date');
-						$paciente_actualizar->occupation= $request->get('occupation');
-						$paciente_actualizar->marital_status= $request->get('marital_status');
+						$paciente_actualizar->birth_date= $request->get('birth_date') =='' ? $request->get('birth_date') : null;
+						$paciente_actualizar->occupation= $request->get('occupation') =='' ? $request->get('occupation') : null;
+						$paciente_actualizar->marital_status= $request->get('marital_status') ?? 1;
 						$paciente_actualizar->save();
 
 						$parentezco = Relative::where('patient_id',$paciente_prueba->id)->first();
-						$parentezco->name = $request->get('contacto');
-						$parentezco->phone = $request->get('contacto_celular');
-						$parentezco->kinship = $request->get('parentezco');
+						$parentezco->name = $request->get('contacto') =='' ? $request->get('contacto') : null;
+						$parentezco->phone = $request->get('contacto_celular') =='' ? $request->get('contacto_celular') : null;
+						$parentezco->kinship = $request->get('parentezco') =='' ? $request->get('parentezco') : null;
+						$parentezco->save();
 
 						$direccion = $request->get('address') ?? '';
 						$direccion_paciente = Address::where('patient_id',$paciente_prueba->id)->first();
@@ -215,7 +216,6 @@ class AppointmentController extends Controller
 						$direccion_paciente->province= $request->get('province');
 						$direccion_paciente->department= $request->get('department');
 						$direccion_paciente->save();
-						
 
 
         }
