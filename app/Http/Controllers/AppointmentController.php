@@ -394,16 +394,17 @@ class AppointmentController extends Controller
 	 */
 	public function update(Request $request, Appointment $appointment)
 	{
-		$appointment->update($request->all());
+		//$appointment->update($request->all());
+		$appointment->where('patient_id', $request->input('dataCita.id'));
 
 		$appointment->payment->update([
-			'observation' => $request->input('payment.observation'),
-			'price' => $request->input('payment.price'),
-			'voucher_issued' => $request->input('payment.voucher_issued'),
-			'pay_status' => $request->input('payment.pay_status'),
-			'payment_method' => $request->input('payment.payment_method'),
-			'voucher' => $request->input('payment.voucher'),
-			'bank' => $request->input('payment.bank')
+			'price' => $request->input('dataCita.payment.price'),
+			'voucher_issued' => $request->input('dataCita.payment.voucher_issued'),
+			'pay_status' => $request->input('dataCita.payment.pay_status'),
+			'payment_method' => $request->input('caso.moneda'),
+			'voucher' => $request->input('dataCita.payment.voucher'),
+			'bank' => $request->input('dataCita.payment.bank'),
+			'observation' => $request->input('dataCita.payment.observation')
 		]);
 		if ($request->reschedule) {
 			$reschedule = Reschedule::create([

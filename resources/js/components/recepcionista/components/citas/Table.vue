@@ -77,7 +77,7 @@
               <a @click="changeMode(cita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
             </td>
             <td>
-              <a @click="modalInfo(cita)" data-toggle="modal" data-target="#pagoModal"
+              <a @click="modalInfo(cita);" data-toggle="modal" data-target="#pagoModal"
               class="btn btn-success btn-icon-split btn-sm"
               :class='{
               "btn-danger":  cita.payment ? cita.payment.pay_status == 1 : false,
@@ -412,6 +412,7 @@ export default {
     },
 
     modalInfo (data) {
+			this.cita = null;
       this.cita = data;
     },
 
