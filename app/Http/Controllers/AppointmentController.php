@@ -394,18 +394,33 @@ class AppointmentController extends Controller
 	 */
 	public function update(Request $request, Appointment $appointment)
 	{
+		try {
+
 		//$appointment->update($request->all());
 		$appointment->where('patient_id', $request->input('dataCita.id'));
 
 		$appointment->payment->update([
 			'price' => $request->input('dataCita.payment.price'),
 			'voucher_issued' => $request->input('dataCita.payment.voucher_issued'),
-			'pay_status' => $request->input('dataCita.payment.pay_status'),
+			'pay_status' => $request->input('caso.pago'),
 			'payment_method' => $request->input('caso.moneda'),
 			'voucher' => $request->input('dataCita.payment.voucher'),
 			'bank' => $request->input('dataCita.payment.bank'),
 			'observation' => $request->input('dataCita.payment.observation')
 		]);
+
+		if($request->input('caso.pago') === '2'){
+				$pagoExtra = new Extra_payment;
+			$pagoExtra->customer = $request->input('dataCita.patient.name');
+			$pagoExtra->price = $request->input('dataCita.payment.price');
+			$pagoExtra->type =5;
+			$pagoExtra->observation = '';
+			$pagoExtra->save();
+		
+		}
+
+		
+
 		if ($request->reschedule) {
 			$reschedule = Reschedule::create([
 				'reason' => $request->reschedule,
@@ -417,6 +432,9 @@ class AppointmentController extends Controller
 		}
 
 		return response()->json(['mensaje' => 'se actualizó la cita']);
+	} catch (\Throwable $th) {
+		echo $th;
+	}
 	}
 
 	public function updateStatus($idAppointment,$valueStatus, Request $request){

@@ -52,7 +52,7 @@ export default {
             device_name:'browser'
             },
             errors:{},
-						version: '4.10 Build 23.0425'
+						version: '4.11 Build 23.0425'
         }
     },
     methods: {

@@ -69,6 +69,7 @@
 </template>
 
 <script>
+
 import moment from 'moment'
 export default {
   name: 'PagosExtras',
@@ -106,6 +107,7 @@ export default {
 					for (let value in this.form) {
 						this.form[value] = ''
 					}
+					this.form['date'] = moment().format('YYYY-MM-DD');
 					this.$swal(res.data)
 				})
 				.catch(err => {

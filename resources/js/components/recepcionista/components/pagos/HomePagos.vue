@@ -14,6 +14,7 @@
                 <td>Cliente</td>
                 <td>Monto</td>
                 <td>Fecha</td>
+                <td>Motivo</td>
                 <td>Observación</td>
                 <td>Ticket</td>
             </tr>
@@ -21,19 +22,32 @@
         <tbody>
             <tr v-for="payment in payments">
                 <td>{{ payment.id}}</td>
-                <td>{{ payment.customer }}</td>
+                <td class="text-capitalize">{{ payment.customer }}</td>
                 <!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
                 <td v-else-if="payment.pay_status == 2">Cancelado</td> -->
-                <td>S./ {{payment.price}}</td>
+                <td>S/ {{payment.price}}</td>
                 <td>{{payment.created_at | formatedDate}}</td>
+								<td>
+									<span v-if="payment.type==5">Pago de cita</span>
+									<span v-else>Otros</span>
+								</td>
 								<td>{{ payment.observation }}</td>
                 <td><a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm">Generar PDF</a></td>
             </tr>
         </tbody>
+				<tfoot>
+					<tr>
+						<th></th>
+						<th>Total</th>
+						<th>S/ {{ suma }}</th>
+						<th></th>
+					</tr>
+				</tfoot>
     </table>
     </div>
 </main>
 </template>
+
 <script>
     import moment from 'moment'
 
@@ -55,7 +69,8 @@
                 .then(res =>{
                     this.payments = res.data
                 })
-            }
+            },
+						exportar(){}
         },
         mounted(){
             this.getAllExtraPayments()
@@ -64,6 +79,13 @@
             formatedDate(date){
                 return moment(date).format('DD/MM/yyyy')
             }
-        }
+        },
+				computed:{
+					suma: function (){
+						return this.payments.reduce((suma, item)=>{
+							return suma+ parseFloat(item.price)
+						}, 0)
+					}
+				}
     }
 </script>
