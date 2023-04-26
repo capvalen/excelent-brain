@@ -12,7 +12,7 @@
               <input
               type="text"
               class="form-control bg-white shadow-sm border-0 small"
-              placeholder="Nombre / Profesional"
+              placeholder="Nombre, Profesional, D.N.I."
               aria-label="Search"
               aria-describedby="basic-addon2"
               id="searchInputAppointment" @keyup.enter="searchHistoria()"
@@ -29,7 +29,7 @@
           </div>
           
           <div class="d-flex justify-content-start" style="flex-shrink: 0;">
-              <button data-toggle="modal" data-target="#addCitaModal" class="btn btn-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
+              <button data-toggle="modal" data-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
               <modal-cita
               :profes="profesionales"
               :horas="horarios"
@@ -39,9 +39,11 @@
           </div>
 
           <div class="d-flex justify-content-start" style="flex-shrink: 0;">
-              <button data-toggle="modal" data-target="#pagoExtras" class="btn btn-secondary"><i class="fas fa-plus"></i> Pagos extras</button>
+              <button data-toggle="modal" data-target="#pagoExtras" class="btn btn-outline-secondary"><i class="fas fa-plus"></i> Pagos extras</button>
           </div>
-
+          <div class="d-flex justify-content-start" style="flex-shrink: 0;">
+						<button data-toggle="modal" data-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
+          </div>
       </div>
 
       <table class="table table-striped w-100 mt-4">
@@ -181,6 +183,7 @@
     <info-modal v-if="cita" :dataCit="cita"></info-modal>
     <reprog-modal v-if="cita" :dataCit="cita"></reprog-modal>
     <modal-pagos-extras />
+    <modal-egresos-extras />
   </div>
 </template>
 
@@ -191,6 +194,7 @@ import ModalPatient from './ModalPatient.vue'
 import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
 import ModalPagosExtras from './ModalPagosExtras.vue'
+import ModalEgresosExtras from './ModalEgresosExtras.vue'
 import moment from 'moment'
 import alertify from 'alertifyjs'
 
@@ -198,7 +202,7 @@ import alertify from 'alertifyjs'
 export default {
   name: 'table-cita',
 
-  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, ModalPagosExtras },
+  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, ModalPagosExtras, ModalEgresosExtras },
 
   props: {
     profes:Array,

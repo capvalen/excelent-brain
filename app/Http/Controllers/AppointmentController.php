@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Carbon\Carbon;
 
 use App\Models\Address;
 use App\Models\Appointment;
@@ -132,9 +133,9 @@ class AppointmentController extends Controller
 		   
 			
 			$relative = Relative::create([
-			  'name'=>$request->get('contacto'),
-			  'phone'=>$request->get('contacto_celular'),
-			  'kinship'=>$request->get('parentenzco'),
+				'name'=> $request->input('name') =='null' ? null: $request->input('contacto'),
+				'phone'=> $request->input('phone') =='null' ? null: $request->input('contacto_celular'),
+				'kinship'=> $request->input('kinship') =='null' ? null: $request->input('parentezco'),
 			  'patient_id' => $patient->id
 			]);
 
@@ -230,9 +231,9 @@ class AppointmentController extends Controller
 			$direccion = $request->get('address') ?? '';
 			$direccion_paciente = Address::where('patient_id',$paciente_prueba->id)->first();
 			$direccion_paciente->address= $direccion;
-			$direccion_paciente->district= $request->get('district');
-			$direccion_paciente->province= $request->get('province');
-			$direccion_paciente->department= $request->get('department');
+			$direccion_paciente->district= $request->get('district') =='null' ? null : $request->get('district');
+			$direccion_paciente->province= $request->get('province') =='null' ? null : $request->get('province');
+			$direccion_paciente->department= $request->get('department') =='null' ? null : $request->get('department');
 			$direccion_paciente->save();
 			
 
@@ -411,12 +412,11 @@ class AppointmentController extends Controller
 
 		if($request->input('caso.pago') === '2'){
 				$pagoExtra = new Extra_payment;
-			$pagoExtra->customer = $request->input('dataCita.patient.name');
-			$pagoExtra->price = $request->input('dataCita.payment.price');
-			$pagoExtra->type =5;
-			$pagoExtra->observation = '';
-			$pagoExtra->save();
-		
+				$pagoExtra->customer = $request->input('dataCita.patient.name');
+				$pagoExtra->price = $request->input('dataCita.payment.price');
+				$pagoExtra->type =5;
+				$pagoExtra->observation = '';
+				$pagoExtra->save();
 		}
 
 		
@@ -677,6 +677,17 @@ class AppointmentController extends Controller
 			'pacientes' => $objectCountAppointment,
 			'totalPacientes' => $sumTotal
 		]);
+	}
+
+	public function pdfTriaje($id){
+		$triaje = DB::table('triaje')->find($id);
+		$paciente = Patient::find($triaje->patient_id);
+		$apoderado = Relative::where('patient_id', $triaje->patient_id )->first();
+		$especialista = Professional::find($triaje->especialista)->name;
+		
+		$pdf = PDF::loadView('interno.triaje', compact('triaje', 'paciente', 'apoderado', 'especialista'));
+		$pdf -> setPaper('a5');
+		return $pdf->stream('triaje.pdf');
 	}
 
 	public function createTicket($id){

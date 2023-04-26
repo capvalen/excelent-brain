@@ -117,14 +117,14 @@
             </div>
           </div>
 					<hr>
-					<p class="mb-0"><strong>Datos de Contacto</strong></p>
+					<p class="mb-0"><strong>Datos de Contacto de Emergencia</strong></p>
 					<div class="form-group row">
             <div class="col-sm-4">
 							<label for="name">Nombre</label>
 							<input type="text" class="form-control" name="contacto" id="contacto" v-model="cita.contacto"  placeholder="Contacto" autocomplete="off">
             </div>
             <div class="col-sm-4">
-							<label for="name">Celular</label>
+							<label for="name">Celular emergencia</label>
 							<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="cita.contacto_celular"  placeholder="Celular" autocomplete="off">
             </div>
             <div class="col-sm-4">
@@ -482,7 +482,7 @@ export default {
 			this.cita.pay_status= '';
       this.cita.status= '';
 			this.cita.type_amount=1;
-			this.contacto= ''; this.contacto_celular= '';; this.parentezco='';
+			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 
     },
 
@@ -554,15 +554,15 @@ export default {
           this.cita.birth_date = res.data.patient.birth_date;
           this.cita.marital_status = res.data.patient.marital_status;
           this.cita.instruction_degree = res.data.patient.instruction_degree;
-          this.cita.gender = isNaN(res.data.patient.gender) ? res.data.patient.gender : 2;
+          this.cita.gender = typeof parseInt(res.data.patient.gender) === 'number' && res.data.patient.gender !==null ? res.data.patient.gender : 2;
           this.cita.occupation = res.data.patient.occupation;
           this.cita.address = res.data.patient.address.address;
           this.cita.department = res.data.patient.address.department;
           this.cita.province = res.data.patient.address.province;
           this.cita.district = res.data.patient.address.district;
-					this.cita.contacto = res.data.relacion.name;
-					this.cita.contacto_celular = res.data.relacion.phone;
-					this.cita.parentezco = res.data.relacion.kinship;
+					this.cita.contacto = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
+					this.cita.contacto_celular = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
+					this.cita.parentezco = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
           this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()

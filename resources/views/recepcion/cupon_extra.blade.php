@@ -196,6 +196,10 @@
                                     Informe
                                     @elseif($extra_payment->type == 4)
                                     Otros
+                                    @elseif($extra_payment->type == 5)
+                                    Pago de cita
+                                    @elseif($extra_payment->type == 6)
+                                    Salida de dinero
                                     @endif
                                 </td>
                                 <td style="text-align: right;">

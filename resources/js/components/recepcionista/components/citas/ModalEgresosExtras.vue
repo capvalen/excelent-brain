@@ -1,10 +1,10 @@
 <template>
-  <div class="modal fade" id="pagoExtras" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  <div class="modal fade" id="egresosExtras" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Pago Extras</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Egresos Extras</h5>
           <button type="button" id="cerrModal" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -12,8 +12,8 @@
 
         <div class="modal-body">
           <form @submit.prevent>
-            <div class="form-group row">
-              <div class="col-sm-6">
+            <div class="form-group row ">
+              <div class="col-sm-6 d-none">
                 <div class="form-group">
                   <label for="customer">Cliente</label>
                   <input type="text" name="customer" required id="customer" class="form-control"
@@ -29,18 +29,16 @@
               </div>
             </div>
 
-            <div class="form-group row">
-              <div class="col-sm-6">
-                <label for="type">Tipo de pago</label>
-                <select class="form-control" id="type" required name="type" v-model="form.type">
-                  <option value="0">Certificado</option>
-                  <option value="1">Paquete de membresia</option>
-                  <option value="2">Paquete kurame</option>
-                  <option value="3">Informe</option>
-                  <option value="4">Otros</option>
-                </select>
-              </div>
+						
 
+            <div class="form-group row">
+							<div class="col-sm-6">
+								<label for="type">Tipo de pago</label>
+								<select class="form-control" id="type" required name="type" v-model="form.type">
+									<option value="6" selected>Salida de dinero</option>
+								</select>
+							</div>
+							
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="date">Fecha</label>
@@ -59,7 +57,7 @@
 
             <div>
               <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-              <button @click="saveData" type="submit" class="btn btn-outline-primary" data-dismiss="modal">Guardar ingreso</button>
+              <button @click="saveData" type="submit" class="btn btn-outline-danger" data-dismiss="modal">Guardar egreso</button>
             </div>
           </form>
         </div>
@@ -72,14 +70,14 @@
 
 import moment from 'moment'
 export default {
-  name: 'PagosExtras',
+  name: 'ModalEgresosExtras',
 
   data() {
     return {
       form: {
         customer: null,
         price: 0,
-        type: null,
+        type: 6,
         observation: null,
         date: moment().format('YYYY-MM-DD')
       }
@@ -88,13 +86,12 @@ export default {
 
   methods: {
     async saveData() {
-			console.log('pago',this.form.price);
 			if(this.form.price < 0){
 				return this.$swal({
 					icon:'error',
 					title: 'El precio no puede ser 0 o negativo'
 				});
-			}else if (!this.form.customer || !this.form.type || !this.form.date){
+			}else if ( !this.form.type || !this.form.date){
         return this.$swal({
 					icon:'error',
 					title: 'Faltan rellenar datos'
@@ -102,8 +99,8 @@ export default {
 			}else{
 				this.$swal("Guardando datos")
 	
-				this.axios.post('/api/paymentExtra', this.form)
-				.then(res => {
+				this.axios.post('/api/egresoExtra', this.form)
+				.then(res => { console.log(res);
 					for (let value in this.form) {
 						this.form[value] = ''
 					}

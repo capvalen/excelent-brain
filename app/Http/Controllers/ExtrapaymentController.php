@@ -83,4 +83,19 @@ class ExtrapaymentController extends Controller
     {
         //
     }
+
+		public function egresoExtra(Request $request){
+			try {
+				$pagoExtra = new Extra_payment;
+				$pagoExtra->price = $request->input('price');
+				$pagoExtra->type = 6;
+				$pagoExtra->observation = $request->input('observation');
+				$pagoExtra->save();
+        return response()->json('Se registro con éxito');
+			
+			} catch (\Throwable $th) {
+				echo $th;
+			}
+			
+		}
 }

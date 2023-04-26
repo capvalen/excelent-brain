@@ -161,6 +161,12 @@
                     <span>Recursos</span>
                 </router-link>
             </li>
+            <li class="nav-item nav__list" @click="activeSidebar()">
+                <router-link  to="/interno/pacientes" class="nav-link">
+                    <i class="fas fa-user-nurse"></i>
+                    <span>Triaje</span>
+                </router-link>
+            </li>
 
             <!-- <li class="nav-item nav__list" @click="activeSidebar()">
                 <router-link  to="/profesional/kurame" class="nav-link">

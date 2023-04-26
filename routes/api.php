@@ -115,6 +115,8 @@ Route::get('ticket/{id}', [AppointmentController::class , 'createTicket']);
 Route::get('pdfCupon/{id}', [AppointmentController::class , 'cupon']);
 Route::get('pdfExtraCupon/{id}', [AppointmentController::class , 'pdfExtraCupon']);
 
+Route::get('triajePDF/{id}', [AppointmentController::class , 'pdfTriaje']);
+
 Route::get('pdf_exam/{id}',[Medical_examController::class , 'createPdf']);
 Route::get('xlsx_recep/{date}', [PatientController::class, 'createXlsx']);
 Route::get('xlsx_admin/{date}', [PatientController::class, 'monthXlsx']);
@@ -154,6 +156,8 @@ Route::resource('exam', ExamController::class)->only(['index', 'store', 'update'
 Route::get('chart/{date}',[AppointmentController::class, 'getDataForCharts']);
 
 Route::resource('paymentExtra', ExtrapaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
+Route::post('egresoExtra', [ExtrapaymentController::class, 'egresoExtra']);
+
 Route::get('discharge/{id}',[PatientController::class, 'discharge']);
 
 Route::get('agePerMonth/{month}', [PatientController::class, 'agePerMonth']);

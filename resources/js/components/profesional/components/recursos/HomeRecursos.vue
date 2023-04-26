@@ -89,7 +89,7 @@
         </div>
         <div class="row">
             <CardRecurso
-            title="SRQ"
+            title="SRQ 18"
             color="primary"
             url="srq" 
             />

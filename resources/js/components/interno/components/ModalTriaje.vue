@@ -4,7 +4,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ficha de ingreso - Triaje</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Ficha de ingreso - Triaje Interno</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -14,7 +14,7 @@
 				<div class="form-group row">
 					<div class="col-sm-6">
 						<label for="name">Dni</label>
-						<input type="text" class="form-control" name="dni" id="dni" v-model="dataPatient.dni" placeholder="Dni del paciente" readonly>
+						<input type="text" class="form-control" name="dni" id="dni" v-model="dataPatient.dni" placeholder="Dni del paciente" :readonly="{true:nuevo, false:!nuevo}">
 					</div>
 					<div class="col-sm-6">
 						<label for="name">Celular</label>
@@ -145,7 +145,7 @@ import moment from "moment"
 export default {
 	name: 'modalTriaje',
 	props: {
-		dataPatient: Object, profesionales:[]
+		dataPatient: Object, profesionales:[], nuevo:false
 	},
 	data(){
 		return {
@@ -161,7 +161,7 @@ export default {
 		async insertarTriaje(){
 			await axios.post(`/api/insertarTriaje/${this.dataPatient.id}`,[this.dataPatient, this.consulta] )
 			.then(res => {
-				//console.log(res.data)
+				console.log(res.data)
         if(res.data['mensaje']>0){
 					this.$swal.fire({title: 'Registrado el triaje ',
 						text:'¿Deseas abrir el PDF de este registro?',

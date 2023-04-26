@@ -25,13 +25,18 @@
                 <td class="text-capitalize">{{ payment.customer }}</td>
                 <!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
                 <td v-else-if="payment.pay_status == 2">Cancelado</td> -->
-                <td>S/ {{payment.price}}</td>
+                <td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{payment.price}}</td>
                 <td>{{payment.created_at | formatedDate}}</td>
 								<td>
+									<span v-if="payment.type==6">Salida de dinero</span>
 									<span v-if="payment.type==5">Pago de cita</span>
-									<span v-else>Otros</span>
+									<span v-if="payment.type==4">Otros</span>
+									<span v-if="payment.type==3">Informe</span>
+									<span v-if="payment.type==2">Paquete Kurame</span>
+									<span v-if="payment.type==1">Paquete Membresía</span>
+									<span v-if="payment.type==0">Certificado</span>
 								</td>
-								<td>{{ payment.observation }}</td>
+								<td class="text-capitalize">{{ payment.observation }}</td>
                 <td><a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm">Generar PDF</a></td>
             </tr>
         </tbody>
@@ -39,7 +44,7 @@
 					<tr>
 						<th></th>
 						<th>Total</th>
-						<th>S/ {{ suma }}</th>
+						<th>S/ {{ parseFloat(suma).toFixed(2) }}</th>
 						<th></th>
 					</tr>
 				</tfoot>
@@ -83,7 +88,12 @@
 				computed:{
 					suma: function (){
 						return this.payments.reduce((suma, item)=>{
-							return suma+ parseFloat(item.price)
+							if(item.type==6){
+								return suma- parseFloat(item.price)
+							}else{
+								return suma+ parseFloat(item.price)
+							}
+							
 						}, 0)
 					}
 				}

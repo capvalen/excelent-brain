@@ -9,15 +9,16 @@
           </button>
         </div>
         <div class="modal-body">
+					<p class="mb-0"><strong>Datos Personales</strong></p>
           <form action="">
             <div class="form-group row">
               <div class="col-sm-6">
                 <label for="name">Dni</label>
-                <input type="text" class="form-control" name="dni" id="dni" v-model="dataCit.patient.dni" placeholder="Dni del paciente">
+                <input type="text" class="form-control" name="dni" id="dni" v-model="dataCit.patient.dni" placeholder="Dni del paciente" readonly="true">
               </div>
               <div class="col-sm-6">
-                <label for="name">Teléfono</label>
-                <input type="text" class="form-control" name="phone" id="phone" v-model="dataCit.patient.phone" placeholder="Telefono del paciente">
+                <label for="name">Celular</label>
+                <input type="text" class="form-control" name="phone" id="phone" v-model="dataCit.patient.phone" placeholder="Celular del paciente">
               </div>          
             </div>
 
@@ -27,47 +28,46 @@
             </div>
 
             <div class="form-group row">                   
-              <div class="col-sm-6">
+              <div class="col-sm-12">
                 <label for="name">Direccion de paciente</label>
                 <input type="text" class="form-control" name="address" id="address" v-model="dataCit.patient.address.address" placeholder="Direccion del paciene">
               </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-6 d-none">
                 <label for="name">Email de paciente</label>
                 <input type="email" class="form-control" name="email" id="email" v-model="dataCit.patient.email"  placeholder="Email de paciente"> 
               </div>
             </div>
 
             <div class="form-group row">
-              <div class="col-sm-4">
-                <label for="name">Distrito</label>
-                <input type="text" class="form-control" name="district" id="district" v-model="dataCit.patient.address.district" placeholder="Distrito">
-              </div>
+							<div class="col-sm-4">
+									<label for="name">Departamento</label>
+									<select v-model="dataCit.patient.address.department" class="form-control" id="department" @change="moverProvincias(true)">
+										<option v-for="departamento in ubigeo.departamentos" :value="departamento.idDepa">{{ departamento.departamento }}</option>
+									</select>
+							</div>
+							<div class="col-sm-4">
+									<label for="name">Provincia</label>
+									<select v-model="dataCit.patient.address.province" class="form-control" id="provincia" @change="moverDistritos()">
+										<option v-for="provincia in provincias" :value="provincia.idProv">{{ provincia.provincia }}</option>
+									</select>
+							</div>
+							<div class="col-sm-4">
+									<label for="name">Distrito</label>
+									<select v-model="dataCit.patient.address.district" class="form-control" id="distrito">
+										<option v-for="distrito in distritos" :value="distrito.idDist">{{ distrito.distrito }}</option>
+									</select>
+							</div>
+						</div>
 
-              <div class="col-sm-4">
-                <label for="name">Provincia</label>
-                <input type="text" class="form-control" name="province" id="province" v-model="dataCit.patient.address.province"  placeholder="Provincia"> 
-              </div>
-
-              <div class="col-sm-4">
-                <label for="name">Departamento</label>
-                <input type="text" class="form-control" name="department" id="department" v-model="dataCit.patient.address.department"  placeholder="Departamento"> 
-              </div>
-            </div>
+           
 
             <div class="form-group row">
-              <div class="col-sm-6">
-                <label for="name">Fecha de nacimiento</label>
-                <input type="date" class="form-control" name="birth_date" id="birth_date" v-model="dataCit.patient.birth_date">
-              </div>
-              <div class="col-sm-6">
+							<div class="col-sm-4">
                 <label for="name">Ocupación</label>
                 <input type="text" class="form-control" name="occupation" id="occupation" v-model="dataCit.patient.occupation"  placeholder="Ocuación del paciente"> 
               </div>
-            </div>
-
-            <div class="form-group row">
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Estado Civil</label>
                   <select class="form-control" name="marital_status" id="marital_status" v-model="dataCit.patient.marital_status">
@@ -80,7 +80,7 @@
                 </div>  
               </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Grado de instrucción</label>
                   <select class="form-control" name="instruction_degree" id="instruction_degree" v-model="dataCit.patient.instruction_degree">
@@ -93,7 +93,38 @@
                   </select>
                 </div>
               </div>       
-            </div> 
+            </div>
+						<div class="form-group row">
+              <div class="col-sm-6">
+                <label for="name">Fecha de nacimiento</label>
+                <input type="date" class="form-control" name="birth_date" id="birth_date" v-model="dataCit.patient.birth_date">
+              </div>
+              <div class="col-sm-6">
+								<label for="name">Género</label>
+								<select class="form-control" id="sexo" v-model="dataCit.patient.gender">
+									<option value="2">Sin definir</option>
+									<option value="0">Femenino</option>
+									<option value="1">Masculino</option>
+								</select>
+							</div>
+            </div>
+
+						<p class="mb-0"><strong>Datos de Contacto de Emergencia</strong></p>
+						<div class="form-group row">
+							<div class="col-sm-4">
+								<label for="name">Nombre</label>
+								<input type="text" class="form-control" name="contacto" id="contacto" v-model="dataCit.patient.relative.name"  placeholder="Contacto" autocomplete="off">
+							</div>
+							<div class="col-sm-4">
+								<label for="name">Celular emergencia</label>
+								<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="dataCit.patient.relative.phone"  placeholder="Celular" autocomplete="off">
+							</div>
+							<div class="col-sm-4">
+								<label for="name">Parentezco</label>
+								<input type="text" class="form-control" name="parentezco" id="parentezco" v-model="dataCit.patient.relative.kinship"  placeholder="Parentezco" autocomplete="off">
+							</div>
+						</div>
+						<hr>
 
             <!-- <div class="form-group row"> 
               <div class="col-sm-12">
@@ -134,13 +165,15 @@
     data () {
       return {
         dataPatient: '',
+				ubigeo: {departamentos:[], provincias:[], distritos:[]},
+				provincias:[], distritos:[],
       }
     },
 
     methods:{
       async updateDataPatient(){
         await this.axios.put(`/api/patient/${this.dataPatient.patient.id}`, this.dataPatient.patient)
-        .then(res => {
+        .then(res => { console.log(res.data);
           this.closeModal()
           this.$swal('Datos de paciente actualizado con éxito')
         })
@@ -152,6 +185,30 @@
       closeModal() {
         document.getElementById('cerrModalPatient').click();
       },
+			async listarDepartamentos(){
+				await this.axios.get('/api/departamentos')
+				.then(response => {
+					this.ubigeo.departamentos = response.data['departamentos'];
+					this.ubigeo.provincias = response.data['provincias'];
+					this.ubigeo.distritos = response.data['distritos'];
+
+					this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == 12)
+					this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == 103)
+
+		
+					this.moverProvincias(false)
+					this.moverDistritos()
+				})
+			},
+			moverProvincias(borrar){
+				let idDepa= this.dataPatient.patient.address.department;
+				this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == idDepa)
+				if(borrar) this.dataPatient.patient.address.district=-1;
+			},
+			moverDistritos(){
+				let idProv= this.dataPatient.patient.address.province;
+				this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == idProv)
+			}
     },
 
     computed: {
@@ -165,7 +222,8 @@
     },
   
     created () {
-      this.actualizarDatos
+      this.actualizarDatos;
+			this.listarDepartamentos();
     }
   }
 </script>

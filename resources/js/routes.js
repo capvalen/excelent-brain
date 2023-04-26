@@ -54,6 +54,7 @@ const HomeKurame = () => import('./components/profesional/components/kurame/Home
 // --- INTERNO
 
 const HomeInterno = () => import('./components/interno/Home.vue');
+const HomePacientes = () => import('./components/interno/HomePacientes.vue');
 
 // --- RECPCIONISTA
 const MainRecepcionista = () => import('./components/recepcionista/Main.vue');
@@ -113,7 +114,12 @@ export const routes = [
         path: 'home',
         name: 'HomeInterno',
         component: HomeInterno
-      }
+      },
+			{
+        path: 'pacientes',
+        name: 'HomePacientes',
+        component: HomePacientes
+      },
     ]
   },
   {

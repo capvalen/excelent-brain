@@ -106,7 +106,15 @@ class PatientController extends Controller
 			'department' => $request->input('address.department'),
 		]);
 
+		Relative::find($request->input('relative.id'))
+		->update([
+			'name' => $request->input('relative.name'),
+			'phone' => $request->input('relative.phone'),
+			'kinship' => $request->input('relative.kinship')
+		]);
+
 		return response()->json(['mensaje' => 'success']);
+		
 	}
 
 	/**
@@ -267,7 +275,8 @@ class PatientController extends Controller
 			//$temp = $request->all();
 			$paciente = Patient::find($id);
 			$paciente ->update($request[0]);
-
+			$triaje = $request[1];
+			
 
 			/* $triaje = new Triaje();
 			$triaje->patient_id = $request[1]['patient_id'];
@@ -277,14 +286,30 @@ class PatientController extends Controller
 			$triaje->prioridad = $request[1]['prioridad'];
 			$triaje->especialista = $request[1]['especialista']; 
 			$triaje->save(); */
-
-			$triaje = DB::insert('INSERT INTO `triaje`(`patient_id`, `motivo`, `sintomatologia`, `antecedentes`, `prioridad`, `especialista`) VALUES (?,?,?,?,?,?)',
-			[ $request[1]['patient_id'],$request[1]['motivo'],$request[1]['sintomatologia'],$request[1]['antecedentes'],$request[1]['prioridad'], $request[1]['especialista'] ]);
+			try {
+				$triaje = DB::insert('INSERT INTO `triaje`(`patient_id`, `motivo`, `sintomatologia`, `antecedentes`, `prioridad`, `especialista`,
+			 `responsable`,`fv`, `fc`, `fr`, `pa`, `t`,
+			 `pruebas`, `referencia`
+			) VALUES (?,?,?,?,?,?,
+			?,?,?,?,?,?,
+			?,?)',
+			[ $triaje['patient_id'],$triaje['motivo'],$triaje['sintomatologia'],$triaje['antecedentes'],$triaje['prioridad'], $triaje['especialista'],
+			$triaje['responsable'], $triaje['fv'], $triaje['fc'], $triaje['fr'], $triaje['pa'], $triaje['t'],
+			$triaje['pruebas'], $triaje['referencia']
+			]);
 		
 			$ultimoID = DB::getPdo()->lastInsertId();
 			return response()->json([
 				'mensaje' => $ultimoID
 			]);
+			} catch (\Throwable $th) {
+				echo $th;
+			}
+	
+			
+		
+
+			
 
 		}
 }

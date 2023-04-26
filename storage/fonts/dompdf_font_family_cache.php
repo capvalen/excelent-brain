@@ -93,5 +93,8 @@ return array (
   'roboto\', sans-serif' => array(
     'normal' => $fontDir . '/roboto___sans_serif_normal_f5282ec5fa0762a4b8f2537ae295bc00',
   ),
+  'glyphicons halflings' => array(
+    'normal' => $fontDir . '/glyphicons_halflings_normal_4bf4c90600ef2617211b8a7969a7b830',
+  ),
 );
 }; ?>
