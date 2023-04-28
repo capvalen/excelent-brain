@@ -79,7 +79,7 @@
               <a @click="changeMode(cita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
             </td>
             <td>
-              <a @click="modalInfo(cita);" data-toggle="modal" data-target="#pagoModal"
+              <a @click="modalInfo(cita); modalDePago()" data-toggle="modal" data-target="#pagoModal"
               class="btn btn-success btn-icon-split btn-sm"
               :class='{
               "btn-danger":  cita.payment ? cita.payment.pay_status == 1 : false,
@@ -177,7 +177,7 @@
       </table>
     </div>
 
-    <pago-modal  v-if="cita" :cita="cita"></pago-modal>
+    <pago-modal v-if="cita" :cita="cita" ></pago-modal>
     <modal-estado  v-if="cita" :dataCit="cita"></modal-estado>
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <info-modal v-if="cita" :dataCit="cita"></info-modal>
@@ -416,12 +416,9 @@ export default {
     },
 
     modalInfo (data) {
-			this.cita = null;
+			//this.cita = null;
       this.cita = data;
     },
-
-    
-
     filtro() {
 
       // if(!this.buscar){
@@ -479,6 +476,9 @@ export default {
 
   updated () {
     // this.modalInfo()
+  },
+	beforeUnmount() {
+    //this.$refs.modal.removeEventListener('hidden.bs.modal', this.manejarCierreModal);
   },
 
   computed:{

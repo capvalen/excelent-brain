@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="pagoModal" ref="pagoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="pagoModal" ref="pagoModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content modal-sm">
         <div class="modal-header">
@@ -14,7 +14,9 @@
             <div class="form-group row">
               <div class="col-sm-12">
                 <!-- <input type="text" class="form-control" name="price" id="price" v-model="dataCita.payment.price"> -->
-               <p class="lead"><small>Precio: S/</small> {{ dataCita.payment.price }}</p>
+								<p class="mb-0"><small>Cuenta de la persona:</small></p>
+								<p class="lead text-capitalize mb-0"> <span>{{dataCita.patient.name}}</span></p>
+               <p class="lead mb-0"><small>Precio: S/</small> {{ dataCita.payment.price }}</p>
               </div>
               
 							<div class="col-sm-12">
@@ -58,7 +60,7 @@
     data() {
       return{
         dataCita: null,
-				caso: {pago:1, moneda:1}
+				caso: {pago:1, moneda:1},
       }
     },
     methods:{
@@ -80,21 +82,26 @@
       },
 			pagoModal(data){
 				console.log('pago modal');
+			},
+			modalDePago(){
+				console.log('algo');
 			}
     },
   
     props:{
       cita: Object
-    },  
-
-    computed: {
-      updateData () {
-        return this.dataCita = this.cita
-      }
     },
-    
+		watch:{
+			cita: function (){
+				this.dataCita = this.cita;
+				this.caso.pago = this.dataCita.payment.pay_status;
+				this.caso.moneda = this.dataCita.payment.payment_method == undefined ? 1:this.dataCita.payment.payment_method ;
+			}
+		},
     created () {
-      this.updateData
+      this.dataCita = this.cita;
+			this.caso.pago = this.dataCita.payment.pay_status;
+			this.caso.moneda = this.dataCita.payment.payment_method == undefined ? 1:this.dataCita.payment.payment_method ;
     },
   }
 </script>

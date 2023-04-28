@@ -305,11 +305,11 @@ class PatientController extends Controller
 			} catch (\Throwable $th) {
 				echo $th;
 			}
-	
-			
-		
-
-			
-
 		}
+
+		public function listarCumpleanos($mes){
+			$pacientes = Patient::whereMonth('birth_date', $mes )->orderBy('name', 'asc')->get();
+			return $pacientes;
+		}
+
 }

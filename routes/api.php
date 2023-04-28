@@ -101,6 +101,7 @@ Route::resource('evolution', Medical_evolutionController::class)->only(['index',
 Route::get('pdfEvolution/{id}', [Medical_evolutionController::class, 'pdfEvolution']);
 
 Route::get('getNamePatient/{id}', [PatientController::class, 'getNamePatient']);
+Route::get('listarCumpleanos/{mes}', [PatientController::class, 'listarCumpleanos']);
 
 Route::get('getNameExam/{id}', [PatientController::class, 'getNameExam']);
 Route::post('insertarTriaje/{id}', [PatientController::class, 'insertarTriaje']);
