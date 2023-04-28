@@ -32,13 +32,12 @@
       </thead>
       <tbody>
         <tr
-        v-for="(patients, index) in busqueda"
-        :key = "index"
-        >
+        v-for="(patients, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
 					<td>
-						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
+						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
+						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje" title="Nuevo triaje"><i class="fas fa-file-medical-alt"></i></button>
 					</td>
           <td>
             <button
@@ -75,6 +74,8 @@
     <modal-recetas v-if="data" :dataPatient="data"></modal-recetas>
     <modal-faltas v-if="data" :dataPatient="data"></modal-faltas>
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales"></modal-triaje>
+		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
+		
   </main>
 </template>
 
@@ -83,6 +84,7 @@ import ModalEditPatient from './ModalEditPatients.vue';
 import ModalRecetas from './ModalRecetas.vue';
 import ModalFaltas from './ModalFaltas.vue';
 import ModalTriaje from './ModalTriaje.vue';
+import ModalVerTriajesViejos from './ModalVerTriajesViejos.vue'
 
 export default {
   name: 'Pacientes',
@@ -90,13 +92,13 @@ export default {
   data () {
     return {
       dataPatients: [],
-      data: null,
+      data: null, dataTriajes:null,
       busqueda: [],
       totalPatients:[], profesionales:[]
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje },
+  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos },
 
   props: {
     dataPatient: Object
@@ -183,6 +185,9 @@ export default {
         this.profesionales=response.data;
       })
     },
+		verTriajesViejos(index){
+			this.dataTriajes = this.busqueda[index].triajes;
+		}
   },
 
 

@@ -39,20 +39,30 @@ class PatientController extends Controller
 		return response()->json($patient);
 	}
 	public function getLast10Patients (){
-		$patient = Patient::with('relative', 'address', 'prescriptions')
+		$patients = Patient::with('relative', 'address', 'prescriptions')
 		->latest('created_at')->take(20)
 		->get();
+		foreach($patients as $patient){
+			$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
+			//$patient->triaje_count=$triaje->count();
+			$patient->triajes = $triaje ;
+		}
 
-		return response()->json($patient);
+		return response()->json($patients);
 	}
 	public function searchPatientByNameDni ($nombre){
-		$patient = Patient::where('name', 'LIKE', "%".$nombre ."%")
+		$patients = Patient::where('name', 'LIKE', "%".$nombre ."%")
 				->orWhere('dni', $nombre )
 				->with('relative', 'address', 'prescriptions')
 				->orderBy('name', 'asc')
 		->get();
+		foreach($patients as $patient){
+			$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
+			//$patient->triaje_count=$triaje->count();
+			$patient->triajes = $triaje ;
+		}
 
-		return response()->json($patient);
+		return response()->json($patients);
 	}
 
 	/**

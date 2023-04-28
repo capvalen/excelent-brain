@@ -22,7 +22,7 @@
 		<section v-if="tipo == 'cumpleaños'">
 			<div class="card px-1 my-4 p-2">
 				<div class="input-group mb-3 col-sm-4">
-					<span class="input-group-text" id="basic-addon1">Cambiar mes</span>
+					<span class="input-group-text" id="basic-addon1">Cambiar mes:</span>
 					<input type="date" class="form-control" id="fechaCumple" @change="cambiarFecha()">
 				</div>
 
@@ -82,10 +82,8 @@ export default {
 		},
 		cambiarFecha(){
 			let queMes = moment(document.getElementById('fechaCumple').value).format('M')
-			console.log(queMes);
 			if(queMes != this.mes && queMes !='Invalid date'){
-				this.mes = queMes;
-				this.cargarDatos('cumpleaños')
+				this.mes = queMes;				
 			}
 		}
 
