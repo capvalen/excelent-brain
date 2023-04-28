@@ -35,12 +35,13 @@ class CieController extends Controller
      */
     public function show($code)
     {
-        // return $code;
-        $cies = Cie::where('code', 'like', "%$code%")
-            ->take(6)
-            ->get();
-            
-        return response()->json($cies);
+			// return $code;
+			$cies = Cie::where('code', 'like', "%$code%")
+			->orWhere('description', 'like', "$code%")
+					->take(6)
+					->get();
+					
+			return response()->json($cies);
     }
 
     /**

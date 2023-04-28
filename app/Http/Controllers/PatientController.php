@@ -163,6 +163,13 @@ class PatientController extends Controller
 		->with('medical_evolutions.professional')
 		->first();
 
+		//return response()->json([$evoluciones]); die();
+		
+		$triaje = DB::table('triaje')->where('patient_id', $evoluciones->id)->get();
+		$evoluciones->triajes = $triaje ;
+		$examenes = DB::table('exams')->where('patient_id', $evoluciones->id)->get();
+		$evoluciones->examenes = $examenes ;
+
 		return response()->json($evoluciones);
 	}
 

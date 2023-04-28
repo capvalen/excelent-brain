@@ -36,6 +36,7 @@
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
 					<td>
+						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
 						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
 					</td>
           
@@ -45,12 +46,14 @@
 
     
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales" :nuevo="nuevo"></modal-triaje>
+		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
   </main>
 </template>
 
 <script>
 
 import ModalTriaje from './components/ModalTriaje.vue';
+import ModalVerTriajesViejos from './../recepcionista/components/pacientes/ModalVerTriajesViejos.vue'
 
 export default {
   name: 'Pacientes',
@@ -58,14 +61,14 @@ export default {
   data () {
     return {
       dataPatients: [],
-      data: null,
+      data: null,dataTriajes:null,
       busqueda: [],
       totalPatients:[], profesionales:[],
 			nuevo:false
     }
   },
 
-  components: { ModalTriaje },
+  components: { ModalTriaje, ModalVerTriajesViejos },
 
   props: {
     dataPatient: Object
@@ -157,6 +160,9 @@ export default {
         this.profesionales=response.data;
       })
     },
+		verTriajesViejos(index){
+			this.dataTriajes = this.busqueda[index].triajes;
+		}
   },
 
 
