@@ -76,10 +76,12 @@ Route::get('updateModeAppoinment/{id}', [AppointmentController::class, 'updateMo
 
 Route::resource('appointment/payment', PaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('patient', PatientController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
+Route::post('patient/new', [PatientController::class, 'insertPatient']);
 Route::get('getPatient', [PatientController::class, 'getPatient']);
 Route::get('getLast10Patients', [PatientController::class, 'getLast10Patients']);
 Route::get('searchPatientByNameDni/{nombre}', [PatientController::class, 'searchPatientByNameDni']);
 Route::get('returnTotalPatients', [PatientController::class, 'returnTotalPatients']);
+Route::post('insertarSemaforo', [PatientController::class, 'insertarSemaforo']);
 
 Route::resource('kairos', KairoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 

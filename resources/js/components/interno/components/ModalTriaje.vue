@@ -14,7 +14,7 @@
 				<div class="form-group row">
 					<div class="col-sm-6">
 						<label for="name">Dni</label>
-						<input type="text" class="form-control" name="dni" id="dni" v-model="dataPatient.dni" placeholder="Dni del paciente" :readonly="{true:nuevo, false:!nuevo}">
+						<input type="text" class="form-control" name="dni" id="dni" v-model="dataPatient.dni" placeholder="Dni del paciente" >
 					</div>
 					<div class="col-sm-6">
 						<label for="name">Celular</label>
@@ -145,15 +145,15 @@ import moment from "moment"
 export default {
 	name: 'modalTriaje',
 	props: {
-		dataPatient: Object, profesionales:[], nuevo:false
+		dataPatient: Object, profesionales:[]
 	},
 	data(){
 		return {
 			datos:'', consulta:{
 				fecha: moment().format('YYYY-MM-DD HH:mm'),
-				patient_id: this.dataPatient.id,
+				patient_id: -1,
 				motivo:'', sintomatologia:'',antecedentes:'', especialista:2, prioridad:1,
-				responsable: '', fv: '', fc: '', fr: '', pa: '', t: '', referencia:1, pruebas:''
+				responsable: '', fv: '', fc: '', fr: '', pa: '', t: '', referencia:1, pruebas:'',
 			}
 		}
 	},

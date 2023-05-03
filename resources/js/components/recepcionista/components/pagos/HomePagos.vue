@@ -6,8 +6,11 @@
                 <input type="date" class="form-control" @change="selectDate">
             </div>
     </div>
-    <div class="card px-1">
-        <table class="table table-striped w-100 mt-4">
+    <div class="card px-1 pt-2">
+			<div>
+				<button class="btn btn-outline-success" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
+			</div>
+        <table class="table table-striped w-100 mt-4" id="table_export">
         <thead class="bg-success text-white">
             <tr>
                 <td>Cita</td>
@@ -75,7 +78,10 @@
                     this.payments = res.data
                 })
             },
-						exportar(){}
+						exportar(){
+							var table2excel = new Table2Excel();
+							table2excel.export(document.getElementById('table_export'), `Caja de ${moment().format('DD-MM-YYYY hh-mm a')}`);
+						}
         },
         mounted(){
             this.getAllExtraPayments()

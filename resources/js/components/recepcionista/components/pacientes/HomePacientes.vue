@@ -18,12 +18,14 @@
             </div>
         </div>
     </div>
+		<button class="btn btn-outline-primary mt-2" data-toggle="modal" data-target="#modalNewPatient"><i class="fas fa-user-nurse"></i> Crear paciente nuevo</button>
 		<p class="mt-3 mb-1">Últimos 20 pacientes registrados</p>
     <table class="table table-striped mt-4">
       <thead>
         <tr>
           <th>N°</th>
           <th>Nombre y apellidos</th>
+          <th>Semáfoto</th>
           <th>Triaje</th>
           <th>Faltas</th>
           <th>Recetas</th>
@@ -35,6 +37,11 @@
         v-for="(patients, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
+					<td>
+						<button class="btn btn-success btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+							<span title="normal"><i class="fas fa-smile"></i></span>
+						</button>
+					</td>
 					<td>
 						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
 						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje" title="Nuevo triaje"><i class="fas fa-file-medical-alt"></i></button>
@@ -75,6 +82,8 @@
     <modal-faltas v-if="data" :dataPatient="data"></modal-faltas>
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales"></modal-triaje>
 		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
+    <modal-new-patient ></modal-new-patient>
+		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
 		
   </main>
 </template>
@@ -85,6 +94,8 @@ import ModalRecetas from './ModalRecetas.vue';
 import ModalFaltas from './ModalFaltas.vue';
 import ModalTriaje from './ModalTriaje.vue';
 import ModalVerTriajesViejos from './ModalVerTriajesViejos.vue'
+import ModalNewPatient from './../pacientes/ModalNewPatient.vue'
+import ModalVerEstados from './ModalVerEstados.vue'
 
 export default {
   name: 'Pacientes',
@@ -94,11 +105,19 @@ export default {
       dataPatients: [],
       data: null, dataTriajes:null,
       busqueda: [],
-      totalPatients:[], profesionales:[]
+      totalPatients:[], profesionales:[],
+			estados:[
+				{id: 1, valor: 'normal'},
+				{id: 2, valor: 'excelente'},
+				{id: 3, valor: 'exigente'},
+				{id: 4, valor: 'deudor'},
+				{id: 5, valor: 'insatisfecho'},
+				{id: 6, valor: 'peligroso'},
+			]
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos },
+  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados },
 
   props: {
     dataPatient: Object
@@ -143,7 +162,6 @@ export default {
 
 				await this.axios.get(`/api/searchPatientByNameDni/${valueInput}`)
 				.then(res => {
-					console.log(res.data);
 					this.totalPatients = res.data;
 
 					coincidenceDni = this.totalPatients.filter(el => el.dni == valueInput)        
@@ -158,7 +176,6 @@ export default {
 							this.busqueda.push(...this.totalPatients)
 						}
 						this.totalPatients = this.totalPatients.filter(el => el.name.match(new RegExp(`${word}`,'ig')) ? el : null)
-						console.log(this.totalPatients)
 						this.busqueda.push(...this.totalPatients)
 						//const coincidence = this.dataPatients.filter(el => el.name.match(new RegExp(`${word}`,'ig')).split(' ') ? el : null)
 						//

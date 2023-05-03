@@ -26,5 +26,6 @@
 
   {{-- Online - Offline --}}
   {{-- <script src="{{ asset('js/connectivity/connectivity.js') }}"></script> --}}
+	<script src="https://rusty1s.github.io/table2excel/dist/table2excel.js"></script>
 </body>
 </html>

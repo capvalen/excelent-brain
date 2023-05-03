@@ -30,6 +30,34 @@ class PatientController extends Controller
 	/**
 	 * Return all patient with recipes and addrres
 	 */
+	public function insertPatient(Request $request){
+		
+		$repetido = Patient::where('dni', $request->input('paciente.dni'));
+		if( $repetido->count() >0){
+			echo 'repetidos '. $repetido->count(); 
+		}else{
+			//echo $request->input('paciente.name');die();
+			$paciente = Patient::create([
+					'dni'=>$request->input('paciente.dni'),
+					'phone'=>$request->input('paciente.phone'),
+					'name'=> trim(str_replace('  ', ' ' , $request->input('paciente.name'))),
+					'instruction_degree'=> $request->input('paciente.instruction_degree') ?? 6,
+					'gender'=> $request->input('paciente.gender') ?? 2,
+					'birth_date'=> $request->input('birth_date') =='null' ? null: $request->input('paciente.birth_date'),
+					'occupation'=> $request->input('occupation') =='null' ? null: $request->input('paciente.occupation'),
+					'marital_status'=> $request->input('paciente.marital_status')
+				]);
+			Address::create([
+				'address'=> $request->input('paciente.address.address'),
+				'district'=>$request->input('paciente.address.district'),
+				'province'=>$request->input('paciente.address.province'),
+				'department'=>$request->input('paciente.address.department'),
+				'patient_id' => $paciente->id
+			]);
+			echo $paciente->id;
+		}
+
+	}
 
 	public function getPatient ()
 	{
@@ -46,6 +74,8 @@ class PatientController extends Controller
 			$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
 			//$patient->triaje_count=$triaje->count();
 			$patient->triajes = $triaje ;
+			$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
+			$patient->semaforo = $semaforo;
 		}
 
 		return response()->json($patients);
@@ -60,6 +90,8 @@ class PatientController extends Controller
 			$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
 			//$patient->triaje_count=$triaje->count();
 			$patient->triajes = $triaje ;
+			$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
+			$patient->semaforo = $semaforo;
 		}
 
 		return response()->json($patients);
@@ -327,6 +359,18 @@ class PatientController extends Controller
 		public function listarCumpleanos($mes){
 			$pacientes = Patient::whereMonth('birth_date', $mes )->orderBy('name', 'asc')->get();
 			return $pacientes;
+		}
+
+		public function insertarSemaforo(Request $request){
+			DB::table('semaforo')->insert([
+				'patient_id'=>$request->input('id'),
+				'codigo'=>$request->input('semaforo.codigo'),
+				'observaciones'=>$request->input('semaforo.observaciones'),
+			]);
+			return response()->json([
+				'msg' => 'insertado con éxito'
+			]);
+		
 		}
 
 }

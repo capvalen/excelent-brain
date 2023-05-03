@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-		<button class="btn btn-outline-primary mt-2" @click="abrirNuevo()" data-toggle="modal" data-target="#modalTriaje"><i class="fas fa-user-nurse"></i> Crear paciente nuevo</button>
+		<button class="btn btn-outline-primary mt-2" data-toggle="modal" data-target="#modalNewPatient"><i class="fas fa-user-nurse"></i> Crear paciente nuevo</button>
 		<p class="mt-3 mb-1">Últimos 20 pacientes registrados</p>
     <table class="table table-striped mt-4">
       <thead>
@@ -39,13 +39,13 @@
 						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
 						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
 					</td>
-          
         </tr>
       </tbody>
     </table>
 
     
-    <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales" :nuevo="nuevo"></modal-triaje>
+    <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales" ></modal-triaje>
+    <modal-new-patient ></modal-new-patient>
 		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
   </main>
 </template>
@@ -54,6 +54,7 @@
 
 import ModalTriaje from './components/ModalTriaje.vue';
 import ModalVerTriajesViejos from './../recepcionista/components/pacientes/ModalVerTriajesViejos.vue'
+import ModalNewPatient from './../recepcionista/components/pacientes/ModalNewPatient.vue'
 
 export default {
   name: 'Pacientes',
@@ -64,11 +65,10 @@ export default {
       data: null,dataTriajes:null,
       busqueda: [],
       totalPatients:[], profesionales:[],
-			nuevo:false
     }
   },
 
-  components: { ModalTriaje, ModalVerTriajesViejos },
+  components: { ModalTriaje, ModalVerTriajesViejos, ModalNewPatient },
 
   props: {
     dataPatient: Object
@@ -146,11 +146,6 @@ export default {
       this.data = data;
 			this.nuevo = false;
     },
-		abrirNuevo(){
-			this.data = [];
-			this.nuevo = true;
-		},
-
     lowerCase (text = '...') {
       return text.toLowerCase();
     },

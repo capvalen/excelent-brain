@@ -2,3 +2,5 @@ Agregar sb-admin2 en las carpetas de public>css y js
 
 
 composer require nesbot/carbon
+
+Se agrega en resources>views>app.blade la conexión: <script src="https://rusty1s.github.io/table2excel/dist/table2excel.js"></script>

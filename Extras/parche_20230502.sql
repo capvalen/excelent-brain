@@ -1,0 +1,1 @@
+CREATE TABLE `semaforo` (`id` INT NOT NULL AUTO_INCREMENT , PRIMARY KEY (`id`), `patient_id` INT NOT NULL , `codigo` INT NULL DEFAULT '1' , `observaciones` TEXT NULL DEFAULT '' , `activo` INT NULL DEFAULT '1' , `registro` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ) ENGINE = InnoDB;
