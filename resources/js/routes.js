@@ -22,6 +22,7 @@ const HomeAdministradorReportePacientes = () => import('./components/administrad
 const HomeReporteMensual = () => import('./components/administrador/views/reportes/ReporteMensual.vue')
 const ChartMensual = () => import('./components/administrador/views/reportes/ChartMensual.vue')
 
+
 // --- PROFESIONAL
 const HomeProfesional = () => import('./components/profesional/views/Home.vue');
 const HomeProfesionalConsultas = () => import('./components/profesional/components/consultas/HomeConsultas.vue')
@@ -45,16 +46,16 @@ const eysenck_b = () => import('./components/profesional/components/examenes/Eys
 const srq = () => import('./components/profesional/components/examenes/SRQ.vue')
 const phq15 = () => import('./components/profesional/components/examenes/PHQ-15.vue')
 const mdq = () => import('./components/profesional/components/examenes/MDQ.vue')
-
 const PrintReceta = () => import('./components/profesional/components/recetas/PrintReceta.vue')
 const KairosTable = () => import('./components/profesional/components/recetas/KairosTable.vue')
-
 const HomeKurame = () => import('./components/profesional/components/kurame/HomeKurame.vue')
+
 
 // --- INTERNO
 
 const HomeInterno = () => import('./components/interno/Home.vue');
 const HomePacientes = () => import('./components/interno/HomePacientes.vue');
+
 
 // --- RECPCIONISTA
 const MainRecepcionista = () => import('./components/recepcionista/Main.vue');

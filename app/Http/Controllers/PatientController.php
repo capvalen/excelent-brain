@@ -200,7 +200,16 @@ class PatientController extends Controller
 		$triaje = DB::table('triaje')->where('patient_id', $evoluciones->id)->get();
 		$evoluciones->triajes = $triaje ;
 		$examenes = DB::table('exams')->where('patient_id', $evoluciones->id)->get();
-		$evoluciones->examenes = $examenes ;
+		$evoluciones->examenes_basicos = $examenes;
+		//$evoluciones->examenes->push( $examenes );
+		$burns = DB::table('burns')->where('patient_id', $evoluciones->id)->get();
+		$gads = DB::table('gads')->where('patient_id', $evoluciones->id)->get();
+		$scrs = DB::table('scrs')->where('patient_id', $evoluciones->id)->get();
+		$zung_anxieties = DB::table('zung_anxieties')->where('patient_id', $evoluciones->id)->get();
+		$zung_depressions = DB::table('zung_depressions')->where('patient_id', $evoluciones->id)->get();
+		$evoluciones->examenes_personalizados =  
+			 array( 'scrs' => $scrs, 'burns' => $burns, 'gads' => $gads, 'zung_anxieties' => $zung_anxieties, 'zung_depressions' => $zung_depressions)
+		;
 
 		return response()->json($evoluciones);
 	}
@@ -371,6 +380,13 @@ class PatientController extends Controller
 				'msg' => 'insertado con éxito'
 			]);
 		
+		}
+
+		public function eliminarSemaforo($id){
+			DB::table('semaforo')->where('id',$id)->delete();
+			return response()->json([
+				'msg' => 'eliminado'
+			]);
 		}
 
 }

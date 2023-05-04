@@ -25,7 +25,7 @@
         <tr>
           <th>N°</th>
           <th>Nombre y apellidos</th>
-          <th>Semáfoto</th>
+          <th>Semáforo</th>
           <th>Triaje</th>
           <th>Faltas</th>
           <th>Recetas</th>
@@ -38,9 +38,31 @@
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
 					<td>
-						<button class="btn btn-success btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
-							<span title="normal"><i class="fas fa-smile"></i></span>
-						</button>
+						<div v-if="patients.semaforo[0]">
+							<button v-if="patients.semaforo[0].codigo==1" class="btn btn-primary btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+								<span  title="Normal"><i class="fas fa-smile"></i></span>
+							</button>
+							<button v-if="patients.semaforo[0].codigo==2" class="btn btn-success btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+								<span title="Excelente"> <i class="fas fa-laugh-wink"></i> </span>
+							</button>
+							<button v-if="patients.semaforo[0].codigo==3" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+								<span title="Exigente"> <i class="fas fa-meh"></i> </span>
+							</button>
+							<button v-if="patients.semaforo[0].codigo==4" class="btn btn-warning btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+								<span title="Deudor"> <i class="fas fa-frown-open"></i> </span>
+							</button>
+							<button v-if="patients.semaforo[0].codigo==5" class="btn btn-info btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+								<span title="Insatisfecho"> <i class="fas fa-angry"></i> </span>
+							</button>
+							<button v-if="patients.semaforo[0].codigo==6" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+								<span title="Peligroso"> <i class="fas fa-frown"></i> </span>
+							</button>
+						</div>
+						<div v-else>
+							<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+								<span title="Normal sin registro"><i class="fas fa-smile"></i></span>
+							</button>
+						</div>
 					</td>
 					<td>
 						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>

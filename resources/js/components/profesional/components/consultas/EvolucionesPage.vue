@@ -20,7 +20,7 @@
 					Ver triajes ({{ datosConsulta.triajes.length }})
 				</button>
 				<button data-toggle="modal" data-target="#examenModal" class="btn btn-outline-info  px-4 py-2 rounded ">
-					Ver exámenes ({{ datosConsulta.examenes.length }})
+					Ver exámenes ({{ contarExamenes()  }})
 				</button>
 				
 			</div>
@@ -448,7 +448,7 @@
 
 					<keep-alive>
 						<component v-if="this.datosExamPaciente.id" :is="component" @keepComponentExam="keepExamFunction"
-							:dataPatient="datosExamPaciente" :dataExam="this.datosExamenes" />
+							:dataPatient="datosExamPaciente" :dataExam="this.datosExamenes" :dataExamBasic="datosConsulta.examenes_basicos" :dataExamPersonalized="datosConsulta.examenes_personalizados" />
 					</keep-alive>
 
 				</div>
@@ -647,8 +647,7 @@ export default {
 			await this.axios.get(`/api/patientEvolution/${this.$route.params.idPaciente}`)
 				.then(res => {
 					this.datosConsulta = res.data;
-					console.log(this.datosConsulta)
-
+					//console.log(this.datosConsulta)
 					this.datosConsulta.medical_evolutions = this.datosConsulta.medical_evolutions.sort(function (a, b) {
 						if (a.date < b.date) {
 							return -1;
@@ -977,7 +976,14 @@ export default {
 				this.miniRespuesta.foto = '';
 			}
 			this.miniRespuesta.contenido = this.datosConsulta.medical_evolutions[index].content;
-		}
+		},
+		contarExamenes(){
+			if(this.datosConsulta!== undefined){
+				
+				return this.datosConsulta.examenes_basicos.length + this.datosConsulta.examenes_personalizados.burns.length + this.datosConsulta.examenes_personalizados.gads.length + this.datosConsulta.examenes_personalizados.scrs.length + this.datosConsulta.examenes_personalizados.zung_anxieties.length + this.datosConsulta.examenes_personalizados.zung_depressions.length 
+			}
+			//datosConsulta.examenes[0].length + datosConsulta.examenes[1]['burns'].length + datosConsulta.examenes[1]['gads'].length + datosConsulta.examenes[1]['scrs'].length + datosConsulta.examenes[1]['zung_anxieties'].length + datosConsulta.examenes[1]['zung_depressions'].length
+		},
 	},
 
 	computed: {

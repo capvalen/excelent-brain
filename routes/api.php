@@ -82,6 +82,7 @@ Route::get('getLast10Patients', [PatientController::class, 'getLast10Patients'])
 Route::get('searchPatientByNameDni/{nombre}', [PatientController::class, 'searchPatientByNameDni']);
 Route::get('returnTotalPatients', [PatientController::class, 'returnTotalPatients']);
 Route::post('insertarSemaforo', [PatientController::class, 'insertarSemaforo']);
+Route::post('eliminarSemaforo/{id}', [PatientController::class, 'eliminarSemaforo']);
 
 Route::resource('kairos', KairoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 

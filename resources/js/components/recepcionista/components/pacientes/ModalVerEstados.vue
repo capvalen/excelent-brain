@@ -2,8 +2,8 @@
 	<div class="modal fade" id="modalVerEstados" tabindex="-1" aria-labelledby="modalEvolution" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
-					<div class="modal-header bg-success text-white">
-						<h5 class="modal-title" id="infoModalLabel">Historial de Estados del Paciente</h5>
+					<div class="modal-header bg-primary text-white">
+						<h5 class="modal-title" id="infoModalLabel">Estados del Paciente</h5>
 						<button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 					</div>
 					<div class="modal-body">
@@ -41,7 +41,7 @@
 									<td>{{ fechaLatam(semaf.registro) }}</td>
 									<td class="text-capitalize">{{ queCodigo(semaf.codigo) }}</td>
 									<td class="text-capitalize">{{ semaf.observaciones }}</td>
-									<td><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td>
+									<td><button class="btn btn-danger btn-sm" @click="eliminarEstado(semaf.id, index)"><i class="fas fa-trash"></i></button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -79,6 +79,16 @@ import moment from 'moment';
 			},
 			queCodigo(tipo){
 				return this.estados.filter(z=> z.id == tipo )[0].valor;
+			},
+			eliminarEstado(id, index){
+				if(confirm('¿Deseas eliminar el estado?')){
+					this.axios.post('/api/eliminarSemaforo/'+id)
+					.then(response =>{
+						if(response.data.msg=='eliminado'){
+							this.dataPatient.semaforo.splice(index, 1)
+						}
+					})
+				}
 			}
 		},
 	}
