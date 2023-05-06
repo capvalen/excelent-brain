@@ -327,8 +327,8 @@ export default {
       ],
       priceCiteOld: [
         [ //--- Psiquitrica
-          //[190, 160, 190, 190, 150, 110, 200, 200, null, null, null], // --- Presencial
-          [666, 555, 444, 333, 222, 111, 999, 888, null, null, null], // --- Presencial
+          [190, 160, 190, 190, 150, 110, 200, 200, null, null, null], // --- Presencial
+          //[666, 555, 444, 333, 222, 111, 999, 888, null, null, null], // --- Presencial
           [200, 170, 150, 150, 120, 90, 120, 120, null, null, null] // --- Virtual 
         ],
         [ //--- Psicologica
