@@ -1,0 +1,5 @@
+admin: admin@admin.com
+recepcion: luz@recep.com
+profesional psiquiatra: wilbertb22@gmail.com
+profeisonal psicologo: jsalvador@gmail.com
+interno: raulmelendezp73@gmail.com

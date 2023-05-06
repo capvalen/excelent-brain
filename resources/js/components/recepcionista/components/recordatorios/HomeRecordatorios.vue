@@ -9,7 +9,7 @@
 			</div>
 			<div class="col-sm-3">
 				<div class="card mb-0 py-0 border-left-warning cursor">
-					<div class="card-body"><i class="fas fa-money-bill-wave-alt"></i> Ver pagos</div>
+					<div class="card-body"><i class="fas fa-money-bill-wave-alt"></i> Ver pagos adelantados</div>
 				</div>
 			</div>
 			<div class="col-sm-3" @click="cargarDatos('cumpleaños')">
