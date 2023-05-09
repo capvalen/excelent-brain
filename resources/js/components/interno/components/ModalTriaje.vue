@@ -102,7 +102,10 @@
 				</div>
 				<div class="form-group row">
 					<div class="col-sm-12">
-						<label for="name">Tipos de pruebas aplicadas</label>
+						<label for="name">Tipos de pruebas aplicadas <router-link  to="/interno/recursos" target="_blank">
+							<i class="fas fa-external-link-square-alt"></i>
+                    <span>Recursos</span>
+                </router-link></label>
 						<textarea class="form-control" id="pruebas" name="pruebas" rows="3" v-model="consulta.pruebas" ></textarea>
 					</div>
 				</div>

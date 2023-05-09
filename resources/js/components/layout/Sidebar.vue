@@ -156,7 +156,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item nav__list" @click="activeSidebar()">
-                <router-link  to="/profesional/recursos" class="nav-link">
+                <router-link  to="/interno/recursos" class="nav-link">
                     <i class="fas fa-home"></i>
                     <span>Recursos</span>
                 </router-link>

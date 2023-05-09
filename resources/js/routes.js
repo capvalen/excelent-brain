@@ -122,6 +122,96 @@ export const routes = [
         name: 'HomePacientes',
         component: HomePacientes
       },
+      {
+        path: 'recursos',
+        name: 'recursosProfesional',
+        component: HomeProfesionalRecursos
+      },
+      {
+        path: 'scr',
+        name: 'scr',
+        component: Scr90
+      },
+      {
+        path: 'burns',
+        name: 'burns',
+        component: Burns
+      },
+      {
+        path: 'depzung',
+        name: 'depzung',
+        component: DepZung
+      },
+      {
+        path: 'anszung',
+        name: 'anszung',
+        component: AnsZung
+      },
+      {
+        path: 'millon',
+        name: 'millon',
+        component: Millon
+      },
+      {
+        path: 'phq-9',
+        name: 'phq-9',
+        component: phq,
+      },
+      {
+        path: 'gad-7',
+        name: 'GAD-7',
+        component: gad,
+      },
+      {
+        path: 'bdi-2',
+        name: 'BDI-2',
+        component: bdi,
+      },
+      {
+        path: 'mcmi',
+        name: 'MCMI-II',
+        component: mcmi,
+      },
+      {
+        path: 'baron',
+        name: 'BARON',
+        component: baron,
+      },
+      {
+        path: 'eysenck-a',
+        name: 'Eysenck-A',
+        component: eysenck_a,
+      },
+      {
+        path: 'eysenck-b',
+        name: 'Eysenck-B',
+        component: eysenck_b,
+      },
+      {
+        path: 'srq',
+        name: 'SRQ',
+        component: srq,
+      },
+      {
+        path: 'phq-15',
+        name: 'phq-15',
+        component: phq15
+      },
+      {
+        path: 'mdq',
+        name: 'mdq',
+        component: mdq
+      },
+      {
+        path: 'examenes/:consultId',
+        name: 'examenesProfesional',
+        component: HomeProfesionalExamenes
+      },
+      {
+        path: 'kurame',
+        name: 'kurame',
+        component: HomeKurame
+      }
     ]
   },
   {

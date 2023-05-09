@@ -35,7 +35,7 @@
 
             <div class="col-sm-6">
               <label for="name">Celular</label>
-              <input type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Celular del paciente" autocomplete="off">
+              <input type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Celular del paciente" @keypress="limitarCel($event)" autocomplete="off">
             </div>           
           </div>
 
@@ -676,7 +676,12 @@ export default {
 		moverDistritos(){
 			let idProv= this.cita.province;
 			this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == idProv)
-		}
+		},
+    limitarCel($event){
+      if( this.cita.phone.length>16 ){
+        $event.preventDefault();
+      }
+    }
   },
 	created (){
 		this.listarDepartamentos();
