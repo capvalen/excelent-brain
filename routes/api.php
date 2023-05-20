@@ -25,6 +25,7 @@ use App\Http\Controllers\PhqController;
 use App\Http\Controllers\ScrController;
 use App\Http\Controllers\Zung_anxietyController;
 use App\Http\Controllers\Zung_depressionController;
+use App\Http\Controllers\ExtrasController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Professional;
@@ -105,6 +106,8 @@ Route::get('pdfEvolution/{id}', [Medical_evolutionController::class, 'pdfEvoluti
 
 Route::get('getNamePatient/{id}', [PatientController::class, 'getNamePatient']);
 Route::get('listarCumpleanos/{mes}', [PatientController::class, 'listarCumpleanos']);
+
+Route::post('nuevoAviso/', [ExtrasController::class, 'nuevoAviso']);
 
 Route::get('getNameExam/{id}', [PatientController::class, 'getNameExam']);
 Route::post('insertarTriaje/{id}', [PatientController::class, 'insertarTriaje']);
