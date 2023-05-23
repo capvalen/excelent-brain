@@ -120,31 +120,28 @@
 				@endphp
 				</span></td>
 			</tr>
+			
 			<tr>
 				<td class="w-20"><strong>Celular</strong></td>
-				<td class="w-20"><span>{{$paciente->phone }}</span></td>
+				<td class="w-20"><span>{{$paciente->phone?? "" }}</span></td>
 			</tr>
 			<tr>
 				<td class="w-20"><strong>Celular del acompañante</strong></td>
-				<td class="w-20"><span> {{$apoderado->phone}} {{$apoderado->name ?? '-'}}</span></td>
+				<td class="w-20"><span> {{$apoderado->phone??''}} {{$apoderado->name ?? '-'}}</span></td>
 			</tr>
-			<tr>
-				<td class="w-20"><strong>Personal responsable</strong></td>
-				<td class="w-20"><span>{{$triaje->responsable}}</span></td>
-			</tr>
+			
 		</tbody>
 	</table>
-	<table style="margin-top:-20px;">
+	<p class="mb-0"><small>Frecuencias vitales</small></p>
+	<table style="margin-top:0px;">
 		<tbody>
 			<tr>
-				<th style="border-top:0px solid black">FV</th>
-				<th style="border-top:0px solid black">FC</th>
-				<th style="border-top:0px solid black">FR</th>
-				<th style="border-top:0px solid black">PA</th>
-				<th style="border-top:0px solid black">T</th>
+				<th style="border-top:1px solid black">FC</th>
+				<th style="border-top:1px solid black">FR</th>
+				<th style="border-top:1px solid black">PA</th>
+				<th style="border-top:1px solid black">T</th>
 			</tr>
 			<tr>
-				<td><span>{{$triaje->fv}}</span></td>
 				<td><span>{{$triaje->fc}}</span></td>
 				<td><span>{{$triaje->fr}}</span></td>
 				<td><span>{{$triaje->pa}}</span></td>
@@ -152,10 +149,25 @@
 			</tr>
 		</tbody>
 	</table>
-	<table style="margin-top:-20px;">
+	
+	<table style="margin-top:0px;">
 		<tbody>
 			<tr>
-				<th style="text-align:left; padding-left:15px; border-top:0px solid black">MOTIVO DE LA CONSULTA:</th>
+				<th style="border-top:1px solid black">Peso</th>
+				<th style="border-top:1px solid black">Talla</th>
+			</tr>
+			<tr>
+				<td><span>{{$triaje->peso}}</span></td>
+				<td><span>{{$triaje->talla}}</span></td>
+			
+			</tr>
+		</tbody>
+	</table>
+
+	<table style="margin-top:0px;">
+		<tbody>
+			<tr>
+				<th style="text-align:left; padding-left:15px; border-top:1px solid black">MOTIVO DE LA CONSULTA:</th>
 			</tr>
 			<tr>
 				<td style="text-align:left; padding-left:15px;"><span>{{$triaje->motivo}}</span></td>
@@ -180,14 +192,26 @@
 			</tr>
 		</tbody>
 	</table>
-	<table style="margin-top:-20px;">
+	<table style="margin-top:0px;">
 		<tbody>
+		<tr>
+				<td class="w-20"><strong>Personal responsable</strong></td>
+				<td class="w-20"><span>{{$triaje->responsable}}</span></td>
+			</tr>	
 			<tr>
 				<th style="text-align:left; border-top:0px solid black">PRIORIDAD: <span>{{romanos($triaje->prioridad)}}</span></th>
 				<th style="text-align:left; border-top:0px solid black">ESPECIALISTA: <span>{{$especialista}}</span></th>
 			</tr>
 			<tr>
-				<th style="text-align:left;" colspan=2>REFERENCIA: <span>{{$triaje->referencia}}</span></th>
+				<th style="text-align:left;" colspan=2>REFERENCIA: 
+				@if($triaje->referencia==1)
+				<span >Psicología</span>
+				@elseif($triaje->referencia==2)
+				<span >Psiquiatría</span>
+				@elseif($triaje->referencia==3)
+				<span >Psicología y Psiquiatría</span>
+				@endif
+			</th>
 			</tr>
 		</tbody>
 	</table>

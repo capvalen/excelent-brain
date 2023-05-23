@@ -33,6 +33,7 @@ class ScheduleController extends Controller
             ->get();
         
         $schedules = Schedule::where('professional_id', $id)
+        ->orderBy('check_time', 'asc')
             ->with('appointments')
             ->get();
         // ->with(['schedule' => function ($q1) { $q1->where('schedules.check_time', '>', date('H:i:s', time())); }])

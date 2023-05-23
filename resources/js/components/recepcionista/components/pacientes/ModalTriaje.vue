@@ -55,10 +55,6 @@
 				<p class="mb-0"><strong>Datos de Contacto del Triaje</strong></p>
 				<div class="form-group row">
 					<div class="col-sm-2">
-						<label for="">F.V.</label>
-						<input type="text" class="form-control" name="fv" id="fv" v-model="consulta.fv" autocomplete="off">
-					</div>
-					<div class="col-sm-2">
 						<label for="">F.C.</label>
 						<input type="text" class="form-control" name="fc" id="fc" v-model="consulta.fc" autocomplete="off">
 					</div>
@@ -73,6 +69,16 @@
 					<div class="col-sm-2">
 						<label for="">T</label>
 						<input type="text" class="form-control" name="t" id="t" v-model="consulta.t" autocomplete="off">
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-sm-3">
+						<label for="">Peso</label>
+						<input type="text" class="form-control" name="peso" id="peso" v-model="consulta.peso" autocomplete="off">
+					</div>
+					<div class="col-sm-3">
+						<label for="">Talla</label>
+						<input type="text" class="form-control" name="talla" id="talla" v-model="consulta.talla" autocomplete="off">
 					</div>
 				</div>
 				<div class="form-group row">
@@ -127,6 +133,7 @@
 						<select class="form-select" id="prioridad" v-model="consulta.referencia">
 							<option value="1">PSICOLOGÍA</option>
 							<option value="2">PSIQUIATRÍA</option>
+							<option value="3">AMBOS</option>
 							
 						</select>
 					</div>
@@ -153,7 +160,7 @@ export default {
 				fecha: moment().format('YYYY-MM-DD HH:mm'),
 				patient_id: this.dataPatient.id,
 				motivo:'', sintomatologia:'',antecedentes:'', especialista:2, prioridad:1,
-				responsable: '', fv: '', fc: '', fr: '', pa: '', t: '', referencia:1, pruebas:''
+				responsable: '', fv: '', fc: '', fr: '', pa: '', t: '', referencia:1, pruebas:'', peso:'', talla:''
 			}
 		}
 	},

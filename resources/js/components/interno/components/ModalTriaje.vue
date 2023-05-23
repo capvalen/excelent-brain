@@ -55,10 +55,6 @@
 				<p class="mb-0"><strong>Datos de Contacto del Triaje</strong></p>
 				<div class="form-group row">
 					<div class="col-sm-2">
-						<label for="">F.V.</label>
-						<input type="text" class="form-control" name="fv" id="fv" v-model="consulta.fv" autocomplete="off">
-					</div>
-					<div class="col-sm-2">
 						<label for="">F.C.</label>
 						<input type="text" class="form-control" name="fc" id="fc" v-model="consulta.fc" autocomplete="off">
 					</div>

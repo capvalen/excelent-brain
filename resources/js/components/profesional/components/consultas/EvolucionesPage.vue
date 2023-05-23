@@ -57,6 +57,15 @@
 								<span v-else-if="datosConsulta.marital_status == 4">Divorciado</span>
 								<span v-else-if="datosConsulta.marital_status == 5">Conviviente</span>
 							</p>
+							<hr>
+							<p>
+								<stong>Motivo: Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium illo ratione expedita, quos ea ipsam repudiandae labore perspiciatis molestias harum adipisci tenetur consectetur architecto laborum! Nihil quibusdam ab neque tempore?</stong>
+							</p>
+							<p><stong>SINTOMATOLOGÍA: Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium illo ratione expedita, quos ea ipsam repudiandae labore perspiciatis molestias harum adipisci tenetur consectetur architecto laborum! Nihil quibusdam ab neque tempore?</stong>
+							</p>
+							<p><stong>ANTECEDENTES: Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium illo ratione expedita, quos ea ipsam repudiandae labore perspiciatis molestias harum adipisci tenetur consectetur architecto laborum! Nihil quibusdam ab neque tempore?</stong>
+							</p>
+							<p><stong>Tipos de pruebas aplicadas: Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium illo ratione expedita, quos ea ipsam repudiandae labore perspiciatis molestias harum adipisci tenetur consectetur architecto laborum! Nihil quibusdam ab neque tempore?</stong></p>
 						</div>
 
 					</div>
@@ -66,7 +75,7 @@
 				<div class="card shadow mb-4">
 					<!-- Card Header - Dropdown -->
 					<div class="card-header bg-primary py-3 d-flex flex-row align-items-center justify-content-between">
-						<h6 class="m-0 font-weight-bold text-white"><i class="fas fa-users"></i> Datos personales del pariente</h6>
+						<h6 class="m-0 font-weight-bold text-white"><i class="fas fa-users"></i> Persona de contacto en caso de emergencias</h6>
 						<button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalEditarPariente"><i class="fa-regular fa-pen-to-square"></i></button>
 					</div>
 					<!-- Card Body -->
@@ -90,7 +99,7 @@
 						<h6 class="m-0 font-weight-bold text-white"><i class="fas fa-user"></i> Otros datos</h6>
 					</div>
 					<div class="card-body">
-						<p>Perfil del paciente: 
+						<p v-if="datosPaciente.semaforo.length>0">Perfil del paciente: 
 							<a class="text-capitalize" href="#!" data-bs-toggle="modal" data-bs-target="#modalVerEstados">{{queEstado(datosPaciente.semaforo[0].codigo)}}</a>
 							<span v-if="datosPaciente.semaforo[0].observaciones!=''">({{ datosPaciente.semaforo[0].observaciones }})</span>
 						 </p>

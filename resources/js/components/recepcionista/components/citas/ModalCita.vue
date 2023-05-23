@@ -262,7 +262,7 @@
 							@change="dynamicPrice()"
 							>
 								<option value="1" selected>Nuevo</option>
-								<option value="2">Antiguo</option>
+								<option value="2">Continuador</option>
                   </select>
             </div>
           </div>
@@ -692,7 +692,7 @@ export default {
 	},
 
   props:{
-    profes:Array,
+    profes:Array, 
     horas:Array
   },
 
