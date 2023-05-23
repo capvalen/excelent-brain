@@ -24,7 +24,7 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="">Tipo de examen</label>
-                            <select name="" id="typeExam" @change="typeExamenSelect" class="form-control">
+                            <select name="" id="typeExam" @change="typeExamenSelect" class="form-select">
                                 <option value="1">Laboratorio</option>
                                 <option value="2">Imagenología</option>
                                 <option value="3">Otros</option>

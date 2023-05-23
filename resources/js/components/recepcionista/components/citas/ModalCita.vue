@@ -15,7 +15,7 @@
           <div class="form-group row">
            <div class="col-sm-6">
               <label for="name">Tipo de documento</label>
-              <select class="form-control" id="type_dni" v-model="cita.type_dni">
+              <select class="form-select" id="type_dni" v-model="cita.type_dni">
 								<option value="1">D.N.I.</option>
 								<option value="2">Carnet de extranjería</option>
 								<option value="3">Pasaporte</option>
@@ -56,19 +56,19 @@
           
 						<div class="col-sm-4">
                 <label for="name">Departamento</label>
-								<select v-model="cita.department" class="form-control" id="department" @change="moverProvincias(true)">
+								<select v-model="cita.department" class="form-select" id="department" @change="moverProvincias(true)">
 									<option v-for="departamento in ubigeo.departamentos" :value="departamento.idDepa">{{ departamento.departamento }}</option>
 								</select>
             </div>
 						<div class="col-sm-4">
                 <label for="name">Provincia</label>
-								<select v-model="cita.province" class="form-control" id="provincia" @change="moverDistritos()">
+								<select v-model="cita.province" class="form-select" id="provincia" @change="moverDistritos()">
 									<option v-for="provincia in provincias" :value="provincia.idProv">{{ provincia.provincia }}</option>
 								</select>
             </div>
 						<div class="col-sm-4">
                 <label for="name">Distrito</label>
-								<select v-model="cita.district" class="form-control" id="distrito">
+								<select v-model="cita.district" class="form-select" id="distrito">
 									<option v-for="distrito in distritos" :value="distrito.idDist">{{ distrito.distrito }}</option>
 								</select>
             </div>
@@ -81,7 +81,7 @@
             </div>
 						<div class="col-sm-4">
                 <label for="marital_status">Estado Civil</label>
-                <select class="form-control" name="marital_status" id="marital_status" v-model="cita.marital_status">
+                <select class="form-select" name="marital_status" id="marital_status" v-model="cita.marital_status">
                   <option value="2">Casado</option>
                   <option value="5">Conviviente</option>
                   <option value="4">Divorciado</option>
@@ -91,7 +91,7 @@
             </div>
              <div class="col-sm-4">
                 <label for="">Grado de instrucción</label>
-             		<select class="form-control" name="instruction_degree" id="instruction_degree" v-model="cita.instruction_degree">
+             		<select class="form-select" name="instruction_degree" id="instruction_degree" v-model="cita.instruction_degree">
                   <option value="1">Inicial</option>
                   <option value="2">Primaria</option>
                   <option value="3">Secundaria</option>
@@ -109,7 +109,7 @@
             </div>
             <div class="col-sm-6">
               <label for="name">Género</label>
-							<select class="form-control" id="sexo" v-model="cita.gender">
+							<select class="form-select" id="sexo" v-model="cita.gender">
 								<option value="2">Sin definir</option>
 								<option value="0">Femenino</option>
 								<option value="1">Masculino</option>
@@ -139,7 +139,7 @@
             <div class="form-group">
               <label for="">Profesional</label>                                  
               <select 
-              class="form-control" 
+              class="form-select" 
               name="professional_id" 
               id="professional_id" 
               v-model="cita.professional_id"
@@ -173,7 +173,7 @@
               
             <div class="col-sm-6">
 							<label for="">Horario del profesional</label>
-							<select class="form-control" name="schedule_id" id="schedule_id" v-model="cita.schedule_id">
+							<select class="form-select" name="schedule_id" id="schedule_id" v-model="cita.schedule_id">
 								<option value="" disabled selected>Seleccione Horario</option>
 								<option 
 								v-for="hora in horas" :key="hora.id" 
@@ -190,7 +190,7 @@
 					<div class="col-sm-6">
 							<label for="">Clasificación de Consulta</label>
 							<select 
-							class="form-control" 
+							class="form-select" 
 							name="clasification" 
 							id="clasification" 
 							v-model="cita.clasification"
@@ -215,7 +215,7 @@
             <div class="col-sm-6">
 							<label for="">Tipo</label>
 							<select 
-							class="form-control" 
+							class="form-select" 
 							name="type" 
 							id="type" 
 							v-model="cita.type"
@@ -241,7 +241,7 @@
             <div class="col-sm-6">
 							<label for="">Modo</label>
 							<select 
-							class="form-control" 
+							class="form-select" 
 							name="mode" 
 							id="mode" 
 							v-model="cita.mode"
@@ -255,7 +255,7 @@
             <div class="col-sm-6">
 							<label for="">Tipo de Monto</label>
 							<select 
-							class="form-control" 
+							class="form-select" 
 							name="mode" 
 							id="type_amount" 
 							v-model="cita.type_amount"

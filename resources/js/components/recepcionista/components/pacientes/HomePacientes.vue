@@ -25,6 +25,7 @@
         <tr>
           <th>N°</th>
           <th>Nombre y apellidos</th>
+          <th>Club</th>
           <th>Semáforo</th>
           <th>Triaje</th>
           <th>Faltas</th>
@@ -37,6 +38,11 @@
         v-for="(patients, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
+					<td>
+						<button class="btn btn-light" v-if="patients.club=='0'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(patients.club, patients.id)"><i class="fa-regular fa-hand-back-fist"></i></button>
+						<button class="btn btn-primary" v-if="patients.club=='1'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(patients.club, patients.id)"><i class="fa-solid fa-thumbs-up"></i></button>
+						<button class="btn btn-danger" v-if="patients.club=='2'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(patients.club, patients.id)"><i class="fa-solid fa-thumbs-down"></i></button>
+					</td>
 					<td>
 						<div v-if="patients.semaforo[0]">
 							<button v-if="patients.semaforo[0].codigo==1" class="btn btn-primary btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
@@ -106,6 +112,7 @@
 		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
     <modal-new-patient ></modal-new-patient>
 		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
+		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
 		
   </main>
 </template>
@@ -118,6 +125,7 @@ import ModalTriaje from './ModalTriaje.vue';
 import ModalVerTriajesViejos from './ModalVerTriajesViejos.vue'
 import ModalNewPatient from './../pacientes/ModalNewPatient.vue'
 import ModalVerEstados from './ModalVerEstados.vue'
+import ModalCambiarLike from './ModalCambiarLike.vue'
 
 export default {
   name: 'Pacientes',
@@ -126,20 +134,23 @@ export default {
     return {
       dataPatients: [],
       data: null, dataTriajes:null,
-      busqueda: [],
+      busqueda: [], like:0, id:-1,
       totalPatients:[], profesionales:[],
 			estados:[
-				{id: 1, valor: 'normal'},
+				{id: 1, valor: 'Neutro'},
 				{id: 2, valor: 'excelente'},
-				{id: 3, valor: 'exigente'},
-				{id: 4, valor: 'deudor'},
-				{id: 5, valor: 'insatisfecho'},
-				{id: 6, valor: 'peligroso'},
+				{id: 3, valor: 'promotor'},
+				{id: 4, valor: 'wow'},
+				{id: 5, valor: 'reprogramador'},
+				{id: 6, valor: 'exigente'},
+				{id: 7, valor: 'deudor'},
+				{id: 8, valor: 'insatisfecho'},
+				{id: 9, valor: 'peligroso'},
 			]
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados },
+  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike },
 
   props: {
     dataPatient: Object
@@ -175,6 +186,10 @@ export default {
       })
     },
 
+		Like(valores){
+			let index = this.busqueda.findIndex(b=> b.id ==valores.id)
+			this.busqueda[index].club = valores.seleccionado;
+		},
     async searchPatients () {
       let valueInput = document.getElementById("searchNamePatient").value; 
       if(valueInput === ''){
@@ -214,6 +229,10 @@ export default {
     dataProps (data) {
       this.data = data;
     },
+		datosLike(like, id){
+			this.like = like;
+			this.id = id;
+		},
 
     lowerCase (text = '...') {
       return text.toLowerCase();

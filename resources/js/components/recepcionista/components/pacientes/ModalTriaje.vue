@@ -30,7 +30,7 @@
 				<div class="form-group row">
 					<div class="col-sm-6">
 						<label for="name">Género</label>
-						<select class="form-control" id="sexo" v-model="dataPatient.gender">
+						<select class="form-select" id="sexo" v-model="dataPatient.gender">
 							<option value="">Elija el un género</option>
 							<option value="0">Femenino</option>
 							<option value="1">Masculino</option>
@@ -109,7 +109,7 @@
 				<div class="form-group row">
 					<div class="col-sm-4">
 						<label for="name">Prioridad</label>
-						<select class="form-control" id="prioridad" v-model="consulta.prioridad">
+						<select class="form-select" id="prioridad" v-model="consulta.prioridad">
 							<option value="1">I</option>
 							<option value="2">II</option>
 							<option value="3">III</option>
@@ -118,13 +118,13 @@
 					</div>
 					<div class="col-sm-4">
 						<label for="name">Especialista</label>
-						<select class="form-control" id="prioridad" v-model="consulta.especialista">
+						<select class="form-select" id="prioridad" v-model="consulta.especialista">
 							<option v-for="profesional in profesionales" :value="profesional.id">{{profesional.name}}</option>
 						</select>
 					</div>
 					<div class="col-sm-4">
 						<label for="name">Referencia</label>
-						<select class="form-control" id="prioridad" v-model="consulta.referencia">
+						<select class="form-select" id="prioridad" v-model="consulta.referencia">
 							<option value="1">PSICOLOGÍA</option>
 							<option value="2">PSIQUIATRÍA</option>
 							

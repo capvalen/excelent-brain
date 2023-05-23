@@ -34,7 +34,7 @@
             <div class="form-group row">
 							<div class="col-sm-6">
 								<label for="type">Tipo de pago</label>
-								<select class="form-control" id="type" required name="type" v-model="form.type">
+								<select class="form-select" id="type" required name="type" v-model="form.type">
 									<option value="6" selected>Salida de dinero</option>
 								</select>
 							</div>

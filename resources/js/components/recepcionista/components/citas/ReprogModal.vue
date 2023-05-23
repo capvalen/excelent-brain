@@ -21,7 +21,7 @@
               <div class="col-sm-6">
                 <label for="">Profesional</label>                                  
                 <select 
-                class="form-control value-professional" 
+                class="form-select value-professional" 
                 name="professional_id" 
                 id="professional_id" 
                 placeholder="Horario del profesional"
@@ -67,7 +67,7 @@
               <div class="col-sm-6">
                 <div class="form-group">                            
                   <label for="">Horario del profesional</label>
-                  <select class="form-control" name="schedule_id" id="schedule_id" v-model="dataCit.schedule_id">
+                  <select class="form-select" name="schedule_id" id="schedule_id" v-model="dataCit.schedule_id">
                     <option value="" disabled selected>Selecciona un horario</option>
                     <option 
                     v-for="hora in horarios" :key="hora.id" 

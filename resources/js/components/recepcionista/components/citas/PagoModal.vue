@@ -21,18 +21,23 @@
 							
 							<div class="col-sm-12">
 									<label for="">Estado de pago</label>
-									<select class="form-control" name="pay_status" id="pay_status" v-model="caso.pago">
+									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.pago">
 										<option value="1">Sin cancelar</option>
 										<option value="2">Cancelado</option>
 									</select>
 							</div>                                                      
 							<div class="col-sm-12">
 									<label for="">Método de pago</label>
-									<select class="form-control" name="pay_status" id="pay_status" v-model="caso.moneda">
+									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.moneda">
 										<option value="1">Efectivo</option>
 										<option value="4">Aplicativo Yape/Plin</option>
 										<option value="2">Depósito bancario</option>
 										<option value="3">POS</option>
+										<option value="5">Banco: BCP</option>
+										<option value="6">Banco: BBVA</option>
+										<option value="7">Banco: Interbank</option>
+										<option value="8">Banco: Nación</option>
+										<option value="9">Banco: Scotiabank</option>
 									</select>
 							</div>                                                      
 					</div>
@@ -71,19 +76,29 @@
 					this.dataCita.payment.pay_status = this.caso.pago;
 					this.closeModal()
 					//this.$swal('Pago actualizado con éxito')
-					this.$swal.fire({
-						title: 'Pago actualizado con éxito',
-						icon: 'info',
-						showCancelButton: true,
-						confirmButtonText:
-							`<span>Ver Cupón</span>`,
-						cancelButtonText:
-							'Salir'
-					}).then(result=>{
-						if(result.isConfirmed){
-							this.abrirCupon();
-						}
-					})
+					if( this.caso.pago ==2){
+						this.$swal.fire({
+							title: 'Pago actualizado con éxito',
+							icon: 'info',
+							showCancelButton: true,
+							confirmButtonText:
+								`<span>Ver Cupón</span>`,
+							cancelButtonText:
+								'Salir'
+						}).then(result=>{
+							if(result.isConfirmed){
+								this.abrirCupon();
+							}
+						})
+					}else{
+						this.$swal.fire({
+							title: 'Pago actualizado con éxito',
+							icon: 'info',
+							showCancelButton: true,
+							cancelButtonText:
+								'Salir'
+						})
+					}
 				})
 				.catch(err => {
 					console.error(err)

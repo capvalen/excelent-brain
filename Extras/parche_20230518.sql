@@ -1,6 +1,11 @@
-CREATE TABLE `consultorio`.`recordatorios` (`id` INT NOT NULL , `fecha` DATETIME NOT NULL , `actividad` INT NOT NULL , `responsable` VARCHAR(250) NOT NULL , `estado` INT NOT NULL , `activo` INT NULL DEFAULT '1' , `actualizador` INT NOT NULL ) ENGINE = InnoDB;
+CREATE TABLE `recordatorios` (`id` INT NOT NULL , `fecha` DATETIME NOT NULL , `actividad` INT NOT NULL , `responsable` VARCHAR(250) NOT NULL , `estado` INT NOT NULL , `activo` INT NULL DEFAULT '1' , `actualizador` INT NOT NULL ) ENGINE = InnoDB;
 ALTER TABLE `recordatorios` CHANGE `activo` `estado` INT(11) NULL DEFAULT '1' COMMENT '1=creado, 2=atendido, 3=solucionado';
 ALTER TABLE `recordatorios` ADD `creador` INT NOT NULL AFTER `activo`;
 ALTER TABLE `recordatorios` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`id`);
 ALTER TABLE `recordatorios` CHANGE `estado` `estado` INT(11) NULL DEFAULT '1';
 ALTER TABLE `recordatorios` CHANGE `actividad` `actividad` TEXT NOT NULL;
+ALTER TABLE `recordatorios` ADD `tipo` INT NULL DEFAULT '1' COMMENT '1=Aviso, 2=Llamada, 3=Recordatorio' AFTER `actualizador`;
+ALTER TABLE `recordatorios` ADD `observaciones` TEXT NULL AFTER `tipo`;
+ALTER TABLE `extra_payments` ADD `moneda` INT NULL DEFAULT '1' AFTER `price`;
+CREATE TABLE `interesados` (`id` INT NOT NULL AUTO_INCREMENT , `nombre` VARCHAR(250) NOT NULL , `celular` VARCHAR(250) NOT NULL , `motivo` TEXT NOT NULL , `referencia` INT NOT NULL , `activo` INT NULL DEFAULT '1' , `fecha` DATETIME NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ALTER TABLE `patients` ADD `club` INT NULL DEFAULT '0' COMMENT '0=neutro, 1=like, 2=dislike' AFTER `type_dni`;

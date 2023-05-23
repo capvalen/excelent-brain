@@ -389,4 +389,20 @@ class PatientController extends Controller
 			]);
 		}
 
+		public function editarPariente($id, Request $request){
+			$respuesta = Relative::find($id)
+			->update([
+				'name' => $request->input('nombre'),
+				'phone' => $request->input('celular'),
+				'kinship' => $request->input('parentesco')
+			]);
+			if($respuesta){ return response()->json([ 'msg' => 'Actualizado con éxito' ]); }
+			
+		}
+
+		public function datosPacienteSemaforo($id){
+			$semaforo = DB::table('semaforo')->where('patient_id', $id )->where('activo',1)->orderBy('registro', 'desc')->get();
+			return response()->json($semaforo);
+		}
+
 }

@@ -414,6 +414,7 @@ class AppointmentController extends Controller
 				$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $request->input('dataCita.patient.name');
 				$pagoExtra->price = $request->input('dataCita.payment.price');
+				$pagoExtra->moneda = $request->input('caso.moneda');
 				$pagoExtra->type =5;
 				$pagoExtra->observation = '';
 				$pagoExtra->save();

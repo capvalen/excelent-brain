@@ -37,14 +37,14 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-sm">
-                    <select @change="showSelect" class="form-control" id="optionTime">
+                    <select @change="showSelect" class="form-select" id="optionTime">
                       <option disabled selected value>Seleccione una opción de tiempo</option>  
                       <option value="1">Mes</option>
                       <option value="2">Día</option>    
                     </select>
                   </div>
                   <div class="col-sm">
-                    <select v-if="show !=0 && show==1" @change="getPatientsPerMonth" class="form-control" id="selectMonth">
+                    <select v-if="show !=0 && show==1" @change="getPatientsPerMonth" class="form-select" id="selectMonth">
                         <option disabled selected value>Seleccione un mes</option>
                         <option v-for="(month, index) in months" :key="index" :value="month">{{month | optionParseMonth}}</option>
                     </select>

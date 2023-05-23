@@ -67,6 +67,7 @@
 					<!-- Card Header - Dropdown -->
 					<div class="card-header bg-primary py-3 d-flex flex-row align-items-center justify-content-between">
 						<h6 class="m-0 font-weight-bold text-white"><i class="fas fa-users"></i> Datos personales del pariente</h6>
+						<button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalEditarPariente"><i class="fa-regular fa-pen-to-square"></i></button>
 					</div>
 					<!-- Card Body -->
 					<div class="card-body">
@@ -84,9 +85,21 @@
 						</div>
 					</div>
 				</div>
+				<div class="card shadow mb-4">
+					<div class="card-header bg-primary py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-white"><i class="fas fa-user"></i> Otros datos</h6>
+					</div>
+					<div class="card-body">
+						<p>Perfil del paciente: 
+							<a class="text-capitalize" href="#!" data-bs-toggle="modal" data-bs-target="#modalVerEstados">{{queEstado(datosPaciente.semaforo[0].codigo)}}</a>
+							<span v-if="datosPaciente.semaforo[0].observaciones!=''">({{ datosPaciente.semaforo[0].observaciones }})</span>
+						 </p>
+					</div>
+				</div>
+
 			</div>
 
-			<div class="col-md-12" v-if="rol === 'Psiquiatra'">
+			 <div class="col-md-12" > <!-- v-if="rol === 'Psiquiatra'" -->
 				<div class="card shadow mb-4">
 					<!-- Card Header - Dropdown -->
 					<div class="card-header bg-warning py-3 d-flex flex-row align-items-center justify-content-between">
@@ -96,191 +109,203 @@
 					<!-- Card Body -->
 					<form class="card-body" @submit.prevent>
 						<div class="historia-info">
-							<div class="">
-								<p class="mb-0"><b>Antecedente General</b></p>
-								<p class="collapse__paragraph" id="general_antecedent" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('general_antecedent')" v-if="!inicialInputPsiquiatria.general_antecedent">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.general_antecedent : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="anteceGeneFami" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.general_antecedent"></textarea>
+							<div class="row row-cols-md-2">
+								<!-- Inicio de Primera Columna -->
+								<div class="col">
+									<div class="">
+										<p class="mb-0"><b>Antecedente General</b></p>
+										<p class="collapse__paragraph" id="general_antecedent" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('general_antecedent')" v-if="!inicialInputPsiquiatria.general_antecedent">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.general_antecedent : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="anteceGeneFami" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.general_antecedent"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Principales signos y síntomas</b></p>
+										<p class="collapse__paragraph" id="main_signs_symptoms" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('main_signs_symptoms')" v-if="!inicialInputPsiquiatria.main_signs_symptoms">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.main_signs_symptoms : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="sigSinPrin" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.main_signs_symptoms"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Problema actual</b></p>
+										<p class="collapse__paragraph" id="psiquiatria_Illness" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('psiquiatria_illness')" v-if="!inicialInputPsiquiatria.illness">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.illness : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="efermeAct" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.illness"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>APC</b></p>
+										<p class="collapse__paragraph" id="apc" :data-rol="rol === 'Psiquiatra'" @click="convertir('apc')"
+											v-if="!inicialInputPsiquiatria.apc">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.apc : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="apcPsiqui" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.apc"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Lenguaje</b></p>
+										<p class="collapse__paragraph" id="languaje" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('languaje')" v-if="!inicialInputPsiquiatria.languaje">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.languaje : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="lenguaje" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.languaje"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Pensamiento</b></p>
+										<p class="collapse__paragraph" id="thought" :data-rol="rol === 'Psiquiatra'" @click="convertir('thought')"
+											v-if="!inicialInputPsiquiatria.thought">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.thought : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="pensamiento" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.thought"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Afecto</b></p>
+										<p class="collapse__paragraph" id="affect" :data-rol="rol === 'Psiquiatra'" @click="convertir('affect')"
+											v-if="!inicialInputPsiquiatria.affect">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.affect : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="afecto" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.affect"></textarea>
+										</div>
+									</div>
 								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Principales signos y síntomas</b></p>
-								<p class="collapse__paragraph" id="main_signs_symptoms" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('main_signs_symptoms')" v-if="!inicialInputPsiquiatria.main_signs_symptoms">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.main_signs_symptoms : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="sigSinPrin" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.main_signs_symptoms"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Problema actual</b></p>
-								<p class="collapse__paragraph" id="psiquiatria_Illness" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('psiquiatria_illness')" v-if="!inicialInputPsiquiatria.illness">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.illness : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="efermeAct" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.illness"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>APC</b></p>
-								<p class="collapse__paragraph" id="apc" :data-rol="rol === 'Psiquiatra'" @click="convertir('apc')"
-									v-if="!inicialInputPsiquiatria.apc">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.apc : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="apcPsiqui" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.apc"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Lenguaje</b></p>
-								<p class="collapse__paragraph" id="languaje" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('languaje')" v-if="!inicialInputPsiquiatria.languaje">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.languaje : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="lenguaje" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.languaje"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Pensamiento</b></p>
-								<p class="collapse__paragraph" id="thought" :data-rol="rol === 'Psiquiatra'" @click="convertir('thought')"
-									v-if="!inicialInputPsiquiatria.thought">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.thought : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="pensamiento" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.thought"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Afecto</b></p>
-								<p class="collapse__paragraph" id="affect" :data-rol="rol === 'Psiquiatra'" @click="convertir('affect')"
-									v-if="!inicialInputPsiquiatria.affect">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.affect : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="afecto" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.affect"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Percepción</b></p>
-								<p class="collapse__paragraph" id="percetion" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('percetion')" v-if="!inicialInputPsiquiatria.percetion">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.percetion : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="percepcion" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.percetion"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Función superior</b></p>
-								<p class="collapse__paragraph" id="superior_function" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('superior_function')" v-if="!inicialInputPsiquiatria.superior_function">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.superior_function : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="funciones" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.superior_function"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Abstracción</b></p>
-								<p class="collapse__paragraph" id="abstraction" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('abstraction')" v-if="!inicialInputPsiquiatria.abstraction">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.abstraction : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="abstraccion" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.abstraction"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Conciencia</b></p>
-								<p class="collapse__paragraph" id="conscience" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('conscience')" v-if="!inicialInputPsiquiatria.conscience">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.conscience : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="conciencia" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.conscience"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Insight</b></p>
-								<p class="collapse__paragraph" id="insight" :data-rol="rol === 'Psiquiatra'" @click="convertir('insight')"
-									v-if="!inicialInputPsiquiatria.insight">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.insight : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="insight" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.insight"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Problemas Diagnóstico</b></p>
-								<p class="collapse__paragraph" id="diagnostic_problems" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('diagnostic_problems')" v-if="!inicialInputPsiquiatria.diagnostic_problems">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.diagnostic_problems : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="problemsDiag" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.diagnostic_problems"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b> Diagnóstico</b></p>
-								<div class="form-group position-relative diagnostico-input" style="min-height: 100px;">
-									<div class="position-relative">
-										<input type="text" class="form-control" autocomplete="off" name="diagnostico" id="diagnostico"
-											v-model="searchCie" @keyup="getDiagnostico">
-										<button class="btn btn-warning position-absolute update-diagnostic" @click="updateDiag">
-											<i class="fas fa-save" title="Guardar cambios"></i>
-										</button>
-										<!-- v-model="inicialPsiquiatria.diagnostic" -->
-										<div class="cie-content rounded overflow-auto">
-											<div v-for="(cie, index) in dataCies" :key="index">
-												<span class="w-100 px-2 py-2 cie--hover d-inline-block pointer cie-item"
-													:class="{ 'cie-danger': inicialPsiquiatria.diagnostic.find(el => el == cie.id) }"
-													:data-id="cie.id" @click="addCie">
-													{{ cie.id }} - {{ cie.code }} - {{ cie.description }}
-												</span>
+								<!-- Fin de Primera Columna -->
+								<!-- Inicio de Segunda columna -->
+								<div class="col">
+									<div>
+										<p class="mb-0"><b>Percepción</b></p>
+										<p class="collapse__paragraph" id="percetion" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('percetion')" v-if="!inicialInputPsiquiatria.percetion">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.percetion : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="percepcion" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.percetion"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Función superior</b></p>
+										<p class="collapse__paragraph" id="superior_function" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('superior_function')" v-if="!inicialInputPsiquiatria.superior_function">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.superior_function : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="funciones" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.superior_function"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Abstracción</b></p>
+										<p class="collapse__paragraph" id="abstraction" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('abstraction')" v-if="!inicialInputPsiquiatria.abstraction">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.abstraction : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="abstraccion" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.abstraction"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Conciencia</b></p>
+										<p class="collapse__paragraph" id="conscience" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('conscience')" v-if="!inicialInputPsiquiatria.conscience">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.conscience : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="conciencia" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.conscience"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Insight</b></p>
+										<p class="collapse__paragraph" id="insight" :data-rol="rol === 'Psiquiatra'" @click="convertir('insight')"
+											v-if="!inicialInputPsiquiatria.insight">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.insight : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="insight" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.insight"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Problemas Diagnóstico</b></p>
+										<p class="collapse__paragraph" id="diagnostic_problems" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('diagnostic_problems')" v-if="!inicialInputPsiquiatria.diagnostic_problems">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.diagnostic_problems : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="problemsDiag" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.diagnostic_problems"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b> Diagnóstico</b></p>
+										<div class="form-group position-relative diagnostico-input" style="min-height: 100px;">
+											<div class="position-relative">
+												<input type="text" class="form-control" autocomplete="off" name="diagnostico" id="diagnostico"
+													v-model="searchCie" @keyup="getDiagnostico">
+												<button class="btn btn-warning position-absolute update-diagnostic" @click="updateDiag">
+													<i class="fas fa-save" title="Guardar cambios"></i>
+												</button>
+												<!-- v-model="inicialPsiquiatria.diagnostic" -->
+												<div class="cie-content rounded overflow-auto">
+													<div v-for="(cie, index) in dataCies" :key="index">
+														<span class="w-100 px-2 py-2 cie--hover d-inline-block pointer cie-item"
+															:class="{ 'cie-danger': inicialPsiquiatria.diagnostic.find(el => el == cie.id) }"
+															:data-id="cie.id" @click="addCie">
+															{{ cie.id }} - {{ cie.code }} - {{ cie.description }}
+														</span>
+													</div>
+												</div>
+											</div>
+											<div class="d-flex flex-gap flex-wrap mt-3 overflow-auto">
+												<div v-if="cieAdd" v-for="(cieAgregado, index) in datosConsulta.cies" :key="`cie${index}`"
+													class="bg-warning rounded text-light p-2">
+													{{ typeof cieAgregado == 'object' ? `${cieAgregado.id} - ${cieAgregado.code} -
+																								${cieAgregado.description}` : cieAgregado }}
+													<span :data-cie="index" class="cie-item ml-2 pointer" @click="deleteCie"><i
+															class="fas fa-times"></i></span>
+												</div>
 											</div>
 										</div>
 									</div>
-									<div class="d-flex flex-gap flex-wrap mt-3 overflow-auto">
-										<div v-if="cieAdd" v-for="(cieAgregado, index) in datosConsulta.cies" :key="`cie${index}`"
-											class="bg-warning rounded text-light p-2">
-											{{ typeof cieAgregado == 'object' ? `${cieAgregado.id} - ${cieAgregado.code} -
-																						${cieAgregado.description}` : cieAgregado }}
-											<span :data-cie="index" class="cie-item ml-2 pointer" @click="deleteCie"><i
-													class="fas fa-times"></i></span>
+									<div>
+										<p class="mb-0"><b>Plan</b></p>
+										<p class="collapse__paragraph" id="psiquiatria_plan" :data-rol="rol === 'Psiquiatra'"
+											@click="convertir('psiquiatria_plan')" v-if="!inicialInputPsiquiatria.plan">
+											{{ inicialPsiquiatria ? inicialPsiquiatria.plan : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="plan" id="" cols="10" rows="3" class="form-control"
+												v-model="inicialPsiquiatria.plan"></textarea>
 										</div>
 									</div>
 								</div>
+								<!-- Fin de Segunda columna -->
 							</div>
-							<div>
-								<p class="mb-0"><b>Plan</b></p>
-								<p class="collapse__paragraph" id="psiquiatria_plan" :data-rol="rol === 'Psiquiatra'"
-									@click="convertir('psiquiatria_plan')" v-if="!inicialInputPsiquiatria.plan">
-									{{ inicialPsiquiatria ? inicialPsiquiatria.plan : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="plan" id="" cols="10" rows="3" class="form-control"
-										v-model="inicialPsiquiatria.plan"></textarea>
-								</div>
-							</div>
+							
+							
 						</div>
 					</form>
 				</div>
@@ -288,7 +313,7 @@
 		</div>
 
 		<div class="row mt-3 ">
-			<div class="col-md-12" v-if="rol === 'Psicólogo'">
+			<div class="col-md-12"> <!-- v-if="rol === 'Psicólogo'" -->
 				<div class="card shadow mb-4">
 					<!-- Card Header - Dropdown -->
 					<div class="card-header bg-warning py-3 d-flex flex-row align-items-center justify-content-between">
@@ -299,72 +324,80 @@
 					<!-- Card Body -->
 					<form class="card-body" @submit.prevent>
 						<div class="historia-info">
-							<div>
-								<p class="mb-0"><b>Problema actual</b></p>
-								<p class="collapse__paragraph" id="Psicologia_illness" :data-rol="rol === 'Psicólogo'"
-									@click="convertir('Psicologia_illness')" v-if="!inicialInputPsychological.illness">
-									{{ initialPsychological.illness ? initialPsychological.illness : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="" id="" cols="10" rows="3" class="form-control"
-										v-model="initialPsychological.illness"></textarea>
+							<div class="row row-cols-md-2">
+								<div class="col">
+									<div>
+										<p class="mb-0"><b>Problema actual</b></p>
+										<p class="collapse__paragraph" id="Psicologia_illness" :data-rol="rol === 'Psicólogo'"
+											@click="convertir('Psicologia_illness')" v-if="!inicialInputPsychological.illness">
+											{{ initialPsychological.illness ? initialPsychological.illness : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="" id="" cols="10" rows="3" class="form-control"
+												v-model="initialPsychological.illness"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Antecedentes</b></p>
+										<p class="collapse__paragraph" id="antecedent" :data-rol="rol === 'Psicólogo'"
+											@click="convertir('antecedent')" v-if="!inicialInputPsychological.antecedent">
+											{{ initialPsychological.antecedent ? initialPsychological.antecedent : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="" id="" cols="10" rows="3" class="form-control"
+												v-model="initialPsychological.antecedent"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Dinámica</b></p>
+										<p class="collapse__paragraph" id="dynamic" :data-rol="rol === 'Psicólogo'" @click="convertir('dynamic')"
+											v-if="!inicialInputPsychological.dynamic">
+											{{ initialPsychological.dynamic ? initialPsychological.dynamic : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="" id="" cols="10" rows="3" class="form-control"
+												v-model="initialPsychological.dynamic"></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div>
+										<p class="mb-0"><b>Actitud actual</b></p>
+										<p class="collapse__paragraph" id="attitude" :data-rol="rol === 'Psicólogo'"
+											@click="convertir('attitude')" v-if="!inicialInputPsychological.attitude">
+											{{ initialPsychological.attitude ? initialPsychological.attitude : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="" id="" cols="10" rows="3" class="form-control"
+												v-model="initialPsychological.attitude"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>DX</b></p>
+										<p class="collapse__paragraph" id="dx" :data-rol="rol === 'Psicólogo'" @click="convertir('dx')"
+											v-if="!inicialInputPsychological.dx">
+											{{ initialPsychological.dx ? initialPsychological.dx : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="" id="" cols="10" rows="3" class="form-control"
+												v-model="initialPsychological.dx"></textarea>
+										</div>
+									</div>
+									<div>
+										<p class="mb-0"><b>Plan</b></p>
+										<p class="collapse__paragraph" id="Psicologia_plan" :data-rol="rol === 'Psicólogo'"
+											@click="convertir('Psicologia_plan')" v-if="!inicialInputPsychological.plan">
+											{{ initialPsychological.plan ? initialPsychological.plan : '...' }}
+										</p>
+										<div class="collpase__textarea" v-else>
+											<textarea name="" id="" cols="10" rows="3" class="form-control"
+												v-model="initialPsychological.plan"></textarea>
+										</div>
+									</div>
 								</div>
 							</div>
-							<div>
-								<p class="mb-0"><b>Antecedentes</b></p>
-								<p class="collapse__paragraph" id="antecedent" :data-rol="rol === 'Psicólogo'"
-									@click="convertir('antecedent')" v-if="!inicialInputPsychological.antecedent">
-									{{ initialPsychological.antecedent ? initialPsychological.antecedent : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="" id="" cols="10" rows="3" class="form-control"
-										v-model="initialPsychological.antecedent"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Dinámica</b></p>
-								<p class="collapse__paragraph" id="dynamic" :data-rol="rol === 'Psicólogo'" @click="convertir('dynamic')"
-									v-if="!inicialInputPsychological.dynamic">
-									{{ initialPsychological.dynamic ? initialPsychological.dynamic : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="" id="" cols="10" rows="3" class="form-control"
-										v-model="initialPsychological.dynamic"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Actitud actual</b></p>
-								<p class="collapse__paragraph" id="attitude" :data-rol="rol === 'Psicólogo'"
-									@click="convertir('attitude')" v-if="!inicialInputPsychological.attitude">
-									{{ initialPsychological.attitude ? initialPsychological.attitude : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="" id="" cols="10" rows="3" class="form-control"
-										v-model="initialPsychological.attitude"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>DX</b></p>
-								<p class="collapse__paragraph" id="dx" :data-rol="rol === 'Psicólogo'" @click="convertir('dx')"
-									v-if="!inicialInputPsychological.dx">
-									{{ initialPsychological.dx ? initialPsychological.dx : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="" id="" cols="10" rows="3" class="form-control"
-										v-model="initialPsychological.dx"></textarea>
-								</div>
-							</div>
-							<div>
-								<p class="mb-0"><b>Plan</b></p>
-								<p class="collapse__paragraph" id="Psicologia_plan" :data-rol="rol === 'Psicólogo'"
-									@click="convertir('Psicologia_plan')" v-if="!inicialInputPsychological.plan">
-									{{ initialPsychological.plan ? initialPsychological.plan : '...' }}
-								</p>
-								<div class="collpase__textarea" v-else>
-									<textarea name="" id="" cols="10" rows="3" class="form-control"
-										v-model="initialPsychological.plan"></textarea>
-								</div>
-							</div>
+							
+							
 						</div>
 					</form>
 				</div>
@@ -498,6 +531,8 @@
 		<edit-modal :datosModal="dataModal"></edit-modal>
 		<modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
 		<modal-ver-triajes-viejos :triajes = "datosConsulta.triajes"></modal-ver-triajes-viejos>
+		<ModalEditarPariente :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
+		<ModalVerEstados :dataPatient="datosPaciente" :estados="estados"></ModalVerEstados>
 	</div>
 </template>
 
@@ -510,11 +545,13 @@ import { dateNow } from '../../../../helpers/Time.js'
 import moment from 'moment';
 import modalVerDetalle from './ModalVerDetalle.vue';
 import ModalVerTriajesViejos from './../../../recepcionista/components/pacientes/ModalVerTriajesViejos.vue';
+import ModalEditarPariente from './ModalEditarPariente.vue'
+import ModalVerEstados from './../../../recepcionista/components/pacientes/ModalVerEstados.vue'
 
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados },
 
 	data() {
 		return {
@@ -537,6 +574,8 @@ export default {
 				id: '',
 				tipoExam: 'SCL90R'
 			},
+			estados:[ {id: 1, valor: 'Neutro'}, {id: 2, valor: 'excelente'}, {id: 3, valor: 'promotor'}, {id: 4, valor: 'wow'}, {id: 5, valor: 'reprogramador'}, {id: 6, valor: 'exigente'}, {id: 7, valor: 'deudor'},
+				{id: 8, valor: 'insatisfecho'}, {id: 9, valor: 'peligroso'}, ], datosPaciente:null,
 
 			inicialPsiquiatria: {
 				id: '',
@@ -643,6 +682,11 @@ export default {
 		editEvolution(evolution) {
 			this.dataModal = evolution
 		},
+		updatePariente(pariente){
+			this.datosConsulta.relative.name = pariente.nombre
+			this.datosConsulta.relative.phone = pariente.celular
+			this.datosConsulta.relative.kinship = pariente.parentesco
+		},
 		async getHistories() {
 			await this.axios.get(`/api/patientEvolution/${this.$route.params.idPaciente}`)
 				.then(res => {
@@ -683,6 +727,14 @@ export default {
 				})
 				.catch(err => {
 					console.error(err)
+				})
+				await this.axios.get(`/api/datosPacienteSemaforo/${this.$route.params.idPaciente}`)
+				.then(res =>{
+					this.datosPaciente={
+						id: this.datosConsulta.id,
+						name: this.datosConsulta.name,
+						semaforo: res.data
+					}
 				})
 		},
 
@@ -877,7 +929,8 @@ export default {
 					this.dobleClick = false;
 				}
 			} else {
-				alert('No tienes acceso para editar a este paciente')
+				//alert('No tienes acceso para editar a este paciente')
+				this.$swal.fire({title: 'No tiene acceso para editar este bloque', icon:'error'})
 			}
 		},
 
@@ -984,6 +1037,10 @@ export default {
 			}
 			//datosConsulta.examenes[0].length + datosConsulta.examenes[1]['burns'].length + datosConsulta.examenes[1]['gads'].length + datosConsulta.examenes[1]['scrs'].length + datosConsulta.examenes[1]['zung_anxieties'].length + datosConsulta.examenes[1]['zung_depressions'].length
 		},
+		queEstado(dato){
+			if(dato!== undefined) return this.estados.find(x=> x.id == dato).valor
+			else return '';
+		}
 	},
 
 	computed: {
@@ -1005,8 +1062,8 @@ export default {
 					}
 				})
 			}
-
 		},
+	
 	},
 
 	created() {

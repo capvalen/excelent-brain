@@ -105,9 +105,19 @@ Route::resource('evolution', Medical_evolutionController::class)->only(['index',
 Route::get('pdfEvolution/{id}', [Medical_evolutionController::class, 'pdfEvolution']);
 
 Route::get('getNamePatient/{id}', [PatientController::class, 'getNamePatient']);
+Route::get('datosPacienteSemaforo/{id}', [PatientController::class, 'datosPacienteSemaforo']);
 Route::get('listarCumpleanos/{mes}', [PatientController::class, 'listarCumpleanos']);
+Route::post('editarPariente/{id}', [PatientController::class, 'editarPariente']);
 
 Route::post('nuevoAviso/', [ExtrasController::class, 'nuevoAviso']);
+Route::post('actualizarAviso/', [ExtrasController::class, 'actualizarAviso']);
+Route::get('listarAvisos/{fecha}', [ExtrasController::class, 'listarAvisos']);
+Route::post('nuevoInteresado/', [ExtrasController::class, 'nuevoInteresado']);
+Route::get('listarInteresados/', [ExtrasController::class, 'listarInteresados']);
+Route::get('borrarInteresados/{id}', [ExtrasController::class, 'borrarInteresados']);
+Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
+
+
 
 Route::get('getNameExam/{id}', [PatientController::class, 'getNameExam']);
 Route::post('insertarTriaje/{id}', [PatientController::class, 'insertarTriaje']);

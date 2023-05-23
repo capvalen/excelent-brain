@@ -70,7 +70,7 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="">Estado Civil</label>
-                  <select class="form-control" name="marital_status" id="marital_status" v-model="dataPatient.marital_status">
+                  <select class="form-select" name="marital_status" id="marital_status" v-model="dataPatient.marital_status">
                     <option value="1">Soltero</option>
                     <option value="2">Casado</option>
                     <option value="3">Viudo</option>
@@ -83,7 +83,7 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="">Grado de instrucción</label>
-                  <select class="form-control" name="instruction_degree" id="instruction_degree" v-model="dataPatient.instruction_degree">
+                  <select class="form-select" name="instruction_degree" id="instruction_degree" v-model="dataPatient.instruction_degree">
                     <option value="1">Inicial</option>
                     <option value="2">Primaria</option>
                     <option value="3">Secundaria</option>

@@ -3,7 +3,7 @@
         <select
             @change="getMedicine"
             name=""
-            class="form-control"
+            class="form-select"
             id="selectMonth"
         >
             <option disabled selected value>Seleccione un mes</option>

@@ -3,8 +3,8 @@
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header bg-primary text-white">
-						<h5 class="modal-title" id="infoModalLabel">Estados del Paciente</h5>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+						<h5 class="modal-title" id="infoModalLabel">Perfil del paciente</h5>
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 					</div>
 					<div class="modal-body">
 						<p class="mb-0 lead">Paciente: {{ dataPatient.name }}</p>
@@ -12,7 +12,7 @@
 							<div class="card-body">
 								<div class="row">
 									<div class="col-sm-3">
-										<select class="form-control text-capitalize" id="" v-model="semaforo.codigo">
+										<select class="form-select text-capitalize" id="" v-model="semaforo.codigo">
 											<option v-for="estado in estados" class="text-capitalize" :value="estado.id">{{estado.valor}}</option>
 										</select>
 									</div>
@@ -75,6 +75,8 @@ import moment from 'moment';
 					if(response.data.msg =='insertado con éxito'){
 						this.dataPatient.semaforo.unshift( {registro: moment(), codigo: this.semaforo.codigo, observaciones: this.semaforo.observaciones});
 					}
+					this.semaforo.codigo = 1
+					this.semaforo.observaciones=''
 				})
 			},
 			queCodigo(tipo){

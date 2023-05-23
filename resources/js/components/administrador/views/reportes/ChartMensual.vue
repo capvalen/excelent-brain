@@ -10,7 +10,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                <select @change="getDataForCharts" name="" class="form-control" id="selectMonth">
+                <select @change="getDataForCharts" name="" class="form-select" id="selectMonth">
                     <option disabled selected value>Seleccione un mes</option>
                     <option v-for="(month, index) in months" :key="index" :value="month">{{month | optionParseMonth}}</option>
                 </select>

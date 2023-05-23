@@ -33,7 +33,7 @@
                 <div class="col-sm-6">
                   <label for="type">Profesional</label>
                   <select 
-                  class="form-control" 
+                  class="form-select" 
                   name="professional_id" 
                   id="professional_id"  
                   v-model="form.professional_id"

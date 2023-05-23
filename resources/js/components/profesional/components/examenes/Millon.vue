@@ -85,7 +85,7 @@
                 <div @click="selectPatient(patient)" class="border border-secondary"  v-for="patient in filtro" :key="patient.id">{{patient.name}}</div>
             </div>
 
-            <select v-model="sexo" name="" id="" class="form-control input-select">
+            <select v-model="sexo" name="" id="" class="form-select input-select">
                 <option value="">Sexo</option>
                 <option value="M">Varon</option>
                 <option value="F">Mujer</option>

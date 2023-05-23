@@ -14,7 +14,7 @@
             <div class="form-group row">                                                                           
               <div class="col-sm-12">
                 <div class="form-group">                                 
-                  <select class="form-control status-appointment" name="status" id="status" v-model="dataCit.status">
+                  <select class="form-select status-appointment" name="status" id="status" v-model="dataCit.status">
                     <option value="1">Sin Confirmar</option>
                     <option value="2">Confirmado</option>
                     <option value="3">Cancelado</option>

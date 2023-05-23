@@ -155,6 +155,9 @@
     <title>Imprimir Cupón</title>
 </head>
 <body>
+@php
+	use Carbon\Carbon;
+@endphp
     <div class="container">
         <div class="container-fluid p-0">
             <div class="header">
@@ -170,11 +173,15 @@
                     <h2>NOTA DE VENTA</h2>
                     <h2>E002-00{{$extra_payment->id}}</h2>
                     <div class="main-data">
-											<p>EMISIÓN: {{date('d/m/Y h:i:s A')}}</p>
-												<p class="name">CLIENTE: {{$extra_payment->customer}}</p>
-												<p>USUARIO: -</p>
-                        {{-- <p>DNI: {{$patient[0]->dni}}</p> --}}
-                        {{-- <p>DIRECCIÓN: {{$patient[0]->address->address}}</p> --}}
+											<p>EMISIÓN:  
+												<span>@php
+												$fecha = Carbon::parse( $appointment->date ); echo $fecha->format('d/m/Y');
+												@endphp</span>
+											</p>
+											<p class="name">CLIENTE: {{$extra_payment->customer}}</p>
+											<p>USUARIO: -</p>
+											{{-- <p>DNI: {{$patient[0]->dni}}</p> --}}
+											{{-- <p>DIRECCIÓN: {{$patient[0]->address->address}}</p> --}}
                     </div>
                     <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
                         <thead>
@@ -216,25 +223,26 @@
                         <thead>
                             <tr>
                                 <td>DESCUENTO</td>
-                                <td style="text-align: right;">S./ 0.00</td>
+                                <td style="text-align: right;">S/ 0.00</td>
                             </tr>
                             <tr>
                                 <td>OP.GRAVADA</td>
-                                <td style="text-align: right;">S./ {{$extra_payment->price - $extra_payment->price*.18}}</td>
+                                <td style="text-align: right;">S/ {{$extra_payment->price - $extra_payment->price*.18}}</td>
                             </tr>
                             <tr>
                                 <td>I.G.V</td>
-                                <td style="text-align: right;">S./ {{$extra_payment->price*.18}}</td>
+                                <td style="text-align: right;">S/ {{$extra_payment->price*.18}}</td>
                             </tr>
                             <tr>
                                 <td><strong>IMPORTE TOTAL</strong></td>
-                                <td style="text-align: right;">S./ {{$extra_payment->price}}</td>
+                                <td style="text-align: right;">S/ {{$extra_payment->price}}</td>
                             </tr>
                         </thead>
                     </table>
             </div>
             <p class="slogan" style="margin-top:10px;">Tu salud mental es lo más importante</p>
-            <p class="note_slogan">NOTA: Este documento es intercambiable por una Boleta de venta o Factura</p>
+            <p class="note_slogan">NOTAS: Este doc. es intercambiable por una Boleta o Factura</p>
+            <p class="note_slogan">No hay devoluciones. Todo adelanto expira en 3 meses</p>
         </div>
     </div>
 

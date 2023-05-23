@@ -8,7 +8,7 @@
 
     <div class="form-row">
       <label for="gender">Genero</label>
-      <select name="gender" id="gender" class="form-control input-name" v-model="dataPersonalPatient.gender">
+      <select name="gender" id="gender" class="form-select input-name" v-model="dataPersonalPatient.gender">
         <option value="Sin escoger" selected disabled>Sin escoger</option>
         <option value="m">Masculino</option>
         <option value="f">Femenino</option>
@@ -17,7 +17,7 @@
 
     <div class="form-row">
       <label for="age">Edad</label>
-      <select name="age" id="age" class="form-control" v-model="dataPersonalPatient.age">
+      <select name="age" id="age" class="form-select" v-model="dataPersonalPatient.age">
         <option value="Sin escoger" selected disabled>Sin escoger</option>
         <option 
           v-for="i in 10"

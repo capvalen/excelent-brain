@@ -29,8 +29,8 @@
 
             <div class="form-group row">                   
               <div class="col-sm-12">
-                <label for="name">Direccion de paciente</label>
-                <input type="text" class="form-control" name="address" id="address" v-model="paciente.address.address" placeholder="Direccion del paciene">
+                <label for="name">Dirección de paciente</label>
+                <input type="text" class="form-control" name="address" id="address" v-model="paciente.address.address" placeholder="Dirección del paciente">
               </div>
 
               <div class="col-sm-6 d-none">
@@ -42,19 +42,19 @@
             <div class="form-group row">
 							<div class="col-sm-4">
 									<label for="name">Departamento</label>
-									<select v-model="paciente.address.department" class="form-control" id="department" @change="moverProvincias(true)">
+									<select v-model="paciente.address.department" class="form-select" id="department" @change="moverProvincias(true)">
 										<option v-for="departamento in ubigeo.departamentos" :value="departamento.idDepa">{{ departamento.departamento }}</option>
 									</select>
 							</div>
 							<div class="col-sm-4">
 									<label for="name">Provincia</label>
-									<select v-model="paciente.address.province" class="form-control" id="provincia" @change="moverDistritos()">
+									<select v-model="paciente.address.province" class="form-select" id="provincia" @change="moverDistritos()">
 										<option v-for="provincia in provincias" :value="provincia.idProv">{{ provincia.provincia }}</option>
 									</select>
 							</div>
 							<div class="col-sm-4">
 									<label for="name">Distrito</label>
-									<select v-model="paciente.address.district" class="form-control" id="distrito">
+									<select v-model="paciente.address.district" class="form-select" id="distrito">
 										<option v-for="distrito in distritos" :value="distrito.idDist">{{ distrito.distrito }}</option>
 									</select>
 							</div>
@@ -70,7 +70,7 @@
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Estado Civil</label>
-                  <select class="form-control" name="marital_status" id="marital_status" v-model="paciente.marital_status">
+                  <select class="form-select" name="marital_status" id="marital_status" v-model="paciente.marital_status">
                     <option value="1">Soltero</option>
                     <option value="2">Casado</option>
                     <option value="3">Viudo</option>
@@ -83,7 +83,7 @@
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Grado de instrucción</label>
-                  <select class="form-control" name="instruction_degree" id="instruction_degree" v-model="paciente.instruction_degree">
+                  <select class="form-select" name="instruction_degree" id="instruction_degree" v-model="paciente.instruction_degree">
                     <option value="1">Inicial</option>
                     <option value="2">Primaria</option>
                     <option value="3">Secundaria</option>
@@ -97,11 +97,11 @@
 						<div class="form-group row">
               <div class="col-sm-6">
                 <label for="name">Fecha de nacimiento</label>
-                <input type="date" class="form-control" name="birth_date" id="birth_date" v-model="paciente.birth_date">
+                <input type="date" class="form-select" name="birth_date" id="birth_date" v-model="paciente.birth_date">
               </div>
               <div class="col-sm-6">
 								<label for="name">Género</label>
-								<select class="form-control" id="sexo" v-model="paciente.gender">
+								<select class="form-select" id="sexo" v-model="paciente.gender">
 									<option value="2">Sin definir</option>
 									<option value="0">Femenino</option>
 									<option value="1">Masculino</option>

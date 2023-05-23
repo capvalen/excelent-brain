@@ -14,18 +14,18 @@
         <thead class="bg-success text-white">
             <tr>
                 <td>Cita</td>
-                <td>Cliente</td>
+                <td>Cliente - Motivo</td>
                 <td>Monto</td>
                 <td>Fecha</td>
                 <td>Motivo</td>
-                <td>Observación</td>
+                <td>Moneda</td>
                 <td>Ticket</td>
             </tr>
         </thead>
         <tbody>
             <tr v-for="payment in payments">
                 <td>{{ payment.id}}</td>
-                <td class="text-capitalize">{{ payment.customer }}</td>
+                <td class="text-capitalize">{{ payment.customer }} {{ payment.observation }}</td>
                 <!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
                 <td v-else-if="payment.pay_status == 2">Cancelado</td> -->
                 <td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{payment.price}}</td>
@@ -39,7 +39,17 @@
 									<span v-if="payment.type==1">Paquete Membresía</span>
 									<span v-if="payment.type==0">Certificado</span>
 								</td>
-								<td class="text-capitalize">{{ payment.observation }}</td>
+								<td class="text-capitalize">
+									<span v-if="payment.moneda==1">Efectivo</span>
+									<span v-if="payment.moneda==2">Depósito bancario</span>
+									<span v-if="payment.moneda==4">Aplicativo Yape/Plin</span>
+									<span v-if="payment.moneda==3">POS</span>
+									<span v-if="payment.moneda==5">Banco: BCP</span>
+									<span v-if="payment.moneda==6">Banco: BBVA</span>
+									<span v-if="payment.moneda==7">Banco: Interbank</span>
+									<span v-if="payment.moneda==8">Banco: Nación</span>
+									<span v-if="payment.moneda==9">Banco: Scotiabank</span>
+								</td>
                 <td><a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm">Generar PDF</a></td>
             </tr>
         </tbody>
