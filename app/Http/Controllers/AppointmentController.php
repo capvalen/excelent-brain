@@ -482,6 +482,15 @@ class AppointmentController extends Controller
 	 */
 	public function destroy(Appointment $appointment)
 	{
+		DB::table('faltas')->insert([
+			'idPaciente' => $appointment->patient_id,
+			'idProfesional' => $appointment->professional_id,
+			'idHorario' => $appointment->schedule_id,
+			'fecha' => $appointment->date
+		]);
+		$patient = Patient::find( $appointment->patient_id );
+		$patient->increment('faults');
+		$patient->save();
 		$appointment->delete();
 	}
 

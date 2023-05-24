@@ -208,8 +208,7 @@ class PatientController extends Controller
 		$zung_anxieties = DB::table('zung_anxieties')->where('patient_id', $evoluciones->id)->get();
 		$zung_depressions = DB::table('zung_depressions')->where('patient_id', $evoluciones->id)->get();
 		$evoluciones->examenes_personalizados =  
-			 array( 'scrs' => $scrs, 'burns' => $burns, 'gads' => $gads, 'zung_anxieties' => $zung_anxieties, 'zung_depressions' => $zung_depressions)
-		;
+			 array( 'scrs' => $scrs, 'burns' => $burns, 'gads' => $gads, 'zung_anxieties' => $zung_anxieties, 'zung_depressions' => $zung_depressions);
 
 		return response()->json($evoluciones);
 	}
@@ -366,7 +365,10 @@ class PatientController extends Controller
 		}
 
 		public function listarCumpleanos($mes){
-			$pacientes = Patient::whereMonth('birth_date', $mes )->orderBy('name', 'asc')->get();
+			$pacientes = Patient::whereMonth('birth_date', $mes )
+			//->orderBy('birth_date', 'asc')
+			->orderByRaw("DAY(birth_date) ASC")
+			->get();
 			return $pacientes;
 		}
 
@@ -403,6 +405,17 @@ class PatientController extends Controller
 		public function datosPacienteSemaforo($id){
 			$semaforo = DB::table('semaforo')->where('patient_id', $id )->where('activo',1)->orderBy('registro', 'desc')->get();
 			return response()->json($semaforo);
+		}
+		
+		public function verHistorialFaltas($id){
+			
+			$faltas = DB::table('faltas as f')
+			->join('professionals as p', 'p.id', '=', 'f.idProfesional')
+			->join('schedules as s', 's.id', '=', 'f.idHorario')
+			->where('idPaciente', $id)
+			->select('f.*', 'p.name', 's.check_time as hora' )->get();
+
+			return response()->json($faltas);
 		}
 
 }

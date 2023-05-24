@@ -35,57 +35,52 @@
       </thead>
       <tbody>
         <tr
-        v-for="(patients, index) in busqueda" :key = "index">
+        v-for="(paciente, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
-          <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
+          <td class="text-capitalize" >{{ paciente.name ? lowerCase(paciente.name) : 'Sin nombre' }}</td>
 					<td>
-						<button class="btn btn-light" v-if="patients.club=='0'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(patients.club, patients.id)"><i class="fa-regular fa-hand-back-fist"></i></button>
-						<button class="btn btn-primary" v-if="patients.club=='1'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(patients.club, patients.id)"><i class="fa-solid fa-thumbs-up"></i></button>
-						<button class="btn btn-danger" v-if="patients.club=='2'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(patients.club, patients.id)"><i class="fa-solid fa-thumbs-down"></i></button>
+						<button class="btn btn-light" v-if="paciente.club=='0'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(paciente.club, paciente.id)"><i class="fa-regular fa-hand-back-fist"></i></button>
+						<button class="btn btn-primary" v-if="paciente.club=='1'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(paciente.club, paciente.id)"><i class="fa-solid fa-thumbs-up"></i></button>
+						<button class="btn btn-danger" v-if="paciente.club=='2'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(paciente.club, paciente.id)"><i class="fa-solid fa-thumbs-down"></i></button>
 					</td>
 					<td>
-						<div v-if="patients.semaforo[0]">
-							<button v-if="patients.semaforo[0].codigo==1" class="btn btn-primary btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+						<div v-if="paciente.semaforo[0]">
+							<button v-if="paciente.semaforo[0].codigo==1" class="btn btn-primary btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span  title="Normal"><i class="fas fa-smile"></i></span>
 							</button>
-							<button v-if="patients.semaforo[0].codigo==2" class="btn btn-success btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+							<button v-if="paciente.semaforo[0].codigo==2" class="btn btn-success btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span title="Excelente"> <i class="fas fa-laugh-wink"></i> </span>
 							</button>
-							<button v-if="patients.semaforo[0].codigo==3" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+							<button v-if="paciente.semaforo[0].codigo==3" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span title="Exigente"> <i class="fas fa-meh"></i> </span>
 							</button>
-							<button v-if="patients.semaforo[0].codigo==4" class="btn btn-warning btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+							<button v-if="paciente.semaforo[0].codigo==4" class="btn btn-warning btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span title="Deudor"> <i class="fas fa-frown-open"></i> </span>
 							</button>
-							<button v-if="patients.semaforo[0].codigo==5" class="btn btn-info btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+							<button v-if="paciente.semaforo[0].codigo==5" class="btn btn-info btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span title="Insatisfecho"> <i class="fas fa-angry"></i> </span>
 							</button>
-							<button v-if="patients.semaforo[0].codigo==6" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+							<button v-if="paciente.semaforo[0].codigo==6" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span title="Peligroso"> <i class="fas fa-frown"></i> </span>
 							</button>
 						</div>
 						<div v-else>
-							<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(patients)">
+							<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span title="Normal sin registro"><i class="fas fa-smile"></i></span>
 							</button>
 						</div>
 					</td>
 					<td>
-						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
-						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje" title="Nuevo triaje"><i class="fas fa-file-medical-alt"></i></button>
+						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ paciente.triajes.length }}</button>
+						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(paciente)" data-target="#modalTriaje" title="Nuevo triaje"><i class="fas fa-file-medical-alt"></i></button>
 					</td>
           <td>
-            <button
-            class="btn btn-info btn-circle btn-md"
-            @click="updateFaults(patients.id ,patients.faults)"
-            >
-            {{ patients.faults }}
-            </button>
+            <button class="btn btn-info btn-circle btn-md" data-toggle="modal" data-target="#modalVerFaltas" @click="queId=paciente.id; cantFaltas = paciente.faults;" >{{ paciente.faults }} </button>
           </td>
           <td>
             <button
             class="btn btn-info btn-circle btn-md"
-            @click="dataProps(patients)"
+            @click="dataProps(paciente)"
             data-toggle="modal"
             data-target="#recetasModal"
             >
@@ -94,7 +89,7 @@
           <td>
             <button
             class="btn btn-info btn-circle btn-md"
-            @click="dataProps(patients)"
+            @click="dataProps(paciente)"
             data-toggle="modal"
             data-target="#patientModal"
             >
@@ -113,6 +108,7 @@
     <modal-new-patient ></modal-new-patient>
 		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
+		<ModalVerFaltas :queId="queId" :cantFaltas="cantFaltas"></ModalVerFaltas>
 		
   </main>
 </template>
@@ -126,15 +122,16 @@ import ModalVerTriajesViejos from './ModalVerTriajesViejos.vue'
 import ModalNewPatient from './../pacientes/ModalNewPatient.vue'
 import ModalVerEstados from './ModalVerEstados.vue'
 import ModalCambiarLike from './ModalCambiarLike.vue'
+import ModalVerFaltas from './reportes/ModalVerFaltas.vue'
 
 export default {
   name: 'Pacientes',
 
   data () {
     return {
-      dataPatients: [],
+      dataPatients: [], queId:null,
       data: null, dataTriajes:null,
-      busqueda: [], like:0, id:-1,
+      busqueda: [], like:0, id:-1, cantFaltas:-1,
       totalPatients:[], profesionales:[],
 			estados:[
 				{id: 1, valor: 'Neutro'},
@@ -150,7 +147,7 @@ export default {
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike },
+  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas },
 
   props: {
     dataPatient: Object

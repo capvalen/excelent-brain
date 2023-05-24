@@ -121,6 +121,7 @@ Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
 
 Route::get('getNameExam/{id}', [PatientController::class, 'getNameExam']);
 Route::post('insertarTriaje/{id}', [PatientController::class, 'insertarTriaje']);
+Route::get('verHistorialFaltas/{id}/', [PatientController::class, 'verHistorialFaltas']);
 
 Route::get('getNames',[PatientController::class, 'getNames']);
 

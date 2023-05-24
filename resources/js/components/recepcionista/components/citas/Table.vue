@@ -118,7 +118,7 @@
               </a>
             </td>
             <td>
-              <div class="row d-flex align-items-center justify-content-around gap-5">
+              <div class="row d-flex align-items-center justify-content-around gap-1">
                   <!-- <a @click="modalInfo(cita)" title="Actualizar paciente" data-toggle="modal" data-target="#patientModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a> -->
                   
                   <a v-if="cita.status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>

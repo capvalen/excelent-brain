@@ -175,7 +175,7 @@
                     <div class="main-data">
 											<p>EMISIÓN:  
 												<span>@php
-												$fecha = Carbon::parse( $appointment->date ); echo $fecha->format('d/m/Y');
+												$fecha = Carbon::parse( $extra_payment->date ); echo $fecha->format('d/m/Y');
 												@endphp</span>
 											</p>
 											<p class="name">CLIENTE: {{$extra_payment->customer}}</p>
