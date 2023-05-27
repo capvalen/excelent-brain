@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Patient extends Model
 {
     use HasFactory;
-    protected $fillable=['name','lastname','email','birth_date','dni','phone','occupation','instruction_degree','birth_date','marital_status','discharge','faults', 'gender', 'type_dni'];
+    protected $fillable=['name','lastname','email','birth_date','dni','phone','occupation','instruction_degree','birth_date','marital_status','discharge','faults', 'gender', 'type_dni', 'club', 'hobbies', 'activo'];
     //Relacion uno a uno Patient-Relaive
     public function relative()
     {

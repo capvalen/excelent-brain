@@ -170,7 +170,7 @@
                 </div>
             </div>
             <div class="body">
-                    <h2>NOTA DE VENTA</h2>
+                    <h2>TICKET INTERNO</h2>
                     <h2>E002-00{{$extra_payment->id}}</h2>
                     <div class="main-data">
 											<p>EMISIÓN:  

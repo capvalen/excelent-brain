@@ -35,7 +35,8 @@ class PrescriptionController extends Controller
     {
         if($request->get('patient_id') == 0){
             $patient = Patient::create([
-                'name' => $request->get('patient_name')
+                'name' => $request->get('patient_name'),
+								'activo' => 0
             ]);
             $request->merge(['patient_id' => $patient->id]);
         }

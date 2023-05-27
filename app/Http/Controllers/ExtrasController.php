@@ -48,10 +48,10 @@ class ExtrasController extends Controller
 		return $avisos;
 	}
 	public function nuevoInteresado(Request $request){
-		DB::insert("INSERT INTO `interesados`(`nombre`, `celular`, `motivo`, `referencia`) VALUES 
-		(?,?,?,?)",
+		DB::insert("INSERT INTO `interesados`(`nombre`, `celular`, `motivo`, `referencia`, `correo`) VALUES 
+		(?,?,?,?,?)",
 		[
-			$request->input('nombre'), $request->input('celular'), $request->input('motivo'), $request->input('referencia')
+			$request->input('nombre'), $request->input('celular'), $request->input('motivo'), $request->input('referencia'), $request->input('correo')
 		]);
 		$ultimoID = DB::getPdo()->lastInsertId();
 		return response()->json([

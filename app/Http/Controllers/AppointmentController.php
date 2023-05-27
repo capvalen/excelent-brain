@@ -116,19 +116,19 @@ class AppointmentController extends Controller
 		}
 
 		if(!$paciente_prueba){
-						if($request->get('name') != null){
-							$patient = Patient::create([
-									'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
-									'email'=>$request->get('email'),
-									'dni' => $request->get('dni'),
-									'phone' => $request->get('phone'),
-									'birth_date'=>$request->get('birth_date'),
-									'occupation'=>$request->get('occupation'),
-									'instruction_degree'=>$request->get('instruction_degree'),
-									'marital_status'=>$request->get('marital_status'),
-									'type_dni'=>$request->get('type_dni')
-							]);
-					}
+			if($request->get('name') != null){
+				$patient = Patient::create([
+					'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
+					'email'=>$request->get('email'),
+					'dni' => $request->get('dni'),
+					'phone' => $request->get('phone'),
+					'birth_date'=>$request->get('birth_date'),
+					'occupation'=>$request->get('occupation'),
+					'instruction_degree'=>$request->get('instruction_degree'),
+					'marital_status'=>$request->get('marital_status'),
+					'type_dni'=>$request->get('type_dni')
+				]);
+			}
 				
 		   
 			
@@ -169,7 +169,9 @@ class AppointmentController extends Controller
 				'price' => $request->get('price'),
 				'appointment_id' => $appointment->id
 			]);
+
 		}else{
+
 			$appointment = Appointment::create([
 				'professional_id' => $request->get('professional_id'),
 				'date' => $request->get('date'),
@@ -259,7 +261,7 @@ class AppointmentController extends Controller
 		// return $professional;
 
 		$date = date('d-m-Y');
-		$dateWeekAfter = date_create(date("d-m-Y",strtotime($date."+ 1 days")));
+		$dateWeekAfter = date_create(date("d-m-Y",strtotime($date."+ 4 days")));
 		$dateWeekBefore = date_create(date("d-m-Y",strtotime($date."- 1 days")));
 
 		$consults = Appointment::where('professional_id', $professional->id)
@@ -415,6 +417,7 @@ class AppointmentController extends Controller
 				$pagoExtra->customer = $request->input('dataCita.patient.name');
 				$pagoExtra->price = $request->input('dataCita.payment.price');
 				$pagoExtra->moneda = $request->input('caso.moneda');
+				$pagoExtra->appointment_id = $request->input('dataCita.id');
 				$pagoExtra->type =5;
 				$pagoExtra->observation = '';
 				$pagoExtra->save();

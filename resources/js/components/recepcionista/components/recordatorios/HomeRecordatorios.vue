@@ -125,6 +125,7 @@
 								<th>N°</th>
 								<th>Nombre</th>
 								<th>Celular</th>
+								<th>Correo</th>
 								<th>Motivo</th>
 								<th>Referencia</th>
 								<th>@</th>
@@ -135,6 +136,7 @@
 								<td>{{ index+1 }}</td>
 								<td class="text-capitalize">{{ interesado.nombre }}</td>
 								<td>{{ interesado.celular }}</td>
+								<td>{{ interesado.correo }}</td>
 								<td class="text-capitalize">{{ interesado.motivo }}</td>
 								<td>
 									<span v-if="interesado.referencia=='1'">Ninguno</span>

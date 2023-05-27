@@ -30,12 +30,7 @@
           
           <div class="d-flex justify-content-start" style="flex-shrink: 0;">
               <button data-toggle="modal" data-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
-              <modal-cita
-              :profes="profesionales"
-              :horas="horarios"
-              @emitIdProf="listarhorario"
-              @emitDate="fechaEmit"
-              ></modal-cita>
+              <modal-cita :profes="profesionales" :horas="horarios" @emitIdProf="listarhorario" @emitDate="fechaEmit" ></modal-cita>
           </div>
 
           <div class="d-flex justify-content-start" style="flex-shrink: 0;">
@@ -280,22 +275,45 @@ export default {
     async listarhorario (id) {
       await this.axios.get(`/api/horario/${id}`)
       .then(res => {
-        this.horarios = res.data.schedulesInvalid;
+        //this.horarios = res.data.schedulesInvalid;
         this.horariosAll = res.data.schedules;
         this.hoursProfessional = this.horarios;
 
         this.fechaEmit(document.querySelector(".fecha-emit").value);
 
-        this.schedulesInvalid = []
+       /*  this.schedulesInvalid = []
         this.hoursProfessional.forEach(el => {
           this.schedulesInvalid.push(el.schedule_id)
-        });
+        }); */
       })
       .catch(err => {
         console.error(err)
       })
     },
+		fechaEmit (diaSeleccionado) {
+      this.horarios = []
+      // this.schedulesInvalid = new Array (this.schedulesInvalid);
 
+      let arraySchedulesInvalid = []
+			
+			//No vale el codigo siguiente:
+      /* this.hoursProfessional.forEach(el => {
+        if (!arraySchedulesInvalid.includes(el.schedule_id)) {
+          arraySchedulesInvalid.push(el.schedule_id)
+        }
+      }) */
+
+      this.horariosAll.forEach(el => {
+        //console.log('dia', el.day)
+				//Si es el dia elegido, en ese rango busca si tiene una cita [appointment], si tiene no agrega nada, si no tiene agrega a horarios (horas libres)
+        if (el.day === this.diaDeLaSemana(new Date(diaSeleccionado).getDay())) { //compara el día de hoy con la lista Ejm: martes con indice(2) en la lista de horarios
+					if (el.appointments.find(el => el.date === diaSeleccionado && el.status != 3) ? true : false) { // Hay cita
+					} else { //hora libre
+						this.horarios.push(el)
+					}
+        }
+      })
+    },
     async searchHistoria () {
       let search = document.getElementById("searchInputAppointment").value.split('/'),
         nombre = search[0],
@@ -353,65 +371,21 @@ export default {
       .catch(err => {
         console.error(err)
       })
-    },
-
-    fechaEmit (info) {
-      this.horarios = []
-
-      // this.schedulesInvalid = new Array (this.schedulesInvalid);
-
-      let arraySchedulesInvalid = []
-      this.hoursProfessional.forEach(el => {
-        if (!arraySchedulesInvalid.includes(el.schedule_id)) {
-          arraySchedulesInvalid.push(el.schedule_id)
-        }
-      })
-
-      this.horariosAll.forEach(el => {
-        console.log('dia', el.day)
-        if (el.day === this.dayWeek(new Date(info).getDay())) {
-          if (arraySchedulesInvalid.includes(el.id)) {
-            // Hay cita
-            if (el.appointments.find(el => el.date === info && el.status != 3) ? true : false) {
-
-            } else {
-              this.horarios.push(el)
-            }
-          } else {
-            // No hay cita
-            this.horarios.push(el)
-          }
-        }
-      })
-    },
+    }, 
 
     lowerCase (text) {
       return text.toLowerCase();
     },
 
-    dayWeek (day) {
-      switch (day) {
-        case 0:
-          return "Lunes"
-        break;
-        case 1:
-          return "Martes"
-        break;
-        case 2:
-          return "Miercoles"
-        break;
-        case 3:
-          return "Jueves"
-        break;
-        case 4:
-          return "Viernes"
-        break;
-        case 5:
-          return "Sabado"
-        break;
-        case 6:
-          return "Domingo"
-        break;
+    diaDeLaSemana (dia) {
+      switch (dia) {
+        case 0: return "Lunes"; break;
+        case 1: return "Martes"; break;
+        case 2: return "Miercoles"; break;
+        case 3: return "Jueves"; break;
+        case 4: return "Viernes"; break; 
+				case 5: return "Sabado"; break;
+        case 6: return "Domingo"; break;
       }
     },
 

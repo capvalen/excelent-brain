@@ -4,23 +4,26 @@
 			<h4>Historia clínica del paciente</h4>
 
 			<div class="" style="background-color: white; border-radius: 5px;">
+				<button data-toggle="modal" data-target="#modalProximaCita" class="btn btn-outline-warning">
+					<i class="fa-solid fa-person-walking-arrow-right"></i> Próxima cita
+				</button>
 				<router-link :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
-					title="Generar receta">Generar nueva receta
+					title="Generar receta"><i class="fa-solid fa-vial"></i> Nueva receta
 				</router-link>
-				<button data-toggle="modal" data-target="#recetasModal" class="btn btn-outline-secondary px-4 py-2 rounded ">
-					Ver recetas
+				<button data-toggle="modal" data-target="#recetasModal" class="btn btn-outline-secondary">
+					<i class="fa-solid fa-vial"></i> Ver recetas
 				</button>
 				<button v-if="datosConsulta.discharge != 1" class="btn btn-outline-success" @click="toDischarge">
-					Dar de alta
+					<i class="fa-solid fa-circle-check"></i> Dar de alta
 				</button>
 				<button v-else class="btn btn-outline-success" disabled>
-					Dado de alta
+					<i class="fa-solid fa-circle-check"></i> Dado de alta
 				</button>
-				<button data-toggle="modal" data-target="#modalVerTriajesViejos" class="btn btn-outline-info px-4 py-2 rounded ">
-					Ver triajes ({{ datosConsulta.triajes.length }})
+				<button data-toggle="modal" data-target="#modalVerTriajesViejos" class="btn btn-outline-info  ">
+					<i class="fa-solid fa-scale-unbalanced-flip"></i> Ver triajes ({{ datosConsulta.triajes.length }})
 				</button>
-				<button data-toggle="modal" data-target="#examenModal" class="btn btn-outline-info  px-4 py-2 rounded ">
-					Ver exámenes ({{ contarExamenes()  }})
+				<button data-toggle="modal" data-target="#examenModal" class="btn btn-outline-info ">
+					<i class="fa-solid fa-note-sticky"></i> Ver exámenes ({{ contarExamenes()  }})
 				</button>
 				
 			</div>
@@ -32,13 +35,16 @@
 					<!-- Card Header - Dropdown -->
 					<div class="card-header bg-primary py-3 d-flex flex-row align-items-center justify-content-between">
 						<h6 class="m-0 font-weight-bold text-white"><i class="fas fa-user"></i> Datos personales del paciente</h6>
+						<button class="btn btn-sm btn-outline-light" @click="datos1Paciente()"><i class="fa-regular fa-pen-to-square"></i></button>
+						<!-- data-bs-toggle="modal" data-bs-target="#patientModal"  -->
 					</div>
 					<!-- Card Body -->
 					<div class="card-body">
 						<div class="historia-info">
 							<p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta ? lowerCase(datosConsulta.name) : '...' }}</p>
 							<p><b>DNI:</b> {{ datosConsulta ? datosConsulta.dni : '...' }}</p>
-							<p><b>Número de celular:</b> {{ datosConsulta ? datosConsulta.phone : '...' }}</p>
+							<p><b>Número de celular:</b> {{ datosConsulta.phone ? datosConsulta.phone : '...' }}</p>
+							<p><b>Correo electrónico:</b> {{ datosConsulta.email ? datosConsulta.email : '...' }}</p>
 							<p><b>Ocupación:</b> {{ datosConsulta ? datosConsulta.occupation : '...' }}</p>
 							<p><b>Grado de instrucción:</b>
 								<span v-if="datosConsulta.instruction_degree == 1">Inicial</span>
@@ -58,14 +64,22 @@
 								<span v-else-if="datosConsulta.marital_status == 5">Conviviente</span>
 							</p>
 							<hr>
-							<p>
-								<stong>Motivo: Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium illo ratione expedita, quos ea ipsam repudiandae labore perspiciatis molestias harum adipisci tenetur consectetur architecto laborum! Nihil quibusdam ab neque tempore?</stong>
-							</p>
-							<p><stong>SINTOMATOLOGÍA: Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium illo ratione expedita, quos ea ipsam repudiandae labore perspiciatis molestias harum adipisci tenetur consectetur architecto laborum! Nihil quibusdam ab neque tempore?</stong>
-							</p>
-							<p><stong>ANTECEDENTES: Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium illo ratione expedita, quos ea ipsam repudiandae labore perspiciatis molestias harum adipisci tenetur consectetur architecto laborum! Nihil quibusdam ab neque tempore?</stong>
-							</p>
-							<p><stong>Tipos de pruebas aplicadas: Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium illo ratione expedita, quos ea ipsam repudiandae labore perspiciatis molestias harum adipisci tenetur consectetur architecto laborum! Nihil quibusdam ab neque tempore?</stong></p>
+							<div v-if="datosConsulta.triajes.length>0">
+								<p><strong>Triaje</strong></p>
+								<div class="row row-cols-4">
+									<div class="col"><p><strong>TR:</strong> {{ datosConsulta.triajes[0].fc }}</p></div>
+									<div class="col"><p><strong>FR:</strong> {{ datosConsulta.triajes[0].fr }}</p></div>
+									<div class="col"><p><strong>PA:</strong> {{ datosConsulta.triajes[0].pa }}</p></div>
+									<div class="col"><p><strong>T:</strong> {{ datosConsulta.triajes[0].t }}</p></div>
+								</div>
+								<p> <strong>Motivo:</strong> <span>{{ datosConsulta.triajes[0].motivo }}</span> </p>
+								<p> <strong>Sintomatologia:</strong> <span>{{ datosConsulta.triajes[0].sintomatologia }}</span> </p>
+								<p> <strong>Antecedentes:</strong> <span>{{ datosConsulta.triajes[0].antecedentes }}</span> </p>
+								<p> <strong>Pruebas aplicadas</strong>: <span>{{ datosConsulta.triajes[0].pruebas }}</span> </p>
+							</div>
+							<div>
+								<p>No existen datos de triaje</p>
+							</div>
 						</div>
 
 					</div>
@@ -94,7 +108,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="card shadow mb-4">
+				<div class="card shadow mb-4" id="cardPerfil">
 					<div class="card-header bg-primary py-3 d-flex flex-row align-items-center justify-content-between">
 						<h6 class="m-0 font-weight-bold text-white"><i class="fas fa-user"></i> Otros datos</h6>
 					</div>
@@ -102,8 +116,19 @@
 						<p v-if="datosPaciente.semaforo.length>0">Perfil del paciente: 
 							<a class="text-capitalize" href="#!" data-bs-toggle="modal" data-bs-target="#modalVerEstados">{{queEstado(datosPaciente.semaforo[0].codigo)}}</a>
 							<span v-if="datosPaciente.semaforo[0].observaciones!=''">({{ datosPaciente.semaforo[0].observaciones }})</span>
-						 </p>
+						</p>
+						<p>Perfil del paciente: 
+							<a class="text-capitalize" href="#!" data-bs-toggle="modal" data-bs-target="#modalVerEstados">Sin asignar</a>
+						</p>
+						<p>Hobbies:</p>
+						<div>
+							<span v-for="hobbie in misHobbies" class="badge text-capitalize rounded-pill text-bg-primary mx-2 px-2 py-1" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" >{{ hobbies[hobbie] }}</span>
+						</div>
+						<div v-if="misHobbies.length==0">
+							<span class="badge rounded-pill text-bg-secondary px-2 py-1" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" >Ninguno</span>
+						</div>
 					</div>
+
 				</div>
 
 			</div>
@@ -541,7 +566,9 @@
 		<modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
 		<modal-ver-triajes-viejos :triajes = "datosConsulta.triajes"></modal-ver-triajes-viejos>
 		<ModalEditarPariente :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
+		<ModalEditarPaciente v-if="dato1" :dataPatient="dato1" ></ModalEditarPaciente>
 		<ModalVerEstados :dataPatient="datosPaciente" :estados="estados"></ModalVerEstados>
+		<ModalVerHobbies :hobbies="hobbies" :id="datosConsulta.id" :misHobbies="misHobbies" ></ModalVerHobbies> 
 	</div>
 </template>
 
@@ -554,13 +581,15 @@ import { dateNow } from '../../../../helpers/Time.js'
 import moment from 'moment';
 import modalVerDetalle from './ModalVerDetalle.vue';
 import ModalVerTriajesViejos from './../../../recepcionista/components/pacientes/ModalVerTriajesViejos.vue';
+import ModalEditarPaciente from './../../../recepcionista/components/pacientes/ModalEditPatients.vue'
 import ModalEditarPariente from './ModalEditarPariente.vue'
 import ModalVerEstados from './../../../recepcionista/components/pacientes/ModalVerEstados.vue'
+import ModalVerHobbies from './../../../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
 
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies },
 
 	data() {
 		return {
@@ -574,7 +603,7 @@ export default {
 			consultaHoy: false,
 			dataCies: null,
 			searchCie: '',
-			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' },
+			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, dato1:{},
 
 			component: "ExamTable",
 			datosExamenes: [],
@@ -584,7 +613,7 @@ export default {
 				tipoExam: 'SCL90R'
 			},
 			estados:[ {id: 1, valor: 'Neutro'}, {id: 2, valor: 'excelente'}, {id: 3, valor: 'promotor'}, {id: 4, valor: 'wow'}, {id: 5, valor: 'reprogramador'}, {id: 6, valor: 'exigente'}, {id: 7, valor: 'deudor'},
-				{id: 8, valor: 'insatisfecho'}, {id: 9, valor: 'peligroso'}, ], datosPaciente:null,
+				{id: 8, valor: 'insatisfecho'}, {id: 9, valor: 'peligroso'}, ], datosPaciente:{ semaforo:[]},
 
 			inicialPsiquiatria: {
 				id: '',
@@ -653,6 +682,7 @@ export default {
 			},
 
 			dataModal: {},
+			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], misHobbies:[],
 
 			// Datos para agregar una nueva evolución
 			evolution: {
@@ -700,6 +730,7 @@ export default {
 			await this.axios.get(`/api/patientEvolution/${this.$route.params.idPaciente}`)
 				.then(res => {
 					this.datosConsulta = res.data;
+					this.misHobbies = JSON.parse(this.datosConsulta.hobbies)
 					//console.log(this.datosConsulta)
 					this.datosConsulta.medical_evolutions = this.datosConsulta.medical_evolutions.sort(function (a, b) {
 						if (a.date < b.date) {
@@ -1049,6 +1080,14 @@ export default {
 		queEstado(dato){
 			if(dato!== undefined) return this.estados.find(x=> x.id == dato).valor
 			else return '';
+		},
+		async datos1Paciente(){
+			this.axios.get('/api/patientById/'+this.$route.params.idPaciente)
+			.then(res => {
+				this.dato1 = res.data[0];
+				$("#patientModal" ).modal('show')
+			})
+      
 		}
 	},
 
@@ -1080,7 +1119,8 @@ export default {
 	},
 
 	mounted() {
-		this.getHistories()
+		this.getHistories();
+		this.hobbies.sort();
 	},
 
 	updated() {
@@ -1098,7 +1138,7 @@ export default {
 h4 {
 	font-weight: 500;
 }
-
+#cardPerfil .badge{cursor:pointer;}
 .btn--edit {
 	width: 95%;
 	max-width: 180px;

@@ -166,7 +166,7 @@ export default {
     async getPatients () {
       this.busqueda = []
       await this.axios.get(`/api/getLast10Patients`)
-      .then(res => {
+      .then(res => { console.log(res.data);
         this.dataPatients = res.data;
         this.busqueda = this.dataPatients;
 

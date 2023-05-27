@@ -77,6 +77,8 @@ Route::get('updateModeAppoinment/{id}', [AppointmentController::class, 'updateMo
 
 Route::resource('appointment/payment', PaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('patient', PatientController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
+Route::get('patientMine/{idProfesional}', [PatientController::class, 'patientMine']);
+Route::get('patientMineText/{texto}', [PatientController::class, 'patientMineText']);
 Route::post('patient/new', [PatientController::class, 'insertPatient']);
 Route::get('getPatient', [PatientController::class, 'getPatient']);
 Route::get('getLast10Patients', [PatientController::class, 'getLast10Patients']);
@@ -119,6 +121,8 @@ Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
 
 
 
+Route::get('patientById/{idPatient}', [PatientController::class, 'patientById']);
+Route::post('addHobbie/{idPatient}', [PatientController::class, 'addHobbie']);
 Route::get('getNameExam/{id}', [PatientController::class, 'getNameExam']);
 Route::post('insertarTriaje/{id}', [PatientController::class, 'insertarTriaje']);
 Route::get('verHistorialFaltas/{id}/', [PatientController::class, 'verHistorialFaltas']);

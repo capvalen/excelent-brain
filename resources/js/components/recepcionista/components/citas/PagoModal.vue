@@ -30,7 +30,7 @@
 									<label for="">Método de pago</label>
 									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.moneda">
 										<option value="1">Efectivo</option>
-										<option value="4">Aplicativo Yape/Plin</option>
+										<option value="4">Aplicativo Yape</option>
 										<option value="2">Depósito bancario</option>
 										<option value="3">POS</option>
 										<option value="5">Banco: BCP</option>
@@ -38,6 +38,7 @@
 										<option value="7">Banco: Interbank</option>
 										<option value="8">Banco: Nación</option>
 										<option value="9">Banco: Scotiabank</option>
+										<option value="10">Aplicativo Plin</option>
 									</select>
 							</div>                                                      
 					</div>
@@ -70,7 +71,7 @@
 		},
 		methods:{
 			async update() {
-				await this.axios.put(`/api/appointment/${+this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso})
+				await this.axios.put(`/api/appointment/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso})
 				.then(res => {
 					console.log(res.data)
 					this.dataCita.payment.pay_status = this.caso.pago;

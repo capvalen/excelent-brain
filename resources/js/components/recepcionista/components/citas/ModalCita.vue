@@ -175,12 +175,8 @@
 							<label for="">Horario del profesional</label>
 							<select class="form-select" name="schedule_id" id="schedule_id" v-model="cita.schedule_id">
 								<option value="" disabled selected>Seleccione Horario</option>
-								<option 
-								v-for="hora in horas" :key="hora.id" 
-								v-if="hora" 
-								:value="hora.id"
-								>
-								{{ hora.check_time }} - {{ hora.departure_date }}
+								<option v-for="hora in horas" :key="hora.id"  v-if="hora" :value="hora.id">
+									{{ horaSimple1(hora.check_time) }} - {{ horaSimple2(hora.departure_date) }}
 								</option>
 							</select>
             </div>
@@ -299,10 +295,11 @@
 <script>
 import { dateNow } from '../../../../helpers/Time.js'
 import alertify from 'alertifyjs'
+import moment from 'moment'
 
 export default {
   name: "form-prof",
-
+  props:{ profes:Array,  horas:Array },
   data(){
     return{
       switchReciec: 1,
@@ -576,7 +573,9 @@ export default {
         document.querySelector(".btnReniec").classList.replace('btn-danger', 'btn-info')
       })
     },    
-  
+
+		horaSimple1(horita){ return moment(horita, 'HH:mm:ss').format('h:mm')},
+		horaSimple2(horita){ return moment(horita, 'HH:mm:ss').format('h:mm a')},
 
     emitirProf () {
       this.$emit("emitIdProf", event.target.value);
@@ -690,11 +689,6 @@ export default {
 		//this.cita.department = 12;
 		
 	},
-
-  props:{
-    profes:Array, 
-    horas:Array
-  },
 
   computed:{
     filtro(){

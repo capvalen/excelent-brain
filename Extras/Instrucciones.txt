@@ -36,4 +36,6 @@ En la tabla exams el resto de examens
 - En la tabla appointments, se modifica los valores del profesional, fecha, y hora
 - En la tabla reschedules, se registra el motivo exacto por el cual se esta reprogramando -> hacer visible en algún lugar
 
+El type de appointments, es sucamec, kurame, terapia
+el status de appointments, cuando se anula pasa a ser el N° 3
 */

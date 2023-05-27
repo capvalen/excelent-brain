@@ -69,9 +69,7 @@
                         ></consult-card>
                     </div>
 
-                    <div v-else class="text-center">
-                        <span v-if="dayActive">No hay Citas</span>
-                    </div>
+                    <div v-else class="text-center"> <span v-if="dayActive">No hay Citas</span> </div>
                     
                     <!-- :dataConsult="consultas"
                     @modal="handle" -->
@@ -95,9 +93,7 @@
                         ></consult-card>
                     </div>
 
-                    <div v-else class="text-center">
-                        No hay Citas
-                    </div>
+                    <div v-else class="text-center"> No hay Citas </div>
                 </div>
                 
                 <!-- Mañana -->
@@ -117,10 +113,67 @@
                         ></consult-card>
                     </div>
 
-                    <div v-else class="text-center">
-                        <span v-if="dayActive">No hay Citas</span>
-                    </div>
+                    <div v-else class="text-center"> <span v-if="dayActive">No hay Citas</span> </div>
                 </div>
+                <!-- Pasado Mañana +2 -->
+                <div class="col-md-4 dayCalendar after">
+                    <div class="date text-strong text-center text-dark mt-3 notNow" v-if="dayActive">
+                        <h2>{{ mañana2 }}</h2>
+                        <p>{{ stringDate.mañana2 }}</p>
+                    </div>
+                    
+                    <div v-if="consultasSiguientes2.length !== 0">
+                        <consult-card
+                        v-for="(consult, index) in consultasSiguientes2"
+                        :key="index"
+                        :dataConsult="consult"
+                        @datosEmitModal="evolucionModal"
+                        @emitInfoModal="getInfoModal"
+                        ></consult-card>
+                    </div>
+
+                    <div v-else class="text-center"> <span v-if="dayActive">No hay Citas</span> </div>
+                </div>
+                <!-- Tras Mañana +3 -->
+                <div class="col-md-4 dayCalendar after">
+                    <div class="date text-strong text-center text-dark mt-3 notNow" v-if="dayActive">
+                        <h2>{{ mañana3 }}</h2>
+                        <p>{{ stringDate.mañana3 }}</p>
+                    </div>
+                    
+                    <div v-if="consultasSiguientes3.length !== 0">
+                        <consult-card
+                        v-for="(consult, index) in consultasSiguientes3"
+                        :key="index"
+                        :dataConsult="consult"
+                        @datosEmitModal="evolucionModal"
+                        @emitInfoModal="getInfoModal"
+                        ></consult-card>
+                    </div>
+
+                    <div v-else class="text-center"> <span v-if="dayActive">No hay Citas</span> </div>
+                </div>
+                <!-- Tras Pasado Mañana +4 -->
+                <div class="col-md-4 dayCalendar after">
+                    <div class="date text-strong text-center text-dark mt-3 notNow" v-if="dayActive">
+                        <h2>{{ mañana4 }}</h2>
+                        <p>{{ stringDate.mañana4 }}</p>
+                    </div>
+                    
+                    <div v-if="consultasSiguientes4.length !== 0">
+                        <consult-card
+                        v-for="(consult, index) in consultasSiguientes4"
+                        :key="index"
+                        :dataConsult="consult"
+                        @datosEmitModal="evolucionModal"
+                        @emitInfoModal="getInfoModal"
+                        ></consult-card>
+                    </div>
+
+                    <div v-else class="text-center"> <span v-if="dayActive">No hay Citas</span> </div>
+                </div>
+
+
             </div>
         </div>
 
@@ -154,6 +207,7 @@ export default {
             consultasHoy: [],
             consultasAntes: [],
             consultasSiguientes: [],
+            consultasSiguientes2: [], consultasSiguientes3: [], consultasSiguientes4: [],
             consultas: [],
             todasConsultas: [],
 
@@ -179,6 +233,7 @@ export default {
             dayMonth: new Date().getDate(),         // Obtiene el dia del mes
             dayBeforeNumber: null,                  // Obtiene el dia antes del dia de hoy del mes
             dayAfterNumber: null,                   // Obtiene el dia despues del dia de hoy del mes
+						mañana2: null, mañana3: null, mañana4: null, 
 
             todayMonthDay: null,                    // valor que se rellena para la funcion de devolucion del dia del mes
 
@@ -186,6 +241,7 @@ export default {
                 stringDateBefore: '',
                 stringDateAfter: '',
                 stringDateNow: '',
+								mañana2: '', mañana3: '', mañana4: ''
             }
         }
     },
@@ -220,11 +276,17 @@ export default {
 
         getDay () { 
             this.dayBeforeNumber = operationDate(1, false).getDate()
-            this.dayAfterNumber = operationDate(1, true).getDate()
+            this.dayAfterNumber = operationDate(1, true).getDate() 
+            this.mañana2 = operationDate(2, true).getDate()
+            this.mañana3 = operationDate(3, true).getDate()
+            this.mañana4 = operationDate(4, true).getDate()
 
             this.stringDate.stringDateNow = this.returnStringMonth(this.todayMonth)
             this.stringDate.stringDateBefore = this.returnStringMonth(operationDate(1, false).getMonth() + 1)
             this.stringDate.stringDateAfter = this.returnStringMonth(operationDate(1, true).getMonth() + 1)
+            this.stringDate.mañana2 = this.returnStringMonth(operationDate(2, true).getMonth() + 1)
+            this.stringDate.mañana3 = this.returnStringMonth(operationDate(3, true).getMonth() + 1)
+            this.stringDate.mañana4 = this.returnStringMonth(operationDate(4, true).getMonth() + 1)
         },
         
         /**
@@ -249,6 +311,7 @@ export default {
             this.consultasAntes = []
             this.consultasHoy = []
             this.consultasSiguientes = []
+            this.consultasSiguientes2 = []; this.consultasSiguientes3 = []; this.consultasSiguientes4 = []
 
             this.todasConsultas.forEach(consult => {
                 // console.log(consult.date.split("-").reverse().join("/"), 
@@ -260,6 +323,9 @@ export default {
                 if (consult.date == formatDate(operationDate(1, false))) this.consultasAntes.push(consult); // restar
                 if (consult.date == formatDate(operationDate(false))) this.consultasHoy.push(consult); // hoy 
                 if (consult.date == formatDate(operationDate(1, true))) this.consultasSiguientes.push(consult); // sumar
+                if (consult.date == formatDate(operationDate(2, true))) this.consultasSiguientes2.push(consult); // sumar
+                if (consult.date == formatDate(operationDate(3, true))) this.consultasSiguientes3.push(consult); // sumar
+                if (consult.date == formatDate(operationDate(4, true))) this.consultasSiguientes4.push(consult); // sumar
             })
 
             // --- Odernar array por las horas
@@ -276,6 +342,21 @@ export default {
             })
            
             this.consultasSiguientes.sort(function (a, b) {
+                if (a.schedule ? a.schedule.check_time : a.schedule > b.schedule ? b.schedule.check_time : b.schedule) return 1;
+                if (a.schedule ? a.schedule.check_time : a.schedule < b.schedule ? b.schedule.check_time : b.schedule) return -1;
+                return 0
+            })
+            this.consultasSiguientes2.sort(function (a, b) {
+                if (a.schedule ? a.schedule.check_time : a.schedule > b.schedule ? b.schedule.check_time : b.schedule) return 1;
+                if (a.schedule ? a.schedule.check_time : a.schedule < b.schedule ? b.schedule.check_time : b.schedule) return -1;
+                return 0
+            })
+            this.consultasSiguientes3.sort(function (a, b) {
+                if (a.schedule ? a.schedule.check_time : a.schedule > b.schedule ? b.schedule.check_time : b.schedule) return 1;
+                if (a.schedule ? a.schedule.check_time : a.schedule < b.schedule ? b.schedule.check_time : b.schedule) return -1;
+                return 0
+            })
+            this.consultasSiguientes4.sort(function (a, b) {
                 if (a.schedule ? a.schedule.check_time : a.schedule > b.schedule ? b.schedule.check_time : b.schedule) return 1;
                 if (a.schedule ? a.schedule.check_time : a.schedule < b.schedule ? b.schedule.check_time : b.schedule) return -1;
                 return 0

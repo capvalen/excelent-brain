@@ -5,7 +5,7 @@ export function dateNow () {
   return `${año}-${mes}-${dia}`
 }
 
-export function operationDate (day = 0, operation) {
+export function operationDate (day = 0, operation) { 
   let hoy = new Date();
   let time = 1000 * 60 * 60 * 24 * day;
   let result = operation ? hoy.getTime() + time : hoy.getTime() - time

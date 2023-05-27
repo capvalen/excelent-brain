@@ -42,15 +42,19 @@
 								<td class="text-capitalize">
 									<span v-if="payment.moneda==1">Efectivo</span>
 									<span v-if="payment.moneda==2">Depósito bancario</span>
-									<span v-if="payment.moneda==4">Aplicativo Yape/Plin</span>
+									<span v-if="payment.moneda==4">Aplicativo Yape</span>
 									<span v-if="payment.moneda==3">POS</span>
 									<span v-if="payment.moneda==5">Banco: BCP</span>
 									<span v-if="payment.moneda==6">Banco: BBVA</span>
 									<span v-if="payment.moneda==7">Banco: Interbank</span>
 									<span v-if="payment.moneda==8">Banco: Nación</span>
 									<span v-if="payment.moneda==9">Banco: Scotiabank</span>
+									<span v-if="payment.moneda==10">Aplicativo Plin</span>
 								</td>
-                <td><a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm">Generar PDF</a></td>
+                <td>
+									<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm">Generar PDF</a>
+									<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm">Generar PDF</a>
+								</td>
             </tr>
         </tbody>
 				<tfoot>

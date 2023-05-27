@@ -5,14 +5,16 @@
 			<div class="modal-content">
 				<div class="modal-header border-0">
 					<h5 class="modal-title " id="exampleModalLabel">Nuevo interesado</h5>
-					<button type="button" id="closeModal" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+					<button type="button" id="closeModal" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<label for="">Nombre</label>
+					<label for="">Nombre <span class="text-danger">*</span></label>
 					<input type="text" class="form-control" v-model="interesado.nombre" autocomplete="off">
-					<label for="">Celular</label>
+					<label for="">Celular <span class="text-danger">*</span></label>
 					<input type="text" class="form-control" v-model="interesado.celular" autocomplete="off">
-					<label for="">Motivo</label>
+					<label for="">Correo electrónico</label>
+					<input type="text" class="form-control" v-model="interesado.correo" autocomplete="off">
+					<label for="">Motivo <span class="text-danger">*</span></label>
 					<input type="text" class="form-control" v-model="interesado.motivo" autocomplete="off">
 					<label for="">Referencia</label>
 					<select v-model="interesado.referencia" class="form-select" id="sltTipo">
@@ -43,7 +45,7 @@
 		data(){
 			return{
 				interesado:{
-					actividad:'', responsable:'', tipo:1
+					actividad:'', responsable:'', tipo:1, correo:''
 				}
 			}
 		},
@@ -57,6 +59,7 @@
 					datos.append('nombre', this.interesado.nombre)
 					datos.append('celular', this.interesado.celular)
 					datos.append('motivo', this.interesado.motivo)
+					datos.append('correo', this.interesado.correo)
 					datos.append('referencia', this.interesado.referencia)
 					fetch('/api/nuevoInteresado',{
 						method:'POST', body:datos

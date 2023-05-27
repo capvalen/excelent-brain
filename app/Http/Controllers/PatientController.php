@@ -21,10 +21,71 @@ class PatientController extends Controller
 	 */
 	public function index()
 	{
-		$patient = Patient::with('initial_psychiatric_history', 'initial_psychological_history')
-			->whereNotNull('dni')
+		$patient = Patient::where('activo', '=', 1)
+		->with('initial_psychiatric_history', 'initial_psychological_history')
+		->whereNotNull('dni')
+		
 			->get();
 		return response()->json($patient);
+	}
+
+	public function patientMine($id)
+	{
+		/* try {
+			$citas = Appointment::where('professional_id', $id)
+			->latest('created_at')->take(6)
+		->get();
+
+		$patients=array();
+		foreach ($citas as $cita) {
+			$paciente = Patient::where('id', $cita->patient_id)
+			->with('initial_psychiatric_history', 'initial_psychological_history', 'appointments')
+			->get();
+			$patients[] = $paciente[0];
+		}
+
+		return response()->json($patients);
+		} catch (\Throwable $th) {
+			echo $th;
+		} */
+		
+		$patients = Patient::join('appointments as a', 'a.patient_id', '=', 'patients.id')
+		->with('initial_psychiatric_history', 'initial_psychological_history')
+
+		->where('a.professional_id', $id)
+		->where('activo', 1)
+		->where('a.status', '<>', 3)
+		->latest('a.created_at')->take(10)
+		
+		->select('patients.*' )->get();
+		return response()->json($patients);
+		
+	}
+
+	public function patientMineText($texto)
+	{
+		try {
+			DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
+
+			$patients = Patient::join('appointments as a', 'a.patient_id', '=', 'patients.id')
+			->with('initial_psychiatric_history', 'initial_psychological_history')
+	
+			->where('a.status', '<>', 3)
+			->where('patients.name', 'like', $texto.'%' )
+			->orWhere('patients.dni', $texto)
+			->where('activo', 1)
+			->groupBy('patients.id')
+			->havingRaw('COUNT(patients.id) > 1')
+			->latest('a.created_at')
+			
+			
+			->select('patients.*' )->get();
+			return response()->json($patients);
+		} catch (\Throwable $th) {
+			echo $th;
+		}
+	
+		
 	}
 
 	/**
@@ -67,7 +128,8 @@ class PatientController extends Controller
 		return response()->json($patient);
 	}
 	public function getLast10Patients (){
-		$patients = Patient::with('relative', 'address', 'prescriptions')
+		$patients = Patient::where('activo', '=', 1)
+		->with('relative', 'address', 'prescriptions')
 		->latest('created_at')->take(20)
 		->get();
 		foreach($patients as $patient){
@@ -416,6 +478,32 @@ class PatientController extends Controller
 			->select('f.*', 'p.name', 's.check_time as hora' )->get();
 
 			return response()->json($faltas);
+		}
+
+		public function patientById($id){
+			$patients = Patient::
+			where('id', $id)
+			->with('relative', 'address', 'prescriptions')
+			->get();
+			foreach($patients as $patient){
+				$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
+				//$patient->triaje_count=$triaje->count();
+				$patient->triajes = $triaje ;
+				$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
+				$patient->semaforo = $semaforo;
+			}
+
+			return response()->json($patients);
+		}
+
+		public function addHobbie($id, Request $request){
+			//var_dump($request->all()); die();
+			$paciente = Patient::find($id);
+			$paciente->update([
+				'hobbies' => json_encode($request->input('misHobbies'))
+			]);
+	
+			return response()->json([ 'msg' => 'Actualizado con éxito' ]);
 		}
 
 }
