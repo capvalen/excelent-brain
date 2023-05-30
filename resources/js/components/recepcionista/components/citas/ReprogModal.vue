@@ -13,7 +13,7 @@
             <div class="form-group">
               <div class="form-group">
                 <label for="">Razón</label>
-                <textarea class="form-control" v-model="data.reschedule" name="reschedule" id="" cols="30" rows="5"></textarea>
+                <textarea class="form-control" v-model="data.reschedule" name="reschedule" id="" rows="3"></textarea>
               </div>
             </div>
             
@@ -23,7 +23,7 @@
                 <select 
                 class="form-select value-professional" 
                 name="professional_id" 
-                id="professional_id" 
+                id="sltProfesional" 
                 placeholder="Horario del profesional"
                 v-model="data.professional_id"
                 @change="listarhorario()" 
@@ -67,7 +67,7 @@
               <div class="col-sm-6">
                 <div class="form-group">                            
                   <label for="">Horario del profesional</label>
-                  <select class="form-select" name="schedule_id" id="schedule_id" v-model="dataCit.schedule_id">
+                  <select class="form-select" name="sltProfesionalHorarioID" id="sltProfesionalHorarioID" v-model="dataCit.schedule_id">
                     <option value="" disabled selected>Selecciona un horario</option>
                     <option 
                     v-for="hora in horarios" :key="hora.id" 
@@ -122,19 +122,19 @@ export default {
     },
     
     async update () {
-      if (!this.dataCit.schedule_id) {
+      if ( document.getElementById('sltProfesionalHorarioID').value=='' ) {
         return this.$swal("Cita no reprogramada, el campo 'horario' esta vacio")
-      }
-
-      await this.axios.put(`/api/appointment/${this.dataCit.id}`, this.data)
-      .then(res => {
-        this.closeModal()
-        this.$swal('Cita reprogramada con éxito')
-        this.$parent.searchHistoria()
-      })
-      .catch(err => {
-        console.error(err)
-      })
+      }else{
+				await this.axios.put(`/api/appointment/${this.dataCit.id}`, this.data)
+				.then(res => {
+					this.closeModal()
+					this.$swal('Cita reprogramada con éxito')
+					this.$parent.searchHistoria()
+				})
+				.catch(err => {
+					console.error(err)
+				})
+			}
     },
 
     async listarhorario () {
@@ -195,27 +195,13 @@ export default {
 
     dayWeek (day) {
       switch (day) {
-        case 0:
-          return "Lunes" 
-        break;
-        case 1: 
-          return "Martes" 
-        break;
-        case 2: 
-          return "Miercoles" 
-        break;
-        case 3: 
-          return "Jueves" 
-        break;
-        case 4: 
-          return "Viernes" 
-        break;
-        case 5: 
-          return "Sabado" 
-        break;
-        case 6: 
-          return "Domingo" 
-        break;
+        case 0: return "Lunes"; break;
+        case 1: return "Martes"; break;
+        case 2: return "Miercoles"; break;
+        case 3: return "Jueves"; break;
+        case 4: return "Viernes"; break;
+        case 5: return "Sabado"; break;
+        case 6: return "Domingo"; break;
       }
     }, 
 

@@ -68,7 +68,7 @@
 						</thead>
 						<tbody>
 							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
-								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(cita)" data-toggle="modal" data-target="#patientModal">
+								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(qCita)" data-toggle="modal" data-target="#patientModal">
 									<span v-html="retornarCara(qCita.patient)"></span>
 									<!-- <i class="fas fa-brain"></i> -->
 									<span> {{index+1}}.</span> <span>{{ qCita.patient ? lowerCase(qCita.patient.name) : '..' }}</span>
@@ -455,7 +455,6 @@ export default {
       return character.substring(0, num) + '...';
     },
 		retornarCara(caras){
-			console.log('cara', caras.semaforo.length);
 			if(caras.semaforo!= undefined && caras.semaforo!=null){
 				if(caras.semaforo.length>0){
 					if( [1].includes(caras.semaforo[0].codigo) ){ return '<span class="badge rounded-pill p-2 text-bg-secondary" title="Normal"><i class="fas fa-smile"></i></span>' }

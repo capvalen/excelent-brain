@@ -142,7 +142,7 @@
 									<span v-if="interesado.referencia=='1'">Ninguno</span>
 									<span v-if="interesado.referencia=='2'">Recomendación</span>
 									<span v-if="interesado.referencia=='3'">Publicidad de internet</span>
-									<span v-if="interesado.referencia=='4'">Publicidad de Escrita</span>
+									<span v-if="interesado.referencia=='4'">Publicidad Escrita</span>
 									<span v-if="interesado.referencia=='5'">Publicidad de TV/Radio</span>
 									<span v-if="interesado.referencia=='6'">Referido</span>
 									<span v-if="interesado.referencia=='7'">Ninguno</span>
