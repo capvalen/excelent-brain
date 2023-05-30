@@ -47,7 +47,7 @@
 								<td>{{ cliente.name }}</td>
 								<td>{{ fechaLatam(cliente.birth_date) }}</td>
 								<td>{{ edad(cliente.birth_date) }} años</td>
-								<td><a v-if="cliente.phone!=''" :href="`https://wa.me/51${cliente.phone}?text=Hola${cliente.name}, de parte te Excelentemente, queremos enviarte un saludo por tu cumpleaños. Esperamos que la pases bonito en este día`" target="_blank"><i class="fab fa-whatsapp"></i></a></td>
+								<td><a v-if="cliente.phone!=''" :href="`https://wa.me/51${cliente.phone}?text=Feliz cumpleaños 🎂 ${cliente.name}, recuerda que el que piensa positivo, ve lo invisible, siente lo intangible y logra lo imposible. Te desea la clínica Excelentemente 🤗`" target="_blank"><i class="fab fa-whatsapp"></i></a></td>
 							</tr>
 						</tbody>
 					</table>

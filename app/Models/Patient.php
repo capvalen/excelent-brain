@@ -80,4 +80,8 @@ class Patient extends Model
     public function Exams() {
         return $this->hasMany('App\Models\Exam');
     }
+		public function Semaforo()
+    {
+        return $this->hasMany("App\Models\Semaforo");
+    }
 }

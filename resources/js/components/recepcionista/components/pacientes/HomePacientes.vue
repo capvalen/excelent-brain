@@ -51,16 +51,25 @@
 							<button v-if="paciente.semaforo[0].codigo==2" class="btn btn-success btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span title="Excelente"> <i class="fas fa-laugh-wink"></i> </span>
 							</button>
-							<button v-if="paciente.semaforo[0].codigo==3" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Exigente"> <i class="fas fa-meh"></i> </span>
+							<button v-if="paciente.semaforo[0].codigo==3" class="btn btn-success btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
+								<span title="Exigente"> <i class="fas fa-laugh-wink"></i> </span>
 							</button>
-							<button v-if="paciente.semaforo[0].codigo==4" class="btn btn-warning btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Deudor"> <i class="fas fa-frown-open"></i> </span>
+							<button v-if="paciente.semaforo[0].codigo==4" class="btn btn-success btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
+								<span title="Deudor"> <i class="fas fa-laugh-wink"></i> </span>
 							</button>
-							<button v-if="paciente.semaforo[0].codigo==5" class="btn btn-info btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Insatisfecho"> <i class="fas fa-angry"></i> </span>
+							<button v-if="paciente.semaforo[0].codigo==5" class="btn btn-warning btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
+								<span title="Insatisfecho"> <i class="fas fa-meh"></i> </span> 
 							</button>
-							<button v-if="paciente.semaforo[0].codigo==6" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
+							<button v-if="paciente.semaforo[0].codigo==6" class="btn btn-warning btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
+								<span title="Peligroso"> <i class="fas fa-meh"></i> </span>
+							</button>
+							<button v-if="paciente.semaforo[0].codigo==7" class="btn btn-danger btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
+								<span title="Peligroso"> <i class="fas fa-angry"></i> </span>
+							</button>
+							<button v-if="paciente.semaforo[0].codigo==8" class="btn btn-warning btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
+								<span title="Peligroso"> <i class="fas fa-frown"></i> </span>
+							</button>
+							<button v-if="paciente.semaforo[0].codigo==9" class="btn btn-warning btn-circle btn-md" data-toggle="modal" data-target="#modalVerEstados" @click="dataProps(paciente)">
 								<span title="Peligroso"> <i class="fas fa-frown"></i> </span>
 							</button>
 						</div>

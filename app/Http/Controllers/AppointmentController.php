@@ -44,11 +44,20 @@ class AppointmentController extends Controller
 	{
 		$date = date('Y-m-d');
 
-		return Appointment::where('date', '=', $date)
-		->where('schedule_id','!=', null)
-		->with('professional','patient','payment','schedule','patient.address','patient.relative')
-		->orderBy('professional_id')
-		->get();
+		try {
+			return Appointment::where('date', '=', $date)
+			->where('schedule_id','!=', null)
+			->with(['professional','patient','payment','schedule','patient.address','patient.relative',
+			'patient.semaforo' => function ($query){
+				$query->orderBy('registro', 'desc');
+				}
+			])
+			->orderBy('professional_id')
+			->get();
+		} catch (\Throwable $th) {
+			echo $th;
+		}
+		
 	}
 
 	/* public function testAppoitmentsReception(){
@@ -451,20 +460,22 @@ class AppointmentController extends Controller
 		}
 
 		if($valueStatus == 3){
-			$appointment->update([
-				'schedule_id' => null
-			]);
-			updateFieldStatus($appointment, $valueStatus);
-
+		
 			DB::table('faltas')->insert([
 				'idPaciente' => $appointment->patient_id,
 				'idProfesional' => $appointment->professional_id,
 				'idHorario' => $appointment->schedule_id,
-				'fecha' => $appointment->date
+				'fecha' => $appointment->date,
+				'observaciones' => $request->input('motivo')
 			]);
 			$patient = Patient::find( $appointment->patient_id );
 			$patient->increment('faults');
 			$patient->save();
+
+			$appointment->update([
+				'schedule_id' => null
+			]);
+			updateFieldStatus($appointment, $valueStatus);
 			
 		}else if($valueStatus == 2){
 			$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->get('patient_id'))

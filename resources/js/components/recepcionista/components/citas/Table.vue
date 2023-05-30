@@ -67,75 +67,74 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr
-							v-for="(cita, index) in citas"
-							:key="index"
-							>
-								<td class="text-capitalize puntero" :title="cita.patient ? cita.patient.name : '...'" @click="modalInfo(cita)" data-toggle="modal" data-target="#patientModal">
-									<span><i class="fas fa-brain"></i>  {{index+1}}.</span> <span>{{ cita.patient ? lowerCase(cita.patient.name) : '..' }}</span>
+							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
+								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(cita)" data-toggle="modal" data-target="#patientModal">
+									<span v-html="retornarCara(qCita.patient)"></span>
+									<!-- <i class="fas fa-brain"></i> -->
+									<span> {{index+1}}.</span> <span>{{ qCita.patient ? lowerCase(qCita.patient.name) : '..' }}</span>
 								</td>
-								<td class="text-capitalize" :title="cita.professional ? cita.professional.name : '...'">{{ cita.professional ? maxStringCharacter(lowerCase(cita.professional.name), 15) : '...' }}</td>
-								<td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">{{ cita.date ? fechaLatam(cita.date) : '...' }}</td>
+								<td class="text-capitalize" :title="qCita.professional ? qCita.professional.name : '...'">{{ qCita.professional ? maxStringCharacter(lowerCase(qCita.professional.name), 15) : '...' }}</td>
+								<td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">{{ qCita.date ? fechaLatam(qCita.date) : '...' }}</td>
 								<td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">
-										<span>{{ cita.schedule ? horaHumana(cita.schedule.check_time) : '...'}}</span>
+										<span>{{ qCita.schedule ? horaHumana(qCita.schedule.check_time) : '...'}}</span>
 										<br>
-										<span>{{ cita.schedule ? horaHumana(cita.schedule.departure_date) : '...'}}</span> 
+										<span>{{ qCita.schedule ? horaHumana(qCita.schedule.departure_date) : '...'}}</span> 
 								</td>
-								<td :title="cita.mode == 1 ? 'Presencial':'Virtual'">
-									<a @click="changeMode(cita.id)" v-if="cita.mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></a>
-									<a @click="changeMode(cita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
+								<td :title="qCita.mode == 1 ? 'Presencial':'Virtual'">
+									<a @click="changeMode(qCita.id)" v-if="qCita.mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></a>
+									<a @click="changeMode(qCita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
 								</td>
 								<td>
-									<a @click="modalInfo(cita); modalDePago()" data-toggle="modal" data-target="#pagoModal"
+									<a @click="modalInfo(qCita); modalDePago()" data-toggle="modal" data-target="#pagoModal"
 									class="btn btn-success btn-icon-split btn-sm"
 									:class='{
-									"btn-danger":  cita.payment ? cita.payment.pay_status == 1 : false,
-									"btn-success": cita.payment ? cita.payment.pay_status == 2 : false}'
+									"btn-danger":  qCita.payment ? qCita.payment.pay_status == 1 : false,
+									"btn-success": qCita.payment ? qCita.payment.pay_status == 2 : false}'
 									>
 										<span class="icon text-white-50">
 											<i :class="{ 
-												'fas fa-exclamation-circle': cita.payment ? cita.payment.pay_status == 1 : false,
-												'fas fa-check': cita.payment ? cita.payment.pay_status == 2 : false 
+												'fas fa-exclamation-circle': qCita.payment ? qCita.payment.pay_status == 1 : false,
+												'fas fa-check': qCita.payment ? qCita.payment.pay_status == 2 : false 
 											}"></i>
 										</span>
 
-										<span class="text labels" v-if="cita.payment && cita.payment.pay_status == 1">Sin cancelar</span>
-										<span class="text labels" v-else-if="cita.payment && cita.payment.pay_status == 2">Cancelado</span>
-										<span class="text labels" v-else-if="!cita.payment">Error</span>
+										<span class="text labels" v-if="qCita.payment && qCita.payment.pay_status == 1">Sin cancelar</span>
+										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 2">Cancelado</span>
+										<span class="text labels" v-else-if="!qCita.payment">Error</span>
 									</a>
 								</td>
 								<td>
-									<a @click="modalInfo(cita)" data-toggle="modal" data-target="#modalEstado"
+									<a @click="modalInfo(qCita)" data-toggle="modal" data-target="#modalEstado"
 									class="btn btn-success btn-icon-split btn-sm"
 									:class='{
-									"btn-warning": cita.status == 1,
-									"btn-info": cita.status == 2,
-									"btn-danger": cita.status == 3,
+									"btn-warning": qCita.status == 1,
+									"btn-info": qCita.status == 2,
+									"btn-danger": qCita.status == 3,
 									}'>
 										<span class="icon text-white-50">
 											<i :class="{
-												'fas fa-exclamation-circle': cita.status == 1,
-												'fas fa-check': cita.status == 2,
-												'fas fa-times': cita.status == 3
+												'fas fa-exclamation-circle': qCita.status == 1,
+												'fas fa-check': qCita.status == 2,
+												'fas fa-times': qCita.status == 3
 											}"></i>
 										</span>
-										<span class="text labels" v-if="cita.status == 1">Sin confirmar</span>
-										<span class="text labels" v-else-if="cita.status == 2">Confirmado</span>
-										<span class="text labels" v-else-if="cita.status == 3">Cancelado</span>
+										<span class="text labels" v-if="qCita.status == 1">Sin confirmar</span>
+										<span class="text labels" v-else-if="qCita.status == 2">Confirmado</span>
+										<span class="text labels" v-else-if="qCita.status == 3">Cancelado</span>
 									</a>
 								</td>
 								<td>
 									<div class="row d-flex align-items-center justify-content-around gap-1">
 											<!-- <a @click="modalInfo(cita)" title="Actualizar paciente" data-toggle="modal" data-target="#patientModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a> -->
 											
-											<a v-if="cita.status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
-											<a v-else @click="modalInfo(cita)" title="Reprogramar cita" data-target="#reprogModal" data-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
+											<a v-if="qCita.status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
+											<a v-else @click="modalInfo(qCita)" title="Reprogramar cita" data-target="#reprogModal" data-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
 											
 											<!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
-											<a @click="eliminar(cita.id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+											<a @click="eliminar(qCita.id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
 
 											<!-- Sin numero -->
-											<a v-if="cita.patient.phone ? false : true"
+											<a v-if="qCita.patient.phone ? false : true"
 											class="btn btn-danger btn-circle btn-sm"
 											title="Sin número"
 											>
@@ -144,37 +143,37 @@
 
 											<!-- Cita virtual - con link -->
 											<a 
-											:href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, 
+											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name : ''}, 
 											le recordamos que tiene reservada una cita online el día de hoy a las 
-											${cita.schedule ? horaHumana(cita.schedule.check_time) : ''}, 
-											le dejo el enlace de la cita ${cita.link}`"
+											${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, 
+											le dejo el enlace de la cita ${qCita.link}`"
 											target="_blank" 
 											title="Enviar mensaje (cita virtual)" 
 											class="btn btn-info btn-circle btn-sm"
-											v-else-if="cita.link"
+											v-else-if="qCita.link"
 											>
 											<i class="fab fa-whatsapp"></i>
 											</a>
 
 											<!-- Cita presencial -->
 											<a 
-											:href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${cita.schedule ? horaHumana(cita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
+											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima qCita.`"
 											target="_blank" 
 											title="Enviar mensaje" 
 											class="btn btn-info btn-circle btn-sm"
-											v-else-if="!cita.link"
+											v-else-if="!qCita.link"
 											>
 											<i class="fab fa-whatsapp"></i>
 											</a>
 											<a 
-											:href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
+											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
 											target="_blank" 
 											title="Enviar mensaje" 
 											class="btn btn-primary btn-circle btn-sm"
 											>
 											<i class="fa fa-align-justify"></i>
 											</a>
-											<a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${cita.id}`" target="_blank">
+											<a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${qCita.id}`" target="_blank">
 												<i class="fas fa-file"></i>
 											</a>
 									</div>
@@ -236,7 +235,7 @@ export default {
       cita: null,
       schedulesInvalid: [],
       horariosAll: [],
-      buscar:'',
+      buscar:'', estados:[ {id: 1, valor: 'Neutro'}, {id: 2, valor: 'excelente'}, {id: 3, valor: 'promotor'}, {id: 4, valor: 'wow'}, {id: 5, valor: 'reprogramador'}, {id: 6, valor: 'exigente'}, {id: 7, valor: 'deudor'}, {id: 8, valor: 'insatisfecho'}, {id: 9, valor: 'peligroso'}, ]
     }
   },
 
@@ -252,14 +251,13 @@ export default {
 
       await axios.get('/api/appoitmentsReception')
       .then(res => {
-        
 
         const nani = res.data.sort(function(a,b){
           if(a.schedule != null || b.schedule != null){
             return a.professional.id - b.professional.id || new Date(a.date+':'+a.schedule.check_time).getTime() - new Date(b.date+':'+b.schedule.check_time).getTime() 
           }
         })
-        this.citas = nani
+        this.citas = nani;
       })
       .catch(err => {
         console.error(err)
@@ -456,6 +454,20 @@ export default {
     maxStringCharacter (character, num) {
       return character.substring(0, num) + '...';
     },
+		retornarCara(caras){
+			console.log('cara', caras.semaforo.length);
+			if(caras.semaforo!= undefined && caras.semaforo!=null){
+				if(caras.semaforo.length>0){
+					if( [1].includes(caras.semaforo[0].codigo) ){ return '<span class="badge rounded-pill p-2 text-bg-secondary" title="Normal"><i class="fas fa-smile"></i></span>' }
+					if( [2, 3, 4].includes(caras.semaforo[0].codigo) ){ return `<span class="badge rounded-pill p-2 text-bg-primary" title="${this.estados[caras.semaforo[0].codigo].valor}"> <i class="fas fa-laugh-wink"></i> </span>` }
+					if( [5, 6, 7].includes(caras.semaforo[0].codigo) ){ return `<span class="badge rounded-pill p-2 text-bg-warning" title="${this.estados[caras.semaforo[0].codigo].valor}"> <i class="fas fa-meh"></i> </span>` }
+					if( [8,9].includes(caras.semaforo[0].codigo) ){ return `<span class="badge rounded-pill p-2 text-bg-danger" title="${this.estados[caras.semaforo[0].codigo].valor}"> <i class="fas fa-meh"></i> </span>` }
+				}else{
+					return '<span class="badge rounded-pill p-2 text-bg-secondary" title="Sin dato"><i class="fas fa-smile"></i></span>'
+				}
+			}else return '<span class="badge rounded-pill p-2 text-bg-secondary" title="Sin dato"><i class="fas fa-smile"></i></span>'
+
+		}
 		
   },
 
@@ -477,7 +489,7 @@ export default {
   },
 
   computed:{
-
+		
   },
 }
 </script>

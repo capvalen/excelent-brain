@@ -474,7 +474,7 @@ class PatientController extends Controller
 			$faltas = DB::table('faltas as f')
 			->join('professionals as p', 'p.id', '=', 'f.idProfesional')
 			->join('schedules as s', 's.id', '=', 'f.idHorario')
-			->where('idPaciente', $id)
+			->where('f.idPaciente', $id)
 			->select('f.*', 'p.name', 's.check_time as hora' )->get();
 
 			return response()->json($faltas);

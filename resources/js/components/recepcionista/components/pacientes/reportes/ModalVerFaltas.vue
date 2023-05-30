@@ -15,6 +15,7 @@
 								<th>Profesional</th>
 								<th>Fecha</th>
 								<th>Hora</th>
+								<th>Motivo</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -23,6 +24,7 @@
 								<td>{{ falta.name }}</td>
 								<td>{{ fechaLatam(falta.fecha) }}</td>
 								<td>{{ horaLatam(falta.hora) }}</td>
+								<td>{{ falta.observaciones }}</td>
 							</tr>
 							<tr v-if="faltas.length === 0" >
 								<td colspan="4">No existen registros de faltas. Faltas anteriores a la actualización: <span>{{ cantFaltas-faltas.length }}</span></td>

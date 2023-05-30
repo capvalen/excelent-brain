@@ -21,7 +21,7 @@
                   </select>
 									<div v-if="dataCit.status==3">
 										<label for="">Motivo</label>
-										<input type="text" class="form-control" v-control="motivo">
+										<input type="text" class="form-control" v-model="motivo">
 									</div>
                 </div>                                                                                             
               </div>
