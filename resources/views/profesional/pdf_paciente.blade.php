@@ -129,13 +129,13 @@
 <body>
   <div class="pdf">
     <div class="pdf-content">
-      <img src="https://excelentemente.org/consultorio-online/libs/logo.png" alt="Excelentemente" class="logotipo">
+      <img src="https://excelentemente.org/wp-content/uploads/2023/05/logo.jpeg" alt="Excelentemente" class="logotipo">
 
 
       {{-- contenido --}}
       <div class="header text-center">
         <img 
-        src="https://excelentemente.org/consultorio-online/public/img/logoem.png" 
+        src="https://excelentemente.org/wp-content/uploads/2023/05/logo.jpeg" 
         alt="Logotipo Excelentemente"
         class="logotipo-header"
         >
@@ -349,7 +349,7 @@
             <div class="py-30">
               <div class="position-relative ">
                 <p class="title-h2 text-center">Historia Psicológica</p>
-                @if ($historia->initial_psychological_history->created_at)))
+                @if ($historia->initial_psychological_history->created_at)
                 <p class="title-h5 date position-absolute right-0 top-0">Fecha {{ date('d-m-Y',strtotime($historia->initial_psychological_history->created_at)) }} </p>
                 @else
                 <p class="title-h5 date position-absolute right-0 top-0">Sin fecha</p>
