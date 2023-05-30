@@ -25,7 +25,7 @@
         <tbody>
             <tr v-for="payment in payments">
                 <td>{{ payment.id}}</td>
-                <td class="text-capitalize">{{ payment.customer }} {{ payment.observation }}</td>
+                <td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''">Obs. {{ payment.observation }}</span></td>
                 <!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
                 <td v-else-if="payment.pay_status == 2">Cancelado</td> -->
                 <td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{payment.price}}</td>

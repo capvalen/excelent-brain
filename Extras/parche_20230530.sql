@@ -1,0 +1,16 @@
+ALTER TABLE `professionals` ADD `nombre` VARCHAR(250) NULL DEFAULT '' AFTER `name`;
+UPDATE `professionals` SET `nombre` = 'Junior' WHERE `professionals`.`id` = 2;
+UPDATE `professionals` SET `nombre` = 'Elizabeth' WHERE `professionals`.`id` = 3;
+UPDATE `professionals` SET `nombre` = 'Erick' WHERE `professionals`.`id` = 4;
+UPDATE `professionals` SET `nombre` = 'Wilbert' WHERE `professionals`.`id` = 5;
+UPDATE `professionals` SET `nombre` = 'Joselin' WHERE `professionals`.`id` = 6;
+UPDATE `professionals` SET `nombre` = 'Quelinda' WHERE `professionals`.`id` = 7;
+UPDATE `professionals` SET `nombre` = 'Sandra' WHERE `professionals`.`id` = 8;
+UPDATE `professionals` SET `nombre` = 'Ruth' WHERE `professionals`.`id` = 9;
+UPDATE `professionals` SET `nombre` = 'Carlos' WHERE `professionals`.`id` = 10;
+UPDATE `professionals` SET `nombre` = 'Fanny' WHERE `professionals`.`id` = 11;
+UPDATE `professionals` SET `nombre` = 'Brigitte' WHERE `professionals`.`id` = 12;
+UPDATE `professionals` SET `nombre` = 'Nohely' WHERE `professionals`.`id` = 13;
+UPDATE `professionals` SET `nombre` = 'Diana' WHERE `professionals`.`id` = 14;
+UPDATE `professionals` SET `nombre` = 'Erika' WHERE `professionals`.`id` = 15;
+ALTER TABLE `faltas` ADD `observaciones` VARCHAR(250) NULL DEFAULT '' AFTER `registro`;

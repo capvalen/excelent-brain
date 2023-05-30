@@ -1,175 +1,195 @@
 <template>
   <div class="card">
-    <div class="container-fluid">
-      <div class="d-sm-flex align-items-center justify-content-around mt-4 px-3" style="gap: 10px;">
-          <div class="d-none d-sm-inline-block form-inline w-75">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <button class="btn btn-success" type="submit" @click="searchHistoria()">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-              </div>
-              <input
-              type="text"
-              class="form-control bg-white shadow-sm border-0 small"
-              placeholder="Nombre, Profesional, D.N.I."
-              aria-label="Search"
-              aria-describedby="basic-addon2"
-              id="searchInputAppointment" @keyup.enter="searchHistoria()"
-              >
-            </div>
-          </div>
+    <div class="container-fluid pt-2">
 
-          <div class="d-flex justify-content-start" style="flex-shrink: 0;">
-              <input 
-              type="date" 
-              class="form-control bg-white shadow-sm border-0 small"
-              @change="searchByDate"
-              >
-          </div>
-          
-          <div class="d-flex justify-content-start" style="flex-shrink: 0;">
-              <button data-toggle="modal" data-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
-              <modal-cita :profes="profesionales" :horas="horarios" @emitIdProf="listarhorario" @emitDate="fechaEmit" ></modal-cita>
-          </div>
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#inicio-tab" type="button" role="tab" aria-controls="inicio-tab" aria-selected="true">Vista clásica</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#calendario-tab" type="button" role="tab" aria-controls="calendario-tab" aria-selected="false">Vista calendario</button>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<!-- Inicio de primera tab -->
+				<div class="tab-pane fade show active" id="inicio-tab" role="tabpanel" aria-labelledby="inicio-tab" tabindex="0">
+					<div class="d-sm-flex align-items-center justify-content-around mt-4 px-3" style="gap: 10px;">
+							<div class="d-none d-sm-inline-block form-inline w-75">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<button class="btn btn-success" type="submit" @click="searchHistoria()">
+												<i class="fas fa-search fa-sm"></i>
+										</button>
+									</div>
+									<input
+									type="text"
+									class="form-control bg-white shadow-sm border-0 small"
+									placeholder="Nombre, Profesional, D.N.I."
+									aria-label="Search"
+									aria-describedby="basic-addon2"
+									id="searchInputAppointment" @keyup.enter="searchHistoria()"
+									>
+								</div>
+							</div>
 
-          <div class="d-flex justify-content-start" style="flex-shrink: 0;">
-              <button data-toggle="modal" data-target="#pagoExtras" class="btn btn-outline-secondary"><i class="fas fa-plus"></i> Pagos extras</button>
-          </div>
-          <div class="d-flex justify-content-start" style="flex-shrink: 0;">
-						<button data-toggle="modal" data-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
-          </div>
-      </div>
+							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
+									<input 
+									type="date" 
+									class="form-control bg-white shadow-sm border-0 small"
+									@change="searchByDate"
+									>
+							</div>
+							
+							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
+									<button data-toggle="modal" data-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
+									<modal-cita :profes="profesionales" :horas="horarios" @emitIdProf="listarhorario" @emitDate="fechaEmit" ></modal-cita>
+							</div>
 
-      <table class="table table-striped w-100 mt-4">
-        <thead class="bg-success text-white">
-          <tr>
-            <th>Paciente</th>
-            <th>Profesional</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Modo</th>
-            <th>Pago</th>
-            <th>Estado de Cita</th>
-            <th>Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-          v-for="(cita, index) in citas"
-          :key="index"
-          >
-            <td class="text-capitalize puntero" :title="cita.patient ? cita.patient.name : '...'" @click="modalInfo(cita)" data-toggle="modal" data-target="#patientModal">
-							<span><i class="fas fa-brain"></i>  {{index+1}}.</span> <span>{{ cita.patient ? lowerCase(cita.patient.name) : '..' }}</span>
-						</td>
-            <td class="text-capitalize" :title="cita.professional ? cita.professional.name : '...'">{{ cita.professional ? maxStringCharacter(lowerCase(cita.professional.name), 15) : '...' }}</td>
-            <td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">{{ cita.date ? fechaLatam(cita.date) : '...' }}</td>
-            <td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">
-                <span>{{ cita.schedule ? horaHumana(cita.schedule.check_time) : '...'}}</span>
-                <br>
-                <span>{{ cita.schedule ? horaHumana(cita.schedule.departure_date) : '...'}}</span> 
-            </td>
-            <td :title="cita.mode == 1 ? 'Presencial':'Virtual'">
-              <a @click="changeMode(cita.id)" v-if="cita.mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></a>
-              <a @click="changeMode(cita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
-            </td>
-            <td>
-              <a @click="modalInfo(cita); modalDePago()" data-toggle="modal" data-target="#pagoModal"
-              class="btn btn-success btn-icon-split btn-sm"
-              :class='{
-              "btn-danger":  cita.payment ? cita.payment.pay_status == 1 : false,
-              "btn-success": cita.payment ? cita.payment.pay_status == 2 : false}'
-              >
-                <span class="icon text-white-50">
-                  <i :class="{ 
-                    'fas fa-exclamation-circle': cita.payment ? cita.payment.pay_status == 1 : false,
-                    'fas fa-check': cita.payment ? cita.payment.pay_status == 2 : false 
-                  }"></i>
-                </span>
+							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
+									<button data-toggle="modal" data-target="#pagoExtras" class="btn btn-outline-secondary"><i class="fas fa-plus"></i> Pagos extras</button>
+							</div>
+							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
+								<button data-toggle="modal" data-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
+							</div>
+					</div>
 
-                <span class="text labels" v-if="cita.payment && cita.payment.pay_status == 1">Sin cancelar</span>
-                <span class="text labels" v-else-if="cita.payment && cita.payment.pay_status == 2">Cancelado</span>
-                <span class="text labels" v-else-if="!cita.payment">Error</span>
-              </a>
-            </td>
-            <td>
-              <a @click="modalInfo(cita)" data-toggle="modal" data-target="#modalEstado"
-              class="btn btn-success btn-icon-split btn-sm"
-              :class='{
-              "btn-warning": cita.status == 1,
-              "btn-info": cita.status == 2,
-              "btn-danger": cita.status == 3,
-              }'>
-                <span class="icon text-white-50">
-                  <i :class="{
-                    'fas fa-exclamation-circle': cita.status == 1,
-                    'fas fa-check': cita.status == 2,
-                    'fas fa-times': cita.status == 3
-                  }"></i>
-                </span>
-                <span class="text labels" v-if="cita.status == 1">Sin confirmar</span>
-                <span class="text labels" v-else-if="cita.status == 2">Confirmado</span>
-                <span class="text labels" v-else-if="cita.status == 3">Cancelado</span>
-              </a>
-            </td>
-            <td>
-              <div class="row d-flex align-items-center justify-content-around gap-1">
-                  <!-- <a @click="modalInfo(cita)" title="Actualizar paciente" data-toggle="modal" data-target="#patientModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a> -->
-                  
-                  <a v-if="cita.status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
-                  <a v-else @click="modalInfo(cita)" title="Reprogramar cita" data-target="#reprogModal" data-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
-                  
-                  <!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
-                  <a @click="eliminar(cita.id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+					<table class="table table-striped w-100 mt-4">
+						<thead class="bg-success text-white">
+							<tr>
+								<th>Paciente</th>
+								<th>Profesional</th>
+								<th>Fecha</th>
+								<th>Hora</th>
+								<th>Modo</th>
+								<th>Pago</th>
+								<th>Estado de Cita</th>
+								<th>Opciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+							v-for="(cita, index) in citas"
+							:key="index"
+							>
+								<td class="text-capitalize puntero" :title="cita.patient ? cita.patient.name : '...'" @click="modalInfo(cita)" data-toggle="modal" data-target="#patientModal">
+									<span><i class="fas fa-brain"></i>  {{index+1}}.</span> <span>{{ cita.patient ? lowerCase(cita.patient.name) : '..' }}</span>
+								</td>
+								<td class="text-capitalize" :title="cita.professional ? cita.professional.name : '...'">{{ cita.professional ? maxStringCharacter(lowerCase(cita.professional.name), 15) : '...' }}</td>
+								<td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">{{ cita.date ? fechaLatam(cita.date) : '...' }}</td>
+								<td class="puntero" @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">
+										<span>{{ cita.schedule ? horaHumana(cita.schedule.check_time) : '...'}}</span>
+										<br>
+										<span>{{ cita.schedule ? horaHumana(cita.schedule.departure_date) : '...'}}</span> 
+								</td>
+								<td :title="cita.mode == 1 ? 'Presencial':'Virtual'">
+									<a @click="changeMode(cita.id)" v-if="cita.mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></a>
+									<a @click="changeMode(cita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
+								</td>
+								<td>
+									<a @click="modalInfo(cita); modalDePago()" data-toggle="modal" data-target="#pagoModal"
+									class="btn btn-success btn-icon-split btn-sm"
+									:class='{
+									"btn-danger":  cita.payment ? cita.payment.pay_status == 1 : false,
+									"btn-success": cita.payment ? cita.payment.pay_status == 2 : false}'
+									>
+										<span class="icon text-white-50">
+											<i :class="{ 
+												'fas fa-exclamation-circle': cita.payment ? cita.payment.pay_status == 1 : false,
+												'fas fa-check': cita.payment ? cita.payment.pay_status == 2 : false 
+											}"></i>
+										</span>
 
-                  <!-- Sin numero -->
-                  <a v-if="cita.patient.phone ? false : true"
-                  class="btn btn-danger btn-circle btn-sm"
-                  title="Sin número"
-                  >
-                  <i class="fab fa-whatsapp"></i>
-                  </a>
+										<span class="text labels" v-if="cita.payment && cita.payment.pay_status == 1">Sin cancelar</span>
+										<span class="text labels" v-else-if="cita.payment && cita.payment.pay_status == 2">Cancelado</span>
+										<span class="text labels" v-else-if="!cita.payment">Error</span>
+									</a>
+								</td>
+								<td>
+									<a @click="modalInfo(cita)" data-toggle="modal" data-target="#modalEstado"
+									class="btn btn-success btn-icon-split btn-sm"
+									:class='{
+									"btn-warning": cita.status == 1,
+									"btn-info": cita.status == 2,
+									"btn-danger": cita.status == 3,
+									}'>
+										<span class="icon text-white-50">
+											<i :class="{
+												'fas fa-exclamation-circle': cita.status == 1,
+												'fas fa-check': cita.status == 2,
+												'fas fa-times': cita.status == 3
+											}"></i>
+										</span>
+										<span class="text labels" v-if="cita.status == 1">Sin confirmar</span>
+										<span class="text labels" v-else-if="cita.status == 2">Confirmado</span>
+										<span class="text labels" v-else-if="cita.status == 3">Cancelado</span>
+									</a>
+								</td>
+								<td>
+									<div class="row d-flex align-items-center justify-content-around gap-1">
+											<!-- <a @click="modalInfo(cita)" title="Actualizar paciente" data-toggle="modal" data-target="#patientModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a> -->
+											
+											<a v-if="cita.status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
+											<a v-else @click="modalInfo(cita)" title="Reprogramar cita" data-target="#reprogModal" data-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
+											
+											<!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
+											<a @click="eliminar(cita.id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
 
-                  <!-- Cita virtual - con link -->
-                  <a 
-                  :href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, 
-                  le recordamos que tiene reservada una cita online el día de hoy a las 
-                  ${cita.schedule ? horaHumana(cita.schedule.check_time) : ''}, 
-                  le dejo el enlace de la cita ${cita.link}`"
-                  target="_blank" 
-                  title="Enviar mensaje (cita virtual)" 
-                  class="btn btn-info btn-circle btn-sm"
-                  v-else-if="cita.link"
-                  >
-                  <i class="fab fa-whatsapp"></i>
-                  </a>
+											<!-- Sin numero -->
+											<a v-if="cita.patient.phone ? false : true"
+											class="btn btn-danger btn-circle btn-sm"
+											title="Sin número"
+											>
+											<i class="fab fa-whatsapp"></i>
+											</a>
 
-                  <!-- Cita presencial -->
-                  <a 
-                  :href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${cita.schedule ? horaHumana(cita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
-                  target="_blank" 
-                  title="Enviar mensaje" 
-                  class="btn btn-info btn-circle btn-sm"
-                  v-else-if="!cita.link"
-                  >
-                  <i class="fab fa-whatsapp"></i>
-                  </a>
-                  <a 
-                  :href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
-                  target="_blank" 
-                  title="Enviar mensaje" 
-                  class="btn btn-primary btn-circle btn-sm"
-                  >
-                  <i class="fa fa-align-justify"></i>
-                  </a>
-                  <a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${cita.id}`" target="_blank">
-                    <i class="fas fa-file"></i>
-                  </a>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+											<!-- Cita virtual - con link -->
+											<a 
+											:href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, 
+											le recordamos que tiene reservada una cita online el día de hoy a las 
+											${cita.schedule ? horaHumana(cita.schedule.check_time) : ''}, 
+											le dejo el enlace de la cita ${cita.link}`"
+											target="_blank" 
+											title="Enviar mensaje (cita virtual)" 
+											class="btn btn-info btn-circle btn-sm"
+											v-else-if="cita.link"
+											>
+											<i class="fab fa-whatsapp"></i>
+											</a>
+
+											<!-- Cita presencial -->
+											<a 
+											:href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${cita.schedule ? horaHumana(cita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
+											target="_blank" 
+											title="Enviar mensaje" 
+											class="btn btn-info btn-circle btn-sm"
+											v-else-if="!cita.link"
+											>
+											<i class="fab fa-whatsapp"></i>
+											</a>
+											<a 
+											:href="`whatsapp://send?phone=51${cita.patient ? cita.patient.phone : ''}&text=Buen día ${cita.patient ? cita.patient.name : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
+											target="_blank" 
+											title="Enviar mensaje" 
+											class="btn btn-primary btn-circle btn-sm"
+											>
+											<i class="fa fa-align-justify"></i>
+											</a>
+											<a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${cita.id}`" target="_blank">
+												<i class="fas fa-file"></i>
+											</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- Fin de primera tab -->
+				<!-- Inicio de segunda tab -->
+				<div class="tab-pane fade" id="calendario-tab" role="tabpanel" aria-labelledby="calendario-tab" tabindex="0">
+					<vista-calendario :profesionales="profesionales" ></vista-calendario>
+				</div>
+				<!-- Fin de segunda tab -->
+			</div>
     </div>
 
     <pago-modal v-if="cita" :cita="cita" ></pago-modal>
@@ -190,6 +210,7 @@ import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
 import ModalPagosExtras from './ModalPagosExtras.vue'
 import ModalEgresosExtras from './ModalEgresosExtras.vue'
+import VistaCalendario from './VistaCalendario.vue'
 import moment from 'moment'
 import alertify from 'alertifyjs'
 
@@ -197,7 +218,7 @@ import alertify from 'alertifyjs'
 export default {
   name: 'table-cita',
 
-  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, ModalPagosExtras, ModalEgresosExtras },
+  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, ModalPagosExtras, ModalEgresosExtras, VistaCalendario },
 
   props: {
     profes:Array,

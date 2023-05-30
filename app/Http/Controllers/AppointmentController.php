@@ -455,6 +455,17 @@ class AppointmentController extends Controller
 				'schedule_id' => null
 			]);
 			updateFieldStatus($appointment, $valueStatus);
+
+			DB::table('faltas')->insert([
+				'idPaciente' => $appointment->patient_id,
+				'idProfesional' => $appointment->professional_id,
+				'idHorario' => $appointment->schedule_id,
+				'fecha' => $appointment->date
+			]);
+			$patient = Patient::find( $appointment->patient_id );
+			$patient->increment('faults');
+			$patient->save();
+			
 		}else if($valueStatus == 2){
 			$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->get('patient_id'))
 														 ->where('professional_id', $request->get('professional_id'))
@@ -485,15 +496,6 @@ class AppointmentController extends Controller
 	 */
 	public function destroy(Appointment $appointment)
 	{
-		DB::table('faltas')->insert([
-			'idPaciente' => $appointment->patient_id,
-			'idProfesional' => $appointment->professional_id,
-			'idHorario' => $appointment->schedule_id,
-			'fecha' => $appointment->date
-		]);
-		$patient = Patient::find( $appointment->patient_id );
-		$patient->increment('faults');
-		$patient->save();
 		$appointment->delete();
 	}
 
