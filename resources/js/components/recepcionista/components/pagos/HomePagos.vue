@@ -13,6 +13,8 @@
         <table class="table table-striped w-100 mt-4" id="table_export">
         <thead class="bg-success text-white">
             <tr>
+                <td>N°</td>
+                <td>Fecha</td>
                 <td>Cita</td>
                 <td>Cliente - Motivo</td>
                 <td>Monto</td>
@@ -23,43 +25,44 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="payment in payments">
-                <td>{{ payment.id}}</td>
-                <td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''">Obs. {{ payment.observation }}</span></td>
-                <!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
-                <td v-else-if="payment.pay_status == 2">Cancelado</td> -->
-                <td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{payment.price}}</td>
-                <td>{{payment.created_at | formatedDate}}</td>
-								<td>
-									<span v-if="payment.type==6">Salida de dinero</span>
-									<span v-if="payment.type==5">Pago de cita</span>
-									<span v-if="payment.type==4">Otros</span>
-									<span v-if="payment.type==3">Informe</span>
-									<span v-if="payment.type==2">Paquete Kurame</span>
-									<span v-if="payment.type==1">Paquete Membresía</span>
-									<span v-if="payment.type==0">Certificado</span>
-								</td>
-								<td class="text-capitalize">
-									<span v-if="payment.moneda==1">Efectivo</span>
-									<span v-if="payment.moneda==2">Depósito bancario</span>
-									<span v-if="payment.moneda==4">Aplicativo Yape</span>
-									<span v-if="payment.moneda==3">POS</span>
-									<span v-if="payment.moneda==5">Banco: BCP</span>
-									<span v-if="payment.moneda==6">Banco: BBVA</span>
-									<span v-if="payment.moneda==7">Banco: Interbank</span>
-									<span v-if="payment.moneda==8">Banco: Nación</span>
-									<span v-if="payment.moneda==9">Banco: Scotiabank</span>
-									<span v-if="payment.moneda==10">Aplicativo Plin</span>
-								</td>
-                <td>
-									<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm">Generar PDF</a>
-									<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm">Generar PDF</a>
-								</td>
+            <tr v-for="(payment, index) in payments">
+							<td>{{index+1}}</td>
+							<td>{{payment.date}}</td>
+
+							<td>{{ payment.id}}</td>
+							<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''">Obs. {{ payment.observation }}</span></td>
+							<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
+							<td v-else-if="payment.pay_status == 2">Cancelado</td> -->
+							<td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{payment.price}}</td>
+							<td>{{payment.created_at | formatedDate}}</td>
+							<td>
+								<span v-if="payment.type==6">Salida de dinero</span>
+								<span v-if="payment.type==5">Pago de cita</span>
+								<span v-if="payment.type==4">Otros</span>
+								<span v-if="payment.type==3">Informe</span>
+								<span v-if="payment.type==2">Paquete Kurame</span>
+								<span v-if="payment.type==1">Paquete Membresía</span>
+								<span v-if="payment.type==0">Certificado</span>
+							</td>
+							<td class="text-capitalize">
+								<span >{{monedas[payment.moneda-1]}}</span>
+								
+							</td>
+							<td>
+								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm">Generar PDF</a>
+								<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm">Generar PDF</a>
+							</td>
             </tr>
         </tbody>
 				<tfoot>
-					<tr>
+					<tr v-for="tipo in sumaTipos">
+						<th></th><th></th><th></th>
+						<th>{{ monedas[tipo.moneda-1] }}</th>
+						<th>S/ {{ tipo.suma.toFixed(2) }}</th>
 						<th></th>
+					</tr>
+					<tr>
+						<th></th><th></th><th></th>
 						<th>Total</th>
 						<th>S/ {{ parseFloat(suma).toFixed(2) }}</th>
 						<th></th>
@@ -76,7 +79,7 @@
     export default{
         data(){
             return{
-                payments:[]
+                payments:[], sumaTipos:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin']
             }
         },
         methods:{
@@ -107,7 +110,15 @@
         },
 				computed:{
 					suma: function (){
+						
 						return this.payments.reduce((suma, item)=>{
+							let queIndex= this.sumaTipos.findIndex(x=> x.moneda== item.moneda );
+							console.log(queIndex);
+							if( !queIndex ){ //encuentra
+								this.sumaTipos[queIndex].suma+= parseFloat(item.price)
+							}else{
+								this.sumaTipos.push({suma: parseFloat(item.price), moneda: item.moneda})
+							}
 							if(item.type==6){
 								return suma- parseFloat(item.price)
 							}else{

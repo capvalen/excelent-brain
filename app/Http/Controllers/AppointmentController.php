@@ -452,6 +452,8 @@ class AppointmentController extends Controller
 
 	public function updateStatus($idAppointment,$valueStatus, Request $request){
 		$appointment = Appointment::find($idAppointment);
+		//print_r( $request->get('dataCit.professional.id') ); die();
+
 
 		function updateFieldStatus($appointment, $valueStatus){
 			$appointment->update([
@@ -459,7 +461,7 @@ class AppointmentController extends Controller
 			]);
 		}
 
-		if($valueStatus == 3){
+		if($valueStatus == 3){ //status cita anulada
 		
 			DB::table('faltas')->insert([
 				'idPaciente' => $appointment->patient_id,
@@ -477,18 +479,19 @@ class AppointmentController extends Controller
 			]);
 			updateFieldStatus($appointment, $valueStatus);
 			
-		}else if($valueStatus == 2){
-			$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->get('patient_id'))
-														 ->where('professional_id', $request->get('professional_id'))
-														 ->where('date',$request->get('date'))
-														 ->get();                   
+		}else if($valueStatus == 2){ //status = confirmado
+			$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCit.patient.id'))
+			->where('professional_id', $request->input('dataCit.professional.id'))
+			->where('date',$request->input('dataCit.date'))
+			->get();
+
 			if(count($medicalEvolutionExistents) == 0){
 				Medical_evolution::create([
-					'type' => $request->get('type'),
-					'date' => $request->get('date'),
+					'type' => $request->input('dataCit.type'),
+					'date' => $request->input('dataCit.date'),
 					'auth' => 0,
-					'patient_id'=> $request->get('patient_id'),
-					'professional_id'=> $request->get('professional_id')
+					'patient_id'=> $request->input('dataCit.patient.id'),
+					'professional_id'=> $request->input('dataCit.professional.id')
 				]);
 			}
 			updateFieldStatus($appointment, $valueStatus);
