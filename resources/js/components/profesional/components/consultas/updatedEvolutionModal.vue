@@ -98,15 +98,14 @@
 
             total_voice = transcript
 
-
         });
-        this.datos.content = ''
+        //this.datos.content = ''
         // end of transcription
         recognition.addEventListener("end", event => {
-        this.datos.content += total_voice
-        document.getElementById('icon-mic').classList.replace('fa-microphone','fa-microphone-slash')
-        document.getElementById('start-btn').classList.replace('btn-primary','btn-danger')
-        recognition.stop();
+          this.datos.content +=' '+ total_voice
+          document.getElementById('icon-mic').classList.replace('fa-microphone','fa-microphone-slash')
+          document.getElementById('start-btn').classList.replace('btn-primary','btn-danger')
+          recognition.stop();
         });
 
         recognition.start();

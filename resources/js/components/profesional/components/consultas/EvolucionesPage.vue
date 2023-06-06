@@ -77,7 +77,7 @@
 								<p> <strong>Antecedentes:</strong> <span>{{ datosConsulta.triajes[0].antecedentes }}</span> </p>
 								<p> <strong>Pruebas aplicadas</strong>: <span>{{ datosConsulta.triajes[0].pruebas }}</span> </p>
 							</div>
-							<div>
+							<div v-else>
 								<p>No existen datos de triaje</p>
 							</div>
 						</div>
@@ -140,6 +140,7 @@
 						<div v-if="misHobbies.length==0">
 							<span class="badge rounded-pill text-bg-secondary px-2 py-1" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" >Ninguno</span>
 						</div>
+						<p class="mt-2 mb-0">Visitas:</p>
 
 					<BarChart :citas="datosConsulta.appointments" ></BarChart>
 
@@ -496,10 +497,10 @@
 							<button @click="updateModal(evolution)" data-toggle="modal" data-target="#updatedModal" class="btn--edit btn--iteration" v-if="evolution.professional_id == dataUser.id && evolution.date === getDateNow() || evolution.auth == 1">
 								<i class="fas fa-edit"></i> Redactar evolución
 							</button>
-							<!-- <button @click="editEvolution(evolution)" class="btn btn-success"
+							<button @click="editEvolution(evolution)" class="btn btn-success"
 								v-if="evolution.professional_id == dataUser.id" data-toggle="modal" data-target="#editModal">
 								<i class="fas fa-edit"></i>
-							</button> -->
+							</button>
 						<!-- 	<div v-if="evolution.professional_id == dataUser.id &&
 								evolution.date === getDateNow()" class="btn-group">
 								<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)"

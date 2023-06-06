@@ -24,7 +24,7 @@
 									<input
 									type="text"
 									class="form-control bg-white shadow-sm border-0 small"
-									placeholder="Nombre, Profesional, D.N.I."
+									placeholder="Nombre, D.N.I."
 									aria-label="Search"
 									aria-describedby="basic-addon2"
 									id="searchInputAppointment" @keyup.enter="searchHistoria()"

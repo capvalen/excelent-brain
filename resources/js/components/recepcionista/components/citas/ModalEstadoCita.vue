@@ -70,6 +70,7 @@
           this.closeModal()
           this.$swal('Cita editada con éxito')
           //this.$parent.searchHistoria()
+          this.motivo=''
         })
         .catch(err => {
             console.error(err)
