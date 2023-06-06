@@ -120,6 +120,8 @@ Route::post('nuevoInteresado/', [ExtrasController::class, 'nuevoInteresado']);
 Route::get('listarInteresados/', [ExtrasController::class, 'listarInteresados']);
 Route::get('borrarInteresados/{id}', [ExtrasController::class, 'borrarInteresados']);
 Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
+Route::get('listRecomendation/{id}', [ExtrasController::class, 'listRecomendation']);
+Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 

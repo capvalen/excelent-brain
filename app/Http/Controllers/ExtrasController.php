@@ -101,4 +101,24 @@ class ExtrasController extends Controller
 				break;
 		}
 	}
+
+	public function addRecomendation( Request $request){
+		//print_r($request->all()); die();
+		DB::table('recommendations')->insert([
+			'professional_id' => $request->input('professional_id'),
+			'comment' => $request->input('texto'),
+			'patient_id' => $request->input('patient_id'),
+		]);
+		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
+	}
+
+	public function listRecomendation($id){
+		$recommendations = DB::table('recommendations as r')->where('patient_id', $id)
+		->join('professionals as pro', 'pro.id', 'r.professional_id')
+		->where('activo', '=', 1)
+		->orderBy('date', 'desc')
+		->get();
+
+		return response()->json($recommendations);
+	}
 }

@@ -18,3 +18,12 @@ ALTER TABLE `extra_payments` ADD `user_id` INT NULL DEFAULT NULL AFTER `continuo
 ALTER TABLE `payments` ADD `user_id` INT NULL DEFAULT NULL AFTER `continuo`;
 ALTER TABLE `extra_payments` ADD `activo` INT NULL DEFAULT '1' AFTER `user_id`;
 INSERT INTO `users` (`id`, `nombre`, `email`, `email_verified_at`, `password`, `rol`, `privilegios`, `remember_token`, `created_at`, `updated_at`, `activo`) VALUES (NULL, 'Luz Cano', 'luzcano@admin', NULL, '$2y$10$IkqdJbO6mJWWY9QfgfFGu.MudzgA7kDvZROQPvFTSF/p21bK3u1Oa', 'recepcionista', '1', NULL, NOW(), NULL, '1');
+CREATE TABLE `recommendations` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `professional_id` int(11) NOT NULL,
+ `comment` text NOT NULL,
+ `date` datetime DEFAULT current_timestamp(),
+ `patient_id` int(11) NOT NULL,
+ `activo` int(11) DEFAULT 1,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1

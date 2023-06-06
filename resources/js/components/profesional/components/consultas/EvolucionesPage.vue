@@ -84,6 +84,19 @@
 
 					</div>
 				</div>
+
+				<div class="card shadow mb-4">
+					<div class="card-header bg-primary py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-white"><i class="fa-regular fa-lightbulb"></i> Recomendaciones entre profesionales</h6>
+						<button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalComentarios"><i class="fa-regular fa-pen-to-square"></i></button>
+					</div>
+					<div class="card-body">
+						<ul >
+							<li v-for="comentario in comentarios">{{ comentario.nombre }} <i class="fa-regular fa-comment"></i> {{ comentario.comment }}</li>
+							<li v-if="comentarios.length==0">No hay recomendaciones previas</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 			<div class="col-md-6 ">
 				<div class="card shadow mb-4">
@@ -569,7 +582,8 @@
 		<ModalEditarPariente :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
 		<ModalEditarPaciente v-if="dato1" :dataPatient="dato1" ></ModalEditarPaciente>
 		<ModalVerEstados :dataPatient="datosPaciente" :estados="estados"></ModalVerEstados>
-		<ModalVerHobbies :hobbies="hobbies" :id="datosConsulta.id" :misHobbies="misHobbies" ></ModalVerHobbies> 
+		<ModalVerHobbies :hobbies="hobbies" :id="datosConsulta.id" :misHobbies="misHobbies" ></ModalVerHobbies>
+		<ModalComentarios :comentarios="comentarios" :idProfesional="dataUser.id" @refrescarComentarios="updateComentarios" ></ModalComentarios>
 	</div>
 </template>
 
@@ -581,6 +595,7 @@ import ExamTable from './ExamTable.vue';
 import { dateNow } from '../../../../helpers/Time.js'
 import moment from 'moment';
 import modalVerDetalle from './ModalVerDetalle.vue';
+import ModalComentarios from './ModalComentarios.vue';
 import ModalVerTriajesViejos from './../../../recepcionista/components/pacientes/ModalVerTriajesViejos.vue';
 import ModalEditarPaciente from './../../../recepcionista/components/pacientes/ModalEditPatients.vue'
 import ModalEditarPariente from './ModalEditarPariente.vue'
@@ -591,7 +606,7 @@ import BarChart  from './grafico/barras'
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios },
 
 	data() {
 		return {
@@ -605,7 +620,7 @@ export default {
 			consultaHoy: false,
 			dataCies: null,
 			searchCie: '',
-			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, dato1:{},
+			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, dato1:{}, comentarios:[],
 
 			component: "ExamTable",
 			datosExamenes: [],
@@ -780,6 +795,10 @@ export default {
 			})
 			this.axios.get('/api/profesional')
 			.then(res=> this.profesionalesTodos= res.data)
+
+			this.axios.get('/api/listRecomendation/'+this.$route.params.idPaciente)
+			.then(res=> this.comentarios= res.data)
+			
 		},
 
 		async updatedConsult() {
@@ -804,6 +823,10 @@ export default {
 			this.switch = 0
 			this.inputSwitchActive(this.inputActive, false)
 			this.inputActive = ""
+		},
+		updateComentarios(){
+			this.axios.get('/api/listRecomendation/'+this.$route.params.idPaciente)
+			.then(res=> this.comentarios= res.data)
 		},
 
 		// async addEvolution () {
