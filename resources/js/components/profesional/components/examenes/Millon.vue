@@ -511,6 +511,8 @@
                 formData.append('devaluation', this.deval)
                 formData.append('validaity', this.valid)
                 formData.append('patient_id', this.patient_id)
+                formData.append('professional_id', this.$attrs.professional.id)
+
                 this.axios.post('/api/saveMillon', formData, config)
                 .then((result) => {
                     this.$swal('Resultados regitrados correctamente')

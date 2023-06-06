@@ -40,7 +40,11 @@
 										<option value="8">Banco: Nación</option>
 										<option value="9">Banco: Scotiabank</option>
 									</select>
-							</div>                                                      
+							</div>
+							<div class="col-sm-12">
+								<label for="">Comprobante de pago</label>
+								<input type="text" class="form-control" v-model="caso.comprobante">
+							</div>
 					</div>
 					<div class="form-group">
 								<label for="">Observación</label>
@@ -66,8 +70,11 @@
 		data() {
 			return{
 				dataCita: null,
-				caso: {pago:1, moneda:1},
+				caso: {pago:1, moneda:1, comprobante:'', continuo: 1, user_id:-1},
 			}
+		},
+		props:{
+			cita: Object, idUsuario:null
 		},
 		methods:{
 			async update() {
@@ -119,20 +126,23 @@
 			}
 		},
 	
-		props:{
-			cita: Object
-		},
 		watch:{
 			cita: function (){
 				this.dataCita = this.cita;
 				this.caso.pago = this.dataCita.payment.pay_status;
 				this.caso.moneda = this.dataCita.payment.payment_method == undefined ? 1:this.dataCita.payment.payment_method ;
+				this.caso.continuo = this.dataCita.payment.continuo;
+				this.caso.user_id = this.idUsuario
 			}
 		},
 		created () {
 			this.dataCita = this.cita;
 			this.caso.pago = this.dataCita.payment.pay_status;
 			this.caso.moneda = this.dataCita.payment.payment_method == undefined ? 1:this.dataCita.payment.payment_method ;
+			this.caso.continuo = this.dataCita.payment.continuo;
+			this.caso.user_id = this.idUsuario
+
+
 		},
 	}
 </script>

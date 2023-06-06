@@ -13,7 +13,7 @@
                 <tr>
                   <th>#</th>
                   <th>Fecha</th>
-                  <th>Generar Receta</th>
+                  <th>Ver Receta</th>
                 </tr>
               </thead>
               <tbody>
@@ -21,9 +21,12 @@
                   <td>{{ index + 1 }}</td>
                   <td>{{ prescription ? prescription.attention_date : '...' }}</td>
                   <td>
-                    <a v-if="prescription" class="btn btn-success" :href="`/api/pdf/${prescription.id}`" target="_blank">Generar</a>
+                    <a v-if="prescription" class="btn btn-success" :href="`/api/pdf/${prescription.id}`" target="_blank"><i class="fa-solid fa-file-pdf"></i> Ver PDF</a>
                   </td>
                 </tr>
+								<tr v-if="dataPatient.prescriptions.length==0">
+									<td colspan="4">No hay recetas</td>
+								</tr>
               </tbody>
             </table>
           </div>

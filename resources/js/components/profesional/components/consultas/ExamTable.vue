@@ -19,7 +19,7 @@
 					<th style="vertical-align:middle;"> {{ index + 1 }} </th>
 					<td style="vertical-align:middle;"> {{ new Date(examen.created_at).toLocaleString() || '...' }} </td>
 					<th>
-						<button class="btn btn-warning" @click="keepExamFunction(examen)">Ver respuesta</button>
+						<button class="btn btn-outline-warning" @click="keepExamFunction(examen)">Ver respuesta</button>
 					</th>
 				</tbody>
 			</table>
@@ -109,7 +109,7 @@ export default {
 	},
 
 	props: {
-		dataPatient: Object, dataExamBasic: Array, dataExamPersonalized: Object
+		dataPatient: Object, dataExamBasic: Array, dataExamPersonalized: Object, profesionales:Array
 	},
 
 	methods: {
@@ -122,7 +122,7 @@ export default {
 				this.axios(`/api/src/${this.dataPatient.id}`),
 				this.axios(`/api/exam/${this.dataPatient.id}`),
 			])
-				.then(res => {
+			.then(res => {
 					const [
 						zungDep,
 						zungAns,
@@ -139,12 +139,13 @@ export default {
 					this.allExams.zungdep.value = zungDep.data
 
 
-					exam.data.forEach(el => {
+				/* 	exam.data.forEach(el => {
 						const result = JSON.parse(el.exam)
+						console.log('resultado',result);
 						if (!result.name) return alert('Hay un examen o exámenes que no tienen nombre')
 
 						this.allExams[result.name].value.push(result.result)
-					})
+					}) */
 
 					this.valid = true
 				})
@@ -181,7 +182,7 @@ export default {
 		keepExamFunction(data) {
 			this.$emit('keepComponentExam', {
 				component: 'ExamResult',
-				data: data,
+				data: data, profesionales: this.profesionales
 			})
 		},
 

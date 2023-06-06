@@ -108,7 +108,10 @@ export default {
       schedulesInvalid: [],
     }
   },
-  
+  props:{
+    dataCit:Object, idUsuario:null
+  },  
+
   methods: {
     async getProfessional () {
       await this.axios.get(`/api/professional`)
@@ -125,8 +128,9 @@ export default {
       if ( document.getElementById('sltProfesionalHorarioID').value=='' ) {
         return this.$swal("Cita no reprogramada, el campo 'horario' esta vacio")
       }else{
-				await this.axios.put(`/api/appointment/${this.dataCit.id}`, this.data)
-				.then(res => {
+				this.data.user_id = this.idUsuario;
+				await this.axios.put(`/api/reprogramado/${this.dataCit.id}`, this.data)
+				.then(res => { console.log(res.data);
 					this.closeModal()
 					this.$swal('Cita reprogramada con éxito')
 					this.$parent.searchHistoria()
@@ -210,10 +214,7 @@ export default {
     }
   },
  
-  props:{
-    dataCit:Object
-  },  
-
+  
   computed : {
     repromingSchedule () {
       this.data = this.dataCit

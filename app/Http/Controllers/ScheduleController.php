@@ -21,21 +21,22 @@ class ScheduleController extends Controller
        
     }
 
-    public function getschedules($id)
-    {   
+    public function getschedules($id){   
         
         $time = date('H:i:s', time());
         $date = date('Y-m-d');
 
         $appointment = Appointment::where('professional_id', $id)
             ->where('appointments.date', '>=', date('Y-m-d'))
+						->where('appointments.status', '<>', 4)
             ->with('schedule')
             ->get();
         
-        $schedules = Schedule::where('professional_id', $id)
-        ->orderBy('check_time', 'asc')
+				$schedules = Schedule::where('professional_id', $id)
+				->orderBy('check_time', 'asc')
             ->with('appointments')
             ->get();
+				
         // ->with(['schedule' => function ($q1) { $q1->where('schedules.check_time', '>', date('H:i:s', time())); }])
         // return $appointment; 
         // return $appointment;
@@ -43,6 +44,24 @@ class ScheduleController extends Controller
             'schedulesInvalid' => $appointment,
             'schedules' => $schedules
         ]);
+    }
+    public function horarioOcupado($id, $fecha){
+			//var_dump($fecha);die();
+        
+      $appointment = Appointment::where('professional_id', $id)
+			->whereDate('appointments.date', '=', $fecha)
+			->where('appointments.status', '<>', 4)
+			->with('schedule')
+			->get();
+        
+			$solos = Schedule::where('professional_id', $id)
+			->orderBy('check_time', 'asc')
+			->get();
+        
+			return response()->json([
+				'invalidos' => $appointment,
+				'solos' => $solos,
+			]);
     }
 
     public function verifHours($check_time, $departure_date, $professional_id, $dia){

@@ -95,9 +95,10 @@
       async saveData() {
         await saveExams({
           patient_id: this.dataPersonalPatient.patient_id,
+					professional_id: this.$attrs.professional.id,
           exam: JSON.stringify({ name: this.name, result: this.values })
         })
-          .then(res => {
+          .then(res => { //console.log(res.data);
             this.$swal('Resultados regitrados correctamente')
           })
           .catch(err => {
@@ -114,17 +115,15 @@
       },
   
       sumatoria() {
-        /* if (!this.dataPersonalPatient.patient_id) {
+        if (!this.dataPersonalPatient.patient_id) {
           document.getElementById('name-patient').focus();
           return;
-        } */
+        }else{
+					this.saveData()
 
-
+				}
   
-        alert('calcula suma??')
-
-
-        //this.saveData()
+        //alert('calcula suma??')
       },
   
       sendData(data) {

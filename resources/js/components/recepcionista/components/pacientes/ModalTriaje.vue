@@ -168,7 +168,7 @@ export default {
 		async insertarTriaje(){
 			await axios.post(`/api/insertarTriaje/${this.dataPatient.id}`,[this.dataPatient, this.consulta] )
 			.then(res => {
-				//console.log(res.data)
+				console.log(res.data)
         if(res.data['mensaje']>0){
 					this.$swal.fire({title: 'Registrado el triaje ',
 						text:'¿Deseas abrir el PDF de este registro?',
@@ -190,16 +190,21 @@ export default {
       })
 		}
 	},
+	watch:{
+		dataPatient(){
+			this.datos = this.dataPatient;
+		}
+	},
 	computed: {
     updateValues () {
       return this.datos = this.dataPatient
     }
   },
 	updated() {
-    this.updateValues;
+    //this.updateValues;
   },
   created () {
-    this.updateValues;
+    //this.updateValues;
   },
 	
 }

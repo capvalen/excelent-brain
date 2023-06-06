@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    protected $fillable=['bank','voucher','voucher_issued','pay_status','price','payment_method','observation','appointment_id'];
+    protected $fillable=['bank','voucher','voucher_issued','pay_status','price','payment_method','observation','appointment_id', 'continuo', 'user_id'];
     use HasFactory;
     //Relacion uno a uno Appointment-Payment
     public function appointment()

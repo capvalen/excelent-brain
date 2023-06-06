@@ -40,6 +40,16 @@
                   <option value="4">Otros</option>
                 </select>
               </div>
+              <div class="col-sm-6">
+                <label for="type">Moneda</label>
+                <select class="form-select" id="type" required name="type" v-model="form.moneda">
+                  <option v-for="(moneda, index) in monedas" :value="index+1">{{moneda}}</option>
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <label for="type">N° de operación</label>
+                <input type="text" class="form-control" v-model="form.voucher_issued">
+              </div>
 
               <div class="col-sm-6">
                 <div class="form-group">
@@ -76,12 +86,13 @@ export default {
 
   data() {
     return {
+			monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin'],
       form: {
         customer: null,
         price: 0,
         type: null,
         observation: null,
-        date: moment().format('YYYY-MM-DD')
+        date: moment().format('YYYY-MM-DD'), continuo:-1
       }
     }
   },

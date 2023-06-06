@@ -181,7 +181,7 @@
 											<p>DNI: {{$patient[0]->dni}}</p>
 											<p class="name">CLIENTE: {{$patient[0]->name}}</p>
 											<p>DIRECCIÓN: {{$patient[0]->address->address}}</p>
-											<p>USUARIO: -</p>
+											<p>USUARIO: {{$usuario[0]->email}}</p>
                     </div>
                     <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
                         <thead>

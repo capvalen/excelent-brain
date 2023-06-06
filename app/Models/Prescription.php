@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Prescription extends Model
 {
     use HasFactory;
-    protected $fillable=['attention_date','effective_date','patient_id','signature'];
+    protected $fillable=['attention_date','effective_date','patient_id','signature', 'professional_id'];
     //Relacion muchos a muchos Prescripttions-karios
     public function kairos()
     {

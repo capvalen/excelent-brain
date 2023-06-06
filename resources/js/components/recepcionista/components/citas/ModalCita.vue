@@ -258,7 +258,7 @@
 							@change="dynamicPrice()"
 							>
 								<option value="1" selected>Nuevo</option>
-								<option value="2">Continuador</option>
+								<option value="2">Continuante</option>
                   </select>
             </div>
           </div>
@@ -299,7 +299,7 @@ import moment from 'moment'
 
 export default {
   name: "form-prof",
-  props:{ profes:Array,  horas:Array },
+  props:{ profes:Array,  horas:Array, idUsuario:null },
   data(){
     return{
       switchReciec: 1,
@@ -425,6 +425,8 @@ export default {
 				formData.append('contacto', this.cita.contacto);
 				formData.append('contacto_celular', this.cita.contacto_celular);
 				formData.append('parentezco', this.cita.parentezco);
+				formData.append('continuo', this.cita.type_amount);
+				formData.append('user_id', this.idUsuario);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => {
 					console.log(response.data)
@@ -587,9 +589,8 @@ export default {
 				default: this.cita.clasification = ''; break;
 			}
     },
-
     emitirFecha () {
-      this.$emit("emitDate", event.target.value);
+      this.$emit("emitDate", this.cita.professional_id, event.target.value);
     },
 
     limpiarInputs (value) {

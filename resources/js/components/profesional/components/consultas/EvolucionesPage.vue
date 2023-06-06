@@ -7,7 +7,7 @@
 				<button data-toggle="modal" data-target="#modalProximaCita" class="btn btn-outline-warning">
 					<i class="fa-solid fa-person-walking-arrow-right"></i> Próxima cita
 				</button>
-				<router-link :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
+				<router-link v-if="dataUser.profession!='Psicólogo'" :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
 					title="Generar receta"><i class="fa-solid fa-vial"></i> Nueva receta
 				</router-link>
 				<button data-toggle="modal" data-target="#recetasModal" class="btn btn-outline-secondary">
@@ -117,7 +117,7 @@
 							<a class="text-capitalize" href="#!" data-bs-toggle="modal" data-bs-target="#modalVerEstados">{{queEstado(datosPaciente.semaforo[0].codigo)}}</a>
 							<span v-if="datosPaciente.semaforo[0].observaciones!=''">({{ datosPaciente.semaforo[0].observaciones }})</span>
 						</p>
-						<p>Perfil del paciente: 
+						<p v-if="datosPaciente.semaforo.length==0">Perfil del paciente: 
 							<a class="text-capitalize" href="#!" data-bs-toggle="modal" data-bs-target="#modalVerEstados">Sin asignar</a>
 						</p>
 						<p>Hobbies:</p>
@@ -127,9 +127,13 @@
 						<div v-if="misHobbies.length==0">
 							<span class="badge rounded-pill text-bg-secondary px-2 py-1" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" >Ninguno</span>
 						</div>
+
+					<BarChart :citas="datosConsulta.appointments" ></BarChart>
+
 					</div>
 
 				</div>
+			
 
 			</div>
 
@@ -476,17 +480,14 @@
 							</div>
 						</div>
 						<div class="d-flex flex-gap">
-							<button @click="updateModal(evolution)" data-toggle="modal" data-target="#updatedModal"
-								class="btn--edit btn--iteration" v-if="evolution.professional_id == dataUser.id &&
-									evolution.date === getDateNow() ||
-									evolution.auth == 1">
-								Redactar evolución
+							<button @click="updateModal(evolution)" data-toggle="modal" data-target="#updatedModal" class="btn--edit btn--iteration" v-if="evolution.professional_id == dataUser.id && evolution.date === getDateNow() || evolution.auth == 1">
+								<i class="fas fa-edit"></i> Redactar evolución
 							</button>
-							<button @click="editEvolution(evolution)" class="btn btn-success"
+							<!-- <button @click="editEvolution(evolution)" class="btn btn-success"
 								v-if="evolution.professional_id == dataUser.id" data-toggle="modal" data-target="#editModal">
 								<i class="fas fa-edit"></i>
-							</button>
-							<div v-if="evolution.professional_id == dataUser.id &&
+							</button> -->
+						<!-- 	<div v-if="evolution.professional_id == dataUser.id &&
 								evolution.date === getDateNow()" class="btn-group">
 								<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)"
 									class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuClickableInside"
@@ -496,7 +497,7 @@
 								<ul class="dropdown-menu px-2 py-2" aria-labelledby="dropdownMenuClickableInside">
 									<span>{{ autoSaveInfo }}</span>
 								</ul>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</div>
@@ -515,7 +516,7 @@
 
 					<keep-alive>
 						<component v-if="this.datosExamPaciente.id" :is="component" @keepComponentExam="keepExamFunction"
-							:dataPatient="datosExamPaciente" :dataExam="this.datosExamenes" :dataExamBasic="datosConsulta.examenes_basicos" :dataExamPersonalized="datosConsulta.examenes_personalizados" />
+							:dataPatient="datosExamPaciente" :dataExam="this.datosExamenes" :dataExamBasic="datosConsulta.examenes_basicos" :dataExamPersonalized="datosConsulta.examenes_personalizados" :profesionales="profesionalesTodos" />
 					</keep-alive>
 
 				</div>
@@ -585,15 +586,16 @@ import ModalEditarPaciente from './../../../recepcionista/components/pacientes/M
 import ModalEditarPariente from './ModalEditarPariente.vue'
 import ModalVerEstados from './../../../recepcionista/components/pacientes/ModalVerEstados.vue'
 import ModalVerHobbies from './../../../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
+import BarChart  from './grafico/barras'
 
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart },
 
 	data() {
 		return {
-			autoSaveInfo: '',
+			autoSaveInfo: '', profesionalesTodos:[],
 			datosConsulta: {},
 			cardUpdate: '',         // Va el el nombre del card | Psiquiatra | Psicologia | perfil | etc
 			dobleClick: false,
@@ -768,14 +770,16 @@ export default {
 				.catch(err => {
 					console.error(err)
 				})
-				await this.axios.get(`/api/datosPacienteSemaforo/${this.$route.params.idPaciente}`)
-				.then(res =>{
-					this.datosPaciente={
-						id: this.datosConsulta.id,
-						name: this.datosConsulta.name,
-						semaforo: res.data
-					}
-				})
+			await this.axios.get(`/api/datosPacienteSemaforo/${this.$route.params.idPaciente}`)
+			.then(res =>{
+				this.datosPaciente={
+					id: this.datosConsulta.id,
+					name: this.datosConsulta.name,
+					semaforo: res.data
+				}
+			})
+			this.axios.get('/api/profesional')
+			.then(res=> this.profesionalesTodos= res.data)
 		},
 
 		async updatedConsult() {
@@ -1115,7 +1119,7 @@ export default {
 	},
 
 	created() {
-		this.getIdPatient
+		this.getIdPatient;
 	},
 
 	mounted() {

@@ -108,6 +108,7 @@ class AppointmentController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		//print_r($request->all()); die();
 			try {
 
 		$paciente_prueba = Patient::where('dni',$request->get('dni'))->first();
@@ -173,10 +174,12 @@ class AppointmentController extends Controller
 			$payment = Payment::create([
 				'observation' => ' ',
 				'bank' => '',
-				'voucher' => '',
+				'voucher' => $request->get('comprobante'),
 				'pay_status' => 1,
 				'price' => $request->get('price'),
-				'appointment_id' => $appointment->id
+				'appointment_id' => $appointment->id,
+				'continuo' => $request->get('continuo'),
+				'user_id' => $request->get('user_id')
 			]);
 
 		}else{
@@ -198,18 +201,17 @@ class AppointmentController extends Controller
 			$payment = Payment::create([
 				'observation'=>'',
 				'bank'=>'',
-				'voucher'=>'',
+				'voucher' => $request->get('comprobante'),
 				'pay_status'=> 1,
 				'price' => $request->get('price'),
-				'appointment_id' => $appointment->id
+				'appointment_id' => $appointment->id,
+				'continuo' => $request->get('continuo'),
+				'user_id' => $request->get('user_id')
 			]);
 			
-							
-			$paciente_actualizar = Patient::find($paciente_prueba->id)
-
 			//var_dump($request->input());die();
 			//$paciente_actualizar = Patient::where('id', $paciente_prueba->id)
-
+			$paciente_actualizar = Patient::find($paciente_prueba->id)
 			->update([
 				'phone'=>$request->get('phone'),
 				'name'=> trim(str_replace('  ', ' ' , $request->get('name'))),
@@ -406,6 +408,7 @@ class AppointmentController extends Controller
 	 */
 	public function update(Request $request, Appointment $appointment)
 	{
+		//var_dump($request->input('dataCita')); die();
 		try {
 
 		//$appointment->update($request->all());
@@ -416,9 +419,10 @@ class AppointmentController extends Controller
 			'voucher_issued' => $request->input('dataCita.payment.voucher_issued'),
 			'pay_status' => $request->input('caso.pago'),
 			'payment_method' => $request->input('caso.moneda'),
-			'voucher' => $request->input('dataCita.payment.voucher'),
+			'voucher' => $request->input('caso.comprobante'),
 			'bank' => $request->input('dataCita.payment.bank'),
-			'observation' => $request->input('dataCita.payment.observation')
+			'observation' => $request->input('dataCita.payment.observation'),
+			'user_id'=>$request->input('caso.user_id')
 		]);
 
 		if($request->input('caso.pago') === '2'){
@@ -426,10 +430,21 @@ class AppointmentController extends Controller
 				$pagoExtra->customer = $request->input('dataCita.patient.name');
 				$pagoExtra->price = $request->input('dataCita.payment.price');
 				$pagoExtra->moneda = $request->input('caso.moneda');
+				$pagoExtra->voucher = $request->input('caso.comprobante');
 				$pagoExtra->appointment_id = $request->input('dataCita.id');
 				$pagoExtra->type =5;
-				$pagoExtra->observation = '';
+				$pagoExtra->observation = $request->input('dataCita.payment.observation');
+				$pagoExtra->continuo = $request->input('caso.continuo');
+				$pagoExtra->user_id = $request->input('caso.user_id');
 				$pagoExtra->save();
+		}else{
+			$pagoExtra = Extra_payment::where('appointment_id', $request->input('dataCita.id') );
+			$pagoExtra->update([
+				'moneda' => $request->input('caso.moneda'),
+				'voucher' => $request->input('caso.comprobante'),
+				'observation' => $request->input('dataCita.payment.observation'),
+				'user_id'=> $request->input('caso.user_id')
+			]);
 		}
 
 		
@@ -443,6 +458,71 @@ class AppointmentController extends Controller
 		if($request->get('status') == 2){
 			
 		}
+
+		return response()->json(['mensaje' => 'se actualizó la cita']);
+	} catch (\Throwable $th) {
+		echo $th;
+	}
+	}
+	public function reprogramado(Request $request, Appointment $appointment)
+	{
+		//var_dump($request->input('payment.price')); die();
+		try {
+
+		//$appointment->update($request->all());
+		$cita = Appointment::find($request->get('id'));
+		$cita->update([
+			'status' => 4
+		]);
+
+		$cita->payment->update([
+			'pay_status' => 3, //nuevo status para reprogramado/anulado
+			'observation' => 'reprogramado'
+		]);
+		//return var_dump( $cita->id ); die();
+
+		
+
+		$nuevaCita = Appointment::create([
+			'professional_id' => $request->get('professional_id'),
+			'date' => $request->get('date'),
+			'schedule_id' => $request->get('schedule_id'),
+			'clasification'=>$request->get('clasification'),
+			'type'=>$request->get('type'),
+			'patient_condition'=>$request->get('patient_condition'),
+			'recomendation'=>$request->get('recomendation'),
+			'mode'=>$request->get('mode'),
+			'link'=>$request->get('link'),
+			'status'=> 1,
+			'patient_id' =>$request->get('patient_id'),
+		]);
+
+		$payment = Payment::create([
+			'observation'=>'Viene de reprogramación',
+			'bank'=>'',
+			'voucher' => $request->input('payment.voucher'),
+			'pay_status'=> 1,
+			'price' => floatval($request->input('payment.price')),
+			'appointment_id' => $nuevaCita->id,
+			'continuo' => $request->input('payment.continuo'),
+			'user_id' => $request->get('user_id')
+		]);
+
+		//Consultar
+		$pagoExtra = Extra_payment::where('appointment_id', $request->get('id') );
+		$pagoExtra->update([
+			'appointment_id'=> $nuevaCita->id,
+			'observation' => 'reprogramado',
+			//'activo' => 0,
+		]);
+
+		if ($request->reschedule) {
+			$reschedule = Reschedule::create([
+				'reason' => $request->reschedule,
+				'appointment_id' => $request->id
+			]);
+		}
+		
 
 		return response()->json(['mensaje' => 'se actualizó la cita']);
 	} catch (\Throwable $th) {
@@ -735,9 +815,19 @@ class AppointmentController extends Controller
 		$professional = Professional::where('id',$appointment->professional_id)->get();
 		$schedule = Schedule::where('id',$appointment->schedule_id)->get();
 		$payment = Payment::where('appointment_id', $appointment->id)->get();
-		$pdf = PDF::loadView('recepcion.cupon', compact('appointment','patient','payment','schedule'));
+		$usuario = DB::table('users')->where('id', '=', $payment[0]->user_id)->get();
+		$pdf = PDF::loadView('recepcion.cupon', compact('appointment','patient','payment','schedule', 'usuario'));
 		$pdf->setPaper('a7');
 		return $pdf->stream('cupon.pdf');
+	}
+	public function cuponMismaSerie($id){ //Viene el appointment_id
+		$extra_payment = Extra_payment::where('appointment_id', '=', $id)
+		//->where('activo', '=', 1)
+		->get();
+		return $extra_payment; die();
+		$pdf = PDF::loadView('recepcion.cupon_extra', compact('extra_payment'));
+		$pdf->setPaper('a7');
+		return $pdf->stream('cupon_extra.pdf');
 	}
 
 	public function pdfExtraCupon($id){

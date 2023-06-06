@@ -98,8 +98,10 @@
                 </tbody>
             </table>
         </div>
-        <button @click="insertPrescription" class="btn btn-success">Registrar</button>
-        <button @click="print" id="printBtn" class="btn btn-success ml-1" disabled>Imprimir PDF</button>
+        <div v-if="usuario.professional.profession!='Psicólogo'">
+					<button @click="insertPrescription" class="btn btn-success">Registrar</button>
+					<button @click="print" id="printBtn" class="btn btn-success ml-1" disabled>Imprimir PDF</button>
+				</div>
     </div>
 
   </div>
@@ -119,7 +121,7 @@ export default{
     data(){
         return{
             showResults:false,
-            buscar:'',
+            buscar:'', usuario:null,
             medicamentos:[],
             selected:[],
             medicamento:{
@@ -135,7 +137,7 @@ export default{
                 attention_date: dateNow(),
                 patient_id: this.$route.params.patientId,
                 medicines: [],
-                signature: ''
+                signature: '', professional_id:-1
             },
             tipo: this.type,
             id_receta : '',
@@ -200,7 +202,7 @@ export default{
             this.prescription.medicines = this.selected
             this.prescription.patient_name = this.name_patient
             this.axios.post('/api/prescription/', this.prescription)
-            .then((result) => {
+            .then((result) => { //console.log(result.data);
                 this.$swal('Receta insertada. Ahora puede imprimir')
                 this.id_receta = result.data.id_receta
                 document.getElementById('printBtn').disabled = false
@@ -212,6 +214,15 @@ export default{
         print(){
             window.open('/api/pdf/'+this.id_receta)
         },
+				queUsuario(){
+					this.axios.get('/api/user')
+        	.then((res) => { //console.log('soy', res.data.user.professional.id)
+						this.usuario = res.data.user;
+						this.prescription.professional_id = res.data.user.professional.id
+					}).catch((err) => {
+							console.log(err)
+					});
+				}
         
     },
     computed:{
@@ -228,6 +239,7 @@ export default{
     beforeMount(){
         this.getNamePatient()
         this.getKairos()
+				this.queUsuario()
     },
     beforeRouteUpdate(to, from, next){
         this.name_patient = '',

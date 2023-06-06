@@ -561,6 +561,7 @@
                 formData.append('sp', this.sp)
                 formData.append('psdi', this.psdi)
                 formData.append('patient_id', this.patient_id)
+                formData.append('professional_id', this.$attrs.professional.id)
 
                 this.axios.post('/api/saveScr', formData, config)
                 .then((result) => {

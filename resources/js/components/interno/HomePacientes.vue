@@ -25,6 +25,7 @@
         <tr>
           <th>N°</th>
           <th>Nombre y apellidos</th>
+          <th>Hobbies</th>
           <th>Triaje</th>
         </tr>
       </thead>
@@ -35,6 +36,11 @@
         >
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
+					<td>
+						<button class="btn btn-outline-primary btn-circle btn-md" data-toggle="modal" data-target="#modalVerHobbies" @click="misHobbies=JSON.parse(patients.hobbies); queId = patients.id">
+							<i class="fa-solid fa-baseball-bat-ball"></i>
+						</button>
+					</td>
 					<td>
 						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
 						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
@@ -47,6 +53,8 @@
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales" ></modal-triaje>
     <modal-new-patient ></modal-new-patient>
 		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
+		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies> 
+
   </main>
 </template>
 
@@ -55,6 +63,7 @@
 import ModalTriaje from './components/ModalTriaje.vue';
 import ModalVerTriajesViejos from './../recepcionista/components/pacientes/ModalVerTriajesViejos.vue'
 import ModalNewPatient from './../recepcionista/components/pacientes/ModalNewPatient.vue'
+import ModalVerHobbies from './../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
 
 export default {
   name: 'Pacientes',
@@ -65,10 +74,11 @@ export default {
       data: null,dataTriajes:null,
       busqueda: [],
       totalPatients:[], profesionales:[],
+			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], misHobbies:[],
     }
   },
 
-  components: { ModalTriaje, ModalVerTriajesViejos, ModalNewPatient },
+  components: { ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerHobbies },
 
   props: {
     dataPatient: Object
@@ -164,6 +174,7 @@ export default {
   created () {
     this.getPatients();
 		this.listarprofesional();
+		this.hobbies.sort();
   }
 }
 </script>

@@ -82,4 +82,23 @@ class ExtrasController extends Controller
 		DB::table('patients')->where('id', '=', $id)
 		->update([ 'club' => $like ]);
 	}
+	public function pedirReporte($id, Request $request){
+		//print_r( $request->get('año') ); die();
+		switch ($id) {
+			case '0': //Reporte de recetas vacias
+			$recetas = DB::table('prescriptions as pre')
+				->leftJoin('professionals as pro', 'pro.id', '=', 'pre.professional_id')
+				->join('patients as p', 'p.id', '=', 'pre.patient_id')
+				->where('p.activo', 0)
+				->where('p.dni', null)
+				->whereYear('attention_date', $request->get('año') )
+				->whereMonth('attention_date', $request->get('mes') )
+				->select('pre.*', 'pro.nombre', 'p.name')
+				->get();
+			return $recetas; break;
+			default:
+				# code...
+				break;
+		}
+	}
 }

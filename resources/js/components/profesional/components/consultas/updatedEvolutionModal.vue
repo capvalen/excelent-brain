@@ -41,17 +41,17 @@
                 <textarea class="form-control" id="comment" cols="30" rows="10" v-model="datos.content"></textarea>
               </div>
 
-              <div class="row form-group">
+             <!--  <div class="row form-group">
                 <div class="col">
                   <label for="date">Fecha de próxima cita</label>
                   <input type="date" class="form-control" v-model="dataModal.next">
                 </div>
                 <div class="col"></div>
-              </div>
+              </div> -->
 
               <div class="modal-footer">
-                  <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                  <button type="submit" class="btn btn-danger" data-dismiss="modal" @click="updatedEvolution">Actualizar</button>
+                  <button class="btn btn-outline-secondary" data-dismiss="modal">Salir</button>
+                  <button type="submit" class="btn btn-outline-danger" data-dismiss="modal" @click="updatedEvolution"><i class="fa-solid fa-rotate-right"></i> Actualizar</button>
               </div>
             </form>
           </div>

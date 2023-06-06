@@ -10,6 +10,10 @@
         <span class="font-weight-bolder">Paciente: </span>
         <span>{{ dataPatient.name }}</span>
       </div>
+      <div>
+        <span class="font-weight-bolder">Encuestador: </span>
+        <span>{{ queProfesional(dataExam.professional_id) }}</span>
+      </div>
     </div>
         
     <table class="table table-striped my-3">
@@ -39,13 +43,21 @@
     name: 'ExamResult',
     props: {
       dataPatient: Object,
-      dataExam: Object
+      dataExam: Object, profesionales: Array
     },
 
     methods: {
       emitExamResult () {
         this.$emit('keepComponentExam', 'ExamTable')
-      }
+      },
+			queProfesional(id){
+				console.log('el id ',id);
+				if( id=='' || id==null || id==undefined){
+					return ''
+				}else{
+					return this.profesionales.filter(x=> x.id==id)[0].name
+				}
+			}
     }
   }
 </script>

@@ -35,14 +35,14 @@
 							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
 									<input 
 									type="date" 
-									class="form-control bg-white shadow-sm border-0 small"
+									class="form-control bg-white shadow-sm border-0 small" v-model="fechaSinImportancia"
 									@change="searchByDate"
 									>
 							</div>
 							
 							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
 									<button data-toggle="modal" data-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
-									<modal-cita :profes="profesionales" :horas="horarios" @emitIdProf="listarhorario" @emitDate="fechaEmit" ></modal-cita>
+									<modal-cita :profes="profesionales" :horas="horarios" @emitIdProf="listarhorario" @emitDate="fechaEmit" :idUsuario="idUsuario"></modal-cita>
 							</div>
 
 							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
@@ -86,41 +86,47 @@
 								</td>
 								<td>
 									<a @click="modalInfo(qCita); modalDePago()" data-toggle="modal" data-target="#pagoModal"
-									class="btn btn-success btn-icon-split btn-sm"
+									class="btn btn-icon-split btn-sm"
 									:class='{
-									"btn-danger":  qCita.payment ? qCita.payment.pay_status == 1 : false,
-									"btn-success": qCita.payment ? qCita.payment.pay_status == 2 : false}'
-									>
+									"btn-secondary":  qCita.payment ? qCita.payment.pay_status == 1 : false,
+									"btn-success": qCita.payment ? qCita.payment.pay_status == 2 : false,
+									"btn-danger": qCita.payment ? [3, null].includes( qCita.payment.pay_status ) : false,
+									} ' >
 										<span class="icon text-white-50">
 											<i :class="{ 
-												'fas fa-exclamation-circle': qCita.payment ? qCita.payment.pay_status == 1 : false,
-												'fas fa-check': qCita.payment ? qCita.payment.pay_status == 2 : false 
+												'fa-regular fa-circle-question': qCita.payment ? qCita.payment.pay_status == 1 : false,
+												'fas fa-check': qCita.payment ? qCita.payment.pay_status == 2 : false,
+												'fas fa-exclamation-circle': qCita.payment ? qCita.payment.pay_status==3 : false,
+												'fa-solid fa-xmark': qCita.payment ? qCita.payment.pay_status==null : false,
 											}"></i>
 										</span>
 
 										<span class="text labels" v-if="qCita.payment && qCita.payment.pay_status == 1">Sin cancelar</span>
 										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 2">Cancelado</span>
+										<span class="text labels" v-else-if="qCita.payment && [3, null].includes( qCita.payment.pay_status )">Anulado</span>
 										<span class="text labels" v-else-if="!qCita.payment">Error</span>
 									</a>
 								</td>
 								<td>
 									<a @click="modalInfo(qCita)" data-toggle="modal" data-target="#modalEstado"
-									class="btn btn-success btn-icon-split btn-sm"
+									class="btn btn-icon-split btn-sm"
 									:class='{
-									"btn-warning": qCita.status == 1,
+									"btn-secondary": qCita.status == 1,
 									"btn-info": qCita.status == 2,
-									"btn-danger": qCita.status == 3,
+									"btn-danger": qCita.status == 3, "btn-danger": qCita.status == 4,
 									}'>
 										<span class="icon text-white-50">
 											<i :class="{
 												'fas fa-exclamation-circle': qCita.status == 1,
 												'fas fa-check': qCita.status == 2,
-												'fas fa-times': qCita.status == 3
+												'fas fa-times': qCita.status == 3,
+												'fas fa-times': qCita.status == 4
 											}"></i>
 										</span>
 										<span class="text labels" v-if="qCita.status == 1">Sin confirmar</span>
 										<span class="text labels" v-else-if="qCita.status == 2">Confirmado</span>
 										<span class="text labels" v-else-if="qCita.status == 3">Cancelado</span>
+										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
 									</a>
 								</td>
 								<td>
@@ -157,7 +163,7 @@
 
 											<!-- Cita presencial -->
 											<a 
-											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima qCita.`"
+											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
 											target="_blank" 
 											title="Enviar mensaje" 
 											class="btn btn-info btn-circle btn-sm"
@@ -191,11 +197,11 @@
 			</div>
     </div>
 
-    <pago-modal v-if="cita" :cita="cita" ></pago-modal>
+    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
     <modal-estado  v-if="cita" :dataCit="cita"></modal-estado>
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <info-modal v-if="cita" :dataCit="cita"></info-modal>
-    <reprog-modal v-if="cita" :dataCit="cita"></reprog-modal>
+    <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
     <modal-pagos-extras />
     <modal-egresos-extras />
   </div>
@@ -228,13 +234,13 @@ export default {
 
   data(){
     return{
-      citas:[],
+      citas:[], fechaSinImportancia: moment().format('YYYY-MM-DD'), idUsuario:-1, tienePrivilegios:0,
       profesionales:[],
       horarios:[],
       hoursProfessional: [],
       cita: null,
       schedulesInvalid: [],
-      horariosAll: [],
+      horariosAll: [],horasSolas:[],horasMalas:[],
       buscar:'', estados:[ {id: 1, valor: 'Neutro'}, {id: 2, valor: 'excelente'}, {id: 3, valor: 'promotor'}, {id: 4, valor: 'wow'}, {id: 5, valor: 'reprogramador'}, {id: 6, valor: 'exigente'}, {id: 7, valor: 'deudor'}, {id: 8, valor: 'insatisfecho'}, {id: 9, valor: 'peligroso'}, ]
     }
   },
@@ -292,28 +298,29 @@ export default {
     },
 
     async listarhorario (id) {
-      await this.axios.get(`/api/horario/${id}`)
+      /* await this.axios.get(`/api/horario/${id}`)
       .then(res => {
         //this.horarios = res.data.schedulesInvalid;
         this.horariosAll = res.data.schedules;
         this.hoursProfessional = this.horarios;
-
-        this.fechaEmit(document.querySelector(".fecha-emit").value);
-
-       /*  this.schedulesInvalid = []
-        this.hoursProfessional.forEach(el => {
-          this.schedulesInvalid.push(el.schedule_id)
-        }); */
       })
       .catch(err => {
         console.error(err)
-      })
+      }) */
+			this.fechaEmit(id,document.querySelector(".fecha-emit").value);
+
     },
-		fechaEmit (diaSeleccionado) {
+		async fechaEmit (id, diaSeleccionado) {
       this.horarios = []
+			
+			await this.axios.get(`/api/horarioOcupado/${id}/${diaSeleccionado}`)
+      .then(res => { //console.log(res.data);
+				this.horasSolas = res.data.solos;
+				this.horasMalas = res.data.invalidos;
+			})
       // this.schedulesInvalid = new Array (this.schedulesInvalid);
 
-      let arraySchedulesInvalid = []
+      //let arraySchedulesInvalid = []
 			
 			//No vale el codigo siguiente:
       /* this.hoursProfessional.forEach(el => {
@@ -321,17 +328,29 @@ export default {
           arraySchedulesInvalid.push(el.schedule_id)
         }
       }) */
+			
+			this.horasSolas.forEach(fecha=>{
+				if(fecha.day == this.diaDeLaSemana(new Date(diaSeleccionado).getDay()) ){ //Digamos Martes
+					this.horarios.push(fecha)
+				}
+			})
+			this.horasMalas.forEach(mal=> {
+				let indice =  this.horarios.findIndex( el => el.id == mal.schedule_id )
+				console.log(indice);
+				this.horarios.splice(indice,1)
+			})
 
-      this.horariosAll.forEach(el => {
+      /* this.horariosAll.forEach(el => {
         //console.log('dia', el.day)
 				//Si es el dia elegido, en ese rango busca si tiene una cita [appointment], si tiene no agrega nada, si no tiene agrega a horarios (horas libres)
         if (el.day === this.diaDeLaSemana(new Date(diaSeleccionado).getDay())) { //compara el día de hoy con la lista Ejm: martes con indice(2) en la lista de horarios
-					if (el.appointments.find(el => el.date === diaSeleccionado && el.status != 3) ? true : false) { // Hay cita
+					if (el.appointments.find( el => {el.date === diaSeleccionado && el.status != 3; console.log(el)} ) ? true : false) { // Hay cita
 					} else { //hora libre
 						this.horarios.push(el)
 					}
+				
         }
-      })
+      }) */
     },
     async searchHistoria () {
       let search = document.getElementById("searchInputAppointment").value.split('/'),
@@ -410,7 +429,10 @@ export default {
 
     modalInfo (data) {
 			//this.cita = null;
-      this.cita = data;
+			if( data.status!=4 )
+      	this.cita = data;
+			else
+				this.$swal({title: 'La cita ya esta reprogramada, no se puede cambiar el estado', icon:'error'})
     },
     filtro() {
 
@@ -478,6 +500,11 @@ export default {
 
   },
 	mounted(){
+		this.axios.get('/api/user')
+		.then((res) => {
+			this.idUsuario = res.data.user.id
+			this.tienePrivilegios = res.data.user.privilegios
+		})
 	},
 
   updated () {

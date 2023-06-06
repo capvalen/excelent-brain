@@ -38,4 +38,27 @@ En la tabla exams el resto de examens
 
 El type de appointments, es sucamec, kurame, terapia
 el status de appointments, cuando se anula pasa a ser el N° 3
+
+Cuando se crea una receta sin paciente registrado se hace:
+Se crea un paciente ficticio
+se crea un registro en prescriptions
+se crean varios registros en funcion a los medicamentos en en kairo_prescription
+
+Para saber las recetas sin paciente
+paciente => activo = 0
+prescriptions  => effective_day=null
+
+
+
+
+Cuando se reprograma pasa lo siguiente:
+tabla payments => el precio pasa a null, pay_status, pasa a null, lo normal es 1=pendiente, 2=pagado
+---> Sugerencia, considerar el #3 como anulado
+tabla reschedules => se agrega la razon del cambio con el ID de la cita anulada
+---> Sugerencia, considerar un campo para indicar que la cita en appointments pasa a anulado
+---> Sugerencia, crear una nueva cita (appointments) con el horario y profesional asignado
+
+Hacer: 
+npm i vue-chartjs chart.js
+npm audit fix
 */

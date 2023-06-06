@@ -63,6 +63,7 @@ const HomeRecepcionista = () => import('./components/recepcionista/components/Ho
 const HomeRecepcionistaProfesional = () => import('./components/recepcionista/components/profesionales/HomeProfesional.vue');
 const HomeRecepcionistaPacientes = () => import('./components/recepcionista/components/pacientes/HomePacientes.vue');
 const HomeRecepcionistaReportes = () => import('./components/recepcionista/components/reportes/HomeReportes.vue');
+const RecepcionistaReportesAvanzados = () => import('./components/recepcionista/components/reportes/ReportesAvanzados.vue');
 const HomeRecepcionistaPagos = () => import('./components/recepcionista/components/pagos/HomePagos.vue')
 const HomeCont = () => import('./components/recepcionista/components/continuantes/HomeCont.vue')
 const HomeAdicionales = () => import('./components/recepcionista/components/adicionales/HomeAdicionales.vue')
@@ -416,6 +417,11 @@ export const routes = [
           path: 'reportes',
           name: 'reportesRecepcionista',
           component: HomeRecepcionistaReportes
+        },
+        {
+          path: 'reportes-avanzados',
+          name: 'reportesRecepcionistaAvanzados',
+          component: RecepcionistaReportesAvanzados
         },
         {
           path:'continuantes',

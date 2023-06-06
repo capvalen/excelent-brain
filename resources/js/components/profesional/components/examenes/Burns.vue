@@ -171,6 +171,7 @@
                 let formData = new FormData()
                 formData.append('result', this.suma)
                 formData.append('patient_id', this.patient_id)
+                formData.append('professional_id', this.$attrs.professional.id)
 
                 this.axios.post('/api/saveBurns', formData, config)
                 .then((result) => {

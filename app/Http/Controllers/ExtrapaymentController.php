@@ -98,4 +98,13 @@ class ExtrapaymentController extends Controller
 			}
 			
 		}
+
+		public function borrarPagoExtra(Request $request){
+			//print($request->get('id')); die();
+			$pagoExtra = Extra_payment::where('id', $request->get('id'))
+			->update([
+				'activo'=>0
+			]);
+			return response()->json(['mensaje' => 'Se borró con éxito']);
+		}
 }

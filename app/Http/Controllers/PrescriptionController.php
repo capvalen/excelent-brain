@@ -10,6 +10,7 @@ use App\Models\Prescription;
 use App\Models\Professional;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class PrescriptionController extends Controller
 {
@@ -33,6 +34,7 @@ class PrescriptionController extends Controller
      */
     public function store(Request $request)
     {
+			//var_dump($request->get('professional_id')); die();
         if($request->get('patient_id') == 0){
             $patient = Patient::create([
                 'name' => $request->get('patient_name'),
@@ -45,7 +47,9 @@ class PrescriptionController extends Controller
             $request->merge(['signature' => 1]);    
         }
 
-        $prescription = Prescription::create($request->all());
+				
+				$prescription = Prescription::create($request->all());
+				
         $medicines = $request->get('medicines');
 
         foreach($medicines as $medicine){
@@ -117,12 +121,12 @@ class PrescriptionController extends Controller
 
         $appointment = Appointment::where('patient_id', $id_paciente)->where('date', $receta[0]->attention_date)->where('clasification',1)->get();
 
-        if(count($appointment) > 0){
-            $professional = Professional::find($appointment[0]->professional_id);
+				if(count($appointment) > 0){
+					$professional = Professional::find($appointment[0]->professional_id);
         }else{
-            $professional = null;
+					$professional = Professional::find($receta[0]->professional_id);
         }
-
+				
         $pdf = PDF::loadView('profesional.pdf', compact('receta', 'professional'));
         $pdf->setPaper('a4', 'landscape');
         return $pdf->stream('mi-archivo.pdf');

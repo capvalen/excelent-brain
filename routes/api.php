@@ -74,6 +74,7 @@ Route::get('reportsAppointments/{date}', [AppointmentController::class, 'reports
 Route::get('getPatientsMonth/{date}', [AppointmentController::class, 'getPatientsMonth']);
 Route::post('updateStatus/{id}/{value}', [AppointmentController::class, 'updateStatus']);
 Route::get('updateModeAppoinment/{id}', [AppointmentController::class, 'updateMode']);
+Route::put('reprogramado/{id}', [AppointmentController::class, 'reprogramado']);
 
 Route::resource('appointment/payment', PaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('patient', PatientController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
@@ -97,6 +98,7 @@ Route::get('buscar/{dni}', [PatientController::class,'buscar']);
 Route::get('updateFaults/{id}/{faults}', [PatientController::class, 'updateFaults']);
 Route::get('profesional',[AppointmentController::class,'getprof']);
 Route::get('horario/{id}',[ScheduleController::class,'getschedules']);
+Route::get('horarioOcupado/{id}/{fecha}',[ScheduleController::class,'horarioOcupado']);
 Route::resource('schedule', ScheduleController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('initialPsychiatric', Initial_psychiatric_historyController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('initialPsychological', Initial_psychological_historyController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
@@ -119,6 +121,8 @@ Route::get('listarInteresados/', [ExtrasController::class, 'listarInteresados'])
 Route::get('borrarInteresados/{id}', [ExtrasController::class, 'borrarInteresados']);
 Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
 
+Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
+
 
 
 Route::get('patientById/{idPatient}', [PatientController::class, 'patientById']);
@@ -134,7 +138,8 @@ Route::put('user/{id}', [AuthController::class,'updateUser']);
 
 Route::get('pdf/{id}', [PrescriptionController::class , 'createPdf']);
 Route::get('ticket/{id}', [AppointmentController::class , 'createTicket']);
-Route::get('pdfCupon/{id}', [AppointmentController::class , 'cupon']);
+//Route::get('pdfCupon/{id}', [AppointmentController::class , 'cupon']);
+Route::get('pdfCupon/{id}', [AppointmentController::class , 'cuponMismaSerie']);
 Route::get('pdfExtraCupon/{id}', [AppointmentController::class , 'pdfExtraCupon']);
 
 Route::get('triajePDF/{id}', [AppointmentController::class , 'pdfTriaje']);
@@ -179,6 +184,7 @@ Route::get('chart/{date}',[AppointmentController::class, 'getDataForCharts']);
 
 Route::resource('paymentExtra', ExtrapaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::post('egresoExtra', [ExtrapaymentController::class, 'egresoExtra']);
+Route::post('borrarPagoExtra', [ExtrapaymentController::class, 'borrarPagoExtra']);
 
 Route::get('discharge/{id}',[PatientController::class, 'discharge']);
 

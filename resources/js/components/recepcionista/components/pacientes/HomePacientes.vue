@@ -25,19 +25,24 @@
         <tr>
           <th>N°</th>
           <th>Nombre y apellidos</th>
+          <th>Hobbie</th>
           <th>Club</th>
           <th>Semáforo</th>
           <th>Triaje</th>
           <th>Faltas</th>
           <th>Recetas</th>
-          <th>Editar</th>
         </tr>
       </thead>
       <tbody>
         <tr
         v-for="(paciente, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
-          <td class="text-capitalize" >{{ paciente.name ? lowerCase(paciente.name) : 'Sin nombre' }}</td>
+          <td class="text-capitalize" @click="dataProps(paciente)" data-toggle="modal" data-target="#patientModal" style="cursor:pointer">{{ paciente.name ? lowerCase(paciente.name) : 'Sin nombre' }}</td>
+					<td>
+						<button class="btn btn-outline-primary btn-circle btn-md" data-toggle="modal" data-target="#modalVerHobbies" @click="misHobbies=JSON.parse(paciente.hobbies); queId = paciente.id">
+							<i class="fa-solid fa-baseball-bat-ball"></i>
+						</button>
+					</td>
 					<td>
 						<button class="btn btn-light" v-if="paciente.club=='0'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(paciente.club, paciente.id)"><i class="fa-regular fa-hand-back-fist"></i></button>
 						<button class="btn btn-primary" v-if="paciente.club=='1'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(paciente.club, paciente.id)"><i class="fa-solid fa-thumbs-up"></i></button>
@@ -95,16 +100,7 @@
             >
             <i class="fas fa-file-medical-alt"></i></button>
           </td>
-          <td>
-            <button
-            class="btn btn-info btn-circle btn-md"
-            @click="dataProps(paciente)"
-            data-toggle="modal"
-            data-target="#patientModal"
-            >
-              <i class="fas fa-newspaper"></i>
-            </button>
-          </td>
+         
         </tr>
       </tbody>
     </table>
@@ -118,6 +114,7 @@
 		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
 		<ModalVerFaltas :queId="queId" :cantFaltas="cantFaltas"></ModalVerFaltas>
+		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies> 
 		
   </main>
 </template>
@@ -132,6 +129,7 @@ import ModalNewPatient from './../pacientes/ModalNewPatient.vue'
 import ModalVerEstados from './ModalVerEstados.vue'
 import ModalCambiarLike from './ModalCambiarLike.vue'
 import ModalVerFaltas from './reportes/ModalVerFaltas.vue'
+import ModalVerHobbies from './reportes/ModalVerHobbies.vue'
 
 export default {
   name: 'Pacientes',
@@ -152,11 +150,13 @@ export default {
 				{id: 7, valor: 'deudor'},
 				{id: 8, valor: 'insatisfecho'},
 				{id: 9, valor: 'peligroso'},
-			]
+			],
+			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], misHobbies:[],
+
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas },
+  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies },
 
   props: {
     dataPatient: Object
@@ -258,6 +258,8 @@ export default {
   created () {
     this.getPatients();
 		this.listarprofesional();
+		this.hobbies.sort();
+
   }
 }
 </script>
