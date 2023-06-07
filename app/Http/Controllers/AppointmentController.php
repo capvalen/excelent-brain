@@ -821,10 +821,10 @@ class AppointmentController extends Controller
 		return $pdf->stream('cupon.pdf');
 	}
 	public function cuponMismaSerie($id){ //Viene el appointment_id
-		$extra_payment = Extra_payment::where('appointment_id', '=', $id)
+		$extra_payment = Extra_payment::where('appointment_id', $id)->first();
+		//print_r($extra_payment);die();
 		//->where('activo', '=', 1)
-		->get();
-		return $extra_payment; die();
+		//return $extra_payment; die();
 		$pdf = PDF::loadView('recepcion.cupon_extra', compact('extra_payment'));
 		$pdf->setPaper('a7');
 		return $pdf->stream('cupon_extra.pdf');
