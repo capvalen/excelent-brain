@@ -156,14 +156,20 @@
 				},
 				borrarPagoExtra(){
 					if(this.tienePrivilegios==1){
-						this.axios.post('/api/borrarPagoExtra',{ id: this.queId, razon:this.razon})
-						.then(res=> { console.log(res.data);
-							this.razon='';
-							if(res.data.mensaje){
-								this.payments.splice(this.queIndex, 1)
-								this.$swal({title: 'Elimado con éxito'})
-							}
-						})
+						if(this.razon==''){
+							this.$swal({ icon:'error', title: 'Faltan rellenar una razón' });
+						}
+						else{
+							this.axios.post('/api/borrarPagoExtra',{ id: this.queId, razon:this.razon})
+							.then(res=> { console.log(res.data);
+								this.razon='';
+								if(res.data.mensaje){
+									this.payments.splice(this.queIndex, 1)
+									this.$swal({title: 'Elimado con éxito'})
+								}
+							})
+
+						}
 					}
 				}
 		},
