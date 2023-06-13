@@ -125,6 +125,7 @@ Route::get('listRecomendation/{id}', [ExtrasController::class, 'listRecomendatio
 Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
+Route::post('buscarCartera/', [ExtrasController::class,'buscarCartera']);
 
 
 

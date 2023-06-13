@@ -46,7 +46,7 @@
                   <option v-for="(moneda, index) in monedas" :value="index+1">{{moneda}}</option>
                 </select>
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-6" v-if="form.moneda!=1">
                 <label for="type">N° de operación</label>
                 <input type="text" class="form-control" v-model="form.voucher_issued">
               </div>
@@ -91,6 +91,7 @@ export default {
         customer: null,
         price: 0,
         type: null,
+				moneda:1,
         observation: null,
         date: moment().format('YYYY-MM-DD'), continuo:-1
       }

@@ -67,6 +67,7 @@ const RecepcionistaReportesAvanzados = () => import('./components/recepcionista/
 const HomeRecepcionistaPagos = () => import('./components/recepcionista/components/pagos/HomePagos.vue')
 const HomeCont = () => import('./components/recepcionista/components/continuantes/HomeCont.vue')
 const HomeAdicionales = () => import('./components/recepcionista/components/adicionales/HomeAdicionales.vue')
+const HomeCartera = () => import('./components/recepcionista/components/adicionales/HomeCartera.vue')
 const HomeRecordatorios = () => import('./components/recepcionista/components/recordatorios/HomeRecordatorios.vue')
 
 
@@ -432,6 +433,11 @@ export const routes = [
           path:'adicionales',
           name: 'adicionalesRecepcionista',
           component: HomeAdicionales
+        },
+        {
+          path:'cartera',
+          name: 'carteraRecepcionista',
+          component: HomeCartera
         },
         {
           path:'pagos',

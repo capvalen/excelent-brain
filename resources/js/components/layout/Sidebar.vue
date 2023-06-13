@@ -233,6 +233,12 @@
 										<span>Adicionales</span>
 								</router-link>
 						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
+								<router-link  to="/recepcionista/cartera" class="nav-link">
+										<i class="fas fa-hospital-user"></i>
+										<span>Cartera de clientes</span>
+								</router-link>
+						</li>
 
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/recepcionista/pacientes" class="nav-link">

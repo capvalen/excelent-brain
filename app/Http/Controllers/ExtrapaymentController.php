@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\Extra_payment;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class ExtrapaymentController extends Controller
@@ -101,10 +103,25 @@ class ExtrapaymentController extends Controller
 
 		public function borrarPagoExtra(Request $request){
 			//print($request->get('id')); die();
-			$pagoExtra = Extra_payment::where('id', $request->get('id'))
-			->update([
+
+			try {
+				$pagoExtra = Extra_payment::where('id', $request->get('id'))->first();
+				
+				$pagoExtra->update([
+				'razon' => $request->get('razon'),
 				'activo'=>0
 			]);
+			if( $pagoExtra->appointment_id <>0){
+				Payment::where('appointment_id', $pagoExtra->appointment_id )
+				->update([
+					'pay_status'=>3 //anulado
+				]);
+			
+			}
 			return response()->json(['mensaje' => 'Se borró con éxito']);
+			} catch (\Throwable $th) {
+				echo $th;
+			}
+			
 		}
 }

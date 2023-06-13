@@ -12,11 +12,11 @@
 					<div class="card-body"><i class="fa-regular fa-circle-user"></i> Interesados</div>
 				</div>
 			</div>
-			<div class="col-sm-3">
+			<!-- <div class="col-sm-3">
 				<div class="card mb-0 py-0 border-left-warning cursor">
 					<div class="card-body"><i class="fas fa-money-bill-wave-alt"></i> Ver pagos adelantados</div>
 				</div>
-			</div>
+			</div> -->
 			<div class="col-sm-3" @click="cargarDatos('cumpleaños')">
 				<div class="card mb-0 py-0 border-left-info cursor">
 					<div class="card-body"><i class="fas fa-birthday-cake"></i> Ver cumpleaños</div>
@@ -62,7 +62,7 @@
 							<span class="input-group-text" id="basic-addon1">Cambiar mes:</span>
 							<input type="date" class="form-control" id="fechaCumple" @change="cambiarFecha()">
 						</div>
-						<div class="d-grid">
+						<div class="d-grid gap-2 d-block">
 							<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoAviso"><i class="fa-regular fa-note-sticky"></i> Nuevo aviso</button>
 							<button class="btn btn-outline-success mx-2" @click="actualizarAvisos()"><i class="fas fa-sync"></i> Actualizar lista</button>
 						</div>

@@ -41,8 +41,8 @@
 										<option value="9">Banco: Scotiabank</option>
 									</select>
 							</div>
-							<div class="col-sm-12" v-if="caso.moneda!=1">
-								<label for="">N° Comprobante de pago</label>
+							<div class="col-sm-12">
+								<label for="">Comprobante de pago</label>
 								<input type="text" class="form-control" v-model="caso.comprobante">
 							</div>
 					</div>

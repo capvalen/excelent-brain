@@ -33,7 +33,7 @@
         <tbody>
             <tr v-for="(payment, index) in payments">
 							<td v-if="tienePrivilegios=='1'">
-								<button class="btn btn-sm btn-outline-danger" @click="borrarPagoExtra(payment.id, index)"><i class="fa-solid fa-xmark"></i></button>
+								<button class="btn btn-sm btn-outline-danger" @click="mostrarModalBorrar(payment.id, index)" data-bs-toggle="modal" data-bs-target="#modalMotivoBorrar" ><i class="fa-solid fa-xmark"></i></button>
 							</td>
 							<td>
 								<span>{{index+1}}</span>
@@ -67,6 +67,7 @@
 							<td>{{ payment.profesional_name }}</td>
 							<td>{{ horaLatam(payment.created_at) }}</td>
 							<td>
+								<button class="btn btn-outline-primary btn-sm" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 								<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 							</td>
@@ -88,6 +89,28 @@
 				</tfoot>
     </table>
     </div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="modalMotivoBorrar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p class="mb-0">Esta a punto de eliminar el pago:</p>
+						<p class="fst-italic mb-0 text-capitalize">{{ contenido }}</p>
+						<p>Ingrese una razón para borrar</p>
+						<input type="text" class="form-control" v-model="razon" autocomplete="off">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="borrarPagoExtra()"><i class="fa-solid fa-trash"></i> Eliminar pago</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 </main>
 </template>
 
@@ -98,7 +121,7 @@
 		data(){
 			return{
 				payments:[], sumaTipos:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin'],
-				idUsuario: null, tienePrivilegios: null
+				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:''
 			}
 		},
 		props:{},
@@ -127,18 +150,20 @@
 						return parseFloat(price).toFixed(2)
 					}
 				},
-				borrarPagoExtra(id, index){
+				mostrarModalBorrar(id, index){
+					this.queId = id; this.queINdex = index;
+					this.contenido = `${this.payments[index].customer} ${this.payments[index].observation??''}`;
+				},
+				borrarPagoExtra(){
 					if(this.tienePrivilegios==1){
-						if( confirm(`¿Deseas borrar el pago de: ${this.payments[index].customer} ${this.payments[index].observation}?`)  ){
-							this.axios.post('/api/borrarPagoExtra',{ id: id})
-							.then(res=> { console.log(res.data);
-								if(res.data.mensaje){
-									this.payments.splice(index, 1)
-									this.$swal({title: 'Elimado con éxito'})
-
-								}
-							})
-						}
+						this.axios.post('/api/borrarPagoExtra',{ id: this.queId, razon:this.razon})
+						.then(res=> { console.log(res.data);
+							this.razon='';
+							if(res.data.mensaje){
+								this.payments.splice(this.queIndex, 1)
+								this.$swal({title: 'Elimado con éxito'})
+							}
+						})
 					}
 				}
 		},
