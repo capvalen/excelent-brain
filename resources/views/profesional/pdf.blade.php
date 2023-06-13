@@ -304,6 +304,9 @@
     </style>
 </head>
 <body>
+	@php
+	use Carbon\Carbon;
+	@endphp
     <div class="pdf">
         <div class="pdf-content">
             <div class="header__content" style="margin-top:30px">
@@ -344,6 +347,14 @@
                     <div class="paciente__name">
                         <span class="paciente__title">Paciente:</span>
                         <small class="font-size-small">{{$receta[0]->patient->name}} </small>
+                        <span class="paciente__title">DNI:</span>
+                        <small class="font-size-small">{{$receta[0]->patient->dni}} </small>
+                        <span class="paciente__title">Edad:</span>
+                        <small class="font-size-small">@php
+					$fecha_nacimiento = Carbon::parse( $receta[0]->patient->birth_date ?? Carbon::now() );
+					$edad = $fecha_nacimiento->diffInYears(Carbon::now());
+					echo "$edad años";
+					@endphp</small>
 
                         <span class="paciente__title">Diagnóstico:</span>
                         @foreach ($receta[0]->patient->cies as $cie)
