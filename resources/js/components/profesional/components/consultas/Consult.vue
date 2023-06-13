@@ -13,7 +13,8 @@
               <div class="row no-gutters align-items-center">
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">
-                        <span v-if="dataConsult.status" :class='{ "text-success": estadoConsulta.status}'>{{ dataConsult.status != 3 ? 'Pendiente' : 'Anulada' }}</span>
+												<span class="text-primary" v-if="dataConsult.status ==2 && dataConsult.payment.pay_status==2">Pagado</span>
+                        <span class="text-warning" v-else-if="dataConsult.status" :class='{ "text-success": estadoConsulta.status}'>{{ dataConsult.status != 3 ? 'Pendiente' : 'Anulada' }}</span>
                         <span v-else :class='{ "text-danger": estadoConsulta.status === 3 }'>Cancelado</span>
                       </div>
                       <router-link class="mb-0 text-capitalize" :to="`/profesional/evoluciones/${dataConsult.patient ? dataConsult.patient.id : null}`">
