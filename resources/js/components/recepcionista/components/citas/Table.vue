@@ -434,15 +434,6 @@ export default {
 			else
 				this.$swal({title: 'La cita ya esta reprogramada, no se puede cambiar el estado', icon:'error'})
     },
-    filtro() {
-
-      // if(!this.buscar){
-      //   return this.citas
-      // } else{
-      //   return this.citas.filter(cita => cita.patient.name.toLowerCase().includes(this.buscar) || cita.professional.name.toLowerCase().includes(this.buscar))
-      // }
-    },
-
     horaHumana (hora) {
       let minutos = parseInt(hora.substring(3,5))
       hora = parseInt(hora.substring(0,2))

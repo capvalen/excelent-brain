@@ -464,6 +464,85 @@ class AppointmentController extends Controller
 		echo $th;
 	}
 	}
+
+	public function pagarCita(Request $request, Appointment $appointment){
+		//var_dump($request->all()); die();
+		try {
+
+		//$appointment->update($request->all());
+		$appointment = Appointment::find($request->input('dataCita.id'));
+
+		$appointment->payment->update([
+			/* 'price' => $request->input('dataCita.payment.price'),
+			'voucher_issued' => $request->input('dataCita.payment.voucher_issued'), */
+			'pay_status' => $request->input('caso.pago'),
+			//'payment_method' => $request->input('caso.moneda'),
+			'voucher' => $request->input('caso.comprobante'),
+			'bank' => $request->input('dataCita.payment.bank'),
+			'observation' => $request->input('dataCita.payment.observation'),
+			'user_id'=>$request->input('caso.user_id')
+		]);
+
+		if($request->input('caso.pago') === '2'){
+				$pagoExtra = new Extra_payment;
+				$pagoExtra->customer = $request->input('dataCita.patient.name');
+				$pagoExtra->price = $request->input('dataCita.payment.price');
+				$pagoExtra->moneda = $request->input('caso.moneda');
+				$pagoExtra->voucher = $request->input('caso.comprobante');
+				$pagoExtra->appointment_id = $request->input('dataCita.id');
+				$pagoExtra->type =5;
+				$pagoExtra->observation = $request->input('dataCita.payment.observation');
+				$pagoExtra->continuo = $request->input('caso.continuo');
+				$pagoExtra->user_id = $request->input('caso.user_id');
+				$pagoExtra->save();
+
+				//Debemos de confirmar si esta confirmado para habilitar al profesional
+				if( $appointment->status == 2){
+					$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCita.patient.id'))
+					->where('professional_id', $request->input('dataCita.professional.id'))
+					->where('date',$request->input('dataCita.date'))
+					->get();
+
+					if(count($medicalEvolutionExistents) == 0){
+						Medical_evolution::create([
+							'type' => $request->input('dataCita.type'),
+							'date' => $request->input('dataCita.date'),
+							'auth' => 0,
+							'patient_id'=> $request->input('dataCita.patient.id'),
+							'professional_id'=> $request->input('dataCita.professional.id')
+						]);
+					}
+				}
+
+		}else{
+			$pagoExtra = Extra_payment::where('appointment_id', $request->input('dataCita.id') );
+			$pagoExtra->update([
+				'moneda' => $request->input('caso.moneda'),
+				'voucher' => $request->input('caso.comprobante'),
+				'observation' => $request->input('dataCita.payment.observation'),
+				'user_id'=> $request->input('caso.user_id')
+			]);
+		}
+
+
+		
+
+		if ($request->reschedule) {
+			$reschedule = Reschedule::create([
+				'reason' => $request->reschedule,
+				'appointment_id' => $request->id
+			]);
+		}
+		if($request->get('status') == 2){
+			
+		}
+
+		return response()->json(['mensaje' => 'se actualizó la cita']);
+	} catch (\Throwable $th) {
+		echo $th;
+	}
+	}
+
 	public function reprogramado(Request $request, Appointment $appointment)
 	{
 		//var_dump($request->input('payment.price')); die();
@@ -532,7 +611,7 @@ class AppointmentController extends Controller
 
 	public function updateStatus($idAppointment,$valueStatus, Request $request){
 		$appointment = Appointment::find($idAppointment);
-		//print_r( $request->get('dataCit.professional.id') ); die();
+		//print_r( $request->all() ); die();
 
 
 		function updateFieldStatus($appointment, $valueStatus){
@@ -560,20 +639,28 @@ class AppointmentController extends Controller
 			updateFieldStatus($appointment, $valueStatus);
 			
 		}else if($valueStatus == 2){ //status = confirmado
-			$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCit.patient.id'))
-			->where('professional_id', $request->input('dataCit.professional.id'))
-			->where('date',$request->input('dataCit.date'))
-			->get();
+			
+			$pago = Payment::where('appointment_id', $request->input('dataCit.payment.id') )->get();
+			if($pago[0]->pay_status  == 2){ //estado = pagado Debe estar pagado y confirmado para que saque la cita con el doctor
 
-			if(count($medicalEvolutionExistents) == 0){
-				Medical_evolution::create([
-					'type' => $request->input('dataCit.type'),
-					'date' => $request->input('dataCit.date'),
-					'auth' => 0,
-					'patient_id'=> $request->input('dataCit.patient.id'),
-					'professional_id'=> $request->input('dataCit.professional.id')
-				]);
+				$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCit.patient.id'))
+				->where('professional_id', $request->input('dataCit.professional.id'))
+				->where('date',$request->input('dataCit.date'))
+				->get();
+				
+
+				if(count($medicalEvolutionExistents) == 0){
+					Medical_evolution::create([
+						'type' => $request->input('dataCit.type'),
+						'date' => $request->input('dataCit.date'),
+						'auth' => 0,
+						'patient_id'=> $request->input('dataCit.patient.id'),
+						'professional_id'=> $request->input('dataCit.professional.id')
+					]);
+				}
+				
 			}
+			
 			updateFieldStatus($appointment, $valueStatus);
 		}else{
 			updateFieldStatus($appointment, $valueStatus);

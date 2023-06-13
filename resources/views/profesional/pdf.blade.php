@@ -306,10 +306,11 @@
 <body>
     <div class="pdf">
         <div class="pdf-content">
-            <div class="header__content">
-                <img src="https://excelentemente.org/consultorio-online/libs/logo2022.png" alt="Excelentemente" class="header-logo">
+            <div class="header__content" style="margin-top:30px">
+                <img src="https://excelentemente.org/consultorio-online/public/img/logoem.png" alt="Excelentemente" class="header-logo">
 
-                <div class="header">
+                <div class="header " style="margin-top:30px" >
+									<p class="header__sub">CENTRO PSICOLÓGICO Y PSIQUIÁTRICO EXCELENTEMENTE</p>
                     @if ($professional == null)
                     <p class="header__name">WILBERT BARZOLA</p>
                     @else
@@ -336,7 +337,7 @@
                 <br>
             </div>
 
-            <img src="https://excelentemente.org/consultorio-online/libs/logo.png" alt="Excelentemente" class="logotipo">
+            <img src="https://excelentemente.org/consultorio-online/public/img/logoem.png" alt="Excelentemente" class="logotipo">
 
             <div class="pdf__body">
                 <div class="body__paciente">

@@ -78,7 +78,7 @@
 		},
 		methods:{
 			async update() {
-				await this.axios.put(`/api/appointment/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso})
+				await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso})
 				.then(res => {
 					console.log(res.data)
 					this.dataCita.payment.pay_status = this.caso.pago;

@@ -145,6 +145,7 @@ class PatientController extends Controller
 	public function searchPatientByNameDni ($nombre){
 		$patients = Patient::where('name', 'LIKE', "%".$nombre ."%")
 				->orWhere('dni', $nombre )
+				->where('acitvo', 1)
 				->with('relative', 'address', 'prescriptions')
 				->orderBy('name', 'asc')
 		->get();
