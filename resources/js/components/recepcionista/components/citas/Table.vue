@@ -4,10 +4,13 @@
 
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 				<li class="nav-item" role="presentation">
-					<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#inicio-tab" type="button" role="tab" aria-controls="inicio-tab" aria-selected="true">Vista clásica</button>
+					<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#inicio-tab" type="button" role="tab" aria-controls="inicio-tab" aria-selected="true"><i class="fa-regular fa-calendar-minus"></i> Vista clásica</button>
 				</li>
 				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#calendario-tab" type="button" role="tab" aria-controls="calendario-tab" aria-selected="false">Vista calendario</button>
+					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#calendario-tab" type="button" role="tab" aria-controls="calendario-tab" aria-selected="false"><i class="fa-regular fa-calendar-days"></i> Vista calendario</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#cuaderno-tab" type="button" role="tab" aria-controls="cuaderno-tab" aria-selected="false"><i class="fa-solid fa-book"></i> Vista cuaderno</button>
 				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
@@ -193,6 +196,9 @@
 				<div class="tab-pane fade" id="calendario-tab" role="tabpanel" aria-labelledby="calendario-tab" tabindex="0">
 					<vista-calendario :profesionales="profesionales" ></vista-calendario>
 				</div>
+				<div class="tab-pane fade" id="cuaderno-tab" role="tabpanel" aria-labelledby="cuaderno-tab" tabindex="0">
+					<vista-cuaderno :profesionales="profesionales" ></vista-cuaderno>
+				</div>
 				<!-- Fin de segunda tab -->
 			</div>
     </div>
@@ -216,6 +222,7 @@ import ReprogModal from './ReprogModal.vue'
 import ModalPagosExtras from './ModalPagosExtras.vue'
 import ModalEgresosExtras from './ModalEgresosExtras.vue'
 import VistaCalendario from './VistaCalendario.vue'
+import VistaCuaderno from './VistaCuaderno.vue'
 import moment from 'moment'
 import alertify from 'alertifyjs'
 
@@ -223,7 +230,7 @@ import alertify from 'alertifyjs'
 export default {
   name: 'table-cita',
 
-  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, ModalPagosExtras, ModalEgresosExtras, VistaCalendario },
+  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, ModalPagosExtras, ModalEgresosExtras, VistaCalendario, VistaCuaderno },
 
   props: {
     profes:Array,

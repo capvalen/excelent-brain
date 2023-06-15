@@ -54,7 +54,7 @@ export default{
 	},
 	methods:{
 		horasDeProfesional(){
-			this.axios()
+			
 			this.hoyLetras = this.dias[moment(this.fecha, 'YYYY-MM-DD').format('d')]// this.dias[]
 
 			var contador=0;

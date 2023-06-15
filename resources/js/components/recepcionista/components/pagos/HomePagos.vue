@@ -44,7 +44,7 @@
 							<td>{{payment.voucher}}</td>
 
 							<td>{{ payment.id}}</td>
-							<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''"> <br />Obs. {{ payment.observation }}</span></td>
+							<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''"></span></td>
 							<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
 								<td v-else-if="payment.pay_status == 2">Cancelado</td> -->
 							<td>
@@ -327,11 +327,19 @@ import moment from 'moment'
 					return this.payments.reduce((suma, item)=>{
 						let queIndex= this.sumaTipos.findIndex(x=> x.moneda== item.moneda );
 						//console.log(queIndex);
-						if( !queIndex ){ //encuentra
-							this.sumaTipos[queIndex].suma+= parseFloat(item.price ?? 0)
+						if( queIndex>-1 ){ //encuentra
+							if( item.type==6)
+								this.sumaTipos[queIndex].suma-= parseFloat(item.price ?? 0)
+							else
+								this.sumaTipos[queIndex].suma+= parseFloat(item.price ?? 0)
 						}else{
-							this.sumaTipos.push({suma: parseFloat(item.price ?? 0), moneda: item.moneda})
+							if( item.type==6 )
+								this.sumaTipos.push({suma: -parseFloat(item.price ?? 0), moneda: item.moneda})
+							else
+								this.sumaTipos.push({suma: parseFloat(item.price ?? 0), moneda: item.moneda})
 						}
+						//console.log(item.type==6);
+						
 						if(item.type==6){
 							return suma- parseFloat(item.price??0)
 						}else{
