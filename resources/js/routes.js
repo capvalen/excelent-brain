@@ -71,6 +71,10 @@ const HomeCartera = () => import('./components/recepcionista/components/adiciona
 const HomeRecordatorios = () => import('./components/recepcionista/components/recordatorios/HomeRecordatorios.vue')
 
 
+// --- USUARIOS SIMPLES
+const HomeUsuarios = () => import('./components/usuarios/HomeUsuarios.vue')
+
+
 const Voice = () => import('./components/profesional/components/consultas/Voice.vue')
 
 // Pagina no encontrada
@@ -448,6 +452,11 @@ export const routes = [
           path:'recordatorios',
           name: 'recordatorios',
           component: HomeRecordatorios
+        },
+				{
+          path:'usuarios-simples',
+          name: 'usuariosSimples',
+          component: HomeUsuarios
         }
       ]
   },

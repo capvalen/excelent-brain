@@ -71,7 +71,7 @@ class PatientController extends Controller
 			->with('initial_psychiatric_history', 'initial_psychological_history')
 	
 			->where('a.status', '<>', 3)
-			->where('patients.name', 'like', $texto.'%' )
+			->where('patients.name', 'like', '%'. $texto.'%' )
 			->orWhere('patients.dni', $texto)
 			->where('activo', 1)
 			->groupBy('patients.id')
@@ -145,7 +145,7 @@ class PatientController extends Controller
 	public function searchPatientByNameDni ($nombre){
 		$patients = Patient::where('name', 'LIKE', "%".$nombre ."%")
 				->orWhere('dni', $nombre )
-				->where('acitvo', 1)
+				->where('activo', 1)
 				->with('relative', 'address', 'prescriptions')
 				->orderBy('name', 'asc')
 		->get();

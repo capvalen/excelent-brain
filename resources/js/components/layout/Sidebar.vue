@@ -227,12 +227,12 @@
 								</router-link>
 						</li>
 
-						<li class="nav-item nav__list" @click="activeSidebar()">
+						<!-- <li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/recepcionista/adicionales" class="nav-link">
 										<i class="fas fa-hospital-user"></i>
 										<span>Adicionales</span>
 								</router-link>
-						</li>
+						</li> -->
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/recepcionista/cartera" class="nav-link">
 										<i class="fas fa-hospital-user"></i>
@@ -260,16 +260,22 @@
 								</router-link>
 						</li> -->
 
-						<li class="nav-item nav__list" @click="activeSidebar()">
+						<!-- <li class="nav-item nav__list" @click="activeSidebar()">
 							<router-link  to="/recepcionista/reportes" class="nav-link">
+									<i class="fas fa-file-alt"></i>
+									<span>Reportes</span>
+							</router-link>
+						</li> -->
+						<li class="nav-item nav__list" @click="activeSidebar()">
+							<router-link  to="/recepcionista/reportes-avanzados" class="nav-link">
 									<i class="fas fa-file-alt"></i>
 									<span>Reportes</span>
 							</router-link>
 						</li>
 						<li class="nav-item nav__list" @click="activeSidebar()">
-							<router-link  to="/recepcionista/reportes-avanzados" class="nav-link">
+							<router-link  to="/recepcionista/usuarios-simples" class="nav-link">
 									<i class="fas fa-file-alt"></i>
-									<span>Reportes nuevo</span>
+									<span>Usuarios</span>
 							</router-link>
 						</li>
 				</div>

@@ -37,10 +37,11 @@
 							<th>N°</th>
 							<th>Cod.</th>
 							<th>Nombre y Apellidos</th>
+							<th>Celular</th>
 							<th>N° Citas</th>
-							<th>N° Confirmad.</th>
+							<th>N° Conf.</th>
 							<th>N° Faltas</th>
-							<th>N° Sin Confirm.</th>
+							<th>No asistieron</th>
 							<th>N° Anulados</th>
 							<th>N° Reprogramados</th>
 							<th>Actual</th>
@@ -51,6 +52,7 @@
 							<td>{{ index+1 }}</td>
 							<td>{{ cita.patient.id }}</td>
 							<td>{{ cita.patient.name }}</td>
+							<td>{{ cita.patient.phone }}</td>
 							<!-- <td>{{ ultimaFecha(cita.patient.id) }}</td> -->
 							<td>{{ cita.visitas }}</td>
 							<td>{{ cita.confirmar }}</td>

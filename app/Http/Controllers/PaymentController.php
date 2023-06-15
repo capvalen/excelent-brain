@@ -102,8 +102,10 @@ class PaymentController extends Controller
 						$payment->profesional_name= '';
 					}
 				}
-        return response()->json($payments);
-       
+        $noactivo = Extra_payment::where('date', 'like', date('Y-m-d').'%')
+				->where('activo', 0)
+				->get();
+        return response()->json(['activos'=>$payments, 'eliminados'=>$noactivo]);
     }
 
     public function getExtraPaymentsByDay($date){
@@ -119,6 +121,20 @@ class PaymentController extends Controller
 						$payment->profesional_name= '';
 					}
 				}
-        return response()->json($payments);
+				$noactivo = Extra_payment::where('created_at', 'like', $date.'%')
+				->where('activo', 0)
+				->get();
+        return response()->json(['activos'=>$payments, 'eliminados'=>$noactivo]);
     }
+
+		public function editarPagoExtra(Request $request){
+			$pago = Extra_payment::find($request->get('id'));
+			$pago->update([
+				'moneda' => $request->get('moneda'),
+				'voucher' => $request->get('boleta'),
+				'voucher_issued' => $request->get('comprobante'),
+				'observation' => $request->get('observacion'),
+			]);
+			return response()->json(['msg'=> 'success']);
+		}
 }

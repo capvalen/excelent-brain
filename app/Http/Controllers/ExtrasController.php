@@ -103,6 +103,15 @@ class ExtrasController extends Controller
 		}
 	}
 
+	public function cargarUsuarios(){
+		$usuarios = DB::table('users')
+		->where('activo', 1)
+		->select('id', 'nombre', 'email', 'rol', 'privilegios')
+		->get();
+		return response()->json( $usuarios );
+
+	}
+
 	public function addRecomendation( Request $request){
 		//print_r($request->all()); die();
 		DB::table('recommendations')->insert([

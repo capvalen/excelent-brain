@@ -122,6 +122,7 @@ Route::get('listarInteresados/', [ExtrasController::class, 'listarInteresados'])
 Route::get('borrarInteresados/{id}', [ExtrasController::class, 'borrarInteresados']);
 Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
 Route::get('listRecomendation/{id}', [ExtrasController::class, 'listRecomendation']);
+Route::get('cargarUsuarios/', [ExtrasController::class,'cargarUsuarios']);
 Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
@@ -204,3 +205,4 @@ Route::get('allAditionals', [AdittionalController::class, 'allAditionals']);
 
 Route::get('getAllExtraPayments',[PaymentController::class, 'getAllExtraPayments']);
 Route::get('getExtraPaymentsByDay/{date}', [PaymentController::class, 'getExtraPaymentsByDay']);
+Route::post('editarPagoExtra/', [PaymentController::class, 'editarPagoExtra']);
