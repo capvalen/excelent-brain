@@ -157,6 +157,7 @@
 <body>
 @php
 	use Carbon\Carbon;
+	$monedas =['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin'];
 @endphp
     <div class="container">
         <div class="container-fluid p-0">
@@ -170,10 +171,16 @@
                 </div>
             </div>
             <div class="body">
-                    <h2>TICKET INTERNO</h2>
-                    <h2>E002-00{{$extra_payment->id}}</h2>
+							
+							@if( $extra_payment->type==6)
+								<h2>EGRESO</h2>
+							@else
+								<h2>TICKET INTERNO</h2>
+								<h2>E002-00{{$extra_payment->id}}</h2>
+							@endif
+							
                     <div class="main-data">
-											<p>EMISIÓN:  
+											<p>FECHA:  
 												<span>@php
 												$fecha = Carbon::parse( $extra_payment->date ); echo $fecha->format('d/m/Y');
 												@endphp</span>
@@ -182,6 +189,7 @@
 											<p>USUARIO: -</p>
 											{{-- <p>DNI: {{$patient[0]->dni}}</p> --}}
 											{{-- <p>DIRECCIÓN: {{$patient[0]->address->address}}</p> --}}
+											 <p>MEDIO DE PAGO: {{ $monedas[$extra_payment->moneda-1] }}</p>
                     </div>
                     <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
                         <thead>

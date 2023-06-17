@@ -25,7 +25,7 @@
 								<td>Obs.</td>
                 <td>Monto</td>
                 <td>Motivo</td>
-                <td>Moneda</td>
+                <td>Medio de pago</td>
                 <td>N° Op.</td>
                 <td>Prof.</td>
                 <td>Hora</td>
@@ -203,7 +203,7 @@
 								<input type="text" class="form-control" v-model="caso.boleta">
 							</div>
 							<div class="col-sm-12">
-								<label for="">Comprobante de pago</label>
+								<label for="">N° de Operación</label>
 								<input type="text" class="form-control" v-model="caso.comprobante">
 							</div>
 							<div class="form-group">

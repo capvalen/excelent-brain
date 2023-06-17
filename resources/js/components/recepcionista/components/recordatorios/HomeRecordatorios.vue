@@ -29,7 +29,7 @@
 				<div class=" card-body">
 					<div class="input-group mb-3 col-sm-4">
 						<span class="input-group-text" id="basic-addon1">Cambiar fecha:</span>
-						<input type="date" class="form-control" id="fechaCumple" @change="cambiarFecha()">
+						<input type="date" class="form-control" v-model="fechaCumple" id="fechaCumple" @change="cambiarFecha()">
 					</div>
 					<table class="table table-striped mt-4">
 						<thead>
@@ -176,7 +176,7 @@ export default {
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], idUsuario:null, queAviso:null, interesados:[]
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD')
 		}
 	},
 	mounted(){
@@ -188,8 +188,9 @@ export default {
 			this.tipo = tipo;
 			switch (tipo) {
 				case 'cumpleaños':
-					await this.axios.get(`/api/listarCumpleanos/${this.mes}`)
+					await this.axios.get(`/api/listarCumpleanos/${this.fechaCumple}`)
 						.then(response => {
+							console.log(response.data);
 							this.clientes = response.data
 						});
 					break;
@@ -220,6 +221,8 @@ export default {
 			let queMes = moment(document.getElementById('fechaCumple').value).format('M')
 			if(queMes != this.mes && queMes !='Invalid date'){
 				this.mes = queMes;				
+			}else{
+				this.cargarDatos('cumpleaños')
 			}
 		},
 		async borrarInteresado(id, index){

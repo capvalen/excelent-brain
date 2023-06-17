@@ -633,9 +633,9 @@ class AppointmentController extends Controller
 			$patient->increment('faults');
 			$patient->save();
 
-			$appointment->update([
+			/* $appointment->update([
 				'schedule_id' => null
-			]);
+			]); */
 			updateFieldStatus($appointment, $valueStatus);
 			
 		}else if($valueStatus == 2){ //status = confirmado

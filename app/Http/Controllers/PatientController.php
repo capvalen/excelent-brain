@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Carbon\Carbon;
 
 use App\Models\Address;
 use App\Models\Appointment;
@@ -427,8 +428,12 @@ class PatientController extends Controller
 			}
 		}
 
-		public function listarCumpleanos($mes){
-			$pacientes = Patient::whereMonth('birth_date', $mes )
+		public function listarCumpleanos($buscar){
+			$fecha = Carbon::create($buscar);
+			$mes = $fecha->month;
+			$año = $fecha->day;
+			$pacientes = Patient::whereMonth('birth_date', '=', $mes )
+			->whereDay('birth_date', '=', $año)
 			//->orderBy('birth_date', 'asc')
 			->orderByRaw("DAY(birth_date) ASC")
 			->get();
