@@ -512,7 +512,7 @@ class AppointmentController extends Controller
 		]);
 
 		
-		if($request->input('caso.pago') === '2'){
+		if($request->input('caso.pago') == '2'){
 			//print_r( 'qqqqqq estado '.$appointment->status); die();
 			
 				$pagoExtra = new Extra_payment;
@@ -527,8 +527,10 @@ class AppointmentController extends Controller
 				$pagoExtra->user_id = $request->input('caso.user_id');
 				$pagoExtra->save();
 
+				print_r($appointment->status );
+
 				//Debemos de confirmar si esta confirmado para habilitar al profesional
-				if( $appointment->status === '2'){
+				if( $appointment->status == '2'){
 					$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCita.patient.id'))
 					->where('professional_id', $request->input('dataCita.professional.id'))
 					->where('date',$request->input('dataCita.date'))
@@ -680,7 +682,7 @@ class AppointmentController extends Controller
 				->where('professional_id', $request->input('dataCit.professional.id'))
 				->where('date',$request->input('dataCit.date'))
 				->get();
-				echo 'contado ' .count($medicalEvolutionExistents);
+				//echo 'contado ' .count($medicalEvolutionExistents);
 
 				if(count($medicalEvolutionExistents) == 0){
 					Medical_evolution::create([
