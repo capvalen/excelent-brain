@@ -150,4 +150,8 @@ class ExtrasController extends Controller
 		return response()->json([ "resumidas"=>$citasResumidas, 'completas'=>$citasCompletas ]);
 		
 	}
+
+	public function listarPrecios(){
+		return DB::table('precios')->where('activo', 1)->get();
+	}
 }

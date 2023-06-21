@@ -207,7 +207,7 @@ export default {
         case 5: return "Sabado"; break;
         case 6: return "Domingo"; break;
       }
-    }, 
+    },
 
     getDateNow () {
       return dateNow()

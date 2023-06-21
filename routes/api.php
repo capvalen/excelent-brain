@@ -100,6 +100,7 @@ Route::get('updateFaults/{id}/{faults}', [PatientController::class, 'updateFault
 Route::get('profesional',[AppointmentController::class,'getprof']);
 Route::get('horario/{id}',[ScheduleController::class,'getschedules']);
 Route::get('horarioOcupado/{id}/{fecha}',[ScheduleController::class,'horarioOcupado']);
+Route::get('horarioCuadernoOcupado/{fecha}/{dia}',[ScheduleController::class,'horarioCuadernoOcupado']);
 Route::resource('schedule', ScheduleController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('initialPsychiatric', Initial_psychiatric_historyController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('initialPsychological', Initial_psychological_historyController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
@@ -122,6 +123,7 @@ Route::get('listarInteresados/', [ExtrasController::class, 'listarInteresados'])
 Route::get('borrarInteresados/{id}', [ExtrasController::class, 'borrarInteresados']);
 Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
 Route::get('listRecomendation/{id}', [ExtrasController::class, 'listRecomendation']);
+Route::get('listarPrecios/', [ExtrasController::class,'listarPrecios']);
 Route::get('cargarUsuarios/', [ExtrasController::class,'cargarUsuarios']);
 Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);
 

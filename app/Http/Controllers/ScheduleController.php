@@ -64,6 +64,32 @@ class ScheduleController extends Controller
 				'solos' => $solos,
 			]);
     }
+    public function horarioCuadernoOcupado($fecha, $dia){
+			//var_dump($fecha);die();
+        
+      $appointment = Appointment::whereDate('appointments.date', '=', $fecha)
+			->where('appointments.status', '<>', 4)
+			->where('appointments.status', '<>', 3)
+			->with('schedule')
+			->with('patient')
+			->with('payment')
+			->get();
+
+			DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
+        
+			$solos = Schedule::where('day', '=', $dia)
+			->whereNotNull('check_time')
+			->whereNotNull('departure_date')
+			->groupBy('professional_id', 'day', 'check_time', 'departure_date')
+			->orderBy('professional_id', 'asc')
+			->orderBy('check_time', 'asc')
+			->get();
+
+			return response()->json([
+				'invalidos' => $appointment,
+				'solos' => $solos,
+			]);
+    }
 
     public function verifHours($check_time, $departure_date, $professional_id, $dia){
         $schedule = Schedule::where('check_time',$check_time)

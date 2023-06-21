@@ -17,10 +17,11 @@ class ProfessionalController extends Controller
     public function index()
     {
         $profesionales = Professional::select('professionals.*','users.email')
-                        ->where('profession','Psicólogo')
-                        ->orWhere('profession','Psiquiatra')
-                        ->join('users','users.id','=','professionals.user_id')
-                        ->get();
+				->where('profession','Psicólogo')
+				->orWhere('profession','Psiquiatra')
+				->join('users','users.id','=','professionals.user_id')
+				->get();
+
         return response()->json($profesionales);
     }
 

@@ -91,10 +91,17 @@ class AppointmentController extends Controller
 	}
 
 	public function getprof(){
-		 return Professional::with('schedules')->where('profession','Psicólogo')
-		 ->orWhere('profession','Psiquiatra')
-				 ->orderBy('name', 'asc')
-				 ->get();
+		 $profesionales = Professional::with('schedules')->where('profession','Psicólogo')
+		 	->orWhere('profession','Psiquiatra')
+			->orderBy('name', 'asc')
+			->get();
+
+			$profesionales = $profesionales->map(function ($item) {
+				$item['horarios'] = [];
+				return $item;
+			});
+
+			return response()->json( $profesionales );
 	}
 
 	public function getschedules(){
@@ -113,19 +120,26 @@ class AppointmentController extends Controller
 
 		$paciente_prueba = Patient::where('dni',$request->get('dni'))->first();
 
-		$condition = Patient::where('dni', '=', $request->dni)
-			->with('medical_evolutions')
-			->first();
 
-		$patient_condition = "1";
+		/* $condition = Patient::where('dni', '=', $request->dni)
+		->with('medical_evolutions')
+		->with([ 'appointments' => function ($query) use ($clas) {
+			$query->where('clasification', $clas );
+		}])
+		->first(); */
+		
+		
+	
 
-		if ($condition && count($condition->medical_evolutions) !== 0) {
+		/* if ($condition && count($condition->medical_evolutions) !== 0) {
 			$patient_condition = "2";
 		} else {
 			$patient_condition = "1";
-		}
+		} */
 
 		if(!$paciente_prueba){
+		$patient_condition = "1";
+
 			if($request->get('name') != null){
 				$patient = Patient::create([
 					'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
@@ -140,7 +154,7 @@ class AppointmentController extends Controller
 				]);
 			}
 				
-		   
+		  
 			
 			$relative = Relative::create([
 				'name'=> $request->input('name') =='null' ? null: $request->input('contacto'),
@@ -183,6 +197,20 @@ class AppointmentController extends Controller
 			]);
 
 		}else{
+
+			$citas = DB::table('appointments as a')
+			->join('medical_evolutions as m', 'm.patient_id', '=', 'a.patient_id')
+			->where('a.patient_id' , '=', $paciente_prueba->id)
+			->where('a.clasification' , '=', $request->get('clasification'))->get()
+			;
+
+				/* $citas = Appointment::where('patient_id', '=', $paciente_prueba->id)
+				->where('clasification', '=', $request->get('clasification'))
+				->with('medical_evolutions')->first(); */
+			$patient_condition = ( count($citas) !==0 ) ? '2': '1';
+			//var_dump( 'conteo '. count($citas) ); die();
+
+				
 
 			$appointment = Appointment::create([
 				'professional_id' => $request->get('professional_id'),
@@ -483,7 +511,10 @@ class AppointmentController extends Controller
 			'user_id'=>$request->input('caso.user_id')
 		]);
 
+		
 		if($request->input('caso.pago') === '2'){
+			//print_r( 'qqqqqq estado '.$appointment->status); die();
+			
 				$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $request->input('dataCita.patient.name');
 				$pagoExtra->price = $request->input('dataCita.payment.price');
@@ -497,7 +528,7 @@ class AppointmentController extends Controller
 				$pagoExtra->save();
 
 				//Debemos de confirmar si esta confirmado para habilitar al profesional
-				if( $appointment->status == 2){
+				if( $appointment->status === '2'){
 					$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCita.patient.id'))
 					->where('professional_id', $request->input('dataCita.professional.id'))
 					->where('date',$request->input('dataCita.date'))
@@ -638,16 +669,18 @@ class AppointmentController extends Controller
 			]); */
 			updateFieldStatus($appointment, $valueStatus);
 			
-		}else if($valueStatus == 2){ //status = confirmado
+		}else if($valueStatus === '2'){ //status = confirmado
 			
-			$pago = Payment::where('appointment_id', $request->input('dataCit.payment.id') )->get();
+			$pago = Payment::where('appointment_id', $request->input('dataCit.id') )->get();
+			//print_r('pago es ');
+			//var_dump($pago[0]->pay_status); die();
 			if($pago[0]->pay_status  == 2){ //estado = pagado Debe estar pagado y confirmado para que saque la cita con el doctor
 
 				$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCit.patient.id'))
 				->where('professional_id', $request->input('dataCit.professional.id'))
 				->where('date',$request->input('dataCit.date'))
 				->get();
-				
+				echo 'contado ' .count($medicalEvolutionExistents);
 
 				if(count($medicalEvolutionExistents) == 0){
 					Medical_evolution::create([
