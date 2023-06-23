@@ -27,7 +27,7 @@
 
         .header__name {
             font-size: 30px;
-            color: #6b61a6;
+            color: #0069b3;
             font-family:'Montserrat-Bold';
             text-transform: uppercase;
         }
@@ -77,7 +77,7 @@
             width: 100%;
             height: 5px;
             margin: 0 auto 5px;
-            background: #2F4A99;
+            background: #0069b3;
         }
 
         .pdf__body {
@@ -116,7 +116,7 @@
         }
 
         .paciente__name {
-            background: #E6E6E6;
+            background: #fafafa;
             width: 100%;
             font-family: 'Montserrat-Light';
             font-size: 25px;
@@ -144,7 +144,7 @@
         
         .body__table {
             text-align: left;
-            background: #E6E6E6;
+            background: #fafafa;
             border: 1px solid;
         }
 
@@ -171,7 +171,7 @@
         .table__body td {
             padding: 2px 12px;
             height: 20px !important;
-            border-bottom: 1px solid;
+            /* border-bottom: 1px solid; */
             text-align: center;
             color: #495057;
             font-size: 12px;
@@ -203,7 +203,7 @@
 
         .footer__contact {
             float: left;
-            width: 70%;
+            width: 100%;
             /* padding-right: 15px; */
         }
 
@@ -215,6 +215,7 @@
 
         .datos__item{
             font-size: 13px;
+						text-align: center;
         }
 
         .contact__recipe {
@@ -226,10 +227,11 @@
             padding: 7px 15px 7px 15px;
             margin-left: 15px;
             color: #495057;
-            background: #E6E6E6;
+            background: #fafafa;
 
             border-radius: 5px;
-            border: 2px solid
+            border: 1px solid;
+						font-size: 10px;
         }
         .botica__info{
             width: 80%;
@@ -237,7 +239,7 @@
             margin-top: 180px;
             margin-left: 90px;
             color: #495057;
-            background: #E6E6E6;
+            background: #fafafa;
             border-radius: 5px;
             border: 2px solid;
             text-align: center;
@@ -248,21 +250,22 @@
         .contact__recipe-item2 {
             width: 62%;
             padding: 7px 15px 7px 15px;
-            background: #E6E6E6;
+            background: #fafafa;
 
             /* margin-left: 15px; */
             color: #495057;
             border-radius: 5px;
-            border: 2px solid
+            border: 1px solid;
+						font-size: 10px;
         }
 
 
         /* datos de contactos */
         .contact__datos {
             width: 100%;
-            clear: both;
+            /* clear: both;
             margin-left: 8px;
-            padding-right: 25px;
+            padding-right: 25px; */
         }
 
         .contact__datos td{
@@ -275,6 +278,7 @@
 
         .icon-redes {
             margin-top: 8px;
+						text-align: center;
         }
 
         /* firma  */
@@ -313,7 +317,6 @@
                 <img src="https://excelentemente.org/consultorio-online/public/img/logoem.png" alt="Excelentemente" class="header-logo">
 
                 <div class="header " style="margin-top:30px" >
-									<p class="header__sub">CENTRO PSICOLÓGICO Y PSIQUIÁTRICO EXCELENTEMENTE</p>
                     @if ($professional == null)
                     <p class="header__name">WILBERT BARZOLA</p>
                     @else
@@ -323,10 +326,8 @@
                     <p class="header__sub">Consultas previa cita, llamar al celular: 996644350</p>
 
                     @if ($professional == null)
-                    <p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
                     <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
                     @elseif ($professional->name == 'Wilbert Barzola Huaman')
-                    <p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
                     <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
                     @else
                     <p class="header__sub">CMP N° 74376 - RNE N° 43202</p>
@@ -340,7 +341,7 @@
                 <br>
             </div>
 
-            <img src="https://excelentemente.org/consultorio-online/public/img/logoem.png" alt="Excelentemente" class="logotipo">
+            
 
             <div class="pdf__body">
                 <div class="body__paciente">
@@ -446,22 +447,25 @@
                             <tbody>
                                 <tr>
                                     <td class="datos__item">
-                                        <p>-996644350</p>
-                                        <p>-(064)603228</p>
+                                        <p>996644350</p>
+                                        <p>(064) 603228</p>
                                     </td>
 
                                     <td class="datos__item">
-                                        <span>Jr. Rebagliatti N° 166 El Tambo – Huancayo</span>
+                                        <span>Jr. Rebagliatti N° 166 El Tambo – Huancayo</span><br>
+																				<span>(a media cuadra del colegio de Arquitectos)</span>
                                     </td>
 
                                     <td class="datos__item">
                                         <div class="icon-redes">
-                                            <span><img src="https://icones.pro/wp-content/uploads/2021/02/facebook-icones.png" alt="Facebook"></span>
+                                            <span><img src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png" alt="Facebook"></span>
                                             <span><img src="https://cdn-icons-png.flaticon.com/512/174/174883.png" alt="Youtube"></span>
                                             <span><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram"></span>
-                                            <span><img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" alt="Tiktok"></span>
+                                            <span><img src="https://cdn-icons-png.flaticon.com/512/3046/3046120.png" alt="Tiktok"></span>
+                                            <span><img src="https://cdn-icons-png.flaticon.com/512/3669/3669986.png" alt="Spotify"></span>
+																						
                                         </div>
-                                        <span>@excelentementepsicologia</span>
+                                        <span class="icon-redes">@excelentementepsicologia</span>
                                     </td>
                                     </tr>
                             </tbody>
@@ -480,7 +484,7 @@
                 
             </div>
             <div class="botica__info">
-                    PODEMOS AYUDARTE A COTIZAR TU RECETA DE MEDICAMENTOS O TU ORDEN DE EXAMENES AUXILIARES, COMUNICATE CON NOSOTROS A NUESTRA CENTRAL: 064-603228 o 952945143
+                    PODEMOS AYUDARTE A COTIZAR TU RECETA DE MEDICAMENTOS O TU ORDEN DE EXAMENES AUXILIARES, COMUNICATE CON NOSOTROS A NUESTRA CENTRAL:<br> 064-603228 o 952945143
             </div>
         </div>
     </div>

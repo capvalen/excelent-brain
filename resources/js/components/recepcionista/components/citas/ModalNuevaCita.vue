@@ -238,7 +238,7 @@
 						</div>        
 					</div>
 					<div class="row d-flex align-content-end">
-						<div class="col-sm-6 d-none">
+						<div class="col-sm-6">
 							<div class=" form-switch">
 								<input class="form-check-input" type="checkbox" role="switch" id="fleDescuento" v-model="tieneDescuento" >
 								<label class="form-check-label" for="fleDescuento">
