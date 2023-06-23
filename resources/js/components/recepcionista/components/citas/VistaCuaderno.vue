@@ -8,11 +8,12 @@
 		<table class="table table-hover my-5" v-for="(doctor, index) in doctores" :key="doctor.id">
 			<thead  >
 				<tr>
-					<th  class="table-dark" colspan="7"> {{ index+1 }}. {{doctor.name}}</th>
+					<th  class="table-dark" colspan="9"> {{ index+1 }}. {{doctor.name}}</th>
 				</tr>
 				<tr>
 					<th>#</th>
 					<th>Hora</th>
+					<th>Servicio</th>
 					<th>Paciente</th>
 					<th>Modo</th>
 					<th>Pago</th>
@@ -24,14 +25,19 @@
 				<tr v-for="(hora, indice) in doctor.horarios" :key="hora.id">
 					<td>{{ indice+1 }}</td>
 					<td>{{ horaLatam1(hora.check_time) }} - {{ horaLatam2(hora.departure_date) }}</td>
+					<td v-if="hora.libre=='0'">
+						<span v-if="horasMalas[hora.indexOcupado].clasification==1">Psiquiatría</span>
+						<span v-if="horasMalas[hora.indexOcupado].clasification==2">Psicología</span>
+						<span v-if="horasMalas[hora.indexOcupado].clasification==3">Certificado</span>
+						<span v-if="horasMalas[hora.indexOcupado].clasification==4">Kurame</span>
+						<span v-if="horasMalas[hora.indexOcupado].formato_nuevo=='0'">{{ tipoViejo[horasMalas[hora.indexOcupado].type-1] }}:</span>
+						<span v-else>{{ queServicio(horasMalas[hora.indexOcupado].type) }}:</span>
+					</td>
+					<td v-else></td>
 					<td>
-						<button class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ModalNuevaCita" @click="prepararAutomaticos(index, indice)" v-if="hora.libre=='1'"><i class="fa-regular fa-circle-check"></i> Libre para citar</button>
+						<button class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#modalNuevaCita" @click="prepararAutomaticos(index, indice)" v-if="hora.libre=='1'"><i class="fa-regular fa-circle-check"></i> Libre para citar</button>
 						<span v-if="hora.libre=='0'">
-							
-							<span>
-								<strong v-if="horasMalas[hora.indexOcupado].formato_nuevo=='0'">{{ tipoViejo[horasMalas[hora.indexOcupado].type-1] }}:</strong>
-								<span>{{ horasMalas[hora.indexOcupado].patient.name }} ind: {{ hora.indexOcupado }}</span>
-							</span>
+							<span class="text-capitalize">{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} </span>
 						</span>
 					</td>
 					<td v-if="hora.libre==0" :title="horasMalas[hora.indexOcupado].mode == 1 ? 'Presencial':'Virtual'">
@@ -138,7 +144,7 @@
 				
 			</tbody>
 		</table>
-		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha'></ModalNuevaCita>
+		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha' @actualizarListadoCitas="actualizarListadoCitas"></ModalNuevaCita>
     <pago-modal v-if="alternativo" :cita="cita" :idUsuario="idUsuario"></pago-modal>
     <modal-estado  v-if="alternativo" :dataCit="cita"></modal-estado>
 
@@ -153,7 +159,7 @@
 	export default{
 		name: 'VistaCuaderno',
 		data(){ return{
-			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], cita:{}, profesionalElegido:[], horaElegida:[], alternativo:false,
+			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], cita:{}, profesionalElegido:[], horaElegida:[], alternativo:false, precios:[],
 			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ]
 		}},
 		props:[ 'idUsuario'],
@@ -216,12 +222,23 @@
 			horaLatam2(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm a') },
 			prepararAutomaticos(indexProfesional, indexHorario){
 				this.profesionalElegido = this.doctores[indexProfesional];
-				this.horaElegida = this.horasSolas[indexHorario]
+				this.horaElegida = this.profesionalElegido.horarios[indexHorario];
+			},
+			async listarPrecios(){
+				await this.axios.get('/api/listarPrecios')
+				.then( response => this.precios = response.data)
+			},
+			actualizarListadoCitas(){
+				this.obtenerHorarios();
+			},
+			queServicio(idTipo){
+				return this.precios.find(x=> x.id == idTipo).descripcion
+
 			}
-			
 		},
 		mounted(){
 			this.listarProfesionales();
+			this.listarPrecios();
 		}
 
 	}

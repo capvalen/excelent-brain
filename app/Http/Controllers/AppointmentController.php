@@ -182,7 +182,8 @@ class AppointmentController extends Controller
 				'mode'=>$request->get('mode'),
 				'link'=>$request->get('link'),
 				'status'=> 1,
-				'patient_id' => $patient->id
+				'patient_id' => $patient->id,
+				'formato_nuevo' => $request->get('formato_nuevo')
 			]);
 
 			$payment = Payment::create([
@@ -223,7 +224,8 @@ class AppointmentController extends Controller
 				'mode'=>$request->get('mode'),
 				'link'=>$request->get('link'),
 				'status'=> 1,
-				'patient_id' => $paciente_prueba->id
+				'patient_id' => $paciente_prueba->id,
+				'formato_nuevo' => $request->get('formato_nuevo')
 			]);
 
 			$payment = Payment::create([
@@ -527,7 +529,7 @@ class AppointmentController extends Controller
 				$pagoExtra->user_id = $request->input('caso.user_id');
 				$pagoExtra->save();
 
-				print_r($appointment->status );
+				//print_r($appointment->status );
 
 				//Debemos de confirmar si esta confirmado para habilitar al profesional
 				if( $appointment->status == '2'){

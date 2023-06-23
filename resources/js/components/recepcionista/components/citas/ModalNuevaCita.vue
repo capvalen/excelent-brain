@@ -1,11 +1,11 @@
 <template>
-<div class="modal fade bd-example-modal-lg" id="ModalNuevaCita" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade " id="modalNuevaCita" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
 			<h5 class="modal-title" id="addCitaModalLabel">Registrar Nueva Cita</h5>
 
-			<button type="button" id="closeModal" @click="limpiarInputs(true)" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+			<button type="button" id="closeModalNuevaCita" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 			</div>
 			<div class="modal-body">
 				<form class="user" @submit="insertar" @keydown="prevenirEvent">
@@ -175,7 +175,7 @@
 							name="clasification" 
 							id="clasification" 
 							v-model="cita.clasification"
-							@change="dynamicPrice()"
+							@change="precioDinamico()"
 							>
 								<option value="1" v-if="profesionalElegido.idProfesion=='1'" selected >Psiquiatrica</option>
 								<option value="2" v-if="profesionalElegido.idProfesion=='2'" selected >Psicológica</option>
@@ -195,7 +195,7 @@
 						</div> -->
 						<div class="col-sm-6">
 							<label for="">Tipo de servicio</label>
-							<select  class="form-select"  name="type" id="type" v-model="cita.type" @change="dynamicPrice()">
+							<select  class="form-select"  name="type" id="type" v-model="cita.type" @change="precioDinamico()">
 								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification ">{{ precio.descripcion }}</option>
 							</select>
 						</div>
@@ -206,7 +206,7 @@
 					<div class="form-group row">
 						<div class="col-sm-6 my-2">
 							<div class=" form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="flePrecio" v-model="precioNuevo" >
+								<input class="form-check-input" type="checkbox" role="switch" id="flePrecio" v-model="precioNuevo" @change="precioDinamico()">
 								<label class="form-check-label" for="flePrecio">
 									<span v-if="precioNuevo"><i class="fa-solid fa-pizza-slice"></i> Precio de nuevo cliente</span>
 									<span v-else><i class="fa-solid fa-champagne-glasses"></i> Precio de cliente continuante</span>
@@ -237,8 +237,8 @@
 							<input type="text" class="form-control" name="link" id="link" v-model="cita.link" placeholder="Ingrese el link de la reunión virtual" autocomplete="off">
 						</div>        
 					</div>
-					<div class="row">
-						<div class="col-sm-6">
+					<div class="row d-flex align-content-end">
+						<div class="col-sm-6 d-none">
 							<div class=" form-switch">
 								<input class="form-check-input" type="checkbox" role="switch" id="fleDescuento" v-model="tieneDescuento" >
 								<label class="form-check-label" for="fleDescuento">
@@ -248,13 +248,15 @@
 								<div v-if="tieneDescuento">
 									<select class="form-select my-2" id="">
 										<option value="5">5% de descuento</option>
-										<option value="5">10% de descuento</option>
+										<option value="10">10% de descuento</option>
+										<option value="15">15% de descuento</option>
+										<option value="20">20% de descuento</option>
 									</select>
 									<input type="text" class="form-control my-2" placeholder="Ingresa un motivo para el descuento">
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-6 text-center d-flex align-content-end">
+						<div class="col-sm-12 text-center ">
 							<p class="lead"><small>Precio a cobrar</small>	S/ {{ parseFloat(cita.price).toFixed(2) }}</p>
 							<!-- <input type="text" class="form-control" name="price" id="price" v-model="cita.price"> -->
 						</div>
@@ -284,43 +286,6 @@ export default {
 			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false,
 			switchReciec: 1,
 			patientNew: false,
-			priceCite: [
-				[ //--- Psiquitrica
-					[200, 170, 200, 200, 160, 120, 200, 200, null, null, null], // --- Presencial
-					[200, 170, 150, 150, 120, 90, 120, 120, null, null, null] // --- Virtual 
-				],
-				[ //--- Psicologica
-					[100, 90, 150, 150, 90, 80, 150, 150, 200, null, null ], // --- Presencial
-					[60, 60, 100, 100, 50, 50, 100, 100, null, null, null] // --- Virtual 
-				],
-				[ // --- Certificado
-					[null, null, null, null, null, null, null, null, null, 190, 170, null], // --- Presencial
-					[null, null, null, null, null, null, null, null, null, null, null] // --- Virtual 
-				],
-				[ //--- Kurame
-					[null, null, null, null, null, null, null, null, null, null, null, 600], // --- Presencial
-					[null, null, null, null, null, null, null, null, null, null, null] // --- Virtual 
-				],
-			],
-			priceCiteOld: [
-				[ //--- Psiquitrica
-					[190, 160, 190, 190, 150, 110, 200, 200, null, null, null], // --- Presencial
-					//[666, 555, 444, 333, 222, 111, 999, 888, null, null, null], // --- Presencial
-					[200, 170, 150, 150, 120, 90, 120, 120, null, null, null] // --- Virtual 
-				],
-				[ //--- Psicologica
-					[70, 70, 120, 120, 60, 60, 120, 120, 200, null, null ], // --- Presencial
-					[60, 60, 100, 100, 50, 50, 100, 100, null, null, null] // --- Virtual 
-				],
-				[ // --- Certificado
-					[null, null, null, null, null, null, null, null, null, 190, 170, null], // --- Presencial
-					[null, null, null, null, null, null, null, null, null, null, null] // --- Virtual 
-				],
-				[ //--- Kurame
-					[null, null, null, null, null, null, null, null, null, null, null, 600], // --- Presencial
-					[null, null, null, null, null, null, null, null, null, null, null] // --- Virtual 
-				],
-			],
 			cita:{
 				phone:'',
 				dni:'',
@@ -366,6 +331,16 @@ export default {
 	methods: {
 		horaLatam1(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm') },
 		horaLatam2(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm a') },
+		precioDinamico(){
+			this.cita.price = 0;
+			if(this.cita.type =='') this.cita.price = 0;
+			else{
+				let precio = this.precios.find(p=> p.id == this.cita.type)
+				if( this.precioNuevo ) precio = precio.nuevos
+				else precio = precio.continuos
+				this.cita.price = precio;
+			}
+		},
 		async insertar(e){ 
 			e.preventDefault()
 			const config = {
@@ -376,6 +351,7 @@ export default {
 			}else if( this.cita.type_dni!=1 && (this.cita.dni =='' || this.cita.dni.length<8) ){
 				alertify.notify('Todo extranjero debe tener un documento de identidad válido', 'danger', 10);
 			}else{
+
 				let formData = new FormData();
 				formData.append('dni', this.cita.dni);
 				formData.append('phone', this.cita.phone);
@@ -391,12 +367,12 @@ export default {
 				formData.append('marital_status', this.cita.marital_status);
 				formData.append('instruction_degree', this.cita.instruction_degree);
 				formData.append('professional_id', this.cita.professional_id);
-				formData.append('schedule_id', this.cita.schedule_id);
-				formData.append('date', this.cita.date);
+				formData.append('schedule_id', this.horaElegida.id);
+				formData.append('date', this.fechaElegida);
 				formData.append('clasification', this.cita.clasification);
 				formData.append('price', this.cita.price);
-				formData.append('type', this.cita.type);
-				formData.append('patient_condition', this.cita.patient_condition);
+				formData.append('type', this.cita.type); //nueva lista de servicios
+				//formData.append('patient_condition', this.cita.patient_condition); //El sistema evalúa la condición: nuevo o continuo, no es necesario pasar
 				formData.append('recomendation', this.cita.recomendation);
 				formData.append('mode', this.cita.mode);
 				formData.append('link', this.cita.link);
@@ -404,15 +380,16 @@ export default {
 				formData.append('contacto', this.cita.contacto);
 				formData.append('contacto_celular', this.cita.contacto_celular);
 				formData.append('parentezco', this.cita.parentezco);
-				formData.append('continuo', this.cita.type_amount);
+				formData.append('continuo', this.precioNuevo ? '1': 2 ); //this.cita.type_amount
 				formData.append('user_id', this.idUsuario);
+				formData.append('formato_nuevo', 1);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => { //Trabaja en api -> modelo>store()
-					console.log(response.data)
-					this.closeModal()
+					this.closeModal();
+					this.$emit('actualizarListadoCitas', true)
+					//console.log(response.data.cita.id)
 					this.$swal('Cita inserdata con éxito')
-					this.$parent.listar()  
-					this.$emit('actualizarArray', true)              
+					//this.$parent.listar()
 					this.clearModal()
 				})
 				.catch(error => {
@@ -420,7 +397,10 @@ export default {
 				})
 			}
 		},
-
+		closeModal(){
+			console.log('cerrar');
+      document.getElementById('closeModalNuevaCita').click();
+		},
 		prevenirEvent() {
 			if (event.key === 'Enter' || event.code === 13) {
 				event.preventDefault();
@@ -463,11 +443,6 @@ export default {
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 
 		},
-
-		closeModal() {
-			document.getElementById('closeModal').click();
-		},
-
 		reniec(){ 
 			if (this.switchReciec === 0) return;
 			this.switchReciec = 0;
@@ -591,15 +566,7 @@ export default {
 			this.cita.relative_name = '';
 			this.cita.relatine_phone = '';
 			this.cita.kinship = '';
-			this.cita.professional_id =  '';
-			this.cita.schedule_id = '';
-			this.cita.date = dateNow();
-			this.cita.clasification = '';
-			this.cita.price = 0;
-			this.cita.type = '';
-			this.cita.patient_condition = '';
-			this.cita.recomendation = '';
-			this.cita.type_amount=1;
+			
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 
 			this.moverProvincias(false)
@@ -676,6 +643,7 @@ export default {
 	},
 	watch:{
 		horaElegida(){
+			this.cita.professional_id = this.profesionalElegido.id;
 			this.cita.clasification = this.profesionalElegido.idProfesion;
 		}
 	},

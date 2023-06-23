@@ -427,6 +427,7 @@ export default {
 				formData.append('parentezco', this.cita.parentezco);
 				formData.append('continuo', this.cita.type_amount);
 				formData.append('user_id', this.idUsuario);
+				formData.append('formato_nuevo', 0);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => {
 					console.log(response.data)

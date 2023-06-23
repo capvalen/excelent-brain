@@ -10,7 +10,7 @@
 			<div>
 				<button class="btn btn-outline-success" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
 			</div>
-			<p class="mt-2"><strong>Pagos, Entradas y Salidas</strong></p>
+			<p class="mt-2"><strong>Cuadre de caja: Pagos, Entradas y Salidas</strong></p>
 
 			<table class="table table-striped w-100 mt-1" id="table_export">
         <thead class="bg-success text-white">
@@ -119,7 +119,7 @@
 						<td>{{payment.voucher}}</td>
 
 						<td>{{ payment.id}}</td>
-						<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''"> <br />Obs. {{ payment.observation }}</span></td>
+						<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!='' && payment.observacion!=null"> <br />Obs. {{ payment.observation }}</span> <span class="text-danger"><br><strong>Motivo: </strong>{{payment.razon}}</span></td>
 						<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
 							<td v-else-if="payment.pay_status == 2">Cancelado</td> -->
 						<td>
@@ -224,7 +224,6 @@
 </template>
 
 <script>
-	import { tsEnumDeclaration } from '@babel/types'
 import moment from 'moment'
 
 	export default{
