@@ -77,8 +77,8 @@
 									<span> {{index+1}}.</span> <span>{{ qCita.patient ? lowerCase(qCita.patient.name) : '..' }}</span>
 								</td>
 								<td class="text-capitalize" :title="qCita.professional ? qCita.professional.name : '...'">{{ qCita.professional ? maxStringCharacter(lowerCase(qCita.professional.name), 15) : '...' }}</td>
-								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">{{ qCita.date ? fechaLatam(qCita.date) : '...' }}</td>
-								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal">
+								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-bs-toggle="modal" data-bs-target="#infoModal">{{ qCita.date ? fechaLatam(qCita.date) : '...' }}</td>
+								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-bs-toggle="modal" data-bs-target="#infoModal">
 										<span>{{ qCita.schedule ? horaHumana(qCita.schedule.check_time) : '...'}}</span>
 										<br>
 										<span>{{ qCita.schedule ? horaHumana(qCita.schedule.departure_date) : '...'}}</span> 

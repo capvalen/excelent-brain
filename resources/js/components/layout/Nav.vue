@@ -7,26 +7,25 @@
 
         <ul class="navbar-nav ml-auto">
             <!-- Nav Item - User Information -->
-            <li class="nav-item dropdown no-arrow">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize">{{ professional.name }}</span>
-                    <img
-                    v-if="checkImage(professional.imagen)"
-                    class="img-profile rounded"
-                    :src="professional.imagen" 
-                    >
-                    <img v-else src="https://excelentemente.org/logo/logoexcel.jpeg" width="50">
-                </a>
-                <!-- Dropdown - User Information -->
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                    aria-labelledby="userDropdown">
-                    <a @click="logout" class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Salir
-                    </a>
-                </div>
-            </li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<span class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize">{{ professional.name }}</span>
+									<img
+									v-if="checkImage(professional.imagen)"
+									class="img-profile rounded"
+									:src="professional.imagen" 
+									>
+									<img v-else src="https://excelentemente.org/logo/logoexcel.jpeg" width="50">
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a @click="logout" class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+											<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Salir
+									</a>
+								</li>
+							</ul>
+						</li>
+           
         </ul>
     </nav>
 </template>
