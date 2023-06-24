@@ -73,7 +73,7 @@
 							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
 								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(qCita)" data-toggle="modal" data-target="#patientModal">
 									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
-									<span ></span>
+									<span v-html="retornarCara(qCita.patient)"></span>
 									<!-- <i class="fas fa-brain"></i> -->
 									<span> {{index+1}}.</span> <span>{{ qCita.patient ? lowerCase(qCita.patient.name) : '..' }}</span>
 								</td>
