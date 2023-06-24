@@ -5,7 +5,7 @@
       <div class="modal-header border-0">
       <h5 class="modal-title" id="addCitaModalLabel">Registrar Nueva Cita</h5>
 
-      <button type="button" id="closeModal" @click="limpiarInputs(true)" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+      <button type="button" id="closeModal" @click="limpiarInputs(true)" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
         <form class="user" @submit="insertar" @keydown="prevenirEvent">
@@ -282,7 +282,7 @@
 					</div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Registrar</button>
           </div>
         </form>

@@ -4,7 +4,7 @@
 			<div class="modal-content modal-sm">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Pago</h5>
-					<button type="button" id="cerrModal" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -54,7 +54,7 @@
 				</div>
 
 				<div class="modal-footer">
-					<!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> -->
+					<!-- <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button> -->
 					<button @click="update()" type="button" class="btn btn-primary"><i class="fas fa-save"></i> Guardar pago</button>
 					<a target="_blank" :href="`/api/pdfCupon/${dataCita.id}`" v-if="dataCita.payment.pay_status != 1" class="btn btn-outline-success">Cupón</a>
 				</div>

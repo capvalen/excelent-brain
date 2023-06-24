@@ -65,8 +65,7 @@ class ScheduleController extends Controller
 			]);
     }
     public function horarioCuadernoOcupado($fecha, $dia){
-			//var_dump($fecha);die();
-        
+			       
       $appointment = Appointment::whereDate('appointments.date', '=', $fecha)
 			->where('appointments.status', '<>', 4)
 			->where('appointments.status', '<>', 3)
@@ -74,6 +73,11 @@ class ScheduleController extends Controller
 			->with('patient')
 			->with('payment')
 			->get();
+			foreach ($appointment as $cita) {
+				$direccion = DB::table('addresses')->where('patient_id', '=', $cita->patient_id)->get();
+				$cita->address = $direccion;
+			}
+
 
 			DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
         

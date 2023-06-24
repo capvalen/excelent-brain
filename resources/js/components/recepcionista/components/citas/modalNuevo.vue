@@ -1,16 +1,15 @@
 <template>
-  <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"> Datos del Paciente para actualizar</h5>
-          <button type="button" id="cerrModalPatient" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-					<p class="mb-0"><strong>Datos Personales</strong></p>
-          <form action="">
+	<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="mb-0"><strong>Datos Personales</strong></p>
+				<form action="">
             <div class="form-group row">
               <div class="col-sm-6">
                 <label for="name">Dni</label>
@@ -144,47 +143,46 @@
               </div>
             </div>                -->
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-          <button  @click="updateDataPatient()" type="button" class="btn btn-primary">Editar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
 </template>
-
 <script>
-  export default {
-    name: "modal_patient",
+	export default {
+		name: "modalNuevo",
 
-    props:{
-      dataCit: Object
-    }, 
+		props:{
+			dataCit: Object
+		}, 
 
-    data () {
-      return {
-        dataPatient: '',
+		data () {
+			return {
+				dataPatient: '',
 				ubigeo: {departamentos:[], provincias:[], distritos:[]},
 				provincias:[], distritos:[],
-      }
-    },
+			}
+		},
 
-    methods:{
-      async updateDataPatient(){
-        await this.axios.put(`/api/patient/${this.dataPatient.patient.id}`, this.dataPatient.patient)
-        .then(res => { console.log(res.data);
-          this.closeModal()
-          this.$swal('Datos de paciente actualizado con éxito')
-        })
-        .catch(error => {
-            console.log('error'+error)
-        })
-      },
+		methods:{
+			async updateDataPatient(){
+				await this.axios.put(`/api/patient/${this.dataPatient.patient.id}`, this.dataPatient.patient)
+				.then(res => { console.log(res.data);
+					this.closeModal()
+					this.$swal('Datos de paciente actualizado con éxito')
+				})
+				.catch(error => {
+						console.log('error'+error)
+				})
+			},
 
-      closeModal() {
-        document.getElementById('cerrModalPatient').click();
-      },
+			closeModal() {
+				document.getElementById('cerrModalPatient').click();
+			},
 			async listarDepartamentos(){
 				await this.axios.get('/api/departamentos')
 				.then(response => {
@@ -209,23 +207,22 @@
 				let idProv= this.dataPatient.patient.address.province;
 				this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == idProv)
 			}
-    },
+		},
 
-    computed: {
-      actualizarDatos () {
-        this.dataPatient = this.dataCit
-      }
-    },
+		computed: {
+			actualizarDatos () {
+				this.dataPatient = this.dataCit
+				console.log('es data', this.dataPatient);
+			}
+		},
 
-    updated () {
-      this.actualizarDatos
-    },
-  
-    created () {
-      this.actualizarDatos;
-			this.listarDepartamentos();
-    }
-  }
+		updated () {
+			this.actualizarDatos
+		},
+	
+		created () {
+			this.actualizarDatos;
+			//this.listarDepartamentos();
+		}
+	}
 </script>
-
-  

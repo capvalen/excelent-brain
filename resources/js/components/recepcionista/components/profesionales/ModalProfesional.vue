@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-success">
                     <h5 class="modal-title text-white" id="exampleModalLabel">{{type}} Profesional</h5>
-                    <button type="button" id="closeModal" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                    <button type="button" id="closeModal" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
                 </div>
 
                 <div class="modal-body">

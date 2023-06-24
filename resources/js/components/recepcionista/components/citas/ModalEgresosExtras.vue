@@ -5,7 +5,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Egresos Extras</h5>
-          <button type="button" id="cerrModal" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -56,8 +56,8 @@
             </div>
 
             <div>
-              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-              <button @click="saveData" type="submit" class="btn btn-outline-danger" data-dismiss="modal">Guardar egreso</button>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button @click="saveData" type="submit" class="btn btn-outline-danger" data-bs-dismiss="modal">Guardar egreso</button>
             </div>
           </form>
         </div>

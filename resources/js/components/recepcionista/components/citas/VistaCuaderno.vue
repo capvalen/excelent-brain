@@ -34,11 +34,11 @@
 						<span v-else>{{ queServicio(horasMalas[hora.indexOcupado].type) }}:</span>
 					</td>
 					<td v-else></td>
-					<td>
-						<button class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#modalNuevaCita" @click="prepararAutomaticos(index, indice)" v-if="hora.libre=='1'"><i class="fa-regular fa-circle-check"></i> Libre para citar</button>
-						<span v-if="hora.libre=='0'">
-							<span class="text-capitalize">{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} </span>
-						</span>
+					<td v-if="hora.libre=='0'" @click="cita = horasMalas[hora.indexOcupado]"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+							<span class="text-capitalize" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} </span>
+					</td>
+					<td v-else>
+						<button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalNuevaCita" @click="prepararAutomaticos(index, indice)" v-if="hora.libre=='1'"><i class="fa-regular fa-circle-check"></i> Libre para citar</button>
 					</td>
 					<td v-if="hora.libre==0" :title="horasMalas[hora.indexOcupado].mode == 1 ? 'Presencial':'Virtual'">
 						<a @click="changeMode(horasMalas[hora.indexOcupado].id)" v-if="horasMalas[hora.indexOcupado].mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></a>
@@ -46,7 +46,7 @@
 					</td>
 					<td v-else></td>
 					<td>
-						<a v-if="hora.libre==0" @click="cita= horasMalas[hora.indexOcupado]; alternativo=true" data-toggle="modal" data-target="#pagoModal" class="btn btn-icon-split btn-sm"
+						<a v-if="hora.libre==0" @click="cita= horasMalas[hora.indexOcupado]; alternativo=true" data-bs-toggle="modal" data-bs-target="#pagoModal" class="btn btn-icon-split btn-sm"
 							:class='{
 							"btn-secondary": horasMalas[hora.indexOcupado].payment.pay_status == 1 ,
 							"btn-success": horasMalas[hora.indexOcupado].payment.pay_status == 2 ,
@@ -65,7 +65,7 @@
 							</a>
 					</td>
 					<td>
-						<a v-if="hora.libre==0" @click="cita= horasMalas[hora.indexOcupado]; alternativo=true" data-toggle="modal" data-target="#modalEstado" class="btn btn-icon-split btn-sm"
+						<a v-if="hora.libre==0" @click="cita= horasMalas[hora.indexOcupado]; alternativo=true" data-bs-toggle="modal" data-bs-target="#modalEstado" class="btn btn-icon-split btn-sm"
 						:class='{
 						"btn-secondary": horasMalas[hora.indexOcupado].status == 1,
 						"btn-info": horasMalas[hora.indexOcupado].status == 2,
@@ -86,7 +86,7 @@
 					</td>
 					<td v-if="hora.libre==0">
 						<a v-if="horasMalas[hora.indexOcupado].status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
-						<a v-else @click="modalInfo(horasMalas[hora.indexOcupado])" title="Reprogramar cita" data-target="#reprogModal" data-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
+						<a v-else @click="modalInfo(horasMalas[hora.indexOcupado])" title="Reprogramar cita" data-bs-target="#reprogModal" data-bs-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
 						
 						<!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
 						<a @click="eliminar(horasMalas[hora.indexOcupado].id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
@@ -147,6 +147,9 @@
 		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha' @actualizarListadoCitas="actualizarListadoCitas"></ModalNuevaCita>
     <pago-modal v-if="alternativo" :cita="cita" :idUsuario="idUsuario"></pago-modal>
     <modal-estado  v-if="alternativo" :dataCit="cita"></modal-estado>
+		
+		<modalNuevo v-if="cita" :dataCit="cita"></modalNuevo>
+		
 
 	</div>
 </template>
@@ -156,14 +159,18 @@
 	import ModalEstadoCita from './ModalEstadoCita.vue'
 	import ModalNuevaCita from './ModalNuevaCita.vue'
 	
+	import modalNuevo from './modalNuevo.vue'
+	
 	export default{
 		name: 'VistaCuaderno',
 		data(){ return{
 			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], cita:{}, profesionalElegido:[], horaElegida:[], alternativo:false, precios:[],
-			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ]
+			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ], cita: {
+				address:{patient:{address:{}}}
+			}
 		}},
 		props:[ 'idUsuario'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, modalNuevo },
 		methods:{
 			dayWeek (day) {
 				switch (day) {
@@ -185,9 +192,9 @@
 			},
 			async obtenerHorarios(){
 				let dia = this.dayWeek(moment(this.fecha).format('d')-1)
-				
+				console.log('quepido', `/api/horarioCuadernoOcupado/${this.fecha}/${dia}`);
 				await this.axios.get(`/api/horarioCuadernoOcupado/${this.fecha}/${dia}`)
-				.then(res => { //console.log(res.data);
+				.then(res => { console.log(res.data);
 					this.horasSolas = res.data.solos;
 					this.horasMalas = res.data.invalidos;
 

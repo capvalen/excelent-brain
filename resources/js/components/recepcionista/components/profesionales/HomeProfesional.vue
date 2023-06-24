@@ -18,7 +18,7 @@
                 </div>
             </form>
             <div class="d-flex justify-content-start">
-                <button @click="llamarModal(profesor,'Agregar')" data-toggle="modal" data-target="#profModal" class="btn btn-success"><i class="fas fa-plus"></i> Agregar Profesional</button>
+                <button @click="llamarModal(profesor,'Agregar')" data-bs-toggle="modal" data-bs-target="#profModal" class="btn btn-success"><i class="fas fa-plus"></i> Agregar Profesional</button>
                 <modal-profesional v-if="tipo" :prof="prof_edit" :type="tipo"></modal-profesional>
             </div>
         </div>

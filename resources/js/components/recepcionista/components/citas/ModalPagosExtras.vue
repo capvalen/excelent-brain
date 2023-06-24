@@ -4,8 +4,8 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Pago Extras</h5>
-          <button type="button" id="cerrModal" class="close" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title" id="exampleModalLabel">Pagos Extras</h5>
+          <button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -68,8 +68,8 @@
             </div>
 
             <div>
-              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-              <button @click="saveData" type="submit" class="btn btn-outline-primary" data-dismiss="modal">Guardar ingreso</button>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button @click="saveData" type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal">Guardar ingreso</button>
             </div>
           </form>
         </div>
@@ -126,6 +126,7 @@ export default {
 					this.$swal('Hubo un error')
 				})
 			}
+			document.querySelector('#pagoExtras #cerrModal').click()
     }
   }
 }

@@ -44,15 +44,15 @@
 							</div>
 							
 							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
-									<button data-toggle="modal" data-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
+									<button data-bs-toggle="modal" data-bs-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
 									<modal-cita :profes="profesionales" :horas="horarios" @emitIdProf="listarhorario" @emitDate="fechaEmit" :idUsuario="idUsuario"></modal-cita>
 							</div>
 
 							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
-									<button data-toggle="modal" data-target="#pagoExtras" class="btn btn-outline-secondary"><i class="fas fa-plus"></i> Pagos extras</button>
+									<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary"><i class="fas fa-plus"></i> Pagos extras</button>
 							</div>
 							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
-								<button data-toggle="modal" data-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
+								<button data-bs-toggle="modal" data-bs-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
 							</div>
 					</div>
 
@@ -71,9 +71,8 @@
 						</thead>
 						<tbody>
 							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
-								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(qCita)" data-toggle="modal" data-target="#patientModal">
+								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal">
 									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
-									<span v-html="retornarCara(qCita.patient)"></span>
 									<!-- <i class="fas fa-brain"></i> -->
 									<span> {{index+1}}.</span> <span>{{ qCita.patient ? lowerCase(qCita.patient.name) : '..' }}</span>
 								</td>
@@ -89,7 +88,7 @@
 									<a @click="changeMode(qCita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
 								</td>
 								<td>
-									<a @click="modalInfo(qCita); modalDePago()" data-toggle="modal" data-target="#pagoModal"
+									<a @click="modalInfo(qCita);" data-bs-toggle="modal" data-bs-target="#pagoModal"
 									class="btn btn-icon-split btn-sm"
 									:class='{
 									"btn-secondary":  qCita.payment ? qCita.payment.pay_status == 1 : false,
@@ -112,7 +111,7 @@
 									</a>
 								</td>
 								<td>
-									<a @click="modalInfo(qCita)" data-toggle="modal" data-target="#modalEstado"
+									<a @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#modalEstado"
 									class="btn btn-icon-split btn-sm"
 									:class='{
 									"btn-secondary": qCita.status == 1,

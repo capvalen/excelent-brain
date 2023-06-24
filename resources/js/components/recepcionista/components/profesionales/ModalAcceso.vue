@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Accesos de {{prof.name}}</h5>
-      <button type="button" id="closeModalAccess" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+      <button type="button" id="closeModalAccess" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
       </div>
         <form @submit="updateAccesos">
             <div class="modal-body">
@@ -18,7 +18,7 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="button" @click="limpiarInputs()" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" @click="limpiarInputs()" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="submit" class="btn btn-primary">Editar Accesos</button>
             </div>
         </form>

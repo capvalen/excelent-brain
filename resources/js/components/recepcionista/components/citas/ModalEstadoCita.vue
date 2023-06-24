@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Estado de la cita {{dataCit.id}}</h5>
-          <button type="button" id="cerrModalEstado" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" id="cerrModalEstado" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -30,7 +30,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
           <button  @click="update()" type="button" class="btn btn-primary">Actualizar</button>
         </div>
       </div>
