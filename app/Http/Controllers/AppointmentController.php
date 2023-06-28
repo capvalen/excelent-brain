@@ -455,7 +455,7 @@ class AppointmentController extends Controller
 			'user_id'=>$request->input('caso.user_id')
 		]);
 
-		if($request->input('caso.pago') === '2'){
+		if($request->input('caso.pago') == '2'){
 				$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $request->input('dataCita.patient.name');
 				$pagoExtra->price = $request->input('dataCita.payment.price');
@@ -673,7 +673,8 @@ class AppointmentController extends Controller
 			]); */
 			updateFieldStatus($appointment, $valueStatus);
 			
-		}else if($valueStatus === '2'){ //status = confirmado
+		}
+		if($valueStatus == 2){ //status = confirmado
 			
 			$pago = Payment::where('appointment_id', $request->input('dataCit.id') )->get();
 			//print_r('pago es ');

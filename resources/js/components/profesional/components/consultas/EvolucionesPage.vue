@@ -524,7 +524,7 @@
 				<div class="modal-content">
 					<div class="modal-header bg-warning text-white">
 						<h5 class="modal-title" id="infoModalLabel">Exámenes</h5>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
 								class="fas fa-times"></i></button>
 					</div>
 
@@ -544,7 +544,7 @@
 				<div class="modal-content">
 					<div class="modal-header bg-primary text-white">
 						<h5 class="modal-title" id="infoModalLabel">Ver recetas</h5>
-						<button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
 								class="fas fa-times"></i></button>
 					</div>
 
@@ -563,7 +563,7 @@
 									<td>{{ prescription ? prescription.attention_date : '...' }}</td>
 									<td>
 										<a v-if="prescription" class="btn btn-success" :href="`/api/pdf/${prescription.id}`"
-											target="_blank">Generar</a>
+											target="_blank">Ver</a>
 									</td>
 								</tr>
 							</tbody>

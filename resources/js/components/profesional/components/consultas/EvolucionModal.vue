@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header py-1 bg-primary text-white">
             <h5 class="modal-title" id="infoModalLabel">Consulta Inicial de Psiquiatria</h5>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
         </div>
 
         <div class="modal-body">
@@ -127,8 +127,8 @@
             </div>
         
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-danger" data-dismiss="modal" @click="sendEvolution">Guardar</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" @click="sendEvolution">Guardar</button>
             </div>
           </form>
         </div>
@@ -139,7 +139,7 @@
       <div class="modal-content">
         <div class="modal-header py-1 bg-primary text-white">
           <h5 class="modal-title" id="infoModalLabel">Consulta Inicial de Psicologia</h5>
-          <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
         </div>
 
         <div class="modal-body">
@@ -175,8 +175,8 @@
             </div>
         
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-danger" data-dismiss="modal" @click="sendEvolution">Guardar</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" @click="sendEvolution">Guardar</button>
             </div>
           </form>
         </div>

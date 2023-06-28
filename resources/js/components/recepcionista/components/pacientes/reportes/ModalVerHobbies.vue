@@ -5,7 +5,7 @@
 			<div class="modal-content">
 				<div class="modal-header border-0">
 					<h1 class="modal-title fs-5" id="exampleModalLabel">Hobbies del paciente</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal"  aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<div class="card mb-2">

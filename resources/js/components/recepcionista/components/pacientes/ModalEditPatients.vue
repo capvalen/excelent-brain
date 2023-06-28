@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel"> Datos del Paciente</h5>
-          <button type="button" id="cerrModalPatient" class="close"  data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close">
+          <button type="button" id="cerrModalPatient" class="close"  data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -120,7 +120,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" @click="updatePatient()" class="btn btn-primary">Editar</button>
         </div>
       </div>

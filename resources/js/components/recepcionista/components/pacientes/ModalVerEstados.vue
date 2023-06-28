@@ -4,7 +4,7 @@
 				<div class="modal-content">
 					<div class="modal-header bg-primary text-white">
 						<h5 class="modal-title" id="infoModalLabel">Perfil del paciente</h5>
-						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 					</div>
 					<div class="modal-body">
 						<p class="mb-0 lead">Paciente: {{ dataPatient.name }}</p>

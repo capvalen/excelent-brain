@@ -4,7 +4,7 @@
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
             <h5 class="modal-title" id="infoModalLabel">Editar evolución {{datosModal.id}}</h5>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
           </div>
 
           <div class="modal-body">
@@ -16,8 +16,8 @@
                 <textarea class="form-control" id="comment" cols="30" rows="10" v-model="datosModal.content"></textarea>
               </div>
               <div class="modal-footer">
-                  <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                  <button @click="editEvolution" type="submit" class="btn btn-danger" data-dismiss="modal">Editar</button>
+                  <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button @click="editEvolution" type="submit" class="btn btn-danger" data-bs-dismiss="modal">Editar</button>
               </div>
             </form>
           </div>

@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header py-1 bg-secondary text-white">
             <h5 class="modal-title" id="infoModalLabel">Ver evolución</h5>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
         </div>
         
         <div class="modal-body">

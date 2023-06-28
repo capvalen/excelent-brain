@@ -5,7 +5,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Agregar Adicional</h5>
-            <button type="button" id="cerrModal" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -60,8 +60,8 @@
                 </div>
   
               <div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button @click="saveData" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button @click="saveData" type="submit" class="btn btn-primary" data-bs-dismiss="modal">Guardar</button>
               </div>
             </form>
           </div>

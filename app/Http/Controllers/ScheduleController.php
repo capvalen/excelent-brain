@@ -72,6 +72,7 @@ class ScheduleController extends Controller
 			->with('schedule')
 			->with('patient')
 			->with('payment')
+			->with('professional')
 			->get();
 			foreach ($appointment as $cita) {
 				$direccion = DB::table('addresses')->where('patient_id', '=', $cita->patient_id)->get();

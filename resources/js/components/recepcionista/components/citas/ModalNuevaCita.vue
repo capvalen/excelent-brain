@@ -398,7 +398,6 @@ export default {
 			}
 		},
 		closeModal(){
-			console.log('cerrar');
       document.getElementById('closeModalNuevaCita').click();
 		},
 		prevenirEvent() {
