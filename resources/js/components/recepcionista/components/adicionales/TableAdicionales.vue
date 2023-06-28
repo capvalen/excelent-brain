@@ -21,7 +21,7 @@
             </div>
           </div>
 
-            <button class="btn btn-success w-25 mx-3 my-3" data-toggle="modal" data-target="#modalAdicionales">+ Adicional  
+            <button class="btn btn-success w-25 mx-3 my-3" data-bs-toggle="modal" data-bs-target="#modalAdicionales">+ Adicional  
             </button>
 
       </div>

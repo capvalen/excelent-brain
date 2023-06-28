@@ -4,13 +4,13 @@
 			<h4>Historia clínica del paciente</h4>
 
 			<div class="" style="background-color: white; border-radius: 5px;">
-				<button data-toggle="modal" data-target="#modalProximaCita" class="btn btn-outline-warning">
+				<button data-bs-toggle="modal" data-bs-target="#modalProximaCita" class="btn btn-outline-warning">
 					<i class="fa-solid fa-person-walking-arrow-right"></i> Próxima cita
 				</button>
 				<router-link v-if="dataUser.profession!='Psicólogo'" :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
 					title="Generar receta"><i class="fa-solid fa-vial"></i> Nueva receta
 				</router-link>
-				<button data-toggle="modal" data-target="#recetasModal" class="btn btn-outline-secondary">
+				<button data-bs-toggle="modal" data-bs-target="#recetasModal" class="btn btn-outline-secondary">
 					<i class="fa-solid fa-vial"></i> Ver recetas
 				</button>
 				<button v-if="datosConsulta.discharge != 1" class="btn btn-outline-success" @click="toDischarge">
@@ -19,10 +19,10 @@
 				<button v-else class="btn btn-outline-success" disabled>
 					<i class="fa-solid fa-circle-check"></i> Dado de alta
 				</button>
-				<button data-toggle="modal" data-target="#modalVerTriajesViejos" class="btn btn-outline-info  ">
+				<button data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" class="btn btn-outline-info  ">
 					<i class="fa-solid fa-scale-unbalanced-flip"></i> Ver triajes ({{ datosConsulta.triajes.length }})
 				</button>
-				<button data-toggle="modal" data-target="#examenModal" class="btn btn-outline-info ">
+				<button data-bs-toggle="modal" data-bs-target="#examenModal" class="btn btn-outline-info ">
 					<i class="fa-solid fa-note-sticky"></i> Ver exámenes ({{ contarExamenes()  }})
 				</button>
 				
@@ -476,7 +476,7 @@
 				<div class="card shadow mb-4 tarjeta" @mouseover="colorear(index)" @mouseleave="descolorear(index)">
 					<!-- Card Header - Dropdown -->
 					<div class="card-header bg-secondary py-3 d-flex flex-row align-items-center justify-content-between"
-						@click="mostrarCard(index)" data-toggle="modal" data-target="#modalVerDetalle">
+						@click="mostrarCard(index)" data-bs-oggle="modal" data-bs-target="#modalVerDetalle">
 						<h6 class="m-0 font-weight-bold text-white text-capitalize">Consulta #{{ evolution.id }} - {{
 							fechaLectura(evolution.date) }}</h6>
 					</div>
@@ -494,11 +494,11 @@
 							</div>
 						</div>
 						<div class="d-flex flex-gap">
-							<button @click="updateModal(evolution)" data-toggle="modal" data-target="#updatedModal" class="btn--edit btn--iteration" v-if="evolution.professional_id == dataUser.id && evolution.date === getDateNow() || evolution.auth == 1">
+							<button @click="updateModal(evolution)" data-bs-toggle="modal" data-bs-target="#updatedModal" class="btn--edit btn--iteration" v-if="evolution.professional_id == dataUser.id && evolution.date === getDateNow() || evolution.auth == 1">
 								<i class="fas fa-edit"></i> Redactar evolución
 							</button>
 							<button @click="editEvolution(evolution)" class="btn btn-success"
-								v-if="evolution.professional_id == dataUser.id" data-toggle="modal" data-target="#editModal">
+								v-if="evolution.professional_id == dataUser.id" data-bs-toggle="modal" data-bs-target="#editModal">
 								<i class="fas fa-edit"></i>
 							</button>
 						<!-- 	<div v-if="evolution.professional_id == dataUser.id &&

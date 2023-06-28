@@ -75,7 +75,12 @@ class ScheduleController extends Controller
 			->get();
 			foreach ($appointment as $cita) {
 				$direccion = DB::table('addresses')->where('patient_id', '=', $cita->patient_id)->get();
-				$cita->address = $direccion;
+				$cita->patient->address= $direccion[0];
+				//$cita->address = $direccion[0];
+				
+				$relacion = DB::table('relatives')->where('patient_id', '=', $cita->patient_id)->get();
+				$cita->patient->relative= $relacion[0];
+
 			}
 
 

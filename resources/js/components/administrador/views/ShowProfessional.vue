@@ -102,24 +102,12 @@
                 <td v-else>Sin tipo de consulta</td>
             <td>{{appointment.payment ? `S/.${appointment.payment.price}` : 'Sin pago' }}</td>
             <td>
-              <button
-              v-if="appointment.patient.medical_evolutions[0] && appointment.patient.medical_evolutions[0].content === null" 
-              class="btn btn-warning"
-              data-toggle="modal"
-              data-target="#evolutionModal" 
-              @click="getEvolutions(appointment.patient.medical_evolutions[0])"
-              >No rellenado</button>
+              <button v-if="appointment.patient.medical_evolutions[0] && appointment.patient.medical_evolutions[0].content === null" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])">No rellenado</button>
               <button
               v-else-if="!appointment.patient.medical_evolutions[0]" 
               class="btn btn-danger"
               >No confirmado</button>
-              <button
-              v-else 
-              class="btn btn-success"
-              data-toggle="modal"
-              data-target="#evolutionModal" 
-              @click="getEvolutions(appointment.patient.medical_evolutions[0])"
-              >Rellenado</button>
+              <button v-else class="btn btn-success" data-bs-toggle="modal" data-bs-target="#evolutionModal"  @click="getEvolutions(appointment.patient.medical_evolutions[0])">Rellenado</button>
               <button v-if="appointment.patient.medical_evolutions[0]" @click="deleteEvolution(appointment.patient.medical_evolutions[0])" class="btn btn-danger">Eliminar</button>
               <p  v-if="!appointment.patient.medical_evolutions[0]" class="text-danger">Evolución no generada o eliminada</p>
             </td>

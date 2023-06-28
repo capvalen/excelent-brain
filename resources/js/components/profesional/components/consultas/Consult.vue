@@ -29,14 +29,8 @@
               </div>
               <div class="d-flex align-items-center mt-2 btn-content">
                 <!-- Boton de info -->
-                <a 
-                data-toggle="modal"
-                data-target="#infoModal" 
-                class="btn btn-consult btn-action" 
-                title="Información"
-                @click="emitInfo(dataConsult)"
-                >
-                <i class="fas fa-info-circle"></i>
+                <a data-bs-toggle="modal" data-bs-target="#infoModal" class="btn btn-consult btn-action"  title="Información" @click="emitInfo(dataConsult)">
+              	  <i class="fas fa-info-circle"></i>
                 </a>
                 
                 <!-- Boton de videollamada -->
@@ -72,12 +66,7 @@
 
                 <!-- consultas iniciales Psiquiatria y Psicologia-->
                 <button
-                @click="evolucionModal"
-                data-toggle="modal"
-                data-target="#evolutionModal"
-                class="btn btn-consult btn-action"
-                title="Agregar historia inicial psiquiatria"
-                v-if="dataConsult.patient.initial_psychiatric_history === null && dataConsult.professional.profession == 'Psiquiatra'"
+                @click="evolucionModal" data-bs-toggle="modal" data-bs-target="#evolutionModal" class="btn btn-consult btn-action" title="Agregar historia inicial psiquiatria" v-if="dataConsult.patient.initial_psychiatric_history === null && dataConsult.professional.profession == 'Psiquiatra'"
                 >
                 <i class="fas fa-portrait"></i>
                 </button>
@@ -87,12 +76,7 @@
                   | 
                 -->
                 <button
-                @click="evolucionModal"
-                data-toggle="modal"
-                data-target="#evolutionModal"
-                class="btn btn-consult btn-action"
-                title="Agregar historia inicial psicología"
-                v-else-if="dataConsult.patient.initial_psychological_history === null && dataConsult.professional.profession == 'Psicólogo'"
+                @click="evolucionModal" data-bs-toggle="modal" data-bs-target="#evolutionModal" class="btn btn-consult btn-action" title="Agregar historia inicial psicología" v-else-if="dataConsult.patient.initial_psychological_history === null && dataConsult.professional.profession == 'Psicólogo'"
                 >
                 <i class="fas fa-portrait"></i>
                 </button>

@@ -34,8 +34,8 @@
 						<span v-else>{{ queServicio(horasMalas[hora.indexOcupado].type) }}:</span>
 					</td>
 					<td v-else></td>
-					<td v-if="hora.libre=='0'" @click="cita = horasMalas[hora.indexOcupado]"  data-bs-toggle="modal" data-bs-target="#exampleModal">
-							<span class="text-capitalize" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} </span>
+					<td v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="asignar(horasMalas[hora.indexOcupado])">
+						<span class="text-capitalize" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} </span>
 					</td>
 					<td v-else>
 						<button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalNuevaCita" @click="prepararAutomaticos(index, indice)" v-if="hora.libre=='1'"><i class="fa-regular fa-circle-check"></i> Libre para citar</button>
@@ -190,9 +190,12 @@
 					this.obtenerHorarios();
 				})
 			},
+			asignar(dato){
+				this.cita = dato;
+			},
 			async obtenerHorarios(){
 				let dia = this.dayWeek(moment(this.fecha).format('d')-1)
-				console.log('quepido', `/api/horarioCuadernoOcupado/${this.fecha}/${dia}`);
+				
 				await this.axios.get(`/api/horarioCuadernoOcupado/${this.fecha}/${dia}`)
 				.then(res => { console.log(res.data);
 					this.horasSolas = res.data.solos;
