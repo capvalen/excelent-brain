@@ -476,7 +476,7 @@
 				<div class="card shadow mb-4 tarjeta" @mouseover="colorear(index)" @mouseleave="descolorear(index)">
 					<!-- Card Header - Dropdown -->
 					<div class="card-header bg-secondary py-3 d-flex flex-row align-items-center justify-content-between"
-						@click="mostrarCard(index)" data-bs-oggle="modal" data-bs-target="#modalVerDetalle">
+						@click="mostrarCard(index)" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
 						<h6 class="m-0 font-weight-bold text-white text-capitalize">Consulta #{{ evolution.id }} - {{
 							fechaLectura(evolution.date) }}</h6>
 					</div>
@@ -554,7 +554,7 @@
 								<tr>
 									<th>#</th>
 									<th>Fecha</th>
-									<th>Generar Receta</th>
+									<th>Ver Receta</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -563,7 +563,7 @@
 									<td>{{ prescription ? prescription.attention_date : '...' }}</td>
 									<td>
 										<a v-if="prescription" class="btn btn-success" :href="`/api/pdf/${prescription.id}`"
-											target="_blank">Ver</a>
+											target="_blank">Ver PDF</a>
 									</td>
 								</tr>
 							</tbody>
