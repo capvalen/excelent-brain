@@ -133,9 +133,9 @@
 									v-model="dataCit.patient.relative.phone" placeholder="Celular" autocomplete="off">
 							</div>
 							<div class="col-sm-4">
-								<label for="name">Parentezco</label>
+								<label for="name">Parentesco</label>
 								<input type="text" class="form-control" name="parentezco" id="parentezco"
-									v-model="dataCit.patient.relative.kinship" placeholder="Parentezco" autocomplete="off">
+									v-model="dataCit.patient.relative.kinship" placeholder="Parentesco" autocomplete="off">
 							</div>
 						</div>
 						<hr>

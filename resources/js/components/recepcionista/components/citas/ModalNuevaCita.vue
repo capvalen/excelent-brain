@@ -149,8 +149,8 @@
 							<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="cita.contacto_celular"  placeholder="Celular" autocomplete="off">
 						</div>
 						<div class="col-sm-4">
-							<label for="name">Parentezco</label>
-							<input type="text" class="form-control" name="parentezco" id="parentezco" v-model="cita.parentezco"  placeholder="Parentezco" autocomplete="off">
+							<label for="name">Parentesco</label>
+							<input type="text" class="form-control" name="parentezco" id="parentezco" v-model="cita.parentezco"  placeholder="Parentesco" autocomplete="off">
 						</div>
 					</div>
 					<p class="mb-2 lead"><strong>Datos de la Nueva Cita</strong></p>

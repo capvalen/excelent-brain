@@ -6,7 +6,7 @@
 				<li class="nav-item" role="presentation">
 					<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#inicio-tab" type="button" role="tab" aria-controls="inicio-tab" aria-selected="true"><i class="fa-regular fa-calendar-minus"></i> Vista clásica</button>
 				</li>
-				<li class="nav-item" role="presentation">
+				<li class="nav-item d-none" role="presentation">
 					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#calendario-tab" type="button" role="tab" aria-controls="calendario-tab" aria-selected="false"><i class="fa-regular fa-calendar-days"></i> Vista calendario</button>
 				</li>
 				<li class="nav-item" role="presentation">

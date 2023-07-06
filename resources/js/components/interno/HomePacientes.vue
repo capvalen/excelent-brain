@@ -13,12 +13,12 @@
                 class="form-control bg-white shadow-sm border-0 small"
                 id="searchNamePatient"
                 placeholder="Buscar por apellidos, nombres o DNI..."
-                aria-describedby="basic-addon2" @keyup.enter="searchPatients()"
+                aria-describedby="basic-addon2" @keyup.enter="searchPatients()" autocomplete="off"
                 >
             </div>
         </div>
     </div>
-		<button class="btn btn-outline-primary mt-2" data-toggle="modal" data-target="#modalNewPatient"><i class="fas fa-user-nurse"></i> Crear paciente nuevo</button>
+		<button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalNewPatient"><i class="fas fa-user-nurse"></i> Crear paciente nuevo</button>
 		<p class="mt-3 mb-1">Últimos 20 pacientes registrados</p>
     <table class="table table-striped mt-4">
       <thead>
@@ -37,13 +37,13 @@
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" >{{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
 					<td>
-						<button class="btn btn-outline-primary btn-circle btn-md" data-toggle="modal" data-target="#modalVerHobbies" @click="misHobbies=JSON.parse(patients.hobbies); queId = patients.id">
+						<button class="btn btn-outline-primary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" @click="misHobbies=JSON.parse(patients.hobbies); queId = patients.id">
 							<i class="fa-solid fa-baseball-bat-ball"></i>
 						</button>
 					</td>
 					<td>
-						<button class="btn btn-secondary btn-circle btn-md" data-toggle="modal" data-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
-						<button class="btn btn-info btn-circle btn-md" data-toggle="modal" @click="dataProps(patients)" data-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
+						<button class="btn btn-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
+						<button class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(patients)" data-bs-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
 					</td>
         </tr>
       </tbody>
@@ -71,7 +71,7 @@ export default {
   data () {
     return {
       dataPatients: [],
-      data: null,dataTriajes:null,
+      data: null,dataTriajes:null, queId:-1,
       busqueda: [],
       totalPatients:[], profesionales:[],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], misHobbies:[],

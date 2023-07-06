@@ -193,6 +193,23 @@
 			asignar(dato){
 				this.cita = dato;
 			},
+			async eliminar(id){
+      this.$swal({
+          title: 'Quieres eliminar esta cita?',
+          showDenyButton: true,
+          confirmButtonText: 'Si',
+          denyButtonText: `No`,
+      }).then((result) => {
+          if(result.isConfirmed){
+              this.axios.delete('/api/appointment/'+id)
+              .then((res) => {
+                this.$swal('Cita eliminada con exito')
+              });
+              this.citas=result.data;
+              this.listar();
+          }
+      })
+    },
 			async obtenerHorarios(){
 				let dia = this.dayWeek(moment(this.fecha).format('d')-1)
 				
