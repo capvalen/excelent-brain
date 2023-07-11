@@ -314,25 +314,25 @@
     <div class="pdf">
         <div class="pdf-content">
             <div class="header__content" style="margin-top:30px">
-                <img src="https://excelentemente.org/consultorio-online/public/img/logoem.png" alt="Excelentemente" class="header-logo">
+                <img src="https://excelentemente.org/wp-content/uploads/2023/06/logo-clinica-psicologica-y-psiquiatrica-excelentemente.png" alt="Excelentemente" class="header-logo">
 
                 <div class="header " style="margin-top:30px" >
                     @if ($professional == null)
-                    <p class="header__name">WILBERT BARZOLA</p>
+                    <p class="header__name">CENTRO PSICOLOGICO EXCELENTEMENTE</p>
                     @else
                     <p class="header__name">{{$professional->name}}</p>
                     @endif
                     <p class="header__sub">MÉDICO PSIQUIATRA</p>
-                    <p class="header__sub">Consultas previa cita, llamar al celular: 996644350</p>
 
                     @if ($professional == null)
                     <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
                     @elseif ($professional->name == 'Wilbert Barzola Huaman')
+										<p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
                     <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
                     @else
                     <p class="header__sub">CMP N° 74376 - RNE N° 43202</p>
                     @endif
-                    
+                    <p class="header__sub">Consultas previa cita, llamar al celular: 996644350</p>
                 </div>
     
                 <br>
