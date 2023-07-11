@@ -148,7 +148,7 @@
 								
 								</tr>
 								<tr v-if="doctor.horarios.length==0">
-									<td colspan="3">El profesional no trabaja este d[ia]</td>
+									<td colspan="3">El profesional no trabaja este día</td>
 								</tr>
 								
 							</tbody>
@@ -284,7 +284,7 @@
     	},
 			verHorariosHoy(){ this.fecha = moment().format('YYYY-MM-DD'); this.obtenerHorarios(); },
 			verHorariosMañana(){ this.fecha = moment().add(1, 'day').format('YYYY-MM-DD'); this.obtenerHorarios(); },
-			queServicio(idTipo){
+			queServicio(idTipo){ console.log('queTipo', idTipo);
 				return this.precios.find(x=> x.id == idTipo).descripcion
 			},
 			changeMode(id, indice){

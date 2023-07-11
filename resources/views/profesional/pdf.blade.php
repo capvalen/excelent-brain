@@ -203,7 +203,7 @@
 
         .footer__contact {
             float: left;
-            width: 100%;
+            width: 70%;
             /* padding-right: 15px; */
         }
 
@@ -263,9 +263,9 @@
         /* datos de contactos */
         .contact__datos {
             width: 100%;
-            /* clear: both;
+            clear: both;
             margin-left: 8px;
-            padding-right: 25px; */
+            padding-right: 25px;
         }
 
         .contact__datos td{
