@@ -601,14 +601,7 @@ class AppointmentController extends Controller
 		$cita->update([
 			'status' => 4
 		]);
-
-		$cita->payment->update([
-			'pay_status' => 3, //nuevo status para reprogramado/anulado
-			'observation' => 'reprogramado'
-		]);
 		//return var_dump( $cita->id ); die();
-
-		
 
 		$nuevaCita = Appointment::create([
 			'professional_id' => $request->get('professional_id'),
@@ -624,12 +617,18 @@ class AppointmentController extends Controller
 			'patient_id' =>$request->get('patient_id'),
 		]);
 
+		$fechado = Carbon::create($cita->payment->created_at);
+		if( $cita->payment->pay_status == '2'):
+			$precioNuevo = 0;
+		else:
+			$precioNuevo =  floatval($request->input('payment.price'));
+		endif;
 		$payment = Payment::create([
-			'observation'=>'Viene de reprogramación',
+			'observation'=>'Viene de reprogramación, del día: ' . $fechado->format('d/m/Y'),
 			'bank'=>'',
 			'voucher' => $request->input('payment.voucher'),
-			'pay_status'=> 1,
-			'price' => floatval($request->input('payment.price')),
+			'pay_status'=> $cita->payment->pay_status,
+			'price' => $precioNuevo,
 			'appointment_id' => $nuevaCita->id,
 			'continuo' => $request->input('payment.continuo'),
 			'user_id' => $request->get('user_id')
@@ -641,6 +640,11 @@ class AppointmentController extends Controller
 			'appointment_id'=> $nuevaCita->id,
 			'observation' => 'reprogramado',
 			//'activo' => 0,
+		]);
+
+		$cita->payment->update([
+			'pay_status' => 3, //nuevo status para el pago: reprogramado/anulado
+			'observation' => 'reprogramado'
 		]);
 
 		if ($request->reschedule) {
@@ -670,6 +674,10 @@ class AppointmentController extends Controller
 
 		if($valueStatus == 3){ //status cita anulada
 		
+			$patient = Patient::find( $appointment->patient_id );
+			$patient->increment('faults');
+			$patient->save();
+			
 			DB::table('faltas')->insert([
 				'idPaciente' => $appointment->patient_id,
 				'idProfesional' => $appointment->professional_id,
@@ -677,9 +685,14 @@ class AppointmentController extends Controller
 				'fecha' => $appointment->date,
 				'observaciones' => $request->input('motivo')
 			]);
-			$patient = Patient::find( $appointment->patient_id );
-			$patient->increment('faults');
-			$patient->save();
+			
+			DB::table('interesados')->insert([
+				'nombre' => $patient->name,
+				'celular' => $patient->phone,
+				'motivo' => 'Anuló la cita',
+				'referencia' => 7, //Ninguno
+				'idPaciente' => $patient->patient_id
+			]);
 
 			/* $appointment->update([
 				'schedule_id' => null

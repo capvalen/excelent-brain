@@ -143,6 +143,7 @@ Route::get('getNames',[PatientController::class, 'getNames']);
 Route::delete('user/{id}', [AuthController::class,'deleteUser']);
 Route::put('user/{id}', [AuthController::class,'updateUser']);
 
+Route::get('verRecetaPorId/{id}', [PrescriptionController::class , 'verRecetaPorId']);
 Route::get('pdf/{id}', [PrescriptionController::class , 'createPdf']);
 Route::get('ticket/{id}', [AppointmentController::class , 'createTicket']);
 //Route::get('pdfCupon/{id}', [AppointmentController::class , 'cupon']);

@@ -3,13 +3,13 @@
 		<h1>Recordatorios</h1>
 		<div class="row">
 			<div class="col-sm-3" @click="cargarDatos('avisos')">
-				<div class="card mb-0 py-0 border-left-primary cursor">
-					<div class="card-body"><i class="fas fa-mobile-alt"></i> Ver llamadas y avisos</div>
+				<div class="card mb-0 py-0 border-left-primary cursor" :class="{'active': activoAviso}">
+					<div class="card-body"><i class="fas fa-mobile-alt"></i> Recordatorios</div>
 				</div>
 			</div>
 			<div class="col-sm-3" @click="cargarDatos('interesados')">
-				<div class="card mb-0 py-0 border-left-success cursor">
-					<div class="card-body"><i class="fa-regular fa-circle-user"></i> Interesados</div>
+				<div class="card mb-0 py-0 border-left-success cursor" :class="{'active': activoInteresado}">
+					<div class="card-body"><i class="fa-regular fa-circle-user"></i> Seguimiento</div>
 				</div>
 			</div>
 			<!-- <div class="col-sm-3">
@@ -18,7 +18,7 @@
 				</div>
 			</div> -->
 			<div class="col-sm-3" @click="cargarDatos('cumpleaños')">
-				<div class="card mb-0 py-0 border-left-info cursor">
+				<div class="card mb-0 py-0 border-left-info cursor" :class="{'active': activoCumple}">
 					<div class="card-body"><i class="fas fa-birthday-cake"></i> Ver cumpleaños</div>
 				</div>
 			</div>
@@ -116,7 +116,7 @@
 					<div class="card-body">
 						<div class="d-flex justify-content-end">
 						<div class="d-grid mb-2">
-							<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoInteresado"><i class="fa-regular fa-circle-user"></i> Nuevo interesado</button>
+							<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoInteresado"><i class="fa-regular fa-circle-user"></i> Nuevo seguimiento</button>
 						</div>
 					</div>
 					<table class="table table-hover">
@@ -128,6 +128,7 @@
 								<th>Correo</th>
 								<th>Motivo</th>
 								<th>Referencia</th>
+								<th>Fecha y Hora</th>
 								<th>@</th>
 							</tr>
 						</thead>
@@ -145,8 +146,9 @@
 									<span v-if="interesado.referencia=='4'">Publicidad Escrita</span>
 									<span v-if="interesado.referencia=='5'">Publicidad de TV/Radio</span>
 									<span v-if="interesado.referencia=='6'">Referido</span>
-									<span v-if="interesado.referencia=='7'">Ninguno</span>
+									<span v-if="interesado.referencia=='7'">Sistema recepción</span>
 								</td>
+								<td>{{ fechaLatam(interesado.fecha) }} {{ horaLatam(interesado.fecha) }}</td>
 								<td>
 									<button class="btn btn-outline-danger btn-sm" @click="borrarInteresado(interesado.id, index)"><i class="fa-solid fa-xmark"></i></button>
 								</td>
@@ -176,7 +178,7 @@ export default {
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD')
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false
 		}
 	},
 	mounted(){
@@ -185,9 +187,13 @@ export default {
 	},
 	methods: {
 		async cargarDatos(tipo) {
+			this.activoCumple = false;
+			this.activoAviso = false;
+			this.activoInteresado = false;
 			this.tipo = tipo;
 			switch (tipo) {
 				case 'cumpleaños':
+					this.activoCumple = true;
 					await this.axios.get(`/api/listarCumpleanos/${this.fechaCumple}`)
 						.then(response => {
 							console.log(response.data);
@@ -195,10 +201,12 @@ export default {
 						});
 					break;
 					case 'avisos':
+						this.activoAviso = true;
 						await this.axios.get(`/api/listarAvisos/${moment().format('YYYY-MM-DD')}`)
 						.then(response => this.avisos = response.data)
 						break;
 					case 'interesados':
+						this.activoInteresado = true;
 						await this.axios.get(`/api/listarInteresados/`)
 						.then(response => this.interesados = response.data)
 						break;
@@ -245,4 +253,5 @@ export default {
 	cursor: pointer;
 	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
+.card.active{font-weight: bold;}
 </style>

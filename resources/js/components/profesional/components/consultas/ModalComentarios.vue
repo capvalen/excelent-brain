@@ -31,7 +31,7 @@ export default{
 			this.axios.post('/api/addRecomendation',{
 				texto: this.texto, professional_id: this.$attrs.idProfesional, patient_id: this.$route.params['idPaciente']
 			})
-			.then(res=> this.$emit('refrescarComentarios')  )
+			.then(res=> {this.$emit('refrescarComentarios'); console.log(res)}  )
 			$('#modalComentarios').modal('hide')
 		}
 	}

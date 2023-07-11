@@ -4,7 +4,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header border-0">
-					<h5 class="modal-title " id="exampleModalLabel">Nuevo interesado</h5>
+					<h5 class="modal-title " id="exampleModalLabel">Nuevo seguimiento</h5>
 					<button type="button" id="closeModal" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -24,7 +24,6 @@
 						<option value="4">Publicidad de Escrita</option>
 						<option value="5">Publicidad de TV/Radio</option>
 						<option value="6">Referido</option>
-						<option value="7">Ninguno</option>
 					</select>
 				</div>
 				<div class="modal-footer border-0">

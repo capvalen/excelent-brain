@@ -48,7 +48,7 @@
                 id="date" 
                 v-model="data.date"
                 :min="getDateNow()"
-                @change="emitSchedule()"
+                @change="listarhorario()"
                 >
               </div>
             </div>

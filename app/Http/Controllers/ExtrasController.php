@@ -97,6 +97,20 @@ class ExtrasController extends Controller
 				->select('pre.*', 'pro.nombre', 'p.name')
 				->get();
 			return $recetas; break;
+
+			case '1':
+				DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
+
+				$results = DB::select( DB::raw("SELECT MAX(ap.date) as fechaMax, ap.*, p.* FROM `appointments` ap
+				inner join patients p on p.id = ap.patient_id
+				where status not like 3 and datediff(now(), date) between 7 and 90
+				and p.discharge = 0 and 
+				date = (SELECT MAX(date) from appointments apo where apo.patient_id = ap.patient_id GROUP BY apo.patient_id )
+				group by ap.patient_id
+				order by date desc;") );
+				return response()->json($results);
+				break;
+				
 			default:
 				# code...
 				break;
@@ -113,19 +127,21 @@ class ExtrasController extends Controller
 	}
 
 	public function addRecomendation( Request $request){
-		//print_r($request->all()); die();
+		
 		DB::table('recommendations')->insert([
 			'professional_id' => $request->input('professional_id'),
 			'comment' => $request->input('texto'),
 			'patient_id' => $request->input('patient_id'),
 		]);
 		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
+		
 	}
 
 	public function listRecomendation($id){
+		
 		$recommendations = DB::table('recommendations as r')->where('patient_id', $id)
 		->join('professionals as pro', 'pro.id', 'r.professional_id')
-		->where('activo', '=', 1)
+		->where('r.activo', '=', 1)
 		->orderBy('date', 'desc')
 		->get();
 

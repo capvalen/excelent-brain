@@ -111,6 +111,12 @@ class PrescriptionController extends Controller
         //
     }
 
+		public function verRecetaPorId($idPaciente){
+			$recetas = Prescription::where('patient_id',$idPaciente)
+			->get();
+			return response()->json( $recetas );
+		}
+
     public function createPDF($id){
         $receta = Prescription::where('id',$id)
         ->with('patient')

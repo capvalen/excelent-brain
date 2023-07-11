@@ -37,7 +37,7 @@
 										<span v-if="horasMalas[hora.indexOcupado].clasification==3">Certificado</span>
 										<span v-if="horasMalas[hora.indexOcupado].clasification==4">Kurame</span>
 										<span v-if="horasMalas[hora.indexOcupado].formato_nuevo=='0'">{{ tipoViejo[horasMalas[hora.indexOcupado].type-1] }}:</span>
-										<span v-else>{{ queServicio(horasMalas[hora.indexOcupado].type) }}:</span>
+										<span v-else>{{ queServicio(horasMalas[hora.indexOcupado].type) }}</span>
 									</td>
 									<td v-else></td>
 									<td class="puntero" v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="asignar(horasMalas[hora.indexOcupado])">
@@ -137,9 +137,12 @@
 										>
 										<i class="fa fa-align-justify"></i>
 										</a>
-										<a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${horasMalas[hora.indexOcupado].id}`" target="_blank">
+										<!-- <a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${horasMalas[hora.indexOcupado].id}`" target="_blank" title="Ver cupón de cita">
 											<i class="fas fa-file"></i>
-										</a>
+										</a> -->
+										<button data-bs-toggle="modal" @click="buscarRecetas(horasMalas[hora.indexOcupado].patient.id)" data-bs-target="#recetasModal" class="btn btn-info btn-circle btn-sm" title="Ver recetas">
+											<i class="fas fa-file"></i>
+										</button>
 									</td>
 									<td v-else></td>
 								
@@ -162,6 +165,7 @@
 		<modalNuevo v-if="cita" :dataCit="cita"></modalNuevo>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
 		<info-modal :dataCit="cita"></info-modal>
+		<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
 
 	</div>
 </template>
@@ -173,18 +177,19 @@
 	import InfoModal from './ModalInfo.vue'
 	import ReprogModal from './ReprogModal.vue'
 	import modalNuevo from './modalNuevo.vue'
+	import modalVerRecetas from './ModalVerRecetas.vue'
 	import alertify from 'alertifyjs'
 	
 	export default{
 		name: 'VistaCuaderno',
 		data(){ return{
-			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], cita:{}, profesionalElegido:[], horaElegida:[], alternativo:false, precios:[],
+			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], cita:{}, profesionalElegido:[], horaElegida:[], alternativo:false, precios:[], recetas:[],
 			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ], cita: {
 				address:{patient:{address:{}}}
 			}
 		}},
 		props:[ 'idUsuario'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, modalNuevo, InfoModal, ReprogModal },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, modalNuevo, InfoModal, ReprogModal, modalVerRecetas },
 		methods:{
 			dayWeek (day) {
 				switch (day) {
@@ -301,6 +306,12 @@
 					}
 				})
     	},
+			buscarRecetas(id){
+				this.axios(`/api/verRecetaPorId/${id}`)
+				.then(res =>{
+					this.recetas = res.data;
+				})
+			}
 		},
 		mounted(){
 			this.listarProfesionales();

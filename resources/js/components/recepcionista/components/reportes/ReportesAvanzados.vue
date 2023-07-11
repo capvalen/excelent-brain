@@ -7,17 +7,17 @@
 				<div class="row">
 					<div class="col-12 col-md-3">
 						<label for="">Tipo de reporte</label>
-						<select class="form-select" v-model="idReporte">
+						<select class="form-select" v-model="idReporte" @change="configurarVista()">
 							<option v-for="reporte in reportes" :value="reporte.id">{{ reporte.nombrado }}</option>
 						</select>
 					</div>
-					<div class="col-12 col-md-3">
+					<div class="col-12 col-md-3" v-show="!ocultarFechas">
 						<label for="">Año</label>
 						<select class="form-select" v-model="fecha.año">
 							<option v-for="año in años" :value="año">{{ año }}</option>
 						</select>
 					</div>
-					<div class="col-12 col-md-3">
+					<div class="col-12 col-md-3" v-show="!ocultarFechas">
 						<label for="">Mes</label>
 						<select class="form-select text-capitalize" v-model="fecha.mes">
 							<option class="text-capitalize" v-for="(mes, index) in meses" :value="index+1">{{ mes }}</option>
@@ -31,7 +31,7 @@
 		</div>
 		<div class="card mt-2">
 			<div class="card-body">
-				<table class="table table-sm table-hover">
+				<table class="table table-sm table-hover" v-if="idReporte==0">
 					<thead>
 						<th>N°</th>
 						<th>Paciente</th>
@@ -51,6 +51,26 @@
 						<td colspan="4">No hay registros</td></tr>
 					</tbody>
 				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==1">
+					<thead>
+						<th>N°</th>
+						<th>Paciente</th>
+						<th>Última cita</th>
+						<th>Diferencia</th>
+						<th>@</th>
+					</thead>
+					<tbody>
+						<tr v-for="(resultado, index) in resultados">
+							<td>{{ index+1 }}</td>
+							<td class="text-capitalize">{{ resultado.name }}</td>
+							<td>{{ fechaLatam(resultado.date) }}</td>
+							<td>{{ fechaFrom(resultado.date) }}</td>
+							<td><a class="btn btn-outline-primary btn-sm" :href="'/api/pdf/'+resultado.id" target="_blank"><i class="fa-solid fa-network-wired"></i> Pasar a seguimiento</a></td>
+						</tr>
+						<tr v-if="resultados.length==0">
+						<td colspan="4">No hay registros</td></tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -63,10 +83,11 @@ import moment from 'moment';
 		name: 'reportesAvanzados',
 		data(){ return{
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-			idReporte:0, resultados:[],
+			idReporte:0, resultados:[], ocultarFechas:false,
 			fecha:{ año: moment().format('YYYY'), mes: moment().format('M') },
 			reportes:[
-				{id: 0, nombrado: 'Recetas sueltas'}
+				{id: 1, nombrado: 'Pacientes ausentes mayor a 7 días'},
+				{id: 0, nombrado: 'Recetas sueltas'},
 			]
 		}},
 		methods:{
@@ -84,9 +105,20 @@ import moment from 'moment';
 					this.resultados=serv.data
 				})	
 			},
+			configurarVista(){
+				this.ocultarFechas=false;
+				switch(this.idReporte){
+					case 0: break;
+					case 1: this.ocultarFechas=true; break;
+				}
+			},
+			fechaFrom(fecha){
+				moment.locale('es')
+				return moment(fecha, 'YYYY-MM-DD').fromNow();
+			},
 			fechaLatam(fecha){
 				return moment(fecha).format('DD/MM/YYYY');
-			},
+			}
 		},
 		mounted(){
 			this.cargarDatos()

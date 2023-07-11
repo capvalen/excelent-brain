@@ -92,7 +92,7 @@
 					</div>
 					<div class="card-body">
 						<ul >
-							<li v-for="comentario in comentarios">{{ comentario.nombre }} <i class="fa-regular fa-comment"></i> {{ comentario.comment }}</li>
+							<li v-for="comentario in comentarios"> <i class="fa-regular fa-comment"></i> {{ comentario.nombre }}: {{ comentario.comment }}</li>
 							<li v-if="comentarios.length==0">No hay recomendaciones previas</li>
 						</ul>
 					</div>
