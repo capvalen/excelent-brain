@@ -59,7 +59,13 @@
 					</div>
 
 					<div class="form-group row" v-show="masBasicos">
-						<div class="form-group row">                   
+						<div class="form-group row">
+							<div class="col-sm-12">
+								<label for="name">Correo electrónico</label>
+								<input type="text" class="form-control" name="address" id="address" v-model="cita.email" placeholder="Correo electrónico" autocomplete="off">
+							</div>
+						</div>
+						<div class="form-group row">
 							<div class="col-sm-12">
 								<label for="name">Dirección</label>
 								<input type="text" class="form-control" name="address" id="address" v-model="cita.address" placeholder="Dirección del paciente" autocomplete="off">
@@ -158,6 +164,10 @@
 						<div class="col">
 							<p class="mb-0"><strong>Profesional:</strong> {{ profesionalElegido.name }}</p>
 							<p class="mb-0"><strong>Profesión:</strong> {{ profesionalElegido.profession }}</p>
+							<p class="mb-0"><strong>Servicio anterior:</strong> 
+								<span title="Última atención" v-if="cita.etiqueta==''" class="badge rounded-pill text-bg-light"><i class="fa-solid fa-asterisk"></i> Sin registro previo</span>
+								<span title="Última atención" v-if="cita.etiqueta" class="badge rounded-pill text-bg-dark"><i class="fa-solid fa-genderless"></i> {{cita.etiqueta}}</span>
+							</p>
 						</div>
 						<div class="col">
 							<p class="mb-0"><strong>Fecha:</strong> {{ fechaElegida }}</p>							
@@ -168,7 +178,7 @@
 
 			
 					<div class="form-group row mt-3">
-					<div class="col-sm-6">
+						<div class="col-sm-6">
 							<label for="">Clasificación de Consulta</label>
 							<select 
 							class="form-select" 
@@ -177,9 +187,10 @@
 							v-model="cita.clasification"
 							@change="precioDinamico()"
 							>
+								<option value="5">Clínica de día</option>
+								<option value="3">Certificado</option>
 								<option value="1" v-if="profesionalElegido.idProfesion=='1'" selected >Psiquiatrica</option>
 								<option value="2" v-if="profesionalElegido.idProfesion=='2'" selected >Psicológica</option>
-								<option value="3">Certificado</option>
 								<option value="4">Kurame</option>
 							</select>
 						</div>
@@ -195,7 +206,7 @@
 						</div> -->
 						<div class="col-sm-6">
 							<label for="">Tipo de servicio</label>
-							<select  class="form-select"  name="type" id="type" v-model="cita.type" @change="precioDinamico()">
+							<select  class="form-select" name="type" id="sltServicio" v-model="cita.type" @change="precioDinamico()">
 								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification ">{{ precio.descripcion }}</option>
 							</select>
 						</div>
@@ -240,19 +251,31 @@
 					<div class="row d-flex align-content-end">
 						<div class="col-sm-6">
 							<div class=" form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="fleDescuento" v-model="tieneDescuento" >
+								<input class="form-check-input" type="checkbox" role="switch" id="fleDescuento" v-model="tieneDescuento" @change="precioDinamico()">
 								<label class="form-check-label" for="fleDescuento">
-									<span v-if="!tieneDescuento"><i class="fa-solid fa-percent"></i> ¿Tiene descuento?</span>
-									<span v-else class="text-danger"><i class="fa-regular fa-money-bill-1"></i> Cancelar descuento</span>
+									<span v-if="!tieneDescuento"><i class="fa-solid fa-percent"></i> ¿Tiene cupón de descuento?</span>
+									<span v-else class="text-danger"><i class="fa-regular fa-money-bill-1"></i> Sin cupón de descuento</span>
 								</label>
 								<div v-if="tieneDescuento">
-									<select class="form-select my-2" id="">
-										<option value="5">5% de descuento</option>
-										<option value="10">10% de descuento</option>
-										<option value="15">15% de descuento</option>
-										<option value="20">20% de descuento</option>
-									</select>
-									<input type="text" class="form-control my-2" placeholder="Ingresa un motivo para el descuento">
+									<label class="mb-0 mt-2" for="">% de Descuento a aplicar</label>
+									<input type="number" min="0" step="1" class="form-control" v-model="descuentoPorcentaje" @change="precioDinamico()">
+									<label class="mb-0 mt-2" for="">Motivo de descuento</label>
+									<input type="text" class="form-control my-2" placeholder="Ingresa una razón para el descuento" v-model="razonPorcentaje">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class=" form-switch">
+								<input class="form-check-input" type="checkbox" role="switch" id="fleRebaja" v-model="tieneRebaja" @change="precioDinamico()">
+								<label class="form-check-label" for="fleRebaja">
+									<span v-if="!tieneRebaja"><i class="fa-solid fa-percent"></i> ¿Tiene rebaja?</span>
+									<span v-else class="text-danger"><i class="fa-regular fa-money-bill-1"></i> Sin rebaja</span>
+								</label>
+								<div v-if="tieneRebaja">
+									<label class="mb-0 mt-2" for="">Rebaja a aplicar en S/</label>
+									<input type="number" min="0" step="1" class="form-control" v-model="descuentoRebaja" @change="precioDinamico()">
+									<label class="mb-0 mt-2" for="">Motivo de la rebaja</label>
+									<input type="text" class="form-control my-2" placeholder="Ingresa una razón para la rebaja" v-model="razonRebaja">
 								</div>
 							</div>
 						</div>
@@ -276,14 +299,14 @@
 <script>
 import { dateNow } from '../../../../helpers/Time.js'
 import alertify from 'alertifyjs'
-import moment from 'moment'
+import moment, { relativeTimeThreshold } from 'moment'
 
 export default {
 	name: "ModalNuevaCita",
 	props:{ profesionalElegido: null, horaElegida: null , idUsuario:null, fechaElegida:null },
 	data(){
 		return{
-			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false,
+			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
 			switchReciec: 1,
 			patientNew: false,
 			cita:{
@@ -324,7 +347,7 @@ export default {
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
 			provincias:[], distritos:[],
 			token:'087d16c0688f5150268342d085a55d54b5064c7649596011f03b35b935899a50',          
-			horario:[],
+			horario:[], descuentoPorcentaje:0
 		}
 	},
 	 
@@ -336,8 +359,20 @@ export default {
 			if(this.cita.type =='') this.cita.price = 0;
 			else{
 				let precio = this.precios.find(p=> p.id == this.cita.type)
+				let descuentoPorcentual;
+
 				if( this.precioNuevo ) precio = precio.nuevos
 				else precio = precio.continuos
+
+				if( this.tieneDescuento ){
+					if( parseInt(this.descuentoPorcentaje) <= 0 ) descuentoPorcentual=0
+					else descuentoPorcentual = parseFloat((precio * 1/ parseInt(this.descuentoPorcentaje)).toFixed(1));				
+					precio = precio - descuentoPorcentual;
+				}
+
+				if( this.tieneRebaja )
+					precio = precio - parseFloat(this.descuentoRebaja);
+				
 				this.cita.price = precio;
 			}
 		},
@@ -346,12 +381,13 @@ export default {
 			const config = {
 				headers: { 'content-type': 'multipart/form-data' }
 			}
-			if( this.cita.type_dni==1 && (this.cita.dni =='' || this.cita.dni.length<8) ){
+			if( this.cita.type_dni==1 && (this.cita.dni =='' || this.cita.dni.length<8) )
 				alertify.notify('Todo paciente debe tener un DNI válido', 'danger', 10);
-			}else if( this.cita.type_dni!=1 && (this.cita.dni =='' || this.cita.dni.length<8) ){
+			else if( this.cita.type_dni!=1 && (this.cita.dni =='' || this.cita.dni.length<8) )
 				alertify.notify('Todo extranjero debe tener un documento de identidad válido', 'danger', 10);
-			}else{
-
+			else if( this.tieneDescuento && this.razonPorcentaje=='' ) alertify.notify('Tiene que rellenarse un motivo de descuento', 'danger', 10)
+			else if( this.tieneRebaja && this.razonRebaja=='' ) alertify.notify('Tiene que rellenarse un motivo de rebaja', 'danger', 10)
+			else{
 				let formData = new FormData();
 				formData.append('dni', this.cita.dni);
 				formData.append('phone', this.cita.phone);
@@ -383,8 +419,14 @@ export default {
 				formData.append('continuo', this.precioNuevo ? '1': 2 ); //this.cita.type_amount
 				formData.append('user_id', this.idUsuario);
 				formData.append('formato_nuevo', 1);
+				formData.append('etiqueta', $('#sltServicio option:selected').text());
+				formData.append('rebaja', this.descuentoRebaja);
+				formData.append('motivoRebaja', this.razonRebaja);
+				formData.append('descuento', this.descuentoPorcentaje);
+				formData.append('motivoDescuento', this.razonPorcentaje);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => { //Trabaja en api -> modelo>store()
+					console.log(response.data)
 					this.closeModal();
 					this.$emit('actualizarListadoCitas', true)
 					//console.log(response.data.cita.id)
@@ -440,6 +482,7 @@ export default {
 			this.cita.status= '';
 			this.cita.type_amount=1;
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
+			this.etiqueta ='';
 
 		},
 		reniec(){ 
@@ -515,6 +558,7 @@ export default {
 					this.cita.contacto = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
 					this.cita.contacto_celular = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
 					this.cita.parentezco = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
+					this.cita.etiqueta = res.data.patient.etiqueta;
 					this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()

@@ -233,7 +233,7 @@ export default {
 	},
 
 	updated() {
-		this.actualizarDatos
+		//this.actualizarDatos
 	},
 
 	created() {

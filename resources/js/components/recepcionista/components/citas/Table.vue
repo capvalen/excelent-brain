@@ -2,20 +2,20 @@
   <div class="card">
     <div class="container-fluid pt-2">
 
-			<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
 				<li class="nav-item" role="presentation">
-					<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#inicio-tab" type="button" role="tab" aria-controls="inicio-tab" aria-selected="true"><i class="fa-regular fa-calendar-minus"></i> Vista clásica</button>
+					<button class="nav-link " id="home-tab" data-bs-toggle="tab" data-bs-target="#inicio-tab" type="button" role="tab" aria-controls="inicio-tab" aria-selected="false"><i class="fa-regular fa-calendar-minus"></i> Vista clásica</button>
 				</li>
 				<li class="nav-item d-none" role="presentation">
 					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#calendario-tab" type="button" role="tab" aria-controls="calendario-tab" aria-selected="false"><i class="fa-regular fa-calendar-days"></i> Vista calendario</button>
 				</li>
 				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#cuaderno-tab" type="button" role="tab" aria-controls="cuaderno-tab" aria-selected="false"><i class="fa-solid fa-book"></i> Vista cuaderno</button>
+					<button class="nav-link active" id="book-tab" data-bs-toggle="tab" data-bs-target="#cuaderno-tab" type="button" role="tab" aria-controls="cuaderno-tab" aria-selected="true"><i class="fa-solid fa-book"></i> Vista cuaderno</button>
 				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
 				<!-- Inicio de primera tab -->
-				<div class="tab-pane fade show active" id="inicio-tab" role="tabpanel" aria-labelledby="inicio-tab" tabindex="0">
+				<div class="tab-pane fade " id="inicio-tab" role="tabpanel" aria-labelledby="inicio-tab" tabindex="0">
 					<div class="d-sm-flex align-items-center justify-content-around mt-4 px-3" style="gap: 10px;">
 							<div class="d-none d-sm-inline-block form-inline w-75">
 								<div class="input-group">
@@ -140,7 +140,7 @@
 											<a v-else @click="modalInfo(qCita)" title="Reprogramar cita" data-bs-target="#reprogModal" data-bs-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
 											
 											<!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
-											<a @click="eliminar(qCita.id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+											<!-- <a @click="eliminar(qCita.id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a> -->
 
 											<!-- Sin numero -->
 											<a v-if="qCita.patient.phone ? false : true"
@@ -196,7 +196,7 @@
 				<div class="tab-pane fade" id="calendario-tab" role="tabpanel" aria-labelledby="calendario-tab" tabindex="0">
 					<vista-calendario :profesionales="profesionales" ></vista-calendario>
 				</div>
-				<div class="tab-pane fade" id="cuaderno-tab" role="tabpanel" aria-labelledby="cuaderno-tab" tabindex="0">
+				<div class="tab-pane fade show active" id="cuaderno-tab" role="tabpanel" aria-labelledby="cuaderno-tab" tabindex="0">
 					<vista-cuaderno :idUsuario="idUsuario" ></vista-cuaderno>
 				</div>
 				<!-- Fin de segunda tab -->

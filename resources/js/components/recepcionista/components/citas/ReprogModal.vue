@@ -117,6 +117,7 @@ export default {
       await this.axios.get(`/api/professional`)
       .then(res => {
         this.professionals = res.data
+				this.professionals.sort()
       })
       .catch(err => {
         console.error(err)

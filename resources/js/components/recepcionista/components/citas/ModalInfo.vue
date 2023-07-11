@@ -34,15 +34,18 @@
               </tr>
 
               <tr>
-                <th scope="row">Condicion del Paciente</th>
+                <th scope="row">Condición del Paciente</th>
                 <td v-if=" dataCit.patient_condition === 1">Paciente inicial</td>
-                <td v-else-if=" dataCit.patient_condition === 2">Paciente repitente</td>  
+                <td v-else-if=" dataCit.patient_condition === 2">Paciente continuo</td>  
               </tr>
               
               <tr>
                 <th scope="row">Clasificación</th>
                 <td v-if=" dataCit.clasification === 2">Psicológico</td>
-                <td v-else-if=" dataCit.clasification === 1">Psiquiátrico</td>            
+                <td v-if=" dataCit.clasification === 1">Psiquiátrico</td>            
+                <td v-if=" dataCit.clasification === 3">Certificado</td>            
+                <td v-if=" dataCit.clasification === 4">Kurame</td>            
+                <td v-if=" dataCit.clasification === 5">Clínica de día</td>            
               </tr>
 
               <tr>
@@ -52,7 +55,7 @@
               </tr>
 
               <tr>
-                <th scope="row">Recomendacion</th>
+                <th scope="row">Recomendación</th>
                 <td>{{ dataCit.recomendation }}</td>
               </tr>
 

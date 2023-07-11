@@ -115,10 +115,10 @@ class AppointmentController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		//print_r($request->all()); die();
-			try {
+		try {
+			//var_dump($request->all());die();
 
-		$paciente_prueba = Patient::where('dni',$request->get('dni'))->first();
+			$paciente_prueba = Patient::where('dni',$request->get('dni'))->first();
 
 
 		/* $condition = Patient::where('dni', '=', $request->dni)
@@ -138,19 +138,20 @@ class AppointmentController extends Controller
 		} */
 
 		if(!$paciente_prueba){
-		$patient_condition = "1";
+			$patient_condition = "1";
 
 			if($request->get('name') != null){
 				$patient = Patient::create([
 					'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
 					'email'=>$request->get('email'),
 					'dni' => $request->get('dni'),
-					'phone' => $request->get('phone'),
+					'phone' => $request->get('phone') =='null' ? '' : $request->get('phone'),
 					'birth_date'=>$request->get('birth_date'),
 					'occupation'=>$request->get('occupation'),
 					'instruction_degree'=>$request->get('instruction_degree'),
 					'marital_status'=>$request->get('marital_status'),
-					'type_dni'=>$request->get('type_dni')
+					'type_dni'=>$request->get('type_dni'),
+					'etiqueta'=>$request->get('etiqueta')
 				]);
 			}
 				
@@ -194,7 +195,11 @@ class AppointmentController extends Controller
 				'price' => $request->get('price'),
 				'appointment_id' => $appointment->id,
 				'continuo' => $request->get('continuo'),
-				'user_id' => $request->get('user_id')
+				'user_id' => $request->get('user_id'),
+				'rebaja' => $request->get('rebaja'),
+				'motivoRebaja' => $request->get('motivoRebaja'),
+				'descuento' => $request->get('descuento'),
+				'motivoDescuento' => $request->get('motivoDescuento')
 			]);
 
 		}else{
@@ -236,20 +241,27 @@ class AppointmentController extends Controller
 				'price' => $request->get('price'),
 				'appointment_id' => $appointment->id,
 				'continuo' => $request->get('continuo'),
-				'user_id' => $request->get('user_id')
+				'user_id' => $request->get('user_id'),
+				'rebaja' => $request->get('rebaja'),
+				'motivoRebaja' => $request->get('motivoRebaja'),
+				'descuento' => $request->get('descuento'),
+				'motivoDescuento' => $request->get('motivoDescuento')
 			]);
 			
 			//var_dump($request->input());die();
 			//$paciente_actualizar = Patient::where('id', $paciente_prueba->id)
 			$paciente_actualizar = Patient::find($paciente_prueba->id)
 			->update([
-				'phone'=>$request->get('phone'),
+				'phone' => $request->get('phone') =='null' ? '' : $request->get('phone'),
+				'email'=>$request->get('email'),
 				'name'=> trim(str_replace('  ', ' ' , $request->get('name'))),
 				'instruction_degree'=> $request->get('instruction_degree') ?? 6,
 				'gender'=> $request->get('gender') ?? 2,
 				'birth_date'=> $request->input('birth_date') =='null' ? null: $request->input('birth_date'),
 				'occupation'=> $request->input('occupation') =='null' ? null: $request->input('occupation'),
-				'marital_status'=> $request->get('marital_status')
+				'marital_status'=> $request->get('marital_status'),
+				'phone'=>$request->get('phone'),
+				'etiqueta'=>$request->get('etiqueta'),
 			]);
 			/* $paciente_actualizar->name = ;
 			$paciente_actualizar->instruction_degree= $request->get('instruction_degree') ?? 6;
@@ -514,7 +526,7 @@ class AppointmentController extends Controller
 		]);
 
 		
-		if($request->input('caso.pago') == '2'){
+		if($request->input('caso.pago') == '2'){ // Modo Cancelado
 			//print_r( 'qqqqqq estado '.$appointment->status); die();
 			
 				$pagoExtra = new Extra_payment;
@@ -549,13 +561,14 @@ class AppointmentController extends Controller
 					}
 				}
 
-		}else{
+		}else{ // No se cancela
 			$pagoExtra = Extra_payment::where('appointment_id', $request->input('dataCita.id') );
 			$pagoExtra->update([
 				'moneda' => $request->input('caso.moneda'),
 				'voucher' => $request->input('caso.comprobante'),
 				'observation' => $request->input('dataCita.payment.observation'),
-				'user_id'=> $request->input('caso.user_id')
+				'user_id'=> $request->input('caso.user_id'),
+				'activo' => 0
 			]);
 		}
 

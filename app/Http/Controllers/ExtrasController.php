@@ -133,20 +133,35 @@ class ExtrasController extends Controller
 	}
 
 	public function buscarCartera(Request $request){
-		//var_dump($request->all());
+		
+		
+		if($request->get('mes')==-1):
 		$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
+			->whereYear('date', $request->get('año'))
+			->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
+			->groupBy('patient_id')
+			->with('patient')
+			->get();
+			$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
+				->whereYear('date', $request->get('año'))
+				->orderBy('date', 'desc')
+				->with('patient')
+				->get();
+		else:
+			$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
 			->whereYear('date', $request->get('año'))
 			->whereMonth('date', $request->get('mes'))
 			->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
 			->groupBy('patient_id')
 			->with('patient')
 			->get();
-		$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
-			->whereYear('date', $request->get('año'))
-			->whereMonth('date', $request->get('mes'))
-			->orderBy('date', 'desc')
-			->with('patient')
-			->get();
+			$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
+				->whereYear('date', $request->get('año'))
+				->whereMonth('date', $request->get('mes'))
+				->orderBy('date', 'desc')
+				->with('patient')
+				->get();
+		endif;
 		return response()->json([ "resumidas"=>$citasResumidas, 'completas'=>$citasCompletas ]);
 		
 	}

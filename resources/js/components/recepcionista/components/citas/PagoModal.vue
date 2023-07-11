@@ -16,7 +16,9 @@
 								<!-- <input type="text" class="form-control" name="price" id="price" v-model="dataCita.payment.price"> -->
 								<p class="mb-0"><small>Cuenta de la persona:</small></p>
 								<p class="lead text-capitalize mb-0"> <span>{{dataCita.patient.name}}</span></p>
-							 <p class="lead mb-0"><small>Precio: S/</small> {{ dataCita.payment.price }}</p>
+							 	<p class="lead mb-0"><small>Precio: S/</small> {{ dataCita.payment.price }}</p>
+							 	<p v-if="dataCita.payment.rebaja>0" class="lead mb-0"><small>Rebaja: S/</small> {{ parseFloat(dataCita.payment.rebaja).toFixed(2) }}</p>
+							 	<p v-if="dataCita.payment.descuento>0" class="lead mb-0"><small>Descuento: </small> {{ dataCita.payment.descuento }}%</p>
 							</div>
 							
 							<div class="col-sm-12">

@@ -20,6 +20,7 @@
 					<div class="col-3">
 						<label for="">Mes</label>
 						<select class="form-select text-capitalize" v-model="filtro.mes">
+							<option value="-1">Todo el año</option>
 							<option class="text-capitalize" v-for="(mes, index) in meses" :value="index+1">{{ mes }}</option>
 						</select>
 					</div>
@@ -54,7 +55,7 @@
 							<td>{{ cita.patient.name }}</td>
 							<td>{{ cita.patient.phone }}</td>
 							<!-- <td>{{ ultimaFecha(cita.patient.id) }}</td> -->
-							<td>{{ cita.visitas }}</td>
+							<td class="puntero" @click="cargarCitas('visitas', cita.patient.id)">{{ cita.visitas }}</td>
 							<td>{{ cita.confirmar }}</td>
 							<td>{{ cita.faltas }}</td>
 							<td>{{ cita.sinconfirmar }}</td>
@@ -67,6 +68,21 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Citas</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					...
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -76,7 +92,7 @@ export default{
 	name: 'HomeCartera',
 	data(){ return {
 		profesionales:[], años:[], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-		filtro: {idProfesional: 10, año: 2023, mes:1}, citasResumidas:[], citasCompletas:[]
+		filtro: {idProfesional: 10, año: 2023, mes:-1}, citasResumidas:[], citasCompletas:[]
 	}},
 	methods:{
 		async listarProfesional(){
@@ -89,7 +105,7 @@ export default{
 			let condicion
 
 			this.axios.post('/api/buscarCartera', this.filtro)
-			.then(res => {
+			.then(res => { console.log(res.data);
 				this.citasResumidas = res.data.resumidas;
 				this.citasCompletas = res.data.completas;
 				this.citasResumidas.forEach((cita, index )=> {
@@ -118,6 +134,12 @@ export default{
 		fechaLatam(fecha){
 			return moment(fecha).format('DD/MM/YYYY');
 		},
+		cargarCitas(caso, id){
+			switch(caso){
+				case 'visitas':
+					this.previewCitas = this.citasCompletas.filter(item=> item.patient_id == id ); break;
+			}
+		}
 		
 	},
 	mounted(){
@@ -128,3 +150,7 @@ export default{
 	}
 }
 </script>
+
+<style >
+	.puntero{ cursor: pointer; }
+</style>
