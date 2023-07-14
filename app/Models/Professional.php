@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Professional extends Model
 {
     use HasFactory;
-    protected $fillable=['name','lastname','phone','profession','cv_description','photo','signing','user_id', 'idProfesion'];
+    protected $fillable=['name','lastname','phone','profession','cv_description','photo','signing','user_id', 'idProfesion', 'activo'];
     //Relación de uno a muchos Professional-Schedule
     public function schedules() {
         return $this->hasMany("App\Models\Schedule");

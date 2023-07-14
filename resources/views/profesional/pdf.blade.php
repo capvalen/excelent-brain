@@ -231,7 +231,7 @@
 
             border-radius: 5px;
             border: 1px solid;
-						font-size: 10px;
+						font-size: 12px;
         }
         .botica__info{
             width: 80%;
@@ -243,7 +243,7 @@
             border-radius: 5px;
             border: 2px solid;
             text-align: center;
-            font-size: 10px;
+            font-size: 12px;
         }
         
         /* Datos de la siguiente consulta */

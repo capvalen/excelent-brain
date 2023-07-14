@@ -183,6 +183,8 @@ class ExtrasController extends Controller
 	}
 
 	public function listarPrecios(){
-		return DB::table('precios')->where('activo', 1)->get();
+		return DB::table('precios')->where('activo', 1)
+		->orderBy('descripcion', 'asc')
+		->get();
 	}
 }

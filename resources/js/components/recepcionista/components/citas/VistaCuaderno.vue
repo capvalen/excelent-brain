@@ -2,19 +2,20 @@
 	<div class="container-fluid p-2">
 		<div class="row mb-3 gx-3 align-items-center">
 			<div class="col-auto"><input type="date" class="form-control shadow-sm" v-model="fecha" @change="obtenerHorarios()"></div>
-			<div class="col-auto"><button class="btn btn-outline-primary mx-2" @click="verHorariosHoy()"><i class="fa-regular fa-clock"></i> Hoy</button></div>
-			<div class="col-auto"><button class="btn btn-outline-secondary mx-2" @click="verHorariosMañana()"><i class="fa-regular fa-clock"></i> Mañana</button></div>
+			<div class="col-auto"><button class="btn btn-outline-primary mx-2 border-0" @click="verHorariosHoy()"><i class="fa-regular fa-clock"></i> Hoy</button></div>
+			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="verHorariosMañana()"><i class="fa-regular fa-clock"></i> Mañana</button></div>
+			<div class="col-auto d-none"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPaciente" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
 		</div>
 		<div class="accordion ">
 			<div class="accordion-item"  v-for="(doctor, index) in doctores" :key="doctor.id">
 				<h2 class="accordion-header">
 				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#panel_'+doctor.id" aria-expanded="false" :aria-controls="'$panel_'+doctor.id">
-					<i class="fa-solid fa-user-doctor"></i> <span class="mt-1 ms-3">{{doctor.name}}</span>
+					<i class="fa-solid fa-user-doctor"></i> <span class="mt-1 ms-3">{{doctor.profession}} {{doctor.name}}</span>
 				</button>
 				</h2>
 				<div class="accordion-collapse collapse" :id="'panel_'+doctor.id">
 					<div class="accordion-body">
-						<table class="table table-hover">
+						<table class="table table-hover table-sm">
 							<thead  >
 								<tr>
 									<th>#</th>
@@ -40,7 +41,7 @@
 										<span v-else>{{ queServicio(horasMalas[hora.indexOcupado].type) }}</span>
 									</td>
 									<td v-else></td>
-									<td class="puntero" v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="asignar(horasMalas[hora.indexOcupado])">
+									<td class="puntero" v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#patientModal" @click="asignar(horasMalas[hora.indexOcupado]); modalInfo(horasMalas[hora.indexOcupado]);">
 										<span class="text-capitalize" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} </span>
 									</td>
 									<td v-else>
@@ -162,10 +163,12 @@
 		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha' @actualizarListadoCitas="actualizarListadoCitas"></ModalNuevaCita>
     <modal-estado v-if="cita" :dataCit="cita"></modal-estado>
     <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
-		<modalNuevo v-if="cita" :dataCit="cita"></modalNuevo>
+		<modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
 		<info-modal :dataCit="cita"></info-modal>
 		<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
+		<modalBuscarPaciente @buscarPacientes="buscarPaciente()"></modalBuscarPaciente>
+		
 
 	</div>
 </template>
@@ -176,8 +179,9 @@
 	import ModalNuevaCita from './ModalNuevaCita.vue'
 	import InfoModal from './ModalInfo.vue'
 	import ReprogModal from './ReprogModal.vue'
-	import modalNuevo from './modalNuevo.vue'
+	import ModalPatient from './ModalPatient.vue'
 	import modalVerRecetas from './ModalVerRecetas.vue'
+	import modalBuscarPaciente from './modalBuscarPaciente.vue'
 	import alertify from 'alertifyjs'
 	
 	export default{
@@ -189,7 +193,7 @@
 			}
 		}},
 		props:[ 'idUsuario'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, modalNuevo, InfoModal, ReprogModal, modalVerRecetas },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, modalVerRecetas, modalBuscarPaciente },
 		methods:{
 			dayWeek (day) {
 				switch (day) {
@@ -228,7 +232,7 @@
               this.listar();
           }
       })
-    },
+   	 },
 			async obtenerHorarios(){
 				let dia = this.dayWeek(moment(this.fecha).format('d')-1)
 				
@@ -311,6 +315,9 @@
 				.then(res =>{
 					this.recetas = res.data;
 				})
+			},
+			buscarPaciente(){
+				console.log('que');
 			}
 		},
 		mounted(){

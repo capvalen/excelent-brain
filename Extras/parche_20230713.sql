@@ -1,0 +1,21 @@
+UPDATE `professionals` SET `activo` = '0' WHERE `professionals`.`id` = 9;
+UPDATE `professionals` SET `activo` = '0' WHERE `professionals`.`id` = 6;
+UPDATE `professionals` SET `activo` = '0' WHERE `professionals`.`id` = 7;
+UPDATE `professionals` SET `activo` = '0' WHERE `professionals`.`id` = 10;
+UPDATE `professionals` SET `idProfesion` = '2' WHERE `professionals`.`id` = 12;
+UPDATE `professionals` SET `cv_description` = NULL WHERE `professionals`.`id` = 12;
+UPDATE `professionals` SET `profession` = 'Psicólogo' WHERE `professionals`.`id` = 12;
+UPDATE `professionals` SET `phone` = NULL WHERE `professionals`.`id` = 12;
+UPDATE `precios` SET `activo` = '0' WHERE `precios`.`id` = 22;
+UPDATE `precios` SET `activo` = '0' WHERE `precios`.`id` = 15;
+
+UPDATE `precios` SET `descripcion` = 'Clínica de día' WHERE `precios`.`id` = 22;
+UPDATE `precios` SET nuevos=0, `continuos` = '0' WHERE `precios`.`id` = 22;
+UPDATE `precios` SET `idClasificacion` = '1' WHERE `precios`.`id` = 22;
+INSERT INTO `precios` (`id`, `descripcion`, `nuevos`, `continuos`, `idClasificacion`, `activo`) VALUES (NULL, 'Clínica de día', '0', '0', '4', '1');
+UPDATE `precios` SET `descripcion` = 'Sesión kurame M1 - Mañana' WHERE `precios`.`id` = 19;
+UPDATE `precios` SET `descripcion` = 'Sesión kurame M2 - Mañana' WHERE `precios`.`id` = 20;
+UPDATE `precios` SET `descripcion` = 'Sesión kurame M3 - Mañana' WHERE `precios`.`id` = 21;
+INSERT INTO `precios` (`id`, `descripcion`, `nuevos`, `continuos`, `idClasificacion`, `activo`) VALUES (NULL, 'Sesión kurame M1 - Tarde', '0', '0', '4', '1'), (NULL, 'Sesión kurame M2 - Tarde', '0', '0', '4', '1'), (NULL, 'Sesión kurame M3 - Tarde', '0', '0', '4', '1');
+UPDATE `precios` SET `idClasificacion` = '1' WHERE `precios`.`id` = 16;
+INSERT INTO `precios` (`id`, `descripcion`, `nuevos`, `continuos`, `idClasificacion`, `activo`) VALUES (NULL, 'Orientación vocacional', '200', '200', '2', '1');

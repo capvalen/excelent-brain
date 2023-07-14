@@ -187,7 +187,6 @@
 							v-model="cita.clasification"
 							@change="precioDinamico()"
 							>
-								<option value="5">Clínica de día</option>
 								<option value="3">Certificado</option>
 								<option value="1" v-if="profesionalElegido.idProfesion=='1'" selected >Psiquiatrica</option>
 								<option value="2" v-if="profesionalElegido.idProfesion=='2'" selected >Psicológica</option>

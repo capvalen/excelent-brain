@@ -222,6 +222,11 @@ export default {
       return this.data.reschedule = ''
     }
   },
+	watch:{
+		data(){
+			this.listarhorario();
+		}
+	},
 
   created () {
     this.repromingSchedule

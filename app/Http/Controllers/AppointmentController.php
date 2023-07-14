@@ -91,8 +91,9 @@ class AppointmentController extends Controller
 	}
 
 	public function getprof(){
-		 $profesionales = Professional::with('schedules')->where('profession','Psicólogo')
-		 	->orWhere('profession','Psiquiatra')
+		 $profesionales = Professional::with('schedules')
+		 	->where('activo', '=', 1)
+			->orderBy('idProfesion', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
