@@ -4,7 +4,7 @@
 			<div class="col-auto"><input type="date" class="form-control shadow-sm" v-model="fecha" @change="obtenerHorarios()"></div>
 			<div class="col-auto"><button class="btn btn-outline-primary mx-2 border-0" @click="verHorariosHoy()"><i class="fa-regular fa-clock"></i> Hoy</button></div>
 			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="verHorariosMañana()"><i class="fa-regular fa-clock"></i> Mañana</button></div>
-			<div class="col-auto d-none"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPaciente" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
+			<div class="col-auto"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPaciente" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
 		</div>
 		<div class="accordion ">
 			<div class="accordion-item"  v-for="(doctor, index) in doctores" :key="doctor.id">
@@ -165,9 +165,9 @@
     <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
 		<modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
-		<info-modal :dataCit="cita"></info-modal>
+		<info-modal v-if="cita" :dataCit="cita"></info-modal>
 		<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
-		<modalBuscarPaciente @buscarPacientes="buscarPaciente()"></modalBuscarPaciente>
+		<modalBuscarPaciente></modalBuscarPaciente>
 		
 
 	</div>
@@ -315,9 +315,6 @@
 				.then(res =>{
 					this.recetas = res.data;
 				})
-			},
-			buscarPaciente(){
-				console.log('que');
 			}
 		},
 		mounted(){
