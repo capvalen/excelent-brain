@@ -66,39 +66,49 @@ class ScheduleController extends Controller
     }
     public function horarioCuadernoOcupado($fecha, $dia){
 			       
-      $appointment = Appointment::whereDate('appointments.date', '=', $fecha)
-			->where('appointments.status', '<>', 4)
-			->where('appointments.status', '<>', 3)
-			->with('schedule')
-			->with('patient')
-			->with('payment')
-			->with('professional')
-			->get();
-			foreach ($appointment as $cita) {
-				$direccion = DB::table('addresses')->where('patient_id', '=', $cita->patient_id)->get();
-				$cita->patient->address= $direccion[0];
-				//$cita->address = $direccion[0];
-				
-				$relacion = DB::table('relatives')->where('patient_id', '=', $cita->patient_id)->get();
-				$cita->patient->relative= $relacion[0];
-
-			}
-
-
-			DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
+        $appointment = Appointment::whereDate('appointments.date', '=', $fecha)
+        ->where('appointments.status', '<>', 4)
+        ->where('appointments.status', '<>', 3)
+        ->with('schedule')
+        ->with('patient')
+        ->with('payment')
+        ->with('professional')
+        ->get();
+        //return $appointment; die();
         
-			$solos = Schedule::where('day', '=', $dia)
-			->whereNotNull('check_time')
-			->whereNotNull('departure_date')
-			->groupBy('professional_id', 'day', 'check_time', 'departure_date')
-			->orderBy('professional_id', 'asc')
-			->orderBy('check_time', 'asc')
-			->get();
+        foreach ($appointment as $cita) {
+            $direccion = DB::table('addresses')->where('patient_id', '=', $cita->patient_id)->get();
+            if ( count($direccion)>0 )
+                $cita->patient->address= $direccion[0];
+            else
+             $cita->patient->address= [];
 
-			return response()->json([
-				'invalidos' => $appointment,
-				'solos' => $solos,
-			]);
+            //$cita->address = $direccion[0];
+            
+            $relacion = DB::table('relatives')->where('patient_id', '=', $cita->patient_id)->get();
+            if( count($relacion)>0 )
+                $cita->patient->relative= $relacion[0];
+            else
+                $cita->patient->relative= [];
+            
+
+        }
+
+
+        DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
+    
+        $solos = Schedule::where('day', '=', $dia)
+        ->whereNotNull('check_time')
+        ->whereNotNull('departure_date')
+        ->groupBy('professional_id', 'day', 'check_time', 'departure_date')
+        ->orderBy('professional_id', 'asc')
+        ->orderBy('check_time', 'asc')
+        ->get();
+
+        return response()->json([
+            'invalidos' => $appointment,
+            'solos' => $solos,
+        ]);
     }
 
     public function verifHours($check_time, $departure_date, $professional_id, $dia){
