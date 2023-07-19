@@ -4,8 +4,9 @@
 			<div class="col-auto"><input type="date" class="form-control shadow-sm" v-model="fecha" @change="obtenerHorarios()"></div>
 			<div class="col-auto"><button class="btn btn-outline-primary mx-2 border-0" @click="verHorariosHoy()"><i class="fa-regular fa-clock"></i> Hoy</button></div>
 			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="verHorariosMañana()"><i class="fa-regular fa-clock"></i> Mañana</button></div>
-			<div class="col-auto"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPaciente" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
+			<div class="col-auto"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPacienteExterno" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
 		</div>
+		<p>Hola mundo 1</p>
 		<div class="accordion ">
 			<div class="accordion-item"  v-for="(doctor, index) in doctores" :key="doctor.id">
 				<h2 class="accordion-header">
@@ -167,7 +168,7 @@
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
 		<info-modal v-if="cita" :dataCit="cita"></info-modal>
 		<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
-		<modalBuscarPaciente></modalBuscarPaciente>
+		
 		
 
 	</div>
@@ -181,7 +182,7 @@
 	import ReprogModal from './ReprogModal.vue'
 	import ModalPatient from './ModalPatient.vue'
 	import modalVerRecetas from './ModalVerRecetas.vue'
-	import modalBuscarPaciente from './modalBuscarPaciente.vue'
+	
 	import alertify from 'alertifyjs'
 	
 	export default{
@@ -193,7 +194,7 @@
 			}
 		}},
 		props:[ 'idUsuario'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, modalVerRecetas, modalBuscarPaciente },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, modalVerRecetas },
 		methods:{
 			dayWeek (day) {
 				switch (day) {

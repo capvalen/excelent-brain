@@ -60,7 +60,7 @@
 
 <script>
 
-import ModalTriaje from './components/ModalTriaje.vue';
+import ModalTriaje from './../recepcionista/components/pacientes/ModalTriaje.vue'
 import ModalVerTriajesViejos from './../recepcionista/components/pacientes/ModalVerTriajesViejos.vue'
 import ModalNewPatient from './../recepcionista/components/pacientes/ModalNewPatient.vue'
 import ModalVerHobbies from './../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
