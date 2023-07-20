@@ -168,6 +168,7 @@
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
 		<info-modal v-if="cita" :dataCit="cita"></info-modal>
 		<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
+		<modal-search-patient></modal-search-patient>
 		
 		
 
@@ -182,6 +183,7 @@
 	import ReprogModal from './ReprogModal.vue'
 	import ModalPatient from './ModalPatient.vue'
 	import modalVerRecetas from './ModalVerRecetas.vue'
+	import ModalSearchPatient from './ModalSearchPatient.vue'
 	
 	import alertify from 'alertifyjs'
 	
@@ -194,7 +196,7 @@
 			}
 		}},
 		props:[ 'idUsuario'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, modalVerRecetas },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, modalVerRecetas, ModalSearchPatient },
 		methods:{
 			dayWeek (day) {
 				switch (day) {
