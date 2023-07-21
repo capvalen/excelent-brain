@@ -1,19 +1,19 @@
 <template>
   <div class="modal fade" id="reprogModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header border-0">
           <h5 class="modal-title" id="exampleModalLabel">Reprogramación de la Cita</h5>
           <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <form action="" id="reproCita">
+        <div class="modal-body border-0">
+          <form action="" id="reproCita" @submit.prevent="onSubmit">
             <div class="form-group">
               <div class="form-group">
-                <label for="">Razón</label>
-                <textarea class="form-control" v-model="data.reschedule" name="reschedule" id="" rows="3"></textarea>
+                <label for="">Motivo de reprogramación</label>
+                <textarea class="form-control" v-model="data.reschedule" name="reschedule" id="" rows="2"></textarea>
               </div>
             </div>
             
@@ -60,7 +60,7 @@
                 type="text" 
                 class="form-control" 
                 readonly 
-                :value="`${ dataCit.schedule ? dataCit.schedule.check_time : '...'} - ${ dataCit.schedule ? dataCit.schedule.departure_date : '...'}`"
+                :value="`${ dataCit.schedule ? horaLatam1(dataCit.schedule.check_time) : '...'} - ${ dataCit.schedule ? horaLatam2(dataCit.schedule.departure_date) : '...'}`"
                 >
               </div>
               
@@ -74,16 +74,15 @@
                     v-if="hora" 
                     :value="hora.id"
                     >
-                    {{ hora.check_time }} - {{ hora.departure_date }}
+                    {{ horaLatam1(hora.check_time) }} - {{ horaLatam2(hora.departure_date) }}
                     </option>
                   </select>
                 </div>
               </div>
             </div>
 
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button @click="update()" class="btn btn-primary"  data-bs-dismiss="modal">Guardar</button>
+            <div class="modal-footer pt-0 border-0">
+              <button @click="update($event)" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="fa-regular fa-floppy-disk"></i> Reprogramar</button>
             </div>
           </form>
         </div>
@@ -94,6 +93,8 @@
 
 <script>
 import { dateNow } from '../../../../helpers/Time.js'
+import alertify from 'alertifyjs'
+import moment from 'moment'
 
 export default {
   name: "modal-reprogramacion",
@@ -125,10 +126,13 @@ export default {
       })
     },
     
-    async update () {
-      if ( document.getElementById('sltProfesionalHorarioID').value=='' ) {
-        return this.$swal("Cita no reprogramada, el campo 'horario' esta vacio")
-      }else{
+    async update ($event) {
+			$event.preventDefault();
+      if ( document.getElementById('sltProfesionalHorarioID').value=='' ) 
+				alertify.notify('El horario no puede estar vacío', 'danger', 10)
+			else if( this.data.reschedule =='' )
+				alertify.notify('Debe haber un motivo de reprogramación', 'danger', 10)
+      else{
 				this.data.user_id = this.idUsuario;
 				await this.axios.put(`/api/reprogramado/${this.dataCit.id}`, this.data)
 				.then(res => { console.log(res.data);
@@ -212,7 +216,9 @@ export default {
 
     getDateNow () {
       return dateNow()
-    }
+    },
+		horaLatam1(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm') },
+		horaLatam2(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm a') },
   },
  
   

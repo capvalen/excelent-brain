@@ -36,7 +36,6 @@
 					<thead>
 						<tr>
 							<th>N°</th>
-							<th>Cod.</th>
 							<th>Nombre y Apellidos</th>
 							<th>Celular</th>
 							<th>N° Citas</th>
@@ -50,8 +49,7 @@
 					</thead>
 					<tbody>
 						<tr v-for="(cita, index) in citasResumidas">
-							<td>{{ index+1 }}</td>
-							<td>{{ cita.patient.id }}</td>
+							<td>{{ index+1 }}</td>	
 							<td>{{ cita.patient.name }}</td>
 							<td>{{ cita.patient.phone }}</td>
 							<!-- <td>{{ ultimaFecha(cita.patient.id) }}</td> -->

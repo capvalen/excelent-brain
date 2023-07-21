@@ -231,7 +231,15 @@
                         <thead>
                             <tr>
                                 <td>DESCUENTO</td>
-                                <td style="text-align: right;">S/ 0.00</td>
+                                <td style="text-align: right;">
+																<span>
+																@if($extra_payment->rebaja >0)
+																	{{ 'S/'.number_format($extra_payment->rebaja,2)}}
+																@elseif($extra_payment->descuento >0)
+																{{ $extra_payment->rebaja . '%'}}
+																@endif
+																</span>
+																</td>
                             </tr>
                             <tr>
                                 <td>OP.GRAVADA</td>

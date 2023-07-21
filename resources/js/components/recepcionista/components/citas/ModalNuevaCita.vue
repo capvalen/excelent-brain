@@ -165,14 +165,18 @@
 							<p class="mb-0"><strong>Profesional:</strong> {{ profesionalElegido.name }}</p>
 							<p class="mb-0"><strong>Profesión:</strong> {{ profesionalElegido.profession }}</p>
 							<p class="mb-0"><strong>Servicio anterior:</strong> 
-								<span title="Última atención" v-if="cita.etiqueta==''" class="badge rounded-pill text-bg-light"><i class="fa-solid fa-asterisk"></i> Sin registro previo</span>
-								<span title="Última atención" v-if="cita.etiqueta" class="badge rounded-pill text-bg-dark"><i class="fa-solid fa-genderless"></i> {{cita.etiqueta}}</span>
+								<span title="Última atención" v-if="cita.etiqueta==''" class="badge rounded-pill text-bg-dark"><i class="fa-solid fa-asterisk"></i> Sin registro previo</span>
+								<span title="Última atención" v-if="cita.etiqueta" class="badge rounded-pill text-bg-primary"><i class="fa-solid fa-genderless"></i> {{cita.etiqueta}}</span>
 							</p>
 						</div>
 						<div class="col">
 							<p class="mb-0"><strong>Fecha:</strong> {{ fechaElegida }}</p>							
 							<p class="mb-0"><strong>Horario:</strong> {{ horaLatam1(horaElegida.check_time) }} - {{ horaLatam2(horaElegida.departure_date) }}</p>							
 						</div>
+					</div>
+
+					<div class="alert alert-danger agrandar m-4" role="alert" v-if="alertaDeudas" >
+						<i class="fa-regular fa-comment-dots"></i> <strong>Alto!</strong> <span v-html="mensajeDeudas"></span>
 					</div>
 
 
@@ -307,7 +311,7 @@ export default {
 		return{
 			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
 			switchReciec: 1,
-			patientNew: false,
+			patientNew: false, alertaDeudas:false, mensajeDeudas:'',
 			cita:{
 				phone:'',
 				dni:'',
@@ -535,6 +539,17 @@ export default {
 						title: 'Buscando paciente',
 						timer: 10,
 					})
+					console.log('datos del paciente',res.data);
+					let sumaDeudas = 0;
+					const cantDeudas =  res.data.deudas.length;
+					if( cantDeudas >0){
+						for(let i=0; i< cantDeudas ; i++ ){
+							sumaDeudas+= res.data.deudas[i].monto
+						}
+						this.alertaDeudas = true;
+						this.mensajeDeudas = `El paciente tiene <strong>${(cantDeudas==1) ? '1 deuda': cantDeudas+' deudas'}</strong> de <strong>${moment(res.data.deudas[0].fecha).fromNow()}</strong> por un total de <strong>S/ ${parseFloat(sumaDeudas).toFixed(2)}</strong>`;
+						
+					}else this.alertaDeudas=false;
 
 					if(res.data.patient.faults != 0){
 						this.$swal.fire({
@@ -558,6 +573,7 @@ export default {
 					this.cita.contacto_celular = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
 					this.cita.parentezco = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
 					this.cita.etiqueta = res.data.patient.etiqueta;
+					this.cita.deudas = res.data.patient.deudas;
 					this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()
@@ -705,4 +721,10 @@ export default {
 .ajs-success { background-color: rgb(33, 201, 89)!important; }
 .ajs-danger { background-color: rgb(232, 27, 0)!important; color:white!important; }
 .form-switch label{cursor: pointer;}
+.alert-danger {
+    color: #ffffff;
+    background-color: #ff3521;
+}
+.agrandar{transition: all 0.2s ease-in-out;}
+.agrandar:hover{transform: scale(1.05);}
 </style>

@@ -8,6 +8,7 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Prescription;
+use App\Models\Reschedule;
 use App\Models\Triaje;
 use App\Models\Relative;
 use Illuminate\Support\Facades\DB;
@@ -139,6 +140,11 @@ class PatientController extends Controller
 			$patient->triajes = $triaje ;
 			$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
 			$patient->semaforo = $semaforo;
+
+			$conteo= Appointment::where('patient_id', $patient->id)
+			->where('status', 4)
+			->get();
+			$patient->reprogramaciones = count($conteo);
 		}
 
 		return response()->json($patients);
@@ -156,9 +162,24 @@ class PatientController extends Controller
 			$patient->triajes = $triaje ;
 			$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
 			$patient->semaforo = $semaforo;
+
+			$conteo= Appointment::where('patient_id', $patient->id)
+			->where('status', 4)
+			->get();
+			$patient->reprogramaciones = count($conteo);
 		}
 
 		return response()->json($patients);
+	}
+	public function verReprogramaciones ($id){
+		$reprogramaciones= Appointment::where('patient_id', $id)
+		->where('status', 4)
+		->get();
+		forEach($reprogramaciones as $reprogramacion){
+			$queMotivo = Reschedule::where('appointment_id', $reprogramacion->id)->get();
+			$reprogramacion -> motivo = count($queMotivo)>0? $queMotivo[0]->reason:'';
+		}
+		return response()->json($reprogramaciones);
 	}
 
 	/**
@@ -240,9 +261,16 @@ class PatientController extends Controller
 		//code...
 		if( $paciente ){
 			$relaciones = Relative::where('patient_id', $paciente->id)->first();
+			$deudas = DB::table('deudas')->where('patient_id', $paciente->id )
+			->where('activo', 1)
+			->where('estado', 1)
+			->whereDate('fecha','<=', Carbon::now())
+			->orderBy('fecha', 'desc')
+			->get();
 			return response()->json([
 				'patient'=>$paciente,
-				'relacion' => $relaciones
+				'relacion' => $relaciones,
+				'deudas' => $deudas
 				]);
 		}else{
 			return response()->json([ 'patient'=>$paciente ]);

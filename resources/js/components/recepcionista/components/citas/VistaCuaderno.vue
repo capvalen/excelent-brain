@@ -291,7 +291,7 @@
     	},
 			verHorariosHoy(){ this.fecha = moment().format('YYYY-MM-DD'); this.obtenerHorarios(); },
 			verHorariosMañana(){ this.fecha = moment().add(1, 'day').format('YYYY-MM-DD'); this.obtenerHorarios(); },
-			queServicio(idTipo){ console.log('queTipo', idTipo);
+			queServicio(idTipo){ //console.log('queTipo', idTipo);
 				return this.precios.find(x=> x.id == idTipo).descripcion
 			},
 			changeMode(id, indice){

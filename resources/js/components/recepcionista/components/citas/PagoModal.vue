@@ -24,8 +24,8 @@
 							<div class="col-sm-12">
 									<label for="">Estado de pago</label>
 									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.pago">
-										<option value="1">Sin cancelar</option>
-										<option value="2">Cancelado</option>
+										<option value="1">Sin pagar</option>
+										<option value="2">Pagado</option>
 									</select>
 							</div>                                                      
 							<div class="col-sm-12">

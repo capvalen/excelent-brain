@@ -1,9 +1,9 @@
 <template>
 	<div class="modal fade" id="modalVerTriajesViejos" tabindex="-1" aria-labelledby="modalEvolution" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
+			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header bg-success text-white">
-						<h5 class="modal-title" id="infoModalLabel">Historial de Triajes</h5>
+						<h5 class="modal-title" id="infoModalLabel">Historial de Reprogramaciones</h5>
 						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 					</div>
 					<div class="modal-body">
@@ -12,20 +12,18 @@
 								<tr>
 									<th>N°</th>
 									<th>Fecha</th>
-									<th>Responsable</th>
-									<th>Triaje</th>
+									<th>Motivo</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(triaje, index) in triajes" :key="triaje.id" >
+								<tr v-for="(reprogramacion, index) in reprogramaciones" :key="reprogramacion.id" >
 									<td>{{ index+1 }}</td>
-									<td>{{fechaLatam(triaje.fecha)}}</td>
-									<td class="text-capitalize">{{triaje.responsable}}</td>
-									<td><a class="btn btn-success btn-sm" :href="`/api/triajePDF/${triaje.id}`" target="_blank">Ver PDF</a></td>
+									<td>{{fechaLatam(reprogramacion.date)}}</td>
+									<td class="text-capitalize">{{reprogramacion.motivo}}</td>
 								</tr>
 							</tbody>
 						</table>
-						<p v-if="triajes.length==0">No hay datos registrados</p>
+						<p v-if="reprogramaciones.length==0">No hay datos registrados</p>
 					</div>
 				</div>
 			</div>
@@ -37,7 +35,7 @@ import moment from 'moment';
 	export default {
 		name: 'ModalVerTriajesViejos',
 		props: {
-			triajes: Array
+			reprogramaciones: Array
 		},
 		methods: {
 			fechaLatam(fecha){

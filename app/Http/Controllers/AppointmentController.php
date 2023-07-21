@@ -528,7 +528,6 @@ class AppointmentController extends Controller
 
 		
 		if($request->input('caso.pago') == '2'){ // Modo Cancelado
-			//print_r( 'qqqqqq estado '.$appointment->status); die();
 			
 				$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $request->input('dataCita.patient.name');
@@ -540,8 +539,12 @@ class AppointmentController extends Controller
 				$pagoExtra->observation = $request->input('dataCita.payment.observation');
 				$pagoExtra->continuo = $request->input('caso.continuo');
 				$pagoExtra->user_id = $request->input('caso.user_id');
+				$pagoExtra->rebaja = $request->input('dataCita.payment.rebaja');
+				$pagoExtra->motivoRebaja = $request->input('dataCita.payment.motivoRebaja');
+				$pagoExtra->descuento = $request->input('dataCita.descuento');
+				$pagoExtra->motivoDescuento = $request->input('dataCita.motivoDescuento');
 				$pagoExtra->save();
-
+			
 				//print_r($appointment->status );
 
 				//Debemos de confirmar si esta confirmado para habilitar al profesional
@@ -594,7 +597,7 @@ class AppointmentController extends Controller
 
 	public function reprogramado(Request $request, Appointment $appointment)
 	{
-		//var_dump($request->input('payment.price')); die();
+		//var_dump($request->all()); die();
 		try {
 
 		//$appointment->update($request->all());

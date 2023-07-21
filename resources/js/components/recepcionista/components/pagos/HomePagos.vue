@@ -54,7 +54,11 @@
 								<span v-if="payment.continuo=='-1'">X</span>
 								<span v-if="payment.continuo==null">X</span>
 							</td>
-							<td>{{ payment.observation }}</td>
+							<td class="text-capitalize">
+								<span> {{ payment.observation }} </span>
+								<span v-if="payment.descuento>0" > {{ payment.motivoDescuento }} S/ {{ parseFloat(payment.descuento).toFixed(2) }} </span>
+								<span v-if="payment.rebaja>0" > {{ payment.motivoRebaja }} S/ {{ parseFloat(payment.rebaja).toFixed(2) }} </span>
+							</td>
 							<td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{ retornarFloat(payment.price)}}</td>
 							<td>
 								

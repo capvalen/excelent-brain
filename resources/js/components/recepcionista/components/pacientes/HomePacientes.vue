@@ -8,19 +8,14 @@
                         <i class="fas fa-search fa-sm"></i>
                     </button>
                 </div>
-                <input
-                type="text"
-                class="form-control bg-white shadow-sm border-0 small"
-                id="searchNamePatient"
-                placeholder="Buscar por apellidos, nombres o DNI..."
-                aria-describedby="basic-addon2" @keyup.enter="searchPatients()"
-                >
+                <input type="text" class="form-control bg-white shadow-sm border-0 small" id="searchNamePatient"
+                placeholder="Buscar por apellidos, nombres o DNI..." autocomplete="off" @keyup.enter="searchPatients()">
             </div>
         </div>
     </div>
 		<button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalNewPatient"><i class="fas fa-user-nurse"></i> Crear paciente nuevo</button>
 		<p class="mt-3 mb-1">Últimos 20 pacientes registrados</p>
-    <table class="table table-striped mt-4">
+    <table class="table table-hover mt-4">
       <thead>
         <tr>
           <th>N°</th>
@@ -30,6 +25,7 @@
           <th>Semáforo</th>
           <th>Triaje</th>
           <th>Faltas</th>
+          <th>Reprog.</th>
           <th>Recetas</th>
         </tr>
       </thead>
@@ -85,20 +81,23 @@
 						</div>
 					</td>
 					<td>
-						<button class="btn btn-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ paciente.triajes.length }}</button>
-						<button class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(paciente)" data-bs-target="#modalTriaje" title="Nuevo triaje"><i class="fas fa-file-medical-alt"></i></button>
+						<button class="btn btn-outline-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ paciente.triajes.length }}</button>
+						<button class="btn btn-outline-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(paciente)" data-bs-target="#modalTriaje" title="Nuevo triaje"><i class="fa-solid fa-lungs"></i></button>
 					</td>
           <td>
-            <button class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerFaltas" @click="queId=paciente.id; cantFaltas = paciente.faults;" >{{ paciente.faults }} </button>
+            <button class="btn btn-outline-info btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerFaltas" @click="queId=paciente.id; cantFaltas = paciente.faults;" >{{ paciente.faults }} </button>
           </td>
+					<td>
+						<button class="btn btn-outline-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verReprogramacionesViejos(paciente.id)">{{ paciente.reprogramaciones }}</button>
+					</td>
           <td>
             <button
-            class="btn btn-info btn-circle btn-md"
+            class="btn btn-outline-info btn-circle btn-md"
             @click="dataProps(paciente)"
             data-bs-toggle="modal"
             data-bs-target="#recetasModal"
             >
-            <i class="fas fa-file-medical-alt"></i></button>
+            <i class="fa-solid fa-flask-vial"></i></button>
           </td>
          
         </tr>
@@ -110,6 +109,7 @@
     <modal-faltas v-if="data" :dataPatient="data"></modal-faltas>
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales"></modal-triaje>
 		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
+		<modal-ver-reprogramaciones-viejos :reprogramaciones="reprogramaciones"></modal-ver-reprogramaciones-viejos>
     <modal-new-patient ></modal-new-patient>
 		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
@@ -125,6 +125,7 @@ import ModalRecetas from './ModalRecetas.vue';
 import ModalFaltas from './ModalFaltas.vue';
 import ModalTriaje from './ModalTriaje.vue';
 import ModalVerTriajesViejos from './ModalVerTriajesViejos.vue'
+import ModalVerReprogramacionesViejos from './ModalVerReprogramacionesViejos.vue'
 import ModalNewPatient from './../pacientes/ModalNewPatient.vue'
 import ModalVerEstados from './ModalVerEstados.vue'
 import ModalCambiarLike from './ModalCambiarLike.vue'
@@ -138,7 +139,7 @@ export default {
     return {
       dataPatients: [], queId:null,
       data: null, dataTriajes:null,
-      busqueda: [], like:0, id:-1, cantFaltas:-1,
+      busqueda: [], like:0, id:-1, cantFaltas:-1, reprogramaciones:[],
       totalPatients:[], profesionales:[],
 			estados:[
 				{id: 1, valor: 'Neutro'},
@@ -156,7 +157,7 @@ export default {
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies },
+  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies, ModalVerReprogramacionesViejos },
 
   props: {
     dataPatient: Object
@@ -175,7 +176,7 @@ export default {
     async getPatients () {
       this.busqueda = []
       await this.axios.get(`/api/getLast10Patients`)
-      .then(res => { console.log(res.data);
+      .then(res => { //console.log(res.data);
         this.dataPatients = res.data;
         this.busqueda = this.dataPatients;
 
@@ -251,6 +252,12 @@ export default {
     },
 		verTriajesViejos(index){
 			this.dataTriajes = this.busqueda[index].triajes;
+		},
+		async verReprogramacionesViejos(id){
+			await this.axios.get('/api/verReprogramaciones/'+id)
+			.then(response=>{
+				this.reprogramaciones = response.data;
+			})
 		}
   },
 
