@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Extra_payment;
+use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -64,21 +67,27 @@ class ExtrasController extends Controller
 		return $interesados;
 	}
 	public function borrarInteresados($id){
-		try {
-			$resultado = DB::table('interesados')->where('id', '=', $id)
-			->update([
-				'activo' => 0
+		$resultado = DB::table('interesados')->where('id', '=', $id)
+		->update([
+			'activo' => 0
+		]);
+
+		if($resultado ){
+			return response()->json([
+				'mensaje' => 'Actualizado exitoso'
 			]);
-	
-			if($resultado ){
-				return response()->json([
-					'mensaje' => 'Actualizado exitoso'
-				]);
-			}
-		} catch (\Throwable $th) {
-			echo $th;
 		}
 	}
+
+	public function listarDeudas($fecha){
+		$resultado = DB::table('deudas as d')->where('d.activo', 1)
+		->join('patients as p', 'p.id', '=', 'd.patient_id' )
+		->whereDate('d.fecha', '<=', $fecha)
+		->orderBy('d.fecha', 'asc')
+		->get();
+		return array('deudas' => $resultado);
+	}
+
 	public function cambiarLike($id, $like){
 		DB::table('patients')->where('id', '=', $id)
 		->update([ 'club' => $like ]);
@@ -137,6 +146,49 @@ class ExtrasController extends Controller
 		
 	}
 
+	public function guardarMembresia( Request $request){
+		
+		$fechas = json_decode ($request->input('fechas'));
+		$membresia = json_decode ($request->input('membresia'), true);
+		//var_dump( $fechas ); die();
+		$idMembresia=DB::table('membresias')-> insertGetId([
+			'patient_id' => $request->input('idPaciente'),
+			'fin' => $membresia['fin'],
+			'tipo' => $membresia['tipo'],
+			'user_id' => $request->input('user_id'),
+			'cuotas' => count($fechas),
+			'monto' => $membresia['precio'],
+		]);
+
+
+		foreach($fechas as $fecha){
+			if( $fecha->pago ){ //cuando es true
+				$pagoExtra = new Extra_payment;
+				$pagoExtra->customer = $request->input('customer');
+				$pagoExtra->price = $fecha->monto;
+				$pagoExtra->moneda = 1;
+				$pagoExtra->voucher = '';
+				$pagoExtra->appointment_id = 0;
+				$pagoExtra->type = 7; //pago de membresía
+				$pagoExtra->observation = '';
+				$pagoExtra->continuo = 1;
+				$pagoExtra->user_id = $request->input('user_id');
+				$pagoExtra->save();
+			}else{
+				DB::table('deudas')->insert([
+					'patient_id' => $request->input('idPaciente'),
+					'motivo' => $membresia['tipo']=='15' ? 'Pago de membresía Kurame': 'Pago de membresía Clínica de día',
+					'user_id' => $request->input('user_id'),
+					'fecha' => $fecha->dia,
+					'monto' => $fecha->monto,
+					'idMembresia' => $idMembresia
+				]);
+			}
+		}
+
+		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
+	}
+
 	public function listRecomendation($id){
 		
 		$recommendations = DB::table('recommendations as r')->where('patient_id', $id)
@@ -184,6 +236,13 @@ class ExtrasController extends Controller
 
 	public function listarPrecios(){
 		return DB::table('precios')->where('activo', 1)
+		->whereNotIn('id', [15,28] )
+		->orderBy('descripcion', 'asc')
+		->get();
+	}
+	public function preciosMembresias(){
+		return DB::table('precios')->where('activo', 1)
+		->whereIn('id', [15, 28] )
 		->orderBy('descripcion', 'asc')
 		->get();
 	}

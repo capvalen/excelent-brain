@@ -12,14 +12,14 @@
 					<div class="card-body"><i class="fa-regular fa-circle-user"></i> Seguimiento</div>
 				</div>
 			</div>
-			<!-- <div class="col-sm-3">
-				<div class="card mb-0 py-0 border-left-warning cursor">
-					<div class="card-body"><i class="fas fa-money-bill-wave-alt"></i> Ver pagos adelantados</div>
+			<div class="col-sm-3" @click="cargarDatos('deudas')">
+				<div class="card mb-0 py-0 border-left-warning cursor" :class="{'active': activoDeudas}">
+					<div class="card-body"><i class="fas fa-money-bill-wave-alt"></i> Deudas</div>
 				</div>
-			</div> -->
+			</div>
 			<div class="col-sm-3" @click="cargarDatos('cumpleaños')">
 				<div class="card mb-0 py-0 border-left-info cursor" :class="{'active': activoCumple}">
-					<div class="card-body"><i class="fas fa-birthday-cake"></i> Ver cumpleaños</div>
+					<div class="card-body"><i class="fas fa-birthday-cake"></i> Cumpleaños</div>
 				</div>
 			</div>
 			<div class="col-sm-3"></div>
@@ -27,6 +27,8 @@
 		<section v-if="tipo == 'cumpleaños'">
 			<div class="card px-1 my-4 p-2">
 				<div class=" card-body">
+					<p class="lead">Cumpleaños</p>
+
 					<div class="input-group mb-3 col-sm-4">
 						<span class="input-group-text" id="basic-addon1">Cambiar fecha:</span>
 						<input type="date" class="form-control" v-model="fechaCumple" id="fechaCumple" @change="cambiarFecha()">
@@ -57,6 +59,8 @@
 		<section v-if="tipo== 'avisos'">
 			<div class="card px-1 my-4 p-2">
 				<div class="card-body">
+					<p class="lead">Avisos</p>
+
 					<div class="d-flex justify-content-between">
 						<div class="input-group mb-3 col-sm-4">
 							<span class="input-group-text" id="basic-addon1">Cambiar mes:</span>
@@ -67,6 +71,7 @@
 							<button class="btn btn-outline-success mx-2" @click="actualizarAvisos()"><i class="fas fa-sync"></i> Actualizar lista</button>
 						</div>
 					</div>
+
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -114,11 +119,14 @@
 			<div class="card px-1 my-4 p-2">
 				<div class="card-body">
 					<div class="card-body">
+						<p class="lead">Listado de interesados</p>
+
 						<div class="d-flex justify-content-end">
-						<div class="d-grid mb-2">
-							<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoInteresado"><i class="fa-regular fa-circle-user"></i> Nuevo seguimiento</button>
+							<div class="d-grid mb-2">
+								<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoInteresado"><i class="fa-regular fa-circle-user"></i> Nuevo seguimiento</button>
+							</div>
 						</div>
-					</div>
+
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -159,6 +167,46 @@
 				</div>
 			</div>
 		</section>
+		<section v-if="tipo=='deudas'">
+			<div class="card px-1 my-4 p-2">
+				<div class="card-body">
+					<div class="card-body">
+						<p class="lead">Deudas por cobrar</p>
+						<div class="input-group mb-3 col-sm-4">
+							<span class="input-group-text" id="basic-addon1">Cambiar fecha:</span>
+							<input type="date" class="form-control" v-model="nFecha" id="fechaDeudas" @change="cargarDatos('deudas')">
+						</div>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Nombre</th>
+								<th>Motivo</th>
+								<th>Fecha de deuda</th>
+								<th>Estado</th>
+								<th>@</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(deuda, index) in deudas">
+								<td>{{ index+1 }}</td>
+								<td class="text-capitalize">{{ deuda.name }}</td>
+								<td class="text-capitalize">{{ deuda.motivo }}</td>
+								<td>{{ fechaLatam(deuda.fecha) }} <small>({{ fechaFrom(deuda.fecha) }})</small></td>
+								<td>
+									<span v-if="deuda.estado == 1">Deuda pendiente</span>
+									<span v-if="deuda.estado == 2">Deuda cobrada</span>
+									<span v-if="deuda.estado == 3">Deuda perdida</span>
+								</td>
+								<td>
+									<button class="btn btn-outline-info btn-sm" title="Cambiar de estado" @click="modificarDeuda(deuda.id, index)"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+				</div>
+			</div></section>
 
 		<ModalNuevoAviso :usuario="idUsuario"></ModalNuevoAviso>
 		<ModalEditarAviso v-if="avisos" :queAviso="queAviso" :usuario="idUsuario"></ModalEditarAviso>
@@ -178,7 +226,7 @@ export default {
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD')
 		}
 	},
 	mounted(){
@@ -209,6 +257,11 @@ export default {
 						this.activoInteresado = true;
 						await this.axios.get(`/api/listarInteresados/`)
 						.then(response => this.interesados = response.data)
+						break;
+					case 'deudas':
+						this.activoDeudas = true;
+						await this.axios.get(`/api/listarDeudas/`+this.nFecha)
+						.then(response => this.deudas = response.data.deudas)
 						break;
 				default:
 					break;
@@ -242,7 +295,11 @@ export default {
 					else this.$swal({icon:'error',title: 'Hubo un error interno'})
 				});
 			}
-		}
+		},
+		fechaFrom(fecha){
+			moment.locale('es')
+			return moment(fecha, 'YYYY-MM-DD').fromNow();
+		},
 
 	}
 	
@@ -253,5 +310,5 @@ export default {
 	cursor: pointer;
 	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
-.card.active{font-weight: bold;}
+.card.active{font-weight: bold; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px; }
 </style>

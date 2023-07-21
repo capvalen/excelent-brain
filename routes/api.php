@@ -120,12 +120,15 @@ Route::post('actualizarAviso/', [ExtrasController::class, 'actualizarAviso']);
 Route::get('listarAvisos/{fecha}', [ExtrasController::class, 'listarAvisos']);
 Route::post('nuevoInteresado/', [ExtrasController::class, 'nuevoInteresado']);
 Route::get('listarInteresados/', [ExtrasController::class, 'listarInteresados']);
+Route::get('listarDeudas/{fecha}', [ExtrasController::class, 'listarDeudas']);
 Route::get('borrarInteresados/{id}', [ExtrasController::class, 'borrarInteresados']);
 Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
 Route::get('listRecomendation/{id}', [ExtrasController::class, 'listRecomendation']);
 Route::get('listarPrecios/', [ExtrasController::class,'listarPrecios']);
+Route::get('preciosMembresias/', [ExtrasController::class,'preciosMembresias']);
 Route::get('cargarUsuarios/', [ExtrasController::class,'cargarUsuarios']);
 Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);
+Route::post('guardarMembresia/', [ExtrasController::class, 'guardarMembresia']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 Route::post('buscarCartera/', [ExtrasController::class,'buscarCartera']);

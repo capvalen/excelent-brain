@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <div>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Pagos</h1>
             <div class="d-flex align-items-center">
@@ -7,8 +7,9 @@
             </div>
     </div>
     <div class="card px-1 pt-2">
-			<div>
+			<div class="m-4">
 				<button class="btn btn-outline-success" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
+				<button class="btn btn-outline-primary" @click="membresias()" data-bs-target="#modalMembresias" data-bs-toggle="modal"><i class="fa-solid fa-arrow-up-right-dots"></i> Ingresar membresía</button>
 			</div>
 			<p class="mt-2"><strong>Cuadre de caja: Pagos, Entradas y Salidas</strong></p>
 
@@ -56,6 +57,8 @@
 							<td>{{ payment.observation }}</td>
 							<td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{ retornarFloat(payment.price)}}</td>
 							<td>
+								
+								<span v-if="payment.type==7">Pago de membresía</span>
 								<span v-if="payment.type==6">Salida de dinero</span>
 								<span v-if="payment.type==5">Pago de cita</span>
 								<span v-if="payment.type==4">Otros</span>
@@ -173,6 +176,8 @@
 				</div>
 			</div>
 		</div>
+		<ModalMembresias :idUsuario="idUsuario"></ModalMembresias>
+
 		<!-- Modal -->
 		<div class="modal fade" id="modalEditarPago" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-sm">
@@ -220,10 +225,11 @@
 		</div>
 		
 		
-</main>
+	</div>
 </template>
 
 <script>
+import ModalMembresias from "./ModalMembresias.vue"
 import moment from 'moment'
 
 	export default{
@@ -234,7 +240,7 @@ import moment from 'moment'
 			}
 		},
 		props:{},
-		components:['modalEditarPago'],
+		components:{ModalMembresias},
 		methods:{
 				getAllExtraPayments(){
 						this.axios.get('/api/getAllExtraPayments')
@@ -304,7 +310,8 @@ import moment from 'moment'
 							this.payments[this.caso.index].observation = this.caso.observacion
 						}
 					})
-				}
+				},
+				membresias(){}
 		},
 		mounted(){
 			this.getAllExtraPayments()
