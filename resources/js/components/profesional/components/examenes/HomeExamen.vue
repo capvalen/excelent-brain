@@ -23,7 +23,11 @@
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label for="">Tipo de examen</label>
+                            <label for="">Tipo de examen
+															<button type="button" class="btn btn-outline-primary btn-sm position-relative" data-bs-target="#modalAddExamen" data-bs-toggle="modal"> <i class="fa-solid fa-plus"></i> Agregar nuevo elemento
+																<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"> </span>
+															</button>
+														</label>
                             <select name="" id="typeExam" @change="typeExamenSelect" class="form-select">
                                 <option value="1">Laboratorio</option>
                                 <option value="2">Imagenología</option>
@@ -34,32 +38,29 @@
 
                     <div class="form-row">
                         <div class="form-group w-100 position-relative">
-                            <label for="">Examen</label>
-                            <input 
-                            autocomplete="off" 
-                            type="text" 
-                            class="form-control w-100" 
-                            placeholder="Nombre del estudio" 
-                            name="" 
-                            id="diagnostico" 
-                            @keyup="searchExam"
-                            />
+													<label for="">Examen</label>
+													<input 
+													autocomplete="off" 
+													type="text" 
+													class="form-control w-100" 
+													placeholder="Nombre del estudio" 
+													name="" 
+													id="diagnostico" 
+													@keyup="searchExam"
+													/>
 
-                            <div class="cie-content rounded">
-                                <div 
-                                v-for="(exam, index) in dataSearchExam" 
-                                :key="index"
-                                >
-                                    <span 
-                                    class="w-100 px-2 py-2 cie--hover d-inline-block pointer cie-item" 
-                                    :data-id="exam.id"
-                                    :class="{ 'cie-danger': selected.find(el => el.id == `${exam.id}`) }"
-                                    @click="insertExam(exam)"
-                                    >
-                                        {{ exam.name }}
-                                    </span>
-                                </div>
-                            </div>
+													<div class="cie-content rounded">
+														<div 
+														v-for="(exam, index) in dataSearchExam" :key="index">
+																<span 
+																class="w-100 px-2 py-2 cie--hover d-inline-block pointer cie-item" 
+																:data-id="exam.id"
+																:class="{ 'cie-danger': selected.find(el => el.id == `${exam.id}`) }"
+																@click="insertExam(exam)">
+																		{{ exam.name }}
+																</span>
+														</div>
+													</div>
                         </div>
                     </div>
                 </div>
@@ -94,6 +95,30 @@
             </div>
         </div>
     </div>
+		<!-- Modal -->
+<div class="modal fade" id="modalAddExamen" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo tipo de examen</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body border-0">
+        <label for="">Categoría que pertenece</label>
+				<select name="" class="form-select" v-model="nuevo.tipo">
+					<option value="1">Laboratorio</option>
+					<option value="2">Imagenología</option>
+					<option value="3">Otros</option>
+				</select>
+        <label for="">Nombre del exámen</label>
+				<input type="text" class="form-control" v-model="nuevo.nombre" autocomplete="off">
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-primary" @click="enviarNuevo()"><i class="fa-regular fa-floppy-disk"></i> Ingresar nuevo tipo</button>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 </template>
 
@@ -107,9 +132,7 @@ export default {
                 attention_date: this.getFecha(),
                 medical_exams:[]
             },
-            
-            buscar:'',
-
+            buscar:'', nuevo:{tipo:1, nombre:''},
             examenes: {
                 laboratorio: [],
                 imagenologia: [],
@@ -135,6 +158,14 @@ export default {
                 console.log(err)
             });
         },
+				enviarNuevo(){
+					if( this.nuevo.nombre )
+						this.axios.post('/api/newExam', this.nuevo)
+						.then(response=> {
+							this.exams.push( response.data );
+							this.typeExamenSelect;
+						})
+				},
 
         async getExams(){
             await this.axios.get('/api/medicalExam/')

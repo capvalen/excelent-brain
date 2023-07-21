@@ -66,7 +66,7 @@
 							<hr>
 							<div v-if="datosConsulta.triajes.length>0">
 								<p><strong>Triaje</strong></p>
-								<div class="row row-cols-4">
+								<div class="row row-cols-4" >
 									<div class="col"><p><strong>TR:</strong> {{ datosConsulta.triajes[0].fc }}</p></div>
 									<div class="col"><p><strong>FR:</strong> {{ datosConsulta.triajes[0].fr }}</p></div>
 									<div class="col"><p><strong>PA:</strong> {{ datosConsulta.triajes[0].pa }}</p></div>
@@ -97,6 +97,17 @@
 						</ul>
 					</div>
 				</div>
+				<div class="card shadow mb-4">
+					<div class="card-header bg-primary py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-white"><i class="fa-solid fa-paperclip"></i> Archivos adjuntos</h6>
+						<button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalArchivos"><i class="fa-solid fa-upload"></i></button>
+					</div>
+					<div class="card-body">
+						<ul >
+							<span data-bs-toggle="modal" data-bs-target="#modalArchivos" style="cursor:pointer;" ><i class="fa-regular fa-file-lines"></i> Vea y adjunte archivos a la Historia Clínica</span>
+						</ul>
+					</div>
+				</div>
 			</div>
 			<div class="col-md-6 ">
 				<div class="card shadow mb-4">
@@ -109,10 +120,10 @@
 					<div class="card-body">
 						<div class="historia-info">
 							<div v-if="datosConsulta.relative">
-								<p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta.relative.name ?
+								<p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta.relative.name && datosConsulta.relative.name!='null' ?
 									lowerCase(datosConsulta.relative.name) : '...' }}</p>
-								<p><b>Número de celular:</b> {{ datosConsulta.relative.phone ? datosConsulta.relative.phone : '...' }}</p>
-								<p><b>Parentesco:</b> {{ datosConsulta.relative.kinship ? datosConsulta.relative.kinship : '...' }}</p>
+								<p><b>Número de celular:</b> {{ datosConsulta.relative.phone && datosConsulta.relative.phone!='null' ? datosConsulta.relative.phone : '...' }}</p>
+								<p><b>Parentesco:</b> {{ datosConsulta.relative.kinship && datosConsulta.relative.kinship!='null' ? datosConsulta.relative.kinship : '...' }}</p>
 							</div>
 
 							<div v-else>
@@ -142,7 +153,7 @@
 						</div>
 						<p class="mt-2 mb-0">Visitas:</p>
 
-					<BarChart :citas="datosConsulta.appointments" ></BarChart>
+					<BarChart v-if="datosConsulta.appointments" :citas="datosConsulta.appointments" ></BarChart>
 
 					</div>
 
@@ -580,11 +591,13 @@
 		<edit-modal :datosModal="dataModal"></edit-modal>
 		<modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
 		<modal-ver-triajes-viejos :triajes = "datosConsulta.triajes"></modal-ver-triajes-viejos>
-		<ModalEditarPariente :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
+		<ModalEditarPariente v-if="datosConsulta" :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
 		<ModalEditarPaciente v-if="dato1" :dataPatient="dato1" ></ModalEditarPaciente>
 		<ModalVerEstados :dataPatient="datosPaciente" :estados="estados"></ModalVerEstados>
 		<ModalVerHobbies :hobbies="hobbies" :id="datosConsulta.id" :misHobbies="misHobbies" ></ModalVerHobbies>
 		<ModalComentarios :comentarios="comentarios" :idProfesional="dataUser.id" @refrescarComentarios="updateComentarios" ></ModalComentarios>
+		<ModalProximaCita :profesional="dataUser" :paciente="datosPaciente"></ModalProximaCita>
+		<ModalArchivos :idPaciente="datosConsulta.id" :idProfesional="dataUser.id" ></ModalArchivos>
 	</div>
 </template>
 
@@ -602,19 +615,21 @@ import ModalEditarPaciente from './../../../recepcionista/components/pacientes/M
 import ModalEditarPariente from './ModalEditarPariente.vue'
 import ModalVerEstados from './../../../recepcionista/components/pacientes/ModalVerEstados.vue'
 import ModalVerHobbies from './../../../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
+import ModalProximaCita from './ModalProximaCita.vue'
+import ModalArchivos from './ModalArchivos.vue'
 import BarChart  from './grafico/barras'
 
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos },
 
 	data() {
 		return {
 			autoSaveInfo: '', profesionalesTodos:[],
-			datosConsulta: {},
+			datosConsulta: { triajes:[], examenes_basicos:[], examenes_personalizados:{burns:[], gads:[], scrs:[], zung_anxieties :[], zung_depressions :[]} },
 			cardUpdate: '',         // Va el el nombre del card | Psiquiatra | Psicologia | perfil | etc
-			dobleClick: false,
+			dobleClick: false,relative: [],
 			switch: 0,
 			inputActive: '',
 			rol: '',
@@ -713,7 +728,7 @@ export default {
 	props: {
 		dataUser: Object,
 		datosModal: Object,
-		dataPatient: Object,
+		dataPatient: {},
 		dataExam: Array
 	},
 

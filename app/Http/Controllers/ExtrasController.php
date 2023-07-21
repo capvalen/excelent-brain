@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Extra_payment;
 use App\Models\Patient;
+use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -186,6 +187,29 @@ class ExtrasController extends Controller
 			}
 		}
 
+		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
+	}
+
+	public function reservarCitaDoctor(Request $request, Appointment $appointment){
+		//var_dump($request->all()); die();
+		$appointment ->fill($request->all());
+		$appointment->save();
+
+		Payment::create([
+			'observation'=>'',
+			'bank'=>'',
+			'voucher' => '',
+			'pay_status'=> 1,
+			'price' => $request->get('precio'),
+			'appointment_id' => $appointment->id,
+			'continuo' => 2,
+			'user_id' => $request->get('professional_id'),
+			'rebaja' => 0,
+			'motivoRebaja' => '',
+			'descuento' => 0,
+			'motivoDescuento' => ''
+		]);
+		//return $appointment; // Ya contiene el ID
 		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
 	}
 

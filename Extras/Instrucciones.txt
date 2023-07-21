@@ -61,4 +61,28 @@ tabla reschedules => se agrega la razon del cambio con el ID de la cita anulada
 Hacer: 
 npm i vue-chartjs chart.js
 npm audit fix
+
+
+En la tabla appointments versión vieja el campo .type es:
+1 Terapia Inicial niño/adolescente
+2 Terapia Inicial adulto
+3 Terapia Inicial pareja
+4 Terapia Inicial familiar
+5 Terapia continua niño/adolescente
+6 Terapia continua adulto
+7 Terapia continua pareja
+8 Terapia continua familiar
+9 Orientación Vocacional
+10 Sucamec inicial
+11 Sucamec renovación
+12 Kurame
+
+Para la versión nueva, el campo se toma de la tabla precios.
+El campo mode 1 es presencial, 2 virtual
+El campo clasification
+1 Psiquiátrico
+2 Psicológico
+3 Certificado
+4 Kurame
+5 Clínica de día
 */

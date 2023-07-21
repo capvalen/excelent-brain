@@ -27,6 +27,25 @@ class Medical_examController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+		 
+		public function newExam(Request $request){
+			//var_dump($request->all());die();
+			try {
+				$examen = new Medical_exam;
+				$examen->fill([
+					'name' => $request->get('nombre'),
+					'type' => $request->get('tipo'),
+				]);
+				$examen->save();
+			
+				return $examen;
+			} catch (\Throwable $th) {
+				echo $th;
+			}
+			
+		}
+
     public function store(Request $request)
     {
         $appointment = Appointment::find($request->get('appointment'));

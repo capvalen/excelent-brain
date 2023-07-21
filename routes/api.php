@@ -33,6 +33,7 @@ use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Prescription_detail;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -106,6 +107,7 @@ Route::resource('schedule', ScheduleController::class)->only(['index', 'store', 
 Route::resource('initialPsychiatric', Initial_psychiatric_historyController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('initialPsychological', Initial_psychological_historyController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('medicalExam', Medical_examController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
+Route::post('newExam', [Medical_examController::class, 'newExam']);
 Route::get('departamentos',[AppointmentController::class,'getDepartamentos']);
 
 Route::resource('evolution', Medical_evolutionController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
@@ -130,6 +132,7 @@ Route::get('preciosMembresias/', [ExtrasController::class,'preciosMembresias']);
 Route::get('cargarUsuarios/', [ExtrasController::class,'cargarUsuarios']);
 Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);
 Route::post('guardarMembresia/', [ExtrasController::class, 'guardarMembresia']);
+Route::post('reservarCitaDoctor/', [ExtrasController::class, 'reservarCitaDoctor']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 Route::post('buscarCartera/', [ExtrasController::class,'buscarCartera']);
@@ -213,3 +216,6 @@ Route::get('allAditionals', [AdittionalController::class, 'allAditionals']);
 Route::get('getAllExtraPayments',[PaymentController::class, 'getAllExtraPayments']);
 Route::get('getExtraPaymentsByDay/{date}', [PaymentController::class, 'getExtraPaymentsByDay']);
 Route::post('editarPagoExtra/', [PaymentController::class, 'editarPagoExtra']);
+
+Route::post('/subirArchivo', [PatientController::class, 'subirArchivo']);
+Route::post('/pedirArchivos', [PatientController::class, 'pedirArchivos']);

@@ -11,12 +11,25 @@ export default{
 	name: 'myChart',
 	props:['citas'],
 	data(){ return {
-		etiquetas:[], datos:[]
+		etiquetas:[], datos:[], bandera:[]
 	}},
 	mounted(){
 
+		
 		this.citas.forEach(cita=>{
 			let año = moment(cita.date).format('YYYY')
+			
+			/* let existe = this.bandera.filter( x => moment(x.date).format('YYYY') == cita.año && x.clasification==cita.clasification)
+			console.log('existe', existe);
+			if(existe){
+				this.bandera[existe].count +=1;
+			}else{
+				this.bandera.push({
+					year: x.clasification==1? 'PSI':'PSCO'+ cita.año,
+					count:1
+				})
+			} */
+			
 			
 			let indice= -1;
 			if( this.etiquetas.indexOf(año) >-1 ){ //ya tiene
@@ -26,7 +39,7 @@ export default{
 				this.etiquetas.push(año);
 				this.datos.push(1)
 			}
-			console.log( indice,  this.etiquetas.indexOf(año) )
+			//console.log( indice,  this.etiquetas.indexOf(año) )
 
 		})
 		

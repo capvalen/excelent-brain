@@ -150,11 +150,11 @@ class PatientController extends Controller
 		return response()->json($patients);
 	}
 	public function searchPatientByNameDni ($nombre){
-		$patients = Patient::where('name', 'LIKE', "%".$nombre ."%")
-				->orWhere('dni', $nombre )
-				->where('activo', 1)
-				->with('relative', 'address', 'prescriptions')
-				->orderBy('name', 'asc')
+		$patients = Patient::where('activo', 1)
+		->where('name', 'LIKE', "%".$nombre ."%")
+		->orWhere('dni', $nombre )
+		->with('relative', 'address', 'prescriptions')
+		->orderBy('name', 'asc')
 		->get();
 		foreach($patients as $patient){
 			$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
@@ -538,6 +538,33 @@ class PatientController extends Controller
 			]);
 	
 			return response()->json([ 'msg' => 'Actualizado con éxito' ]);
+		}
+
+		public function subirArchivo(Request $request){
+		
+			if ($request->file('file')->isValid()) {
+				$file = $request->file('file');
+				$fileName = time() . '.' . $file->getClientOriginalExtension();
+				$file->move(public_path('storage/archivos'), $fileName);
+
+				$archivo = DB::table('archivos')->insertGetId([
+					'patient_id' => $request->get('idPaciente'),
+					'nombre' => $file->getClientOriginalName(),
+					'archivo' => $fileName,
+					'user_id' => $request->get('idProfesional')
+				]);
+
+				return response()->json(['archivo' =>$fileName, 'fecha'=>Carbon::now(), 'nombre' => $file->getClientOriginalName(), 'id'=> $archivo ]);
+			}
+
+			return response()->json(['error' => 'Error al subir el archivo.'], 400);
+
+		}
+
+		public function pedirArchivos(Request $request){
+			//var_dump($request->all()); die();
+			$archivos = DB::table('archivos')->where('patient_id', $request->get('idPaciente'))->get();
+			return $archivos;
 		}
 
 }

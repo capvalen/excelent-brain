@@ -54,7 +54,7 @@
 									</td>
 									<td v-else></td>
 									<td>
-										<a v-if="hora.libre==0" @click="modalInfo(horasMalas[hora.indexOcupado]);" data-bs-toggle="modal" data-bs-target="#pagoModal" class="btn btn-icon-split btn-sm"
+										<a v-if="hora.libre==0 && horasMalas[hora.indexOcupado].payment" @click="modalInfo(horasMalas[hora.indexOcupado]);" data-bs-toggle="modal" data-bs-target="#pagoModal" class="btn btn-icon-split btn-sm"
 											:class='{
 											"btn-secondary": horasMalas[hora.indexOcupado].payment.pay_status == 1 ,
 											"btn-success": horasMalas[hora.indexOcupado].payment.pay_status == 2 ,
@@ -238,6 +238,7 @@
    	 },
 			async obtenerHorarios(){
 				let dia = this.dayWeek(moment(this.fecha).format('d')-1)
+				console.log('que pediria', `/api/horarioCuadernoOcupado/${this.fecha}/${dia}`);
 				
 				await this.axios.get(`/api/horarioCuadernoOcupado/${this.fecha}/${dia}`)
 				.then(res => { console.log(res.data);

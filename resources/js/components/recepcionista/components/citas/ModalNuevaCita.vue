@@ -189,7 +189,7 @@
 							name="clasification" 
 							id="clasification" 
 							v-model="cita.clasification"
-							@change="precioDinamico()"
+							@change="precioDinamico(); cita.type=''"
 							>
 								<option value="3">Certificado</option>
 								<option value="1" v-if="profesionalElegido.idProfesion=='1'" selected >Psiquiatrica</option>
@@ -388,6 +388,8 @@ export default {
 				alertify.notify('Todo paciente debe tener un DNI válido', 'danger', 10);
 			else if( this.cita.type_dni!=1 && (this.cita.dni =='' || this.cita.dni.length<8) )
 				alertify.notify('Todo extranjero debe tener un documento de identidad válido', 'danger', 10);
+			else if( !this.cita.type)
+				alertify.notify('Debe seleccionar un tipo de servicio', 'danger', 10);
 			else if( this.tieneDescuento && this.razonPorcentaje=='' ) alertify.notify('Tiene que rellenarse un motivo de descuento', 'danger', 10)
 			else if( this.tieneRebaja && this.razonRebaja=='' ) alertify.notify('Tiene que rellenarse un motivo de rebaja', 'danger', 10)
 			else{
