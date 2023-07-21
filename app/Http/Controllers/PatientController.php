@@ -421,7 +421,7 @@ class PatientController extends Controller
 		public function insertarTriaje(Request $request, $id){
 			//print_r($request[0]['campo']);
 			//var_dump( $request[0]);
-			//$temp = $request->all();
+			//var_dump( $request->all()); die();
 			$paciente = Patient::find($id);
 			$paciente ->update($request[0]);
 			$triaje = $request[1];
@@ -442,7 +442,7 @@ class PatientController extends Controller
 			) VALUES (?,?,?,?,?,?,
 			?,?,?,?,?,?,
 			?,?,?,?)',
-			[ $triaje['patient_id'],$triaje['motivo'],$triaje['sintomatologia'],$triaje['antecedentes'],$triaje['prioridad'], $triaje['especialista'],
+			[ $id, $triaje['motivo'],$triaje['sintomatologia'],$triaje['antecedentes'],$triaje['prioridad'], $triaje['especialista'],
 			$triaje['responsable'], $triaje['fv'], $triaje['fc'], $triaje['fr'], $triaje['pa'], $triaje['t'],
 			$triaje['pruebas'], $triaje['referencia'],$triaje['peso'], $triaje['talla']
 			]);
