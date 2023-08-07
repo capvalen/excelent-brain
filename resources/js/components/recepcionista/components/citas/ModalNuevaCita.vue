@@ -164,7 +164,7 @@
 						<div class="col">
 							<p class="mb-0"><strong>Profesional:</strong> {{ profesionalElegido.name }}</p>
 							<p class="mb-0"><strong>Profesión:</strong> {{ profesionalElegido.profession }}</p>
-							<p class="mb-0"><strong>Servicio anterior:</strong> 
+							<p class="mb-0"><strong>Última atención:</strong> 
 								<span title="Última atención" v-if="cita.etiqueta==''" class="badge rounded-pill text-bg-dark"><i class="fa-solid fa-asterisk"></i> Sin registro previo</span>
 								<span title="Última atención" v-if="cita.etiqueta" class="badge rounded-pill text-bg-primary"><i class="fa-solid fa-genderless"></i> {{cita.etiqueta}}</span>
 							</p>
