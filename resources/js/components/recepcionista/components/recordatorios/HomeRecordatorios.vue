@@ -46,7 +46,7 @@
 						<tbody>
 							<tr v-for="(cliente, index) in clientes">
 								<td>{{ index + 1 }}</td>
-								<td>{{ cliente.name }}</td>
+								<td @click="dataProps(cliente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ cliente.name }}</td>
 								<td>{{ fechaLatam(cliente.birth_date) }}</td>
 								<td>{{ edad(cliente.birth_date) }} años</td>
 								<td><a v-if="cliente.phone!=''" :href="`https://wa.me/51${cliente.phone}?text=Feliz cumpleaños 🎂 ${cliente.name}, recuerda que el que piensa positivo, ve lo invisible, siente lo intangible y logra lo imposible. Te desea la clínica Excelentemente 🤗`" target="_blank"><i class="fab fa-whatsapp"></i></a></td>
@@ -190,7 +190,7 @@
 						<tbody>
 							<tr v-for="(deuda, index) in deudas">
 								<td>{{ index+1 }}</td>
-								<td class="text-capitalize">{{ deuda.name }}</td>
+								<td class="text-capitalize" @click="dataProps(deuda)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ deuda.name }}</td>
 								<td class="text-capitalize">{{ deuda.motivo }}</td>
 								<td>{{ fechaLatam(deuda.fecha) }} <small>({{ fechaFrom(deuda.fecha) }})</small></td>
 								<td>
@@ -211,6 +211,7 @@
 		<ModalNuevoAviso :usuario="idUsuario"></ModalNuevoAviso>
 		<ModalEditarAviso v-if="avisos" :queAviso="queAviso" :usuario="idUsuario"></ModalEditarAviso>
 		<ModalNuevoInteresado :usuario="idUsuario"></ModalNuevoInteresado>
+		<ModalEditPatients v-if="data" :dataPatient="data"></ModalEditPatients>
 		
 	</main>
 	
@@ -219,14 +220,16 @@
 import ModalNuevoAviso from './ModalNuevoAviso.vue'
 import ModalEditarAviso from './ModalEditarAviso.vue'
 import ModalNuevoInteresado from './ModalNuevoInteresado.vue'
+import ModalEditPatients from '../pacientes/ModalEditPatients.vue'
+
 import moment from 'moment';
 
 export default {
-	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado },
+	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditPatients },
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD')
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null
 		}
 	},
 	mounted(){
@@ -243,8 +246,7 @@ export default {
 				case 'cumpleaños':
 					this.activoCumple = true;
 					await this.axios.get(`/api/listarCumpleanos/${this.fechaCumple}`)
-						.then(response => {
-							console.log(response.data);
+						.then(response => { //console.log(response.data);
 							this.clientes = response.data
 						});
 					break;
@@ -266,6 +268,10 @@ export default {
 				default:
 					break;
 			}
+		},
+		dataProps(data){
+			this.$emit('cambioDato');
+			this.data= data
 		},
 		actualizarAvisos(){ this.cargarDatos('avisos') },
 		fechaLatam(fecha) {

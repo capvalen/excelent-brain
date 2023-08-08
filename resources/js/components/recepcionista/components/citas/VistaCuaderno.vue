@@ -4,9 +4,9 @@
 			<div class="col-auto"><input type="date" class="form-control shadow-sm" v-model="fecha" @change="obtenerHorarios()"></div>
 			<div class="col-auto"><button class="btn btn-outline-primary mx-2 border-0" @click="verHorariosHoy()"><i class="fa-regular fa-clock"></i> Hoy</button></div>
 			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="verHorariosMañana()"><i class="fa-regular fa-clock"></i> Mañana</button></div>
+			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="refrescarHorarios()"><i class="fas fa-sync"></i> Actualizar</button></div>
 			<div class="col-auto"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPacienteExterno" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
 		</div>
-		<p>Hola mundo 1</p>
 		<div class="accordion ">
 			<div class="accordion-item"  v-for="(doctor, index) in doctores" :key="doctor.id">
 				<h2 class="accordion-header">
@@ -238,7 +238,7 @@
    	 },
 			async obtenerHorarios(){
 				let dia = this.dayWeek(moment(this.fecha).format('d')-1)
-				console.log('que pediria', `/api/horarioCuadernoOcupado/${this.fecha}/${dia}`);
+				//console.log('que pediria', `/api/horarioCuadernoOcupado/${this.fecha}/${dia}`);
 				
 				await this.axios.get(`/api/horarioCuadernoOcupado/${this.fecha}/${dia}`)
 				.then(res => { console.log(res.data);
@@ -292,6 +292,7 @@
     	},
 			verHorariosHoy(){ this.fecha = moment().format('YYYY-MM-DD'); this.obtenerHorarios(); },
 			verHorariosMañana(){ this.fecha = moment().add(1, 'day').format('YYYY-MM-DD'); this.obtenerHorarios(); },
+			refrescarHorarios(){ this.obtenerHorarios(); },
 			queServicio(idTipo){ //console.log('queTipo', idTipo);
 				return this.precios.find(x=> x.id == idTipo).descripcion
 			},

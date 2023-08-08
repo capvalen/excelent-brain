@@ -33,7 +33,7 @@
 <script>
 import moment from 'moment';
 	export default {
-		name: 'ModalVerTriajesViejos',
+		name: 'ModalVerTriajesHistorial',
 		props: {
 			reprogramaciones: Array
 		},
