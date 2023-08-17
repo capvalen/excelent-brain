@@ -1,17 +1,18 @@
 <template>
   <div class="modal fade" id="modalEstado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Estado de la cita {{dataCit.id}}</h5>
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="exampleModalLabel">Estado de la cita </h5>
           <button type="button" id="cerrModalEstado" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         
         <div class="modal-body">
+					<label for="">Código de cita: #{{ dataCit.id }}</label>
           <form action="">                                                                      
-							<label for="">Estado</label>
+							<label for="">Nuevo estado:</label>
 							<select class="form-select status-appointment" name="status" id="status" v-model="dataCit.status">
 								<option value="1">Sin Confirmar</option>
 								<option value="2">Confirmar cita</option>
@@ -24,9 +25,8 @@
           </form>
         </div>
 
-        <div class="modal-footer border-0">
-          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Salir</button>
-          <button  @click="update()" type="button" class="btn btn-outline-primary">Actualizar</button>
+        <div class="modal-footer border-0 d-flex justify-content-end">
+          <button  @click="update()" type="button" class="btn btn-outline-primary"><i class="fas fa-redo"></i> Actualizar</button>
         </div>
       </div>
     </div>

@@ -90,6 +90,7 @@ Route::get('returnTotalPatients', [PatientController::class, 'returnTotalPatient
 Route::post('insertarSemaforo', [PatientController::class, 'insertarSemaforo']);
 Route::post('eliminarSemaforo/{id}', [PatientController::class, 'eliminarSemaforo']);
 Route::get('verReprogramaciones/{id}', [PatientController::class, 'verReprogramaciones']);
+Route::get('pedirSeguimientos', [PatientController::class, 'pedirSeguimientos']);
 
 Route::resource('kairos', KairoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 
@@ -135,7 +136,8 @@ Route::post('guardarMembresia/', [ExtrasController::class, 'guardarMembresia']);
 Route::post('reservarCitaDoctor/', [ExtrasController::class, 'reservarCitaDoctor']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
-Route::post('buscarCartera/', [ExtrasController::class,'buscarCartera']);
+Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);
+Route::post('insertarSeguimiento', [ExtrasController::class,'insertarSeguimiento']);
 
 
 

@@ -9,6 +9,7 @@ use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class ExtrasController extends Controller
 {
@@ -281,5 +282,23 @@ class ExtrasController extends Controller
 		->whereIn('id', [15, 28] )
 		->orderBy('descripcion', 'asc')
 		->get();
+	}
+	public function insertarSeguimiento(Request $request){
+		//var_dump($request->all()); die();
+		try {
+			Patient::find($request->get('patient_id'))->update([
+				'seguimiento' =>  $request->get('idSeguimiento')
+			]);
+	
+			$idSeguimiento = DB::table('pacient_seguimiento')->insertGetId([
+				'patient_id' => $request->get('patient_id'),
+				'user_id' => $request->get('idUsuario'),
+				'idSeguimiento' => $request->get('idSeguimiento')
+			]);
+			return $idSeguimiento;
+		} catch (\Throwable $th) {
+			echo $th;
+		}
+		
 	}
 }

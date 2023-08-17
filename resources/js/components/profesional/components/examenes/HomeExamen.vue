@@ -161,10 +161,11 @@ export default {
 				enviarNuevo(){
 					if( this.nuevo.nombre )
 						this.axios.post('/api/newExam', this.nuevo)
-						.then(response=> {
-							this.exams.push( response.data );
-							this.typeExamenSelect;
+						.then(response=> { console.log('queresp', response.data);
+							this.getExams()
+							this.nuevo.nombre =''
 						})
+						$('#modalAddExamen').modal('hide')
 				},
 
         async getExams(){

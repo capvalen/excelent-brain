@@ -166,7 +166,7 @@
                     <h2 class="titulo-oficial">EXCELENTEMENTE E.I.R.L.</h2>
                     <h3>RUC: 20601862329</h3>
                     <p class="address">Jr.Rebagliatti Nro 166 - El Tambo - Huancayo</p>
-                    <p class="phones">064 603228 - 984894659 - 996644350 - www.excelentemente.org</p>
+                    <p class="phones">064 603228 - 984894659 - 996644350 - https://excelentemente.org</p>
                 </div>
             </div>
             <div class="body">

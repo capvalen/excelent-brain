@@ -172,6 +172,8 @@
 						<div class="col">
 							<p class="mb-0"><strong>Fecha:</strong> {{ fechaElegida }}</p>							
 							<p class="mb-0"><strong>Horario:</strong> {{ horaLatam1(horaElegida.check_time) }} - {{ horaLatam2(horaElegida.departure_date) }}</p>							
+							<p class="mb-0"><strong>Status anterior:</strong> {{ nombreStatus(cita.prev_status) }} </p>							
+
 						</div>
 					</div>
 
@@ -182,7 +184,7 @@
 
 			
 					<div class="form-group row mt-3">
-						<div class="col-sm-6">
+						<div class="col-sm-4">
 							<label for="">Clasificación de Consulta</label>
 							<select 
 							class="form-select" 
@@ -207,10 +209,16 @@
 								</select>
 							</div>
 						</div> -->
-						<div class="col-sm-6">
+						<div class="col-sm-4">
 							<label for="">Tipo de servicio</label>
 							<select  class="form-select" name="type" id="sltServicio" v-model="cita.type" @change="precioDinamico()">
 								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification ">{{ precio.descripcion }}</option>
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<label for="">Status</label>
+							<select  class="form-select" name="type" id="sltServicio" v-model="cita.new_status" >
+								<option v-for="statu in status" :value="statu.id" >{{ statu.stat }}</option>
 							</select>
 						</div>
 					</div>
@@ -311,6 +319,7 @@ export default {
 		return{
 			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
 			switchReciec: 1,
+			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
 			patientNew: false, alertaDeudas:false, mensajeDeudas:'',
 			cita:{
 				phone:'',
@@ -342,7 +351,7 @@ export default {
 				link:'',
 				bank:'',
 				pay_status:'1',
-				status:'',
+				status:'', new_status:1, prev_status:1,
 				type_amount:1,
 				type_dni:1,
 				contacto: '', contacto_celular: '', parentezco:''
@@ -429,6 +438,7 @@ export default {
 				formData.append('motivoRebaja', this.razonRebaja);
 				formData.append('descuento', this.descuentoPorcentaje);
 				formData.append('motivoDescuento', this.razonPorcentaje);
+				formData.append('new_status', this.cita.new_status);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => { //Trabaja en api -> modelo>store()
 					console.log(response.data)
@@ -576,6 +586,7 @@ export default {
 					this.cita.parentezco = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
 					this.cita.etiqueta = res.data.patient.etiqueta;
 					this.cita.deudas = res.data.patient.deudas;
+					this.cita.prev_status = res.data.patient.new_status;
 					this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()
@@ -626,6 +637,9 @@ export default {
 			this.cita.relative_name = '';
 			this.cita.relatine_phone = '';
 			this.cita.kinship = '';
+			this.cita.prev_status=1;
+			this.cita.etiqueta='';
+			this.cita.new_status=1
 			
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 
@@ -691,6 +705,11 @@ export default {
 			if( this.cita.phone.length>16 ){
 				$event.preventDefault();
 			}
+		},
+		nombreStatus(tipo){
+			let enc = this.status.find(x=> x.id == tipo)
+			//console.log(enc);
+			return enc.stat
 		}
 	},
 	created (){

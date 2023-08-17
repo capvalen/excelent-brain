@@ -1,9 +1,9 @@
 <template>
 	<div class="modal fade" id="pagoModal" ref="pagoModal" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog" role="document">
+		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content modal-sm">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Pago 2</h5>
+				<div class="modal-header border-0">
+					<h5 class="modal-title" id="exampleModalLabel">Pago de cita</h5>
 					<button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -55,9 +55,9 @@
 					</form>
 				</div>
 
-				<div class="modal-footer">
+				<div class="modal-footer border-0">
 					<!-- <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button> -->
-					<button @click="update()" type="button" class="btn btn-primary"><i class="fas fa-save"></i> Guardar pago</button>
+					<button @click="update()" type="button" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar pago</button>
 					<a target="_blank" :href="`/api/pdfCupon/${dataCita.id}`" v-if="dataCita.payment.pay_status != 1" class="btn btn-outline-success">Cupón</a>
 				</div>
 			</div>

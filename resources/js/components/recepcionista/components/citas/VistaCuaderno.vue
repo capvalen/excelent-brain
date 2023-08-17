@@ -338,9 +338,10 @@
     text-shadow: none!important;
 	}
 	.accordion-button:not(.collapsed) {
-    color: #653205!important;
-    background-color: #ffeccf!important;
+    color: #003a25!important;
+    background-color: #1cc88a!important
 	}
-	.accordion-button:focus { box-shadow: 0 0 0 0.25rem rgb(253 102 13 / 25%); }
+	.accordion-button:focus { box-shadow: 0 0 0 0.25rem #1cc88aa6 } 
+	/* .accordion-button:focus { box-shadow: 0 0 0 0.25rem rgb(253 102 13 / 25%); } */
 	.accordion button:hover { background-color: #ebebebbf; }
 </style>

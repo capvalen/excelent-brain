@@ -167,7 +167,7 @@
                     <h2 class="titulo-oficial">EXCELENTEMENTE E.I.R.L.</h2>
                     <h3>RUC: 20601862329</h3>
                     <p class="address">Jr.Rebagliatti Nro 166 - El Tambo - Huancayo</p>
-                    <p class="phones">064 603228 - 984894659 - 996644350 - www.excelentemente.org</p>
+                    <p class="phones">064 603228 - 984894659 - 996644350 - https://excelentemente.org</p>
                 </div>
             </div>
             <div class="body">
@@ -224,9 +224,15 @@
 														@if($extra_payment->observation <>'')
 														<tr><td><strong>Obs.:</strong> {{$extra_payment->observation}}</td></tr>
 														@endif
+														@if($extra_payment->voucher <>'')
+														<tr><td><strong>Comprobante:</strong> {{$extra_payment->voucher}}</td></tr>
+														@endif
+														@if($extra_payment->voucher_issued <>'' && $extra_payment->voucher_issued <> null )
+														<tr><td><strong>Serie-Correlativo:</strong> {{strtoupper($extra_payment->voucher_issued)}}</td></tr>
+														@endif
                         </tbody>
                     </table>
-                    <hr style="width: 100%; margin-top:5px;">
+                    <hr style="width: 90%; margin:3px 5px; padding-left: 5px; ">
                     <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
                         <thead>
                             <tr>

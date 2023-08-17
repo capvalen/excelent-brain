@@ -48,12 +48,7 @@
 									<modal-cita :profes="profesionales" :horas="horarios" @emitIdProf="listarhorario" @emitDate="fechaEmit" :idUsuario="idUsuario"></modal-cita>
 							</div>
 
-							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
-									<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary"><i class="fas fa-plus"></i> Pagos extras</button>
-							</div>
-							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
-								<button data-bs-toggle="modal" data-bs-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
-							</div>
+							
 					</div>
 
 					<table class="table table-striped w-100 mt-4">
@@ -208,8 +203,7 @@
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <info-modal v-if="cita" :dataCit="cita"></info-modal>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
-    <modal-pagos-extras />
-    <modal-egresos-extras />
+    
   </div>
 </template>
 
@@ -219,8 +213,7 @@ import InfoModal from './ModalInfo.vue'
 import ModalPatient from './ModalPatient.vue'
 import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
-import ModalPagosExtras from './ModalPagosExtras.vue'
-import ModalEgresosExtras from './ModalEgresosExtras.vue'
+
 import VistaCalendario from './VistaCalendario.vue'
 import VistaCuaderno from './VistaCuaderno.vue'
 import moment from 'moment'
@@ -230,7 +223,7 @@ import alertify from 'alertifyjs'
 export default {
   name: 'table-cita',
 
-  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, ModalPagosExtras, ModalEgresosExtras, VistaCalendario, VistaCuaderno },
+  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, VistaCalendario, VistaCuaderno },
 
   props: {
     profes:Array,

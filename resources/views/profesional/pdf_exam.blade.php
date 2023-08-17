@@ -284,7 +284,7 @@
                 <div class="header__content">
                     <img src="https://excelentemente.org/consultorio-online/libs/logo.png" alt="Excelentemente" class="header-logo">
     
-                    <div class="header">
+                    <div class="header" style="margin-top: 3rem;">
                         <p class="header__name">WILBERT BARZOLA HUAMAN</p>
                         <p class="header__sub">MÉDICO PSIQUIÁTRA</p>
                         <p class="header__sub">Consultas previa cita, llamar al celular: 996644350</p>

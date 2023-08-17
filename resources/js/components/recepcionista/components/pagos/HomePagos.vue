@@ -10,6 +10,11 @@
 			<div class="m-4">
 				<button class="btn btn-outline-success" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
 				<button class="btn btn-outline-primary" @click="membresias()" data-bs-target="#modalMembresias" data-bs-toggle="modal"><i class="fa-solid fa-arrow-up-right-dots"></i> Ingresar membresía</button>
+				<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary ms-auto"><i class="fas fa-plus"></i> Pagos extras</button>
+				<button data-bs-toggle="modal" data-bs-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
+				<button class="btn btn-outline-secondary border-0" @click="actualizar()"> <i class="fas fa-sync"></i> Actualizar</button>
+				
+				
 			</div>
 			<p class="mt-2"><strong>Cuadre de caja: Pagos, Entradas y Salidas</strong></p>
 
@@ -198,13 +203,14 @@
 									<option value="1">Efectivo</option>
 									<option value="4">Aplicativo Yape</option>
 									<option value="10">Aplicativo Plin</option>
-									<option value="2">Depósito bancario</option>
-									<option value="3">POS</option>
 									<option value="5">Banco: BCP</option>
 									<option value="6">Banco: BBVA</option>
 									<option value="7">Banco: Interbank</option>
 									<option value="8">Banco: Nación</option>
 									<option value="9">Banco: Scotiabank</option>
+									<option value="2">Depósito bancario</option>
+									<option value="3">POS</option>
+									<option value="11">Open Pay</option>
 								</select>
 							</div>
 							<div class="col-sm-12">
@@ -228,23 +234,26 @@
 			</div>
 		</div>
 		
-		
+		<modal-pagos-extras />
+    <modal-egresos-extras />
 	</div>
 </template>
 
 <script>
 import ModalMembresias from "./ModalMembresias.vue"
+import ModalPagosExtras from './../citas/ModalPagosExtras.vue'
+import ModalEgresosExtras from './../citas/ModalEgresosExtras.vue'
 import moment from 'moment'
 
 	export default{
 		data(){
 			return{
-				payments:[], sumaTipos:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin'],
+				payments:[], sumaTipos:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'],
 				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:''}
 			}
 		},
 		props:{},
-		components:{ModalMembresias},
+		components:{ ModalMembresias, ModalPagosExtras, ModalEgresosExtras },
 		methods:{
 				getAllExtraPayments(){
 						this.axios.get('/api/getAllExtraPayments')
@@ -315,6 +324,7 @@ import moment from 'moment'
 						}
 					})
 				},
+				actualizar(){ this.getAllExtraPayments() },
 				membresias(){}
 		},
 		mounted(){

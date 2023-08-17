@@ -152,7 +152,8 @@ class AppointmentController extends Controller
 					'instruction_degree'=>$request->get('instruction_degree'),
 					'marital_status'=>$request->get('marital_status'),
 					'type_dni'=>$request->get('type_dni'),
-					'etiqueta'=>$request->get('etiqueta')
+					'etiqueta'=>$request->get('etiqueta'),
+					'new_status'=>$request->get('new_status'),
 				]);
 			}
 				
@@ -195,7 +196,7 @@ class AppointmentController extends Controller
 				'pay_status' => 1,
 				'price' => $request->get('price'),
 				'appointment_id' => $appointment->id,
-				'continuo' => $request->get('continuo'),
+				'continuo' => $patient_condition,
 				'user_id' => $request->get('user_id'),
 				'rebaja' => $request->get('rebaja'),
 				'motivoRebaja' => $request->get('motivoRebaja'),
@@ -216,8 +217,6 @@ class AppointmentController extends Controller
 				->with('medical_evolutions')->first(); */
 			$patient_condition = ( count($citas) !==0 ) ? '2': '1';
 			//var_dump( 'conteo '. count($citas) ); die();
-
-				
 
 			$appointment = Appointment::create([
 				'professional_id' => $request->get('professional_id'),
@@ -241,7 +240,7 @@ class AppointmentController extends Controller
 				'pay_status'=> 1,
 				'price' => $request->get('price'),
 				'appointment_id' => $appointment->id,
-				'continuo' => $request->get('continuo'),
+				'continuo' => $patient_condition,
 				'user_id' => $request->get('user_id'),
 				'rebaja' => $request->get('rebaja'),
 				'motivoRebaja' => $request->get('motivoRebaja'),
@@ -263,6 +262,7 @@ class AppointmentController extends Controller
 				'marital_status'=> $request->get('marital_status'),
 				'phone'=>$request->get('phone'),
 				'etiqueta'=>$request->get('etiqueta'),
+				'new_status'=>$request->get('new_status'),
 			]);
 			/* $paciente_actualizar->name = ;
 			$paciente_actualizar->instruction_degree= $request->get('instruction_degree') ?? 6;
@@ -510,8 +510,7 @@ class AppointmentController extends Controller
 
 	public function pagarCita(Request $request, Appointment $appointment){
 		//var_dump($request->all()); die();
-		try {
-
+		
 		//$appointment->update($request->all());
 		$appointment = Appointment::find($request->input('dataCita.id'));
 
@@ -590,9 +589,7 @@ class AppointmentController extends Controller
 		}
 
 		return response()->json(['mensaje' => 'se actualizó la cita']);
-	} catch (\Throwable $th) {
-		echo $th;
-	}
+	
 	}
 
 	public function reprogramado(Request $request, Appointment $appointment)

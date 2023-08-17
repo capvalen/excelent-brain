@@ -467,67 +467,87 @@
 			</div>
 		</div>
 
-		<!-- Titulo -->
-		<div class="d-flex justify-content-between">
-			<h4>Historia clínica del paciente</h4>
-			<!-- <button
-      data-toggle="modal"
-      data-target="#evolutionModal"
-      @click="evoluciones"
-      class="bg-warning px-4 py-2 rounded border-0 text-light btn--iteration"
-      v-if="consultaHoy"
-      >
-      Nueva evolución
-      </button> -->
-		</div>
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="evoluciones-tab" data-bs-toggle="tab" data-bs-target="#evoluciones-tab-pane" type="button" role="tab" aria-controls="evoluciones-tab-pane" aria-selected="true"><i class="fas fa-tv"></i> Evoluciones del paciente</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="linea-tab" data-bs-toggle="tab" data-bs-target="#linea-tab-pane" type="button" role="tab" aria-controls="linea-tab-pane" aria-selected="false"><i class="fas fa-sort-amount-up-alt"></i> Línea de vida</button>
+			</li>
+		</ul>
 
-		<!-- Card -->
-		<div class="row">
-			<div class="col-md-4 mb-3" v-for="(evolution, index) in datosConsulta.medical_evolutions" :key="index">
-				<div class="card shadow mb-4 tarjeta" @mouseover="colorear(index)" @mouseleave="descolorear(index)">
-					<!-- Card Header - Dropdown -->
-					<div class="card-header bg-secondary py-3 d-flex flex-row align-items-center justify-content-between"
-						@click="mostrarCard(index)" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
-						<h6 class="m-0 font-weight-bold text-white text-capitalize">Consulta #{{ evolution.id }} - {{
-							fechaLectura(evolution.date) }}</h6>
-					</div>
-					<!-- Card Body -->
-					<div class="card-body">
-						<div class="card-evolution">
-							<div class="historia-info">
-								<p><b>Profesional:</b> {{ evolution.professional ? evolution.professional.name : 'Sin asignar' }} </p>
-								<p><b>Comentario: </b> {{ evolution ? maxStringCharacter(evolution.content, 50) : '...' }} </p>
+		<div class="tab-content mb-5" id="myTabContent">
+			<div class="tab-pane fade show active p-3 bg-light-subtle border border-top-0" id="evoluciones-tab-pane" role="tabpanel" aria-labelledby="evoluciones-tab" tabindex="0">
+				<!-- Titulo -->
+				<div class="d-flex justify-content-between">
+					<!-- <h4>Evoluciones del paciente</h4> -->
+					<!-- <button
+					data-toggle="modal"
+					data-target="#evolutionModal"
+					@click="evoluciones"
+					class="bg-warning px-4 py-2 rounded border-0 text-light btn--iteration"
+					v-if="consultaHoy"
+					>
+					Nueva evolución
+					</button> -->
+				</div>
+
+				<!-- Card -->
+				<div class="row mb-5">
+					<div class="col-md-4 mb-3" v-for="(evolution, index) in datosConsulta.medical_evolutions" :key="index">
+						<div class="card mb-4 tarjeta" @mouseover="colorear(index)" @mouseleave="descolorear(index)" :class="dondeEsta(evolution.type)">
+							<!-- Card Header - Dropdown -->
+							<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" @click="mostrarCard(index)" data-bs-toggle="modal" data-bs-target="#modalVerDetalle" >
+								<h6 class="m-0 font-weight-bold text-white text-capitalize">{{ fechaLectura(evolution.date) }} <small>(#{{ evolution.id }})</small></h6>
 							</div>
-							<div class="card-evolution__image d-none">
-								<img :src="`/storage/${evolution.professional ? evolution.professional.signing : null}`"
-									class="card-evolution-image"
-									:alt="evolution.professional ? evolution.professional.signing : null ? 'Firma del doctor' : 'Sin firma'">
+							<!-- Card Body -->
+							<div class="card-body">
+								<div class="card-evolution">
+									<div class="historia-info">
+										<p><b>Profesional:</b> {{ evolution.professional ? evolution.professional.name : 'Sin asignar' }} </p>
+										<p><b>Comentario: </b> {{ evolution ? maxStringCharacter(evolution.content, 50) : '...' }} </p>
+									</div>
+									<div class="card-evolution__image d-none">
+										<img :src="`/storage/${evolution.professional ? evolution.professional.signing : null}`"
+											class="card-evolution-image"
+											:alt="evolution.professional ? evolution.professional.signing : null ? 'Firma del doctor' : 'Sin firma'">
+									</div>
+								</div>
+								<div class="d-flex flex-gap">
+									<button @click="updateModal(evolution)" data-bs-toggle="modal" data-bs-target="#updatedModal" class="btn btn-outline-secondary" v-if="evolution.professional_id == dataUser.id  || evolution.auth == 1"> <!-- && evolution.date === getDateNow() --> <!-- btn--edit -->
+										<i class="fas fa-edit"></i> Redactar evolución
+									</button>
+									<button @click="editEvolution(evolution)" class="btn btn-success d-none"
+										v-if="evolution.professional_id == dataUser.id" data-bs-toggle="modal" data-bs-target="#editModal">
+										<i class="fas fa-edit"></i>
+									</button>
+								<!-- 	<div v-if="evolution.professional_id == dataUser.id &&
+										evolution.date === getDateNow()" class="btn-group">
+										<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)"
+											class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuClickableInside"
+											data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+											<i class="fas fa-save"></i>
+										</button>
+										<ul class="dropdown-menu px-2 py-2" aria-labelledby="dropdownMenuClickableInside">
+											<span>{{ autoSaveInfo }}</span>
+										</ul>
+									</div> -->
+								</div>
 							</div>
-						</div>
-						<div class="d-flex flex-gap">
-							<button @click="updateModal(evolution)" data-bs-toggle="modal" data-bs-target="#updatedModal" class="btn--edit btn--iteration" v-if="evolution.professional_id == dataUser.id && evolution.date === getDateNow() || evolution.auth == 1">
-								<i class="fas fa-edit"></i> Redactar evolución
-							</button>
-							<button @click="editEvolution(evolution)" class="btn btn-success"
-								v-if="evolution.professional_id == dataUser.id" data-bs-toggle="modal" data-bs-target="#editModal">
-								<i class="fas fa-edit"></i>
-							</button>
-						<!-- 	<div v-if="evolution.professional_id == dataUser.id &&
-								evolution.date === getDateNow()" class="btn-group">
-								<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)"
-									class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuClickableInside"
-									data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-									<i class="fas fa-save"></i>
-								</button>
-								<ul class="dropdown-menu px-2 py-2" aria-labelledby="dropdownMenuClickableInside">
-									<span>{{ autoSaveInfo }}</span>
-								</ul>
-							</div> -->
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="tab-pane fade py-5 px-3 bg-light-subtle border border-top-0" id="linea-tab-pane" role="tabpanel" aria-labelledby="linea-tab" tabindex="0">
+				
+				<button class="btn btn-outline-success" data-bs-target="#nuevoAcontecimiento" data-bs-toggle="modal"><i class="far fa-comment-alt"></i> Agregar nuevo acontecimiento</button>
+				<lineaTiempo></lineaTiempo>
+				
+			</div>
+			
 		</div>
+
+		
 
 		<!-- Modal de examenes -->
 		<div class="modal fade" id="examenModal" tabindex="-1" aria-labelledby="modalEvolution" aria-hidden="true">
@@ -598,6 +618,7 @@
 		<ModalComentarios :comentarios="comentarios" :idProfesional="dataUser.id" @refrescarComentarios="updateComentarios" ></ModalComentarios>
 		<ModalProximaCita :profesional="dataUser" :paciente="datosPaciente"></ModalProximaCita>
 		<ModalArchivos :idPaciente="datosConsulta.id" :idProfesional="dataUser.id" ></ModalArchivos>
+		<ModalNuevoAcontecimiento></ModalNuevoAcontecimiento>
 	</div>
 </template>
 
@@ -618,16 +639,20 @@ import ModalVerHobbies from './../../../recepcionista/components/pacientes/repor
 import ModalProximaCita from './ModalProximaCita.vue'
 import ModalArchivos from './ModalArchivos.vue'
 import BarChart  from './grafico/barras'
+import ModalNuevoAcontecimiento from './ModalNuevoAcontecimiento.vue'
+import lineaTiempo from './grafico/lineaTiempo.vue'
 
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo },
 
 	data() {
 		return {
 			autoSaveInfo: '', profesionalesTodos:[],
 			datosConsulta: { triajes:[], examenes_basicos:[], examenes_personalizados:{burns:[], gads:[], scrs:[], zung_anxieties :[], zung_depressions :[]} },
+			evolucionPsiquiatria: [1,2,3,4,5,6,16,17], //Ver tabla de precios, son los IDs
+			evolucionPsicologia: [7,8,9,10,11,12,18,22,27], //Ver tabla de precios, son los IDs
 			cardUpdate: '',         // Va el el nombre del card | Psiquiatra | Psicologia | perfil | etc
 			dobleClick: false,relative: [],
 			switch: 0,
@@ -1089,13 +1114,15 @@ export default {
 		},
 		colorear(index) {
 			let cabecera = document.querySelectorAll('.tarjeta .card-header')[index]
-			cabecera.classList.remove('bg-secondary');
-			cabecera.classList.add('bg-success');
+			cabecera.closest('.card').classList.add('shadow');
+			//cabecera.classList.remove('bg-secondary');
+			//cabecera.classList.add('bg-success');
 		},
 		descolorear(index) {
 			let cabecera = document.querySelectorAll('.tarjeta .card-header')[index]
-			cabecera.classList.remove('bg-success');
-			cabecera.classList.add('bg-secondary');
+			cabecera.closest('.card').classList.remove('shadow');
+			//cabecera.classList.remove('bg-success');
+			//cabecera.classList.add('bg-secondary');
 		},
 		mostrarCard(index) {
 			this.indexGlobal = index;
@@ -1129,16 +1156,21 @@ export default {
 			.then(res => {
 				this.dato1 = res.data[0];
 				$("#patientModal" ).modal('show')
-			})
-      
-		}
+			}) 
+		},
+		dondeEsta(tips){
+			let valor = null
+			if (valor = this.evolucionPsiquiatria.indexOf(tips)>-1) return 'evolucionPsiquiatria'
+			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'evolucionPsicologia'
+			else return 'evoOtro'
+		},
 	},
 
 	computed: {
 		updatedValues() {
 			return this.dataUser.profession === 'Psiquiatra' ? this.rol = 'Psiquiatra' : this.rol = 'Psicólogo'
 		},
-
+		
 		evolutionToday() {
 			if (this.datosConsulta.medical_evolutions) {
 				if (this.datosConsulta.medical_evolutions.length === 0) {
@@ -1174,6 +1206,9 @@ export default {
 </script>
 
 <style scoped>
+.evolucionPsiquiatria .card-header{ background: #e74a3b }
+.evolucionPsicologia .card-header{ background: #4e73df }
+.evoOtro .card-header{ background: rgb(88, 88, 107)}
 .tarjeta .card-header:hover {
 	cursor: pointer;
 }

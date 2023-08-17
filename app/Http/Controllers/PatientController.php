@@ -573,4 +573,10 @@ class PatientController extends Controller
 			return $archivos;
 		}
 
+		public function pedirSeguimientos(){
+			$seguimientos = DB::table('seguimientos')
+			->orderBy('seguimiento', 'asc')->get();
+			return $seguimientos;
+		}
+
 }
