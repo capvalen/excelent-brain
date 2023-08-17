@@ -53,9 +53,9 @@
 							<td>{{ cita.patient.name }}</td>
 							<td>{{ cita.patient.phone }}</td>
 							<!-- <td>{{ ultimaFecha(cita.patient.id) }}</td> -->
-							<td class="puntero" @click="cargarCitas('visitas', cita.patient.id)">{{ cita.visitas }}</td>
-							<td>{{ cita.confirmar }}</td>
-							<td>{{ cita.faltas }}</td>
+							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('visitas', cita.patient.id)">{{ cita.visitas }}</td>
+							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('confirmar', cita.patient.id)">{{ cita.confirmar }}</td>
+							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('faltas', cita.patient.id)">{{ cita.faltas }}</td>
 							<td>{{ cita.sinconfirmar }}</td>
 							<td>{{ cita.anulados }}</td>
 							<td>{{ cita.reprogramados }}</td>
@@ -65,22 +65,39 @@
 				</table>
 			</div>
 		</div>
-	</div>
-
-	<!-- Modal -->
-	<!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<!-- Modal -->
+	<div class="modal fade" id="modalCitasPreview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="exampleModalLabel">Citas</h1>
+					<h1 class="modal-title fs-5" id="exampleModalLabel">{{titulo}}</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					...
+					<table class="table table-hover table-sm">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Fecha</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(preview, index) in previewCitas">
+								<td>{{ index+1 }}</td>
+								<td>{{ fechaLatam(preview.date) }}</td>
+							</tr>
+							<tr v-if="previewCitas.length==0">
+								<td colspan="2">No se encontraron datos</td>
+							</tr>
+						</tbody>
+					</table>
+					
 				</div>
 			</div>
 		</div>
-	</div> -->
+	</div>
+
+	</div>
 </template>
 
 <script>
@@ -90,7 +107,7 @@ export default{
 	name: 'HomeCartera',
 	data(){ return {
 		profesionales:[], años:[], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-		filtro: {idProfesional: 10, año: 2023, mes:-1}, citasResumidas:[], citasCompletas:[]
+		filtro: {idProfesional: 10, año: 2023, mes:-1}, citasResumidas:[], citasCompletas:[], previewCitas:[], titulo:''
 	}},
 	methods:{
 		async listarProfesional(){
@@ -132,10 +149,18 @@ export default{
 		fechaLatam(fecha){
 			return moment(fecha).format('DD/MM/YYYY');
 		},
-		cargarCitas(caso, id){
+		async cargarCitas(caso, id){
 			switch(caso){
 				case 'visitas':
+					this.titulo = 'Total de Citas'
 					this.previewCitas = this.citasCompletas.filter(item=> item.patient_id == id ); break;
+				case 'confirmar':
+					this.titulo = 'Citas confirmadas'
+					this.previewCitas = this.citasCompletas.filter(item=> item.patient_id == id && item.status==2 ); break;
+				case 'confirmar':
+					this.titulo = 'Faltas'
+					this.axios('/api/')
+					this.previewCitas = 0;
 			}
 		}
 		

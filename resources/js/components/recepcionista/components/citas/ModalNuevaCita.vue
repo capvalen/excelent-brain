@@ -288,7 +288,7 @@
 						</div>
 					</div>
 
-					<div class="modal-footer">
+					<div class="modal-footer border-0">
 						<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
 						<button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Registrar cita</button>
 					</div>

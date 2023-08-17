@@ -173,7 +173,7 @@
     methods:{
       async updateDataPatient(){
         await this.axios.put(`/api/patient/${this.dataPatient.patient.id}`, this.dataPatient.patient)
-        .then(res => { console.log(res.data);
+        .then(res => { //console.log(res.data);
           this.closeModal()
           this.$swal('Datos de paciente actualizado con éxito')
         })
@@ -201,7 +201,7 @@
 				})
 			},
 			moverProvincias(borrar){
-				let idDepa= this.dataPatient.patient.address.department;
+				let idDepa= this.dataPatient.patient.address.department ;
 				this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == idDepa)
 				if(borrar) this.dataPatient.patient.address.district=-1;
 			},
@@ -214,13 +214,17 @@
     computed: {
       actualizarDatos () {
         this.dataPatient = this.dataCit
+				this.listarDepartamentos(false);
+				/* if(this.dataPatient.address)
+				else
+					this.dataPatient.address.department = 12
+					this.dataPatient.address.province = 103
+					this.dataPatient.address.province = 1006 */
       }
     },
-
     updated () {
       this.actualizarDatos
     },
-  
     created () {
       this.actualizarDatos;
 			this.listarDepartamentos();

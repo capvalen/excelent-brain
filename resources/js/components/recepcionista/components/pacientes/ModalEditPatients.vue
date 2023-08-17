@@ -39,21 +39,25 @@
             </div>
 
             <div class="form-group row">
-              <div class="col-sm-4">
-                <label for="name">Distrito</label>
-                <input type="text" class="form-control" name="district" id="district" v-model="dataPatient.address.district" placeholder="Distrito">
-              </div>
-
-              <div class="col-sm-4">
-                <label for="name">Provincia</label>
-                <input type="text" class="form-control" name="province" id="province" v-model="dataPatient.address.province" placeholder="Provincia"> 
-              </div>
-
-              <div class="col-sm-4">
-                <label for="name">Departamento</label>
-                <input type="text" class="form-control" name="department" id="department" v-model="dataPatient.address.department" placeholder="Departamento"> 
-              </div>
-            </div>
+							<div class="col-sm-4">
+									<label for="name">Departamento</label>
+									<select v-model="dataPatient.address.department" class="form-select" id="department" @change="moverProvincias(true)">
+										<option v-for="departamento in ubigeo.departamentos" :value="departamento.idDepa">{{ departamento.departamento }}</option>
+									</select>
+							</div>
+							<div class="col-sm-4">
+									<label for="name">Provincia</label>
+									<select v-model="dataPatient.address.province" class="form-select" id="provincia" @change="moverDistritos()">
+										<option v-for="provincia in provincias" :value="provincia.idProv">{{ provincia.provincia }}</option>
+									</select>
+							</div>
+							<div class="col-sm-4">
+									<label for="name">Distrito</label>
+									<select v-model="dataPatient.address.district" class="form-select" id="distrito">
+										<option v-for="distrito in distritos" :value="distrito.idDist">{{ distrito.distrito }}</option>
+									</select>
+							</div>
+						</div>
 
             <div class="form-group row">
               <div class="col-sm-6">
@@ -138,7 +142,9 @@ export default {
 
   data () {
     return {
-      datos: ''
+      datos: '',
+			ubigeo: {departamentos:[], provincias:[], distritos:[]},
+			provincias:[], distritos:[],
     }
   },
 
@@ -158,8 +164,38 @@ export default {
 
     closeModal() {
       document.getElementById('cerrModalPatient').click();
-    }
+    },
+		async listarDepartamentos(){
+			await this.axios.get('/api/departamentos')
+			.then(response => {
+				this.ubigeo.departamentos = response.data['departamentos'];
+				this.ubigeo.provincias = response.data['provincias'];
+				this.ubigeo.distritos = response.data['distritos'];
+
+				this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == 12)
+				this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == 103)
+
+	
+				this.moverProvincias(false)
+				this.moverDistritos()
+			})
+		},
+		moverProvincias(borrar){
+			let idDepa= this.dataPatient.address.department ;
+			this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == idDepa)
+			if(borrar) this.dataPatient.patient.address.district=-1;
+		},
+		moverDistritos(){
+			let idProv= this.dataPatient.address.province;
+			this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == idProv)
+		},
+		capturaSeñal() {
+			this.listarDepartamentos(false);
+    },
   },
+	mounted(){
+		this.$parent.$on('cambioDato', this.capturaSeñal);
+	},
 
   computed: {
     updateValues () {
@@ -173,6 +209,8 @@ export default {
 
   created () {
     this.updateValues;
+		this.listarDepartamentos();
+
   },
 } 
 </script>

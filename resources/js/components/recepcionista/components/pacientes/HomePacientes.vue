@@ -192,7 +192,6 @@ export default {
         console.error(err)
       })
     },
-
 		Like(valores){
 			let index = this.busqueda.findIndex(b=> b.id ==valores.id)
 			this.busqueda[index].club = valores.seleccionado;
@@ -234,6 +233,7 @@ export default {
     },
 
     dataProps (data) {
+			this.$emit('cambioDato');
       this.data = data;
     },
 		datosLike(like, id){
@@ -260,13 +260,15 @@ export default {
 			})
 		}
   },
+	updated () {
+		this.actualizarDatos
+	},
 
 
   created () {
     this.getPatients();
 		this.listarprofesional();
 		this.hobbies.sort();
-
   }
 }
 </script>

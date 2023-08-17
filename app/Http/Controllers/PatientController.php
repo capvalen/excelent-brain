@@ -465,6 +465,12 @@ class PatientController extends Controller
 			//->orderBy('birth_date', 'asc')
 			->orderByRaw("DAY(birth_date) ASC")
 			->get();
+
+			foreach ($pacientes as $resultado) {
+				$direccion = DB::table('addresses')->where('patient_id', $resultado->id)->get();
+				$resultado->address = $direccion[0];
+			}
+
 			return $pacientes;
 		}
 

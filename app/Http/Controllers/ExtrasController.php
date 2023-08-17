@@ -81,12 +81,18 @@ class ExtrasController extends Controller
 	}
 
 	public function listarDeudas($fecha){
-		$resultado = DB::table('deudas as d')->where('d.activo', 1)
+		$resultados = DB::table('deudas as d')->where('d.activo', 1)
 		->join('patients as p', 'p.id', '=', 'd.patient_id' )
 		->whereDate('d.fecha', '<=', $fecha)
 		->orderBy('d.fecha', 'asc')
 		->get();
-		return array('deudas' => $resultado);
+
+		foreach ($resultados as $resultado) {
+			$direccion = DB::table('addresses')->where('patient_id', $resultado->patient_id)->get();
+			$resultado->address = $direccion[0];
+		}
+
+		return array('deudas' => $resultados);
 	}
 
 	public function cambiarLike($id, $like){
@@ -228,12 +234,12 @@ class ExtrasController extends Controller
 		
 		
 		if($request->get('mes')==-1):
-		$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
-			->whereYear('date', $request->get('año'))
-			->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
-			->groupBy('patient_id')
-			->with('patient')
-			->get();
+			$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
+				->whereYear('date', $request->get('año'))
+				->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
+				->groupBy('patient_id')
+				->with('patient')
+				->get();
 			$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
 				->whereYear('date', $request->get('año'))
 				->orderBy('date', 'desc')
@@ -241,12 +247,12 @@ class ExtrasController extends Controller
 				->get();
 		else:
 			$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
-			->whereYear('date', $request->get('año'))
-			->whereMonth('date', $request->get('mes'))
-			->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
-			->groupBy('patient_id')
-			->with('patient')
-			->get();
+				->whereYear('date', $request->get('año'))
+				->whereMonth('date', $request->get('mes'))
+				->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
+				->groupBy('patient_id')
+				->with('patient')
+				->get();
 			$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
 				->whereYear('date', $request->get('año'))
 				->whereMonth('date', $request->get('mes'))
@@ -254,6 +260,12 @@ class ExtrasController extends Controller
 				->with('patient')
 				->get();
 		endif;
+
+		foreach($citasCompletas as $cita){
+			$pago = Payment::where('appointment_id', $cita->id)->get();
+			$cita->payment = $pago[0] ?? [];
+		}
+
 		return response()->json([ "resumidas"=>$citasResumidas, 'completas'=>$citasCompletas ]);
 		
 	}

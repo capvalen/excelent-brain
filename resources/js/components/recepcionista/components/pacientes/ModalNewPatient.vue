@@ -157,7 +157,7 @@
 <script>
 import alertify from 'alertifyjs'
   export default {
-    name: "modal_patient",
+    name: "modal_new_patient",
 
     props:{
       
