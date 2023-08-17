@@ -9,6 +9,7 @@
       </div>
       <div class="modal-body">
         <label for="">Busque por DNI o Nombres</label>
+				<input type="text" class="form-control" v-model="texto" @keypress.enter="buscarTexto()">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -20,5 +21,11 @@
 </template>
 <script>
 export default{
-	name: 'ModalBuscarPacienteExterno'
+	name: 'ModalBuscarPacienteExterno',
+	data(){ return {
+		texto: ''
+	}},
+	methods:{
+		buscarTexto(){}
+	}
 }</script>
