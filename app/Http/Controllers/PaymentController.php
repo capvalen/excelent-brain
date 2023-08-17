@@ -96,7 +96,7 @@ class PaymentController extends Controller
 				foreach ($payments as $payment) {
 					if($payment->appointment_id!=0){
 						$appointment = Appointment::find($payment->appointment_id);
-						if( $appointment->professional_id ){
+						if( isset($appointment->professional_id) ){
 							$profesional = Professional::find($appointment->professional_id);
 							$payment->profesional_name= $profesional->nombre ?? '';
 						}
