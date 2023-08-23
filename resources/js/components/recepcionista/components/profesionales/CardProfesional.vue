@@ -6,7 +6,7 @@
     <h5 class="m-0 font-weight-bold text-nowrap text-dark w-100" :title="profesional.name" style="overflow:hidden; text-overflow:ellipsis;">{{profesional.name}}</h5>
     <p class="card-text">{{profesional.profession}}</p>
     <div class="row d-flex align-items-center justify-content-around mt-4">
-        <a href="#" data-bs-toggle="modal" title="Editar datos del profesional" data-tbs-arget="#profModal" @click="llamarModal(profesional,'Editar')" class="btn btn-info btn-circle"><i class="fas fa-pencil-alt"></i></a>
+        <a href="#" data-bs-toggle="modal" title="Editar datos del profesional" data-bs-target="#profModal" @click="llamarModal(profesional,'Editar')" class="btn btn-info btn-circle"><i class="fas fa-pencil-alt"></i></a>
         <a href="#" data-bs-toggle="modal" title="Cambiar acceso del profesional" data-bs-target="#accessModal" @click="llamarModal(profesional,'Acces')" class="btn btn-info btn-circle"><i class="fas fa-key"></i></a>
         <a @click="deleteProfesional" title="Eliminar profesional" class="btn btn-info btn-circle"><i class="fas fa-trash"></i></a>
         <a href="#" data-bs-toggle="modal" title="Agregar horarios" data-bs-target="#horarioModal" @click="llamarModalHorarios(profesional)" class="btn btn-info btn-circle"><i class="fas fa-calendar"></i></a>
@@ -62,7 +62,7 @@ export default {
             this.$parent.pasarData(profesional)
         },
         llamarModal(profesional,tipo){
-            this.$parent.llamarModal(profesional,tipo)
+            this.$parent.llamarModal(profesional,tipo) 
         },
         llamarModalHorarios(profesional){
             this.$parent.llamarModalHorarios(profesional)

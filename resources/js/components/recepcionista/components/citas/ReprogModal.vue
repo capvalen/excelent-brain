@@ -137,8 +137,9 @@ export default {
 				await this.axios.put(`/api/reprogramado/${this.dataCit.id}`, this.data)
 				.then(res => { console.log(res.data);
 					this.closeModal()
+					this.$emit('ocultarCita')
 					this.$swal('Cita reprogramada con éxito')
-					this.$parent.searchHistoria()
+					//this.$parent.searchHistoria()
 				})
 				.catch(err => {
 					console.error(err)

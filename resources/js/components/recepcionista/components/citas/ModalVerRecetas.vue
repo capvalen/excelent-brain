@@ -1,12 +1,11 @@
 <template>
 	<!-- Modal de recetas -->
 	<div class="modal fade" id="recetasModal" tabindex="-1" aria-labelledby="modalEvolution" aria-hidden="true">
-			<div class="modal-dialog ">
+			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header border-0">
 						<h5 class="modal-title" id="infoModalLabel">Recetas del paciente</h5>
-						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
-								class="fas fa-times"></i></button>
+						<button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 					</div>
 
 					<div class="modal-body">
@@ -23,7 +22,7 @@
 									<td>{{ index + 1 }}</td>
 									<td>{{ prescription ? fechaLatam(prescription.attention_date) : '...' }}</td>
 									<td>
-										<a v-if="prescription" class="btn btn-outline-success" :href="`/api/pdf/${prescription.id}`"
+										<a v-if="prescription" class="btn btn-outline-success btn-sm" :href="`/api/pdf/${prescription.id}`"
 											target="_blank"><i class="fa-regular fa-file-pdf"></i> Ver en PDF</a>
 									</td>
 								</tr>

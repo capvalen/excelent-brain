@@ -8,7 +8,7 @@
     </div>
     <div class="card px-1 pt-2">
 			<div class="m-4">
-				<button class="btn btn-outline-success" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
+				<button class="btn btn-outline-success d-none" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
 				<button class="btn btn-outline-primary" @click="membresias()" data-bs-target="#modalMembresias" data-bs-toggle="modal"><i class="fa-solid fa-arrow-up-right-dots"></i> Ingresar membresía</button>
 				<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary ms-auto"><i class="fas fa-plus"></i> Pagos extras</button>
 				<button data-bs-toggle="modal" data-bs-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>

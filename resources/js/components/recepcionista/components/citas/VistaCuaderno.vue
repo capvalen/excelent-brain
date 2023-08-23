@@ -5,7 +5,7 @@
 			<div class="col-auto"><button class="btn btn-outline-primary mx-2 border-0" @click="verHorariosHoy()"><i class="fa-regular fa-clock"></i> Hoy</button></div>
 			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="verHorariosMañana()"><i class="fa-regular fa-clock"></i> Mañana</button></div>
 			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="refrescarHorarios()"><i class="fas fa-sync"></i> Actualizar</button></div>
-			<div class="col-auto"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPacienteExterno" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
+			<div class="col-auto d-none"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPacienteExterno" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
 		</div>
 		<div class="accordion ">
 			<div class="accordion-item"  v-for="(doctor, index) in doctores" :key="doctor.id">
@@ -165,9 +165,8 @@
     <modal-estado v-if="cita" :dataCit="cita"></modal-estado>
     <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
 		<modal-patient v-if="cita" :dataCit="cita"></modal-patient>
-    <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
+    <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario" @ocultarCita="actualizarListadoCitas"></reprog-modal>
 		<info-modal v-if="cita" :dataCit="cita"></info-modal>
-		<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
 		<modal-search-patient></modal-search-patient>
 		
 		
@@ -182,7 +181,6 @@
 	import InfoModal from './ModalInfo.vue'
 	import ReprogModal from './ReprogModal.vue'
 	import ModalPatient from './ModalPatient.vue'
-	import modalVerRecetas from './ModalVerRecetas.vue'
 	import ModalSearchPatient from './ModalSearchPatient.vue'
 	
 	import alertify from 'alertifyjs'
@@ -196,7 +194,7 @@
 			}
 		}},
 		props:[ 'idUsuario'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, modalVerRecetas, ModalSearchPatient },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient },
 		methods:{
 			dayWeek (day) {
 				switch (day) {
@@ -320,7 +318,7 @@
 				.then(res =>{
 					this.recetas = res.data;
 				})
-			}
+			},
 		},
 		mounted(){
 			this.listarProfesionales();

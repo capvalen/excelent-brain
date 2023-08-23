@@ -262,12 +262,17 @@
 					<div class="row d-flex align-content-end">
 						<div class="col-sm-6">
 							<div class=" form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="fleDescuento" v-model="tieneDescuento" @change="precioDinamico()">
+								<input class="form-check-input" type="checkbox" role="switch" id="fleAdelanto" v-model="tieneAdelanto" @change="precioDinamico()">
+								<label class="form-check-label" for="fleAdelanto">
+									<span v-if="!tieneAdelanto"><i class="fa-solid fa-percent"></i> ¿Tiene adelanto?</span>
+									<span v-else class="text-danger"><i class="fa-regular fa-money-bill-1"></i> No posee adelanto</span>
+								</label>
+								<!-- <input class="form-check-input" type="checkbox" role="switch" id="fleDescuento" v-model="tieneDescuento" @change="precioDinamico()">
 								<label class="form-check-label" for="fleDescuento">
 									<span v-if="!tieneDescuento"><i class="fa-solid fa-percent"></i> ¿Tiene cupón de descuento?</span>
 									<span v-else class="text-danger"><i class="fa-regular fa-money-bill-1"></i> Sin cupón de descuento</span>
-								</label>
-								<div v-if="tieneDescuento">
+								</label> -->
+								<div v-if="tieneAdelanto">
 									<label class="mb-0 mt-2" for="">% de Descuento a aplicar</label>
 									<input type="number" min="0" step="1" class="form-control" v-model="descuentoPorcentaje" @change="precioDinamico()">
 									<label class="mb-0 mt-2" for="">Motivo de descuento</label>
@@ -318,7 +323,7 @@ export default {
 	data(){
 		return{
 			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
-			switchReciec: 1,
+			switchReciec: 1, tieneAdelanto:false,
 			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
 			patientNew: false, alertaDeudas:false, mensajeDeudas:'',
 			cita:{
@@ -354,7 +359,7 @@ export default {
 				status:'', new_status:1, prev_status:1,
 				type_amount:1,
 				type_dni:1,
-				contacto: '', contacto_celular: '', parentezco:''
+				contacto: '', contacto_celular: '', parentezco:'', adelanto:0
 			},
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
 			provincias:[], distritos:[],

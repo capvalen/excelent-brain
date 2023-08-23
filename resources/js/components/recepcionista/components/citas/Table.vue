@@ -3,14 +3,15 @@
     <div class="container-fluid pt-2">
 
 			<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-				<li class="nav-item" role="presentation">
-					<button class="nav-link " id="home-tab" data-bs-toggle="tab" data-bs-target="#inicio-tab" type="button" role="tab" aria-controls="inicio-tab" aria-selected="false"><i class="fa-regular fa-calendar-minus"></i> Vista clásica</button>
-				</li>
+				
 				<li class="nav-item d-none" role="presentation">
 					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#calendario-tab" type="button" role="tab" aria-controls="calendario-tab" aria-selected="false"><i class="fa-regular fa-calendar-days"></i> Vista calendario</button>
 				</li>
 				<li class="nav-item" role="presentation">
 					<button class="nav-link active" id="book-tab" data-bs-toggle="tab" data-bs-target="#cuaderno-tab" type="button" role="tab" aria-controls="cuaderno-tab" aria-selected="true"><i class="fa-solid fa-book"></i> Vista cuaderno</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link " id="home-tab" data-bs-toggle="tab" data-bs-target="#inicio-tab" type="button" role="tab" aria-controls="inicio-tab" aria-selected="false"><i class="fas fa-search"></i> Búsqueda del paciente</button>
 				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
@@ -43,10 +44,10 @@
 									>
 							</div>
 							
-							<div class="d-flex justify-content-start" style="flex-shrink: 0;">
+							<!-- <div class="d-flex justify-content-start" style="flex-shrink: 0;">
 									<button data-bs-toggle="modal" data-bs-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
 									<modal-cita :profes="profesionales" :horas="horarios" @emitIdProf="listarhorario" @emitDate="fechaEmit" :idUsuario="idUsuario"></modal-cita>
-							</div>
+							</div> -->
 
 							
 					</div>
@@ -79,17 +80,17 @@
 										<span>{{ qCita.schedule ? horaHumana(qCita.schedule.departure_date) : '...'}}</span> 
 								</td>
 								<td :title="qCita.mode == 1 ? 'Presencial':'Virtual'">
-									<a @click="changeMode(qCita.id)" v-if="qCita.mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></a>
-									<a @click="changeMode(qCita.id)" v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></a>
+									<button disabled v-if="qCita.mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></button> <!-- @click="changeMode(qCita.id)" -->
+									<button disabled v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></button> <!-- @click="changeMode(qCita.id)" -->
 								</td>
 								<td>
-									<a @click="modalInfo(qCita);" data-bs-toggle="modal" data-bs-target="#pagoModal"
+									<button disabled
 									class="btn btn-icon-split btn-sm"
 									:class='{
 									"btn-secondary":  qCita.payment ? qCita.payment.pay_status == 1 : false,
 									"btn-success": qCita.payment ? qCita.payment.pay_status == 2 : false,
 									"btn-danger": qCita.payment ? [3, null].includes( qCita.payment.pay_status ) : false,
-									} ' >
+									} ' > <!-- @click="modalInfo(qCita);" data-bs-toggle="modal" data-bs-target="#pagoModal" -->
 										<span class="icon text-white-50">
 											<i :class="{ 
 												'fa-regular fa-circle-question': qCita.payment ? qCita.payment.pay_status == 1 : false,
@@ -103,16 +104,16 @@
 										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 2">Cancelado</span>
 										<span class="text labels" v-else-if="qCita.payment && [3, null].includes( qCita.payment.pay_status )">Anulado</span>
 										<span class="text labels" v-else-if="!qCita.payment">Error</span>
-									</a>
+									</button>
 								</td>
 								<td>
-									<a @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#modalEstado"
+									<button disabled
 									class="btn btn-icon-split btn-sm"
 									:class='{
 									"btn-secondary": qCita.status == 1,
 									"btn-info": qCita.status == 2,
 									"btn-danger": qCita.status == 3, "btn-danger": qCita.status == 4,
-									}'>
+									}'> <!-- @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#modalEstado" -->
 										<span class="icon text-white-50">
 											<i :class="{
 												'fas fa-exclamation-circle': qCita.status == 1,
@@ -125,14 +126,14 @@
 										<span class="text labels" v-else-if="qCita.status == 2">Confirmado</span>
 										<span class="text labels" v-else-if="qCita.status == 3">Cancelado</span>
 										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
-									</a>
+									</button>
 								</td>
 								<td>
 									<div class="row d-flex align-items-center justify-content-around gap-1">
 											<!-- <a @click="modalInfo(cita)" title="Actualizar paciente" data-toggle="modal" data-target="#patientModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a> -->
 											
 											<a v-if="qCita.status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
-											<a v-else @click="modalInfo(qCita)" title="Reprogramar cita" data-bs-target="#reprogModal" data-bs-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
+											<!-- <a v-else @click="modalInfo(qCita)" title="Reprogramar cita" data-bs-target="#reprogModal" data-bs-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a> -->
 											
 											<!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
 											<!-- <a @click="eliminar(qCita.id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a> -->
@@ -177,9 +178,8 @@
 											>
 											<i class="fa fa-align-justify"></i>
 											</a>
-											<a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${qCita.id}`" target="_blank">
-												<i class="fas fa-file"></i>
-											</a>
+											<button data-bs-toggle="modal" @click="buscarRecetas(qCita.patient.id)" data-bs-target="#recetasModal" class="btn btn-info btn-circle btn-sm" title="Ver recetas">
+											<i class="fas fa-file"></i></button>
 									</div>
 								</td>
 							</tr>
@@ -196,6 +196,8 @@
 				</div>
 				<!-- Fin de segunda tab -->
 			</div>
+			<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
+
     </div>
 
     <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
@@ -203,6 +205,7 @@
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <info-modal v-if="cita" :dataCit="cita"></info-modal>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
+
     
   </div>
 </template>
@@ -210,9 +213,11 @@
 <script>
 import PagoModal from './PagoModal.vue'
 import InfoModal from './ModalInfo.vue'
-import ModalPatient from './ModalPatient.vue'
+//import ModalPatient from './ModalPatient.vue'
 import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
+import modalVerRecetas from './ModalVerRecetas.vue'
+
 
 import VistaCalendario from './VistaCalendario.vue'
 import VistaCuaderno from './VistaCuaderno.vue'
@@ -223,7 +228,7 @@ import alertify from 'alertifyjs'
 export default {
   name: 'table-cita',
 
-  components: { PagoModal, InfoModal, ReprogModal, ModalPatient, ModalEstadoCita, VistaCalendario, VistaCuaderno },
+  components: { PagoModal, InfoModal, ReprogModal, ModalEstadoCita, VistaCalendario, VistaCuaderno, modalVerRecetas }, //ModalPatient,
 
   props: {
     profes:Array,
@@ -237,7 +242,7 @@ export default {
       citas:[], fechaSinImportancia: moment().format('YYYY-MM-DD'), idUsuario:-1, tienePrivilegios:0,
       profesionales:[],
       horarios:[],
-      hoursProfessional: [],
+      hoursProfessional: [], recetas:[],
       cita: null,
       schedulesInvalid: [],
       horariosAll: [],horasSolas:[],horasMalas:[],
@@ -479,6 +484,12 @@ export default {
 				}
 			}else return '<span class="badge rounded-pill p-2 text-bg-secondary" title="Sin dato"><i class="fas fa-smile"></i></span>'
 
+		},
+		buscarRecetas(id){
+			this.axios(`/api/verRecetaPorId/${id}`)
+			.then(res =>{
+				this.recetas = res.data;
+			})
 		}
 		
   },

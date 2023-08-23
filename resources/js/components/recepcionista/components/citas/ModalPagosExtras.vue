@@ -92,13 +92,13 @@ export default {
 
   methods: {
     async saveData() {
-			console.log('pago',this.form.price);
+			//console.log('pago',this.form.price);
 			if(this.form.price < 0){
 				return this.$swal({
 					icon:'error',
 					title: 'El precio no puede ser 0 o negativo'
 				});
-			}else if (!this.form.customer || !this.form.type || !this.form.date){
+			}else if (!this.form.type || !this.form.date){ //!this.form.customer
         return this.$swal({
 					icon:'error',
 					title: 'Faltan rellenar datos'

@@ -1266,12 +1266,12 @@ h4 {
 	max-height: 100% !important;
 }
 
-.card-evolution {
-	/* display: grid;
+/*.card-evolution {
+	 display: grid;
     grid-template-columns: 70% 1fr;
     place-items: center;
-    grid-gap: 25px; */
-}
+    grid-gap: 25px; 
+}*/
 
 .card-evolution__image {
 	width: 100%;
