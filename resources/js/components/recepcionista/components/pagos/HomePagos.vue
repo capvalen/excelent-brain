@@ -18,7 +18,7 @@
 			</div>
 			<p class="mt-2"><strong>Cuadre de caja: Pagos, Entradas y Salidas</strong></p>
 
-			<table class="table table-striped w-100 mt-1" id="table_export">
+			<table class="table table-hover w-100 mt-1" id="table_export">
         <thead class="bg-success text-white">
             <tr>
 							<td v-if="tienePrivilegios=='1'">@</td>
