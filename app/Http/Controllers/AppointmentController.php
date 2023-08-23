@@ -20,6 +20,7 @@ use App\Models\Schedule;
 use Barryvdh\DomPDF\Facade as PDF;
 use Faker\Provider\ar_SA\Payment as Ar_SAPayment;
 use Illuminate\Support\Facades\App;
+use PhpParser\Node\Stmt\TryCatch;
 
 class AppointmentController extends Controller
 {
@@ -117,6 +118,8 @@ class AppointmentController extends Controller
 	public function store(Request $request)
 	{
 		try {
+			//code...
+		
 			//var_dump($request->all());die();
 
 			$paciente_prueba = Patient::where('dni',$request->get('dni'))->first();
@@ -201,7 +204,8 @@ class AppointmentController extends Controller
 				'rebaja' => $request->get('rebaja'),
 				'motivoRebaja' => $request->get('motivoRebaja'),
 				'descuento' => $request->get('descuento'),
-				'motivoDescuento' => $request->get('motivoDescuento')
+				'motivoDescuento' => $request->get('motivoDescuento'),
+				'adelanto' => $request->get('adelanto')
 			]);
 
 		}else{
@@ -245,7 +249,8 @@ class AppointmentController extends Controller
 				'rebaja' => $request->get('rebaja'),
 				'motivoRebaja' => $request->get('motivoRebaja'),
 				'descuento' => $request->get('descuento'),
-				'motivoDescuento' => $request->get('motivoDescuento')
+				'motivoDescuento' => $request->get('motivoDescuento'),
+				'adelanto' => $request->get('adelanto')
 			]);
 			
 			//var_dump($request->input());die();
@@ -296,10 +301,10 @@ class AppointmentController extends Controller
 		}
 				//echo 'nombre: '. trim(str_replace('  ', ' ' , $request->get('name')));
 		return response()->json([ 'cita'=>$appointment ]);
-
 		} catch (\Throwable $th) {
 			echo $th;
 		}
+		
 	}
 
 	/**

@@ -1,0 +1,1 @@
+ALTER TABLE `payments` ADD `adelanto` FLOAT NULL DEFAULT '0' AFTER `descuento`;

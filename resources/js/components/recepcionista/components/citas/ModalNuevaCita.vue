@@ -262,27 +262,20 @@
 					<div class="row d-flex align-content-end">
 						<div class="col-sm-6">
 							<div class=" form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="fleAdelanto" v-model="tieneAdelanto" @change="precioDinamico()">
+								<input class="form-check-input" type="checkbox" role="switch" id="fleAdelanto" v-model="tieneAdelanto" @change="precioDinamico(); descuentoAdelanto=0;">
 								<label class="form-check-label" for="fleAdelanto">
 									<span v-if="!tieneAdelanto"><i class="fa-solid fa-percent"></i> ¿Tiene adelanto?</span>
 									<span v-else class="text-danger"><i class="fa-regular fa-money-bill-1"></i> No posee adelanto</span>
 								</label>
-								<!-- <input class="form-check-input" type="checkbox" role="switch" id="fleDescuento" v-model="tieneDescuento" @change="precioDinamico()">
-								<label class="form-check-label" for="fleDescuento">
-									<span v-if="!tieneDescuento"><i class="fa-solid fa-percent"></i> ¿Tiene cupón de descuento?</span>
-									<span v-else class="text-danger"><i class="fa-regular fa-money-bill-1"></i> Sin cupón de descuento</span>
-								</label> -->
 								<div v-if="tieneAdelanto">
-									<label class="mb-0 mt-2" for="">% de Descuento a aplicar</label>
-									<input type="number" min="0" step="1" class="form-control" v-model="descuentoPorcentaje" @change="precioDinamico()">
-									<label class="mb-0 mt-2" for="">Motivo de descuento</label>
-									<input type="text" class="form-control my-2" placeholder="Ingresa una razón para el descuento" v-model="razonPorcentaje">
+									<label class="mb-0 mt-2" for="">Adelanto en S/:</label>
+									<input type="number" min="0" step="1" class="form-control" v-model="descuentoAdelanto" @keyup="precioDinamico()">
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class=" form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="fleRebaja" v-model="tieneRebaja" @change="precioDinamico()">
+								<input class="form-check-input" type="checkbox" role="switch" id="fleRebaja" v-model="tieneRebaja" @change="precioDinamico(); descuentoRebaja=0;">
 								<label class="form-check-label" for="fleRebaja">
 									<span v-if="!tieneRebaja"><i class="fa-solid fa-percent"></i> ¿Tiene rebaja?</span>
 									<span v-else class="text-danger"><i class="fa-regular fa-money-bill-1"></i> Sin rebaja</span>
@@ -323,7 +316,7 @@ export default {
 	data(){
 		return{
 			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
-			switchReciec: 1, tieneAdelanto:false,
+			switchReciec: 1, tieneAdelanto:false, descuentoAdelanto:0,
 			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
 			patientNew: false, alertaDeudas:false, mensajeDeudas:'',
 			cita:{
@@ -381,6 +374,10 @@ export default {
 				if( this.precioNuevo ) precio = precio.nuevos
 				else precio = precio.continuos
 
+				if( this.tieneAdelanto )
+					if( parseInt(this.descuentoAdelanto) <= 0 || this.descuentoAdelanto=='' ) this.descuentoAdelanto=0
+					else precio = precio - parseFloat(this.descuentoAdelanto);
+
 				if( this.tieneDescuento ){
 					if( parseInt(this.descuentoPorcentaje) <= 0 ) descuentoPorcentual=0
 					else descuentoPorcentual = parseFloat((precio * 1/ parseInt(this.descuentoPorcentaje)).toFixed(1));				
@@ -429,7 +426,7 @@ export default {
 				formData.append('type', this.cita.type); //nueva lista de servicios
 				//formData.append('patient_condition', this.cita.patient_condition); //El sistema evalúa la condición: nuevo o continuo, no es necesario pasar
 				formData.append('recomendation', this.cita.recomendation);
-				formData.append('mode', this.cita.mode);
+				formData.append('mode', (this.esPresencial) ? 1: 2 );
 				formData.append('link', this.cita.link);
 				formData.append('type_dni', this.cita.type_dni);
 				formData.append('contacto', this.cita.contacto);
@@ -444,6 +441,7 @@ export default {
 				formData.append('descuento', this.descuentoPorcentaje);
 				formData.append('motivoDescuento', this.razonPorcentaje);
 				formData.append('new_status', this.cita.new_status);
+				formData.append('adelanto', this.descuentoAdelanto);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => { //Trabaja en api -> modelo>store()
 					console.log(response.data)
@@ -502,8 +500,8 @@ export default {
 			this.cita.status= '';
 			this.cita.type_amount=1;
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
-			this.etiqueta ='';
-
+			this.etiqueta =''; this.descuentoAdelanto = 0; this.descuentoPorcentaje=0; this.descuentoPorcentual=0;
+			this.tieneAdelanto=false; this.tieneDescuento=false; this.tieneRebaja=false;
 		},
 		reniec(){ 
 			if (this.switchReciec === 0) return;
@@ -657,6 +655,8 @@ export default {
 			this.cita.bank = '';
 			this.cita.pay_status = '';
 			this.cita.status = '';
+			this.descuentoAdelanto = 0; this.descuentoPorcentaje=0; this.descuentoPorcentual=0;
+			this.tieneAdelanto=false; this.tieneDescuento=false; this.tieneRebaja=false;
 		},
 
 		dynamicPrice () {

@@ -4,7 +4,7 @@
 			<div class="modal-content modal-sm">
 				<div class="modal-header border-0">
 					<h5 class="modal-title" id="exampleModalLabel">Pago de cita</h5>
-					<button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<button type="button" id="cerrModal" class="btn-sm btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -15,21 +15,22 @@
 							<div class="col-sm-12">
 								<!-- <input type="text" class="form-control" name="price" id="price" v-model="dataCita.payment.price"> -->
 								<p class="mb-0"><small>Cuenta de la persona:</small></p>
-								<p class="lead text-capitalize mb-0"> <span>{{dataCita.patient.name}}</span></p>
+								<p class="lead text-capitalize mb-2 fw-bold"> <span>{{(dataCita.patient.name).toLowerCase()}}</span></p>
 							 	<p class="lead mb-0"><small>Precio: S/</small> {{ dataCita.payment.price }}</p>
 							 	<p v-if="dataCita.payment.rebaja>0" class="lead mb-0"><small>Rebaja: S/</small> {{ parseFloat(dataCita.payment.rebaja).toFixed(2) }}</p>
 							 	<p v-if="dataCita.payment.descuento>0" class="lead mb-0"><small>Descuento: </small> {{ dataCita.payment.descuento }}%</p>
+							 	<p v-if="dataCita.payment.adelanto>0" class="lead mb-0"><small>Adelanto: </small> S/ {{ parseFloat(dataCita.payment.adelanto).toFixed(2) }}</p>
 							</div>
 							
-							<div class="col-sm-12">
-									<label for="">Estado de pago</label>
+							<div class="col-sm-12 mt-2">
+									<label class="mt-2 mb-0" for="">Estado de pago</label>
 									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.pago">
 										<option value="1">Sin pagar</option>
 										<option value="2">Pagado</option>
 									</select>
 							</div>                                                      
 							<div class="col-sm-12">
-									<label for="">Método de pago</label>
+									<label class="mt-2 mb-0" for="">Método de pago</label>
 									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.moneda">
 										<option value="1">Efectivo</option>
 										<option value="4">Aplicativo Yape</option>
