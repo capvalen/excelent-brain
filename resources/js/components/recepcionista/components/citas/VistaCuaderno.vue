@@ -93,6 +93,9 @@
 										</a>
 									</td>
 									<td v-if="hora.libre==0">
+										<a class="btn btn-success btn-circle btn-sm" title="Hacer intercambio" @click="intercambiarHorario(horasMalas[hora.indexOcupado])" data-bs-target="#modalIntercambio" data-bs-toggle="modal">
+											<i class="fas fa-retweet"></i>
+										</a>
 										<a v-if="horasMalas[hora.indexOcupado].status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
 										<a v-else @click="modalInfo(horasMalas[hora.indexOcupado])" title="Reprogramar cita" data-bs-target="#reprogModal" data-bs-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
 										
@@ -168,6 +171,8 @@
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario" @ocultarCita="actualizarListadoCitas"></reprog-modal>
 		<info-modal v-if="cita" :dataCit="cita"></info-modal>
 		<modal-search-patient></modal-search-patient>
+		<ModalIntercambio :posibles="posibles" :primero="primero" @actualizar="actualizarListadoCitas"></ModalIntercambio>
+
 		
 		
 
@@ -182,7 +187,8 @@
 	import ReprogModal from './ReprogModal.vue'
 	import ModalPatient from './ModalPatient.vue'
 	import ModalSearchPatient from './ModalSearchPatient.vue'
-	
+	import ModalIntercambio from './ModalIntercambio.vue'
+		
 	import alertify from 'alertifyjs'
 	
 	export default{
@@ -191,10 +197,10 @@
 			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], cita:{}, profesionalElegido:[], horaElegida:[], alternativo:false, precios:[], recetas:[],
 			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ], cita: {
 				address:{patient:{address:{}}}
-			}
+			}, posibles:[], primero:{}
 		}},
 		props:[ 'idUsuario'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio },
 		methods:{
 			dayWeek (day) {
 				switch (day) {
@@ -319,6 +325,11 @@
 					this.recetas = res.data;
 				})
 			},
+			intercambiarHorario(laCita){
+				let idProf = laCita.professional_id
+				this.primero = laCita;
+				this.posibles = this.horasMalas.filter(posible=> posible.professional_id == idProf && posible.date == this.fecha && laCita.id != posible.id )
+			}
 		},
 		mounted(){
 			this.listarProfesionales();

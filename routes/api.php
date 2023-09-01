@@ -77,6 +77,7 @@ Route::get('getPatientsMonth/{date}', [AppointmentController::class, 'getPatient
 Route::post('updateStatus/{id}/{value}', [AppointmentController::class, 'updateStatus']);
 Route::get('updateModeAppoinment/{id}', [AppointmentController::class, 'updateMode']);
 Route::put('reprogramado/{id}', [AppointmentController::class, 'reprogramado']);
+Route::post('intercambiar', [AppointmentController::class, 'intercambiar']);
 
 Route::resource('appointment/payment', PaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('patient', PatientController::class)->only(['index', 'store', 'update', 'show', 'destroy']);

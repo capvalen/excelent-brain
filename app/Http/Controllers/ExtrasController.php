@@ -54,10 +54,13 @@ class ExtrasController extends Controller
 		return $avisos;
 	}
 	public function nuevoInteresado(Request $request){
-		DB::insert("INSERT INTO `interesados`(`nombre`, `celular`, `motivo`, `referencia`, `correo`) VALUES 
-		(?,?,?,?,?)",
+		DB::insert("INSERT INTO `interesados`(`nombre`, `celular`, `motivo`, `referencia`, `correo`, 
+		`idProfesional`, `origen`) VALUES 
+		(?,?,?,?,?,
+		?,?)",
 		[
-			$request->input('nombre'), $request->input('celular'), $request->input('motivo'), $request->input('referencia'), $request->input('correo')
+			$request->input('nombre'), $request->input('celular'), $request->input('motivo'), $request->input('referencia'), $request->input('correo'),
+			$request->input('idProfesional'), $request->input('origen')
 		]);
 		$ultimoID = DB::getPdo()->lastInsertId();
 		return response()->json([
@@ -65,8 +68,19 @@ class ExtrasController extends Controller
 		]);
 	}
 	public function listarInteresados(){
-		$interesados = DB::table('interesados')-> where('activo', '=', '1')->get();
+		try {
+			$interesados = DB::table('interesados as i')
+		->join('professionals as p', 'p.id', '=', 'i.idProfesional')
+		->join('users as u', 'i.idUsuario', '=', 'u.id')
+		->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
+		->where('i.activo', '=', '1')
+		->orderBy('fecha', 'asc')
+		->get();
 		return $interesados;
+		} catch (\Throwable $th) {
+			echo $th;
+		}
+		
 	}
 	public function borrarInteresados($id){
 		$resultado = DB::table('interesados')->where('id', '=', $id)

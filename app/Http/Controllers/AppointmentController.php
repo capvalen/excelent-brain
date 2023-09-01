@@ -208,6 +208,20 @@ class AppointmentController extends Controller
 				'adelanto' => $request->get('adelanto')
 			]);
 
+			if( $request->get('adelanto') > 0 ){
+				$pagoExtra = new Extra_payment;
+				$pagoExtra->customer = $patient->name;
+				$pagoExtra->price = $request->get('adelanto');
+				$pagoExtra->moneda = 1;
+				$pagoExtra->voucher = '';
+				$pagoExtra->appointment_id = $appointment->id;
+				$pagoExtra->type = 8;
+				$pagoExtra->observation = '';
+				$pagoExtra->continuo = $patient_condition;
+				$pagoExtra->user_id = $request->get('user_id');
+				$pagoExtra->save();
+			}
+
 		}else{
 
 			$citas = DB::table('appointments as a')
@@ -296,6 +310,20 @@ class AppointmentController extends Controller
 			$direccion_paciente->province= $request->get('province') =='null' ? null : $request->get('province');
 			$direccion_paciente->department= $request->get('department') =='null' ? null : $request->get('department');
 			$direccion_paciente->save();
+
+			if( $request->get('adelanto') > 0 ){
+				$pagoExtra = new Extra_payment;
+				$pagoExtra->customer = $paciente_prueba->name;
+				$pagoExtra->price = $request->get('adelanto');
+				$pagoExtra->moneda = 1;
+				$pagoExtra->voucher = '';
+				$pagoExtra->appointment_id = $appointment->id;
+				$pagoExtra->type = 8;
+				$pagoExtra->observation = '';
+				$pagoExtra->continuo = $patient_condition;
+				$pagoExtra->user_id = $request->get('user_id');
+				$pagoExtra->save();
+			}
 			
 
 		}
@@ -997,24 +1025,24 @@ class AppointmentController extends Controller
 	public function getDataForCharts($month){
 		 
 		$names = DB::table('payments')
-				->select(DB::raw('SUM(payments.price) as total_price'), 'professionals.name')
-				->join('appointments', 'appointments.id', '=', 'payments.appointment_id')
-				->where('appointments.date','like',$month.'%')
-				->where('payments.price', '!=', null)
-				->join('professionals', 'appointments.professional_id', '=', 'professionals.id')
-				->groupBy('name')
-				->get()
-				->pluck('name');
+			->select(DB::raw('SUM(payments.price) as total_price'), 'professionals.name')
+			->join('appointments', 'appointments.id', '=', 'payments.appointment_id')
+			->where('appointments.date','like',$month.'%')
+			->where('payments.price', '!=', null)
+			->join('professionals', 'appointments.professional_id', '=', 'professionals.id')
+			->groupBy('name')
+			->get()
+			->pluck('name');
 
 		$prices = DB::table('payments')
-				->select(DB::raw('SUM(payments.price) as total_price'), 'professionals.name')
-				->join('appointments', 'appointments.id', '=', 'payments.appointment_id')
-				->where('appointments.date','like',$month.'%')
-				->where('payments.price', '!=', null)
-				->join('professionals', 'appointments.professional_id', '=', 'professionals.id')
-				->groupBy('name')
-				->get()
-				->pluck('total_price');
+			->select(DB::raw('SUM(payments.price) as total_price'), 'professionals.name')
+			->join('appointments', 'appointments.id', '=', 'payments.appointment_id')
+			->where('appointments.date','like',$month.'%')
+			->where('payments.price', '!=', null)
+			->join('professionals', 'appointments.professional_id', '=', 'professionals.id')
+			->groupBy('name')
+			->get()
+			->pluck('total_price');
 
 		return response()->json([
 			'names' => $names,
@@ -1022,12 +1050,28 @@ class AppointmentController extends Controller
 		]);
 	}
 
-		public function getDepartamentos(){
-			$departamentos = DB::table('ubdepartamento')->select('idDepa', 'departamento' )->get();
-			$provincias = DB::table('ubprovincia')->select('idDepa', 'provincia', 'idProv' )->get();
-			$distritos = DB::table('ubdistrito')->select('idDist', 'distrito', 'idProv' )->get();
-			return array( 'departamentos'=>$departamentos, 'provincias' => $provincias, 'distritos'=>$distritos);
-		}
+	public function getDepartamentos(){
+		$departamentos = DB::table('ubdepartamento')->select('idDepa', 'departamento' )->get();
+		$provincias = DB::table('ubprovincia')->select('idDepa', 'provincia', 'idProv' )->get();
+		$distritos = DB::table('ubdistrito')->select('idDist', 'distrito', 'idProv' )->get();
+		return array( 'departamentos'=>$departamentos, 'provincias' => $provincias, 'distritos'=>$distritos);
+	}
+
+	public function intercambiar(Request $request){
+		$horaTemporal = $request->input('horaPrimero');
+
+		$cita = Appointment::find($request->input('idPrimero'));
+		$cita->update([ 'schedule_id' =>  $request->input('horaElegido') ]);
+
+		$cita2 = Appointment::find($request->input('idElegido'));
+		$cita2->update([ 'schedule_id' => $horaTemporal ]);
+
+		return response()->json(['mensaje' => 'se actualizó la cita']);
+
+	}
+
+		
+
 }
 
 function object_sorter($clave,$orden=null) {

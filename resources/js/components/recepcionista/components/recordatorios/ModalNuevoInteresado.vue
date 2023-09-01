@@ -60,6 +60,8 @@
 					datos.append('motivo', this.interesado.motivo)
 					datos.append('correo', this.interesado.correo)
 					datos.append('referencia', this.interesado.referencia)
+					datos.append('origen', 1)
+					datos.append('idProfesional', 1)
 					fetch('/api/nuevoInteresado',{
 						method:'POST', body:datos
 					})

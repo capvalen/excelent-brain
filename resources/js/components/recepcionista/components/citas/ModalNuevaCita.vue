@@ -252,7 +252,10 @@
 						</div>
 					
 						<div class="col-sm-12 my-1" v-if="nosrecomienda">
-							<input type="text" class="form-control" name="recomendation" id="recomendation" v-model="cita.recomendation" placeholder="¿De dónde nos recomienda?" autocomplete="off">
+							<select class="form-select text-capitalize" name="" id="" v-model="cita.recomendation" >
+								<option value="" selected>Ninguno</option>
+								<option class=" text-capitalize" v-for="reco in recomendaciones" :value="reco">{{ reco }}</option>
+							</select>
 						</div>   
 
 						<div class="col-sm-12 my-1" v-if="!esPresencial">
@@ -318,7 +321,7 @@ export default {
 			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
 			switchReciec: 1, tieneAdelanto:false, descuentoAdelanto:0,
 			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
-			patientNew: false, alertaDeudas:false, mensajeDeudas:'',
+			patientNew: false, alertaDeudas:false, mensajeDeudas:'', recomendaciones:['Facebook', 'instagram', 'TikTok', 'Linkedin', 'Youtube', 'spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio'],
 			cita:{
 				phone:'',
 				dni:'',
@@ -642,7 +645,8 @@ export default {
 			this.cita.kinship = '';
 			this.cita.prev_status=1;
 			this.cita.etiqueta='';
-			this.cita.new_status=1
+			this.cita.new_status=1;
+			this.cita.recomendation='';
 			
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 
@@ -720,6 +724,7 @@ export default {
 	created (){
 		this.listarPrecios();
 		this.listarDepartamentos();
+		this.recomendaciones.sort();
 	},
 	updated(){
 		//this.cita.department = 12;

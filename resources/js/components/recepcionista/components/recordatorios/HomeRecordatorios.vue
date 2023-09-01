@@ -133,7 +133,8 @@
 								<th>N°</th>
 								<th>Nombre</th>
 								<th>Celular</th>
-								<th>Correo</th>
+								<th>Profesional</th>
+								<th>Origen</th>
 								<th>Motivo</th>
 								<th>Referencia</th>
 								<th>Fecha y Hora</th>
@@ -145,8 +146,14 @@
 								<td>{{ index+1 }}</td>
 								<td class="text-capitalize">{{ interesado.nombre }}</td>
 								<td>{{ interesado.celular }}</td>
-								<td>{{ interesado.correo }}</td>
+								<td>{{ interesado.nomProf }}</td>
+								<td>
+									<span v-if="interesado.origen=='1'">Manual</span>
+									<span v-if="interesado.origen=='2'">Cartera de clientes</span>
+									<span v-if="interesado.origen=='3'">Cita anulada</span>
+								</td>
 								<td class="text-capitalize">{{ interesado.motivo }}</td>
+								<td>{{ interesado.usuNombre }}</td>
 								<td>
 									<span v-if="interesado.referencia=='1'">Ninguno</span>
 									<span v-if="interesado.referencia=='2'">Recomendación</span>
