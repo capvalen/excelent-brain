@@ -293,7 +293,9 @@ class ExtrasController extends Controller
 	}
 	public function preciosMembresias(){
 		return DB::table('precios')->where('activo', 1)
-		->whereIn('id', [15, 28] )
+		//->whereIn('id', [15, 28] )
+		->where('idClasificacion', '4')
+		->whereNotIn('id', [19, 20, 21, 23, 24, 25, 26] )
 		->orderBy('descripcion', 'asc')
 		->get();
 	}

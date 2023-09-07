@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Extra_payment;
 use App\Models\Professional;
 use App\Models\Payment;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -92,22 +93,47 @@ class PaymentController extends Controller
 				->whereYear('date', '=', date('Y'))
 				->whereDay('date', '=', date('d'))
 				->where('activo', 1)
+				->where('type', '!=', 6)
 				->get();
-				foreach ($payments as $payment) {
-					if($payment->appointment_id!=0){
-						$appointment = Appointment::find($payment->appointment_id);
-						if( isset($appointment->professional_id) ){
-							$profesional = Professional::find($appointment->professional_id);
-							$payment->profesional_name= $profesional->nombre ?? '';
-						}
-					}else{
-						$payment->profesional_name= '';
+			foreach ($payments as $payment) {
+				if($payment->appointment_id!=0){
+					$appointment = Appointment::find($payment->appointment_id);
+					if( isset($appointment->professional_id) ){
+						$profesional = Professional::find($appointment->professional_id);
+						$payment->profesional_name= $profesional->nombre ?? '';
+						$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
+						$payment->horar = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H');
 					}
+				}else{
+					$payment->profesional_name= '';
+					$payment->horario = '';
 				}
-        $noactivo = Extra_payment::where('date', 'like', date('Y-m-d').'%')
+			}
+			$salidas = Extra_payment::whereMonth('date', '=', date('m'))
+				->whereYear('date', '=', date('Y'))
+				->whereDay('date', '=', date('d'))
+				->where('activo', 1)
+				->where('type', '=', 6)
+				->get();
+			foreach ($salidas as $salida) {
+				if($salida->appointment_id!=0){
+					$appointment = Appointment::find($salida->appointment_id);
+					if( isset($appointment->professional_id) ){
+						$profesional = Professional::find($appointment->professional_id);
+						$salida->profesional_name= $profesional->nombre ?? '';
+					}
+				}else{
+					$salida->profesional_name= '';
+				}
+			}
+
+			$noactivo = Extra_payment::where('date', 'like', date('Y-m-d').'%')
 				->where('activo', 0)
 				->get();
-        return response()->json(['activos'=>$payments, 'eliminados'=>$noactivo]);
+			
+			$ordenados = $payments->sortBy('horar');
+			
+			return response()->json(['activos'=>$ordenados->values()->all(), 'eliminados'=>$noactivo, 'salidas'=> $salidas]);
     }
 
     public function getExtraPaymentsByDay($date){
