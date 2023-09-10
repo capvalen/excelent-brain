@@ -725,7 +725,8 @@ class AppointmentController extends Controller
 				'celular' => $patient->phone,
 				'motivo' => 'Anuló la cita',
 				'referencia' => 7, //Ninguno
-				'idPaciente' => $patient->patient_id
+				'idPaciente' => $patient->id,
+				'idUsuario' => 1
 			]);
 
 			/* $appointment->update([
@@ -765,6 +766,7 @@ class AppointmentController extends Controller
 		}
 		
 		return response()->json(['mensaje' => 'Se actualizó el estado la cita']);
+		
 	}
 
 	/**

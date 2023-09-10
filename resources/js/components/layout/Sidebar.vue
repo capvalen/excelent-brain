@@ -250,7 +250,7 @@
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/recepcionista/recordatorios" class="nav-link">
 										<i class="fas fa-birthday-cake"></i>
-										<span>Recordatorios</span>
+										<span>Gestor de datos</span>
 								</router-link>
 						</li>
 						<!-- <li class="nav-item nav__list" @click="activeSidebar()">

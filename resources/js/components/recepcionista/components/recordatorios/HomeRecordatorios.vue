@@ -1,6 +1,6 @@
 <template>
 	<main>
-		<h1>Recordatorios</h1>
+		<h1>Gestor de datos</h1>
 		<div class="row">
 			<div class="col-sm-3" @click="cargarDatos('avisos')">
 				<div class="card mb-0 py-0 border-left-primary cursor" :class="{'active': activoAviso}">
