@@ -5,8 +5,7 @@
 			<div class="modal-content">
 				<div class="modal-header border-0">
 					<h5 class="modal-title " id="exampleModalLabel">Nuevo aviso, recordatorio, llamada</h5>
-					<button type="button" id="closeModal" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
-
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<label for="">Fecha y hora</label>
@@ -62,6 +61,7 @@
 					})
 					.then(response=> response.json())
 					.then(texto=>{
+						this.$parent.actualizarAvisos();
 						this.cerrarModal()
 						if( texto.mensaje )
 							this.$swal('Se creó exitosamente');

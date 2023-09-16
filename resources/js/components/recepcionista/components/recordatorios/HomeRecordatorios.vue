@@ -31,7 +31,7 @@
 
 					<div class="input-group mb-3 col-sm-4">
 						<span class="input-group-text" id="basic-addon1">Cambiar fecha:</span>
-						<input type="date" class="form-control" v-model="fechaCumple" id="fechaCumple" @change="cambiarFecha()">
+						<input type="date" class="form-control" v-model="fechaCumple" id="fechaCumple" @change="cambiarFecha('cumpleaños')">
 					</div>
 					<table class="table table-striped mt-4">
 						<thead>
@@ -61,18 +61,8 @@
 				<div class="card-body">
 					<p class="lead">Avisos</p>
 
-					<div class="d-flex justify-content-between">
-						<div class="input-group mb-3 col-sm-4">
-							<span class="input-group-text" id="basic-addon1">Cambiar mes:</span>
-							<input type="date" class="form-control" id="fechaCumple" @change="cambiarFecha()">
-						</div>
-						<div class="d-grid gap-2 d-block">
-							<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoAviso"><i class="fa-regular fa-note-sticky"></i> Nuevo aviso</button>
-							<button class="btn btn-outline-success mx-2" @click="actualizarAvisos()"><i class="fas fa-sync"></i> Actualizar lista</button>
-						</div>
-					</div>
-
-					<table class="table table-hover">
+					<p>Avisos pendientes hasta la fecha</p>
+					<table class="table table-hover" v-if="avisosAnteriores.length>0">
 						<thead>
 							<tr>
 								<th>N°</th>
@@ -87,24 +77,84 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(aviso, index) in avisos">
-								<td> {{ index+1 }} </td>
+							<tr v-for="(anterior, indice) in avisosAnteriores">
+								<td> {{ indice+1 }} </td>
+								<td>{{fechaLatam(anterior.fecha)}}</td>
+								<td>{{horaLatam(anterior.fecha)}}</td>
+								<td class="text-capitalize">
+									<span>{{anterior.actividad}}</span>
+									<span v-if="anterior.respuesta">{{ anterior.respuesta }}</span>
+								</td>
+								<td class="text-capitalize">{{anterior.responsable}}</td>
+								<td>{{anterior.nomCreador}}</td>
+								<td>
+									<span v-if="anterior.tipo=='1'"><span class="badge rounded-pill text-bg-primary p-2" title="Aviso"><i class="fas fa-paperclip"></i></span></span>
+									<span v-if="anterior.tipo=='2'"><span class="badge rounded-pill text-ligth bg-warning p-2" title="Llamada"><i class="fas fa-phone"></i></span></span>
+									<span v-if="anterior.tipo=='3'"><span class="badge rounded-pill text-bg-success p-2" title="Recordatorio"><i class="fas fa-brain"></i></span></span>
+								</td>
+								<td>
+									<span class="text-muted" v-if="anterior.estado=='1'"><span title="Recién creado"><i class="far fa-circle"></i></span></span>
+									<span class="text-success" v-if="anterior.estado=='2'"><span title="Atendido"><i class="fas fa-shield-alt"></i></span></span>
+									<span class="text-success" v-if="anterior.estado=='3'"><span title="Solucionado"><i class="fas fa-check"></i></span></span>
+									<span class="text-warning" v-if="anterior.estado=='4'"><span title="Pendiente aún"><i class="fas fa-water"></i></span></span>
+									<span class="text-danger" v-if="anterior.estado=='5'"><span title="Cancelado"><i class="fas fa-user-slash"></i></span></span>
+								</td>
+								<td>
+									<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editarAviso" @click="queAviso=anterior"><i class="fas fa-edit"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="text-mute" v-else>Listado de avisos pendientes limpio hasta el día de hoy</p>
+
+					<p>Avisos por fecha</p>
+
+					<div class="d-flex justify-content-between">
+						<div class="input-group mb-3 col-sm-4">
+							<span class="input-group-text" id="basic-addon1">Mostrando avisos de:</span>
+							<input type="date" class="form-control" v-model="fechaAviso" @change="cargarDatos('avisos')">
+						</div>
+						<div class="d-grid gap-2 d-block">
+							<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoAviso"><i class="fa-regular fa-note-sticky"></i> Nuevo aviso</button>
+							<button class="btn btn-outline-success mx-2" @click="actualizarAvisos()"><i class="fas fa-sync"></i> Actualizar lista</button>
+						</div>
+					</div>
+					<table class="table table-hover" v-if="avisos.length>0">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Fecha</th>
+								<th>Hora</th>
+								<th>Actividad</th>
+								<th>Responsable</th>
+								<th>Creador</th>
+								<th>Tipo</th>
+								<th>Estado</th>
+								<th>@</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(aviso, indice) in avisos">
+								<td> {{ indice+1 }} </td>
 								<td>{{fechaLatam(aviso.fecha)}}</td>
 								<td>{{horaLatam(aviso.fecha)}}</td>
-								<td>{{aviso.actividad}}</td>
+								<td class="text-capitalize">
+									<span>{{aviso.actividad}}</span>
+									<span v-if="aviso.respuesta"><br><i class="fas fa-user-alt"></i>	{{ aviso.respuesta }}</span>
+								</td>
 								<td>{{aviso.responsable}}</td>
 								<td>{{aviso.nomCreador}}</td>
 								<td>
-									<span v-if="aviso.tipo=='1'">Aviso</span>
-									<span v-if="aviso.tipo=='2'">Llamada</span>
-									<span v-if="aviso.tipo=='3'">Recordatorio</span>
+									<span v-if="aviso.tipo=='1'"><span class="badge rounded-pill text-bg-primary p-2" title="Aviso"><i class="fas fa-paperclip"></i></span></span>
+									<span v-if="aviso.tipo=='2'"><span class="badge rounded-pill text-ligth bg-warning p-2" title="Llamada"><i class="fas fa-phone"></i></span></span>
+									<span v-if="aviso.tipo=='3'"><span class="badge rounded-pill text-bg-success p-2" title="Recordatorio"><i class="fas fa-brain"></i></span></span>
 								</td>
 								<td>
-									<span v-if="aviso.estado=='1'">Creado</span>
-									<span class="text-success" v-if="aviso.estado=='2'">Atendido</span>
-									<span class="text-secondary" v-if="aviso.estado=='3'">Solucionado</span>
-									<span class="text-warning" v-if="aviso.estado=='4'">Pendiente</span>
-									<span class="text-danger" v-if="aviso.estado=='5'">Cancelado</span>
+									<span class="text-muted" v-if="aviso.estado=='1'"><span title="Recién creado"><i class="far fa-circle"></i></span></span>
+									<span class="text-success" v-if="aviso.estado=='2'"><span title="Atendido"><i class="fas fa-shield-alt"></i></span></span>
+									<span class="text-success" v-if="aviso.estado=='3'"><span title="Solucionado"><i class="fas fa-check"></i></span></span>
+									<span class="text-warning" v-if="aviso.estado=='4'"><span title="Pendiente aún"><i class="fas fa-water"></i></span></span>
+									<span class="text-danger" v-if="aviso.estado=='5'"><span title="Cancelado"><i class="fas fa-user-slash"></i></span></span>
 								</td>
 								<td>
 									<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editarAviso" @click="queAviso=aviso"><i class="fas fa-edit"></i></button>
@@ -112,6 +162,7 @@
 							</tr>
 						</tbody>
 					</table>
+					<p class="text-mute" v-else>Listado de avisos pendientes limpio hasta el día de hoy</p>
 				</div>
 			</div>
 		</section>
@@ -121,7 +172,17 @@
 					<div class="card-body">
 						<p class="lead">Listado de interesados</p>
 
-						<div class="d-flex justify-content-end">
+						<div class="d-flex justify-content-between">
+							<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+								<label class="btn btn-outline-primary" for="btnradio1" @click="filtro='todos'">Todos</label>
+
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+								<label class="btn btn-outline-primary" for="btnradio2" @click="filtro='1'"><i class="fas fa-check"></i> Con respuestas</label>
+
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+								<label class="btn btn-outline-primary" for="btnradio3" @click="filtro='2'"><i class="far fa-times-circle"></i> Sin respuestas</label>
+							</div>
 							<div class="d-grid mb-2">
 								<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoInteresado"><i class="fa-regular fa-circle-user"></i> Nuevo seguimiento</button>
 							</div>
@@ -136,13 +197,15 @@
 								<th>Profesional</th>
 								<th>Origen</th>
 								<th>Motivo</th>
+								<th>Usuario</th>
 								<th>Referencia</th>
 								<th>Fecha y Hora</th>
+								<th>Est.</th>
 								<th>@</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(interesado, index) in interesados">
+							<tr v-for="(interesado, index) in interesados" :class="{'todos':interesado.atendido==0, 'con':interesado.atendido==1, 'sin':interesado.atendido==2}" v-show="filtro=='todos' || filtro== interesado.atendido ">
 								<td>{{ index+1 }}</td>
 								<td class="text-capitalize">{{ interesado.nombre }}</td>
 								<td>{{ interesado.celular }}</td>
@@ -152,7 +215,10 @@
 									<span v-if="interesado.origen=='2'">Cartera de clientes</span>
 									<span v-if="interesado.origen=='3'">Cita anulada</span>
 								</td>
-								<td class="text-capitalize">{{ interesado.motivo }}</td>
+								<td class="text-capitalize">
+									<span>{{ interesado.motivo }}</span>
+									<span v-if="interesado.atendido>0"><br><i class="fas fa-user-alt"></i> {{ interesado.respuesta }}</span>
+								</td>
 								<td>{{ interesado.usuNombre }}</td>
 								<td>
 									<span v-if="interesado.referencia=='1'">Ninguno</span>
@@ -161,11 +227,17 @@
 									<span v-if="interesado.referencia=='4'">Publicidad Escrita</span>
 									<span v-if="interesado.referencia=='5'">Publicidad de TV/Radio</span>
 									<span v-if="interesado.referencia=='6'">Referido</span>
-									<span v-if="interesado.referencia=='7'">Sistema recepción</span>
+									<span v-if="interesado.referencia=='7'"> </span> <!-- Sistema recepcion -->
 								</td>
 								<td>{{ fechaLatam(interesado.fecha) }} {{ horaLatam(interesado.fecha) }}</td>
 								<td>
-									<button class="btn btn-outline-danger btn-sm" @click="borrarInteresado(interesado.id, index)"><i class="fa-solid fa-xmark"></i></button>
+									<span class="text-muted" v-if="interesado.atendido=='0'"><span title="Recién creado"><i class="far fa-circle"></i></span></span>
+									<span class="text-success" v-if="interesado.atendido=='1'"><span title="Cliente respondió"><i class="fas fa-check"></i></span></span>
+									<span class="text-danger" v-if="interesado.atendido=='2'"><span title="Cliente no respondió"><i class="far fa-times-circle"></i></span></span>
+								</td>
+								<td>
+									<button class="btn btn-outline-primary btn-sm " v-if="interesado.atendido=='0'" @click="responderInteresado(interesado, index)" data-bs-target="#modalResponderInteresado" data-bs-toggle="modal"><i class="far fa-comment-dots"></i></button>
+									<!-- <button class="btn btn-outline-danger btn-sm border-0" @click="borrarInteresado(interesado.id, index)"><i class="fa-solid fa-xmark"></i></button> -->
 								</td>
 							</tr>
 						</tbody>
@@ -216,9 +288,10 @@
 			</div></section>
 
 		<ModalNuevoAviso :usuario="idUsuario"></ModalNuevoAviso>
-		<ModalEditarAviso v-if="avisos" :queAviso="queAviso" :usuario="idUsuario"></ModalEditarAviso>
+		<ModalEditarAviso :queAviso="queAviso" :usuario="idUsuario"></ModalEditarAviso>
 		<ModalNuevoInteresado :usuario="idUsuario"></ModalNuevoInteresado>
 		<ModalEditPatients v-if="data" :dataPatient="data"></ModalEditPatients>
+		<ModalResponderInteresado :queInteresado="queInteresado"></ModalResponderInteresado>
 		
 	</main>
 	
@@ -228,15 +301,16 @@ import ModalNuevoAviso from './ModalNuevoAviso.vue'
 import ModalEditarAviso from './ModalEditarAviso.vue'
 import ModalNuevoInteresado from './ModalNuevoInteresado.vue'
 import ModalEditPatients from '../pacientes/ModalEditPatients.vue'
+import ModalResponderInteresado from './ModalResponderInteresado.vue'
 
 import moment from 'moment';
 
 export default {
-	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditPatients },
+	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditPatients, ModalResponderInteresado },
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos'
 		}
 	},
 	mounted(){
@@ -259,8 +333,8 @@ export default {
 					break;
 					case 'avisos':
 						this.activoAviso = true;
-						await this.axios.get(`/api/listarAvisos/${moment().format('YYYY-MM-DD')}`)
-						.then(response => this.avisos = response.data)
+						await this.axios.get(`/api/listarAvisos/${this.fechaAviso}`)
+						.then(response => {this.avisos = response.data.avisos; this.avisosAnteriores = response.data.anteriores})
 						break;
 					case 'interesados':
 						this.activoInteresado = true;
@@ -291,12 +365,14 @@ export default {
 			let miEdad = moment(fecha);
 			return moment().diff(miEdad, 'years');
 		},
-		cambiarFecha(){
+		cambiarFecha(tipo){
 			let queMes = moment(document.getElementById('fechaCumple').value).format('M')
 			if(queMes != this.mes && queMes !='Invalid date'){
 				this.mes = queMes;				
-			}else{
-				this.cargarDatos('cumpleaños')
+			}
+			switch(tipo){
+				case 'avisos': this.cargarDatos('avisos'); break;
+				case 'cumpleaños': this.cargarDatos('cumpleaños'); break;
 			}
 		},
 		async borrarInteresado(id, index){
@@ -313,7 +389,9 @@ export default {
 			moment.locale('es')
 			return moment(fecha, 'YYYY-MM-DD').fromNow();
 		},
-
+		responderInteresado(interesado, index){
+			this.queInteresado = interesado;
+		}
 	}
 	
 }
@@ -324,4 +402,8 @@ export default {
 	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 .card.active{font-weight: bold; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px; }
+.btn-group>.btn:first-child{
+	border-top-left-radius: 5px!important;
+	border-bottom-left-radius: 6px!important;
+}
 </style>

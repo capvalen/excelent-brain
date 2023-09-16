@@ -85,8 +85,15 @@ El campo clasification
 3 Certificado
 4 Kurame
 5 Clínica de día
+6 Membresía <- nuevo
 
 El campo patient_condition refiere a:
 1 Paciente nuevo
 2 Paciente antiguo
+
+
+Ejecutar en la terminal:
+  npm i vue-select-picker-bootstrap
+
+
 */

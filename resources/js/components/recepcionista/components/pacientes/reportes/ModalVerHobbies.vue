@@ -10,14 +10,18 @@
 				<div class="modal-body">
 					<div class="card mb-2">
 							<div class="card-body">
+								
 								<div class="row">
 									<div class="col-sm-6">
+										<template>
+											<VSelect addClass="text-capitalize" searchable="true" searchPlaceholder="Buscar hobbies" defaultTitle="Hobbies" searchNotFound="No hay resultados" v-model="selected" :options="actividades" />
+										</template>		
 										<select class="form-select text-capitalize" id="sltHobbie" >
 											<option v-for="(hobbie, index) in hobbies" class="text-capitalize" :value="index">{{hobbie}}</option>
 										</select>
 									</div>
 									<div class="col-sm-6">
-										<button class="btn btn-outline-secondary" @click="addHobbie()"><i class="fas fa-share"></i> Enviar</button>
+										<button class="btn btn-outline-secondary" @click="addHobbie()"><i class="fas fa-paperclip"></i> Agregar</button>
 									</div>
 								</div>
 							</div>
@@ -47,16 +51,25 @@
 	</div>
 </template>
 <script>
+import VSelect from "vue-select-picker-bootstrap";
 
 export default{
 	name: 'ModalVerHobbies',
 	props:['hobbies','misHobbies', 'id'],
-	data(){return {
-		
+	components: { VSelect },
+	data(){return { actividades:[],
+		countries: [
+        { value: 1, text: "Pakistan" },
+        { value: 2, text: "China" },
+        { value: 3, text: "Bangladesh" },
+        { value: 4, text: "USA" },
+        { value: 5, text: "Australia" },
+      ],
+		selected: {value: null},
 	}},
 	methods:{
 		async addHobbie(){
-			this.misHobbies.push( document.getElementById('sltHobbie').value );	
+			this.misHobbies.push( this.selected.value );	 //document.getElementById('sltHobbie').value
 			this.guardarJSON();
 		},
 		 borrarHobbie(index){
@@ -66,8 +79,26 @@ export default{
 		async guardarJSON(){
 			await this.axios.post('/api/addHobbie/'+this.id, {misHobbies: this.misHobbies})
 			.then(res=> console.log(res.data))
+		},
+		capitalizarPrimeraLetra(palabra) {
+			if (palabra.length === 0) return "";
+			// Convierte la primera letra a mayúscula y el resto a minúscula
+			palabra = palabra.toLowerCase();
+			palabra = palabra.charAt(0).toUpperCase() + palabra.slice(1);
+			return palabra;
 		}
+
 	},
 	watch:{
+		hobbies(){
+			this.hobbies.forEach((hob, index)=>{
+				this.actividades.push({ value: index, text: this.capitalizarPrimeraLetra(hob) })
+			})
+		}
 	}
 }</script>
+
+<style>
+	.v-select-toggle, .v-dropdown-item{font-size: 15px!important;}
+	
+</style>

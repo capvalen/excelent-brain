@@ -1,0 +1,11 @@
+ALTER TABLE `precios` ADD `servicio` BOOLEAN NULL DEFAULT FALSE AFTER `sesiones`;
+UPDATE `precios` SET `servicio` = '1' WHERE `precios`.`id` <= 30;
+UPDATE `precios` SET `servicio` = '1' WHERE `precios`.`id` in (43, 44,45);
+UPDATE `precios` SET `servicio` = '0' WHERE `precios`.`id` = 15;
+UPDATE `precios` SET `servicio` = '0' WHERE `precios`.`id` = 30;
+UPDATE `precios` SET `sesiones` = '6' WHERE `precios`.`id` = 31;
+CREATE TABLE `payments_files` (`id` INT NOT NULL AUTO_INCREMENT , `file` VARCHAR(500) NOT NULL , `payment_id` INT NOT NULL , `activo` INT NULL DEFAULT '1' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ALTER TABLE `payments_files` ADD `fecha` DATETIME NULL DEFAULT CURRENT_TIMESTAMP AFTER `payment_id`;
+ALTER TABLE `extra_payments` CHANGE `continuo` `continuo` INT(11) NULL DEFAULT '1' COMMENT '1= nuevo, 2=continuo, 3 Membres';
+ALTER TABLE `recordatorios` ADD `respuesta` TEXT NULL DEFAULT '' AFTER `observaciones`;
+ALTER TABLE `interesados` ADD `atendido` INT NULL DEFAULT '0' AFTER `respuesta`;

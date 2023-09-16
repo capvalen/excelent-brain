@@ -65,7 +65,7 @@
               </div>
               
               <div class="col-sm-6">
-                <div class="form-group">                            
+                <div class="form-group">
                   <label for="">Horario del profesional</label>
                   <select class="form-select" name="sltProfesionalHorarioID" id="sltProfesionalHorarioID" v-model="dataCit.schedule_id">
                     <option value="" disabled selected>Selecciona un horario</option>
@@ -197,7 +197,7 @@ export default {
           }
         }
       })
-    },   
+    },
     
     closeModal() {
       document.getElementById('cerrModal').click();

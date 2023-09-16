@@ -122,6 +122,7 @@ export default {
 	
 				this.axios.post('/api/egresoExtra', this.form)
 				.then(res => { console.log(res);
+					this.$parent.actualizar()
 					for (let value in this.form) {
 						this.form[value] = ''
 					}

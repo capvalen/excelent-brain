@@ -137,11 +137,12 @@ export default{
 
 			this.axios.post('/api/buscarCartera', this.filtro)
 			.then(res => { console.log(res.data);
+				let hoy=moment().format('YYYY-MM-DD')
 				this.citasResumidas = res.data.resumidas;
 				this.citasCompletas = res.data.completas;
 				this.citasResumidas.forEach((cita, index )=> {
 					cita.visitas = Object.values(this.citasCompletas).filter(item => item.patient_id === cita.patient_id).length;
-					cita.sinconfirmar = Object.values(this.citasCompletas).filter(item => item.patient_id === cita.patient_id && item.status==1 ).length;
+					cita.sinconfirmar = Object.values(this.citasCompletas).filter(item => item.patient_id === cita.patient_id && item.status==1 && moment(item.date).diff(hoy)>0 ).length;
 					cita.confirmar = Object.values(this.citasCompletas).filter(item => item.patient_id === cita.patient_id && item.status==2 ).length;
 					cita.anulados = Object.values(this.citasCompletas).filter(item => item.patient_id === cita.patient_id && item.status==3 ).length;
 					cita.reprogramados = Object.values(this.citasCompletas).filter(item => item.patient_id === cita.patient_id && item.status==4 ).length;
@@ -166,6 +167,7 @@ export default{
 			return moment(fecha).format('DD/MM/YYYY');
 		},
 		async cargarCitas(caso, id){
+			let hoy=moment().format('YYYY-MM-DD')
 			switch(caso){
 				case 'visitas':
 					this.titulo = 'Total de Citas'
@@ -175,7 +177,7 @@ export default{
 					this.previewCitas = this.citasCompletas.filter(item=> item.patient_id == id && item.status==2 ); break;
 				case 'sinconfirmar':
 					this.titulo = 'Citas sin confirmar'
-					this.previewCitas = this.citasCompletas.filter(item=> item.patient_id == id && item.status==1 ); break;
+					this.previewCitas = this.citasCompletas.filter(item=> item.patient_id == id && item.status==1 && moment(item.date).diff(hoy)>0 ); break;
 				case 'anulados':
 					this.titulo = 'Citas anuladas'
 					this.previewCitas = this.citasCompletas.filter(item=> item.patient_id == id && item.status==3 ); break;

@@ -41,6 +41,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'adjuntos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/adjuntos'),
+            'url' => env('APP_URL').'/storage/app/public/adjuntos',
+            'visibility' => 'adjuntos',
+        ],
 
         's3' => [
             'driver' => 's3',

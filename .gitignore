@@ -2,7 +2,6 @@
 /public/hot
 /public/storage
 /storage/*.key
-/storage/*
 /storage/fonts/*
 /storage/fonts/*.php
 /public/js/*

@@ -14,6 +14,7 @@
                   <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">
 												<span class="text-primary" v-if="dataConsult.status ==2 && dataConsult.payment.pay_status==2">Pagado & Confirmado</span>
+												<span class="text-primary" v-else-if="dataConsult.status ==2">Confirmado sin pagar</span>
                         <span class="text-warning" v-else-if="dataConsult.status ==1" :class='{ "text-success": estadoConsulta.status}'> Pendiente</span>
                         <span v-else :class='{ "text-danger": dataConsult.status == 3 }'>Cancelado</span>
                       </div>

@@ -34,6 +34,7 @@ class ExtrasController extends Controller
 			'estado' => $request->input('tipo'),
 			'actualizador' => $request->input('actualizador'),
 			'observaciones' => $request->input('observaciones'),
+			'respuesta' => $request->input('respuesta')
 		]);
 
 		if($resultado ){
@@ -47,11 +48,24 @@ class ExtrasController extends Controller
 		}
 	}
 	public function listarAvisos($fecha){
+		$anteriores = DB::table('recordatorios as r')
+		->join('users as u', 'r.creador', '=', 'u.id')
+		->select('r.*', 'u.email as nomCreador')
+		->whereDate('fecha', '<', $fecha)
+		->where('estado', 1)
+		->orderByRaw("FIELD(estado, 1, 4, 2, 3)")
+		->orderBy('fecha', 'desc')
+		->get();
 		$avisos = DB::table('recordatorios as r')
 		->join('users as u', 'r.creador', '=', 'u.id')
 		->select('r.*', 'u.email as nomCreador')
-		->whereDate('fecha', $fecha)->get();
-		return $avisos;
+		->whereDate('fecha', $fecha)
+		->orderByRaw("FIELD(estado, 1, 4, 2, 3)")
+		->orderBy('fecha', 'desc')
+		->get();
+		return response()->json([
+			'avisos'=>$avisos, 'anteriores'=> $anteriores
+		]);
 	}
 	public function nuevoInteresado(Request $request){
 		DB::insert("INSERT INTO `interesados`(`nombre`, `celular`, `motivo`, `referencia`, `correo`, 
@@ -74,6 +88,7 @@ class ExtrasController extends Controller
 		->join('users as u', 'i.idUsuario', '=', 'u.id')
 		->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
 		->where('i.activo', '=', '1')
+		->orderBy('atendido', 'asc')
 		->orderBy('fecha', 'asc')
 		->get();
 		return $interesados;
@@ -171,6 +186,7 @@ class ExtrasController extends Controller
 	public function guardarMembresia( Request $request){
 		
 		$fechas = json_decode ($request->input('fechas'));
+		$fechas_membresias = json_decode ($request->input('fechas_membresias'));
 		$membresia = json_decode ($request->input('membresia'), true);
 		//var_dump( $fechas ); die();
 		$idMembresia=DB::table('membresias')-> insertGetId([
@@ -181,6 +197,39 @@ class ExtrasController extends Controller
 			'cuotas' => count($fechas),
 			'monto' => $membresia['precio'],
 		]);
+
+		foreach($fechas_membresias as $sesion){
+			$cita = Appointment::create([
+				'date'=>$sesion->fecha,
+				'patient_condition'=>2, //consideremos paciente antiguo
+				'type'=>$membresia['tipo'],
+				'mode'=>1,
+				'status'=>1,
+				'clasification'=>6,
+				'professional_id'=>$sesion->idProfesional,
+				'patient_id'=>$sesion->idPaciente,
+				'schedule_id'=>$sesion->idHorario,
+				'formato_nuevo'=>1,
+				'verAviso'=>1,
+				'byDoctor'=>0,
+			]);
+
+			Payment::create([
+				'observation'=>'',
+				'bank'=>'',
+				'voucher' => '',
+				'pay_status'=> 1,
+				'price' => 0,
+				'appointment_id' => $cita->id,
+				'continuo' => 2,
+				'user_id' => 1,
+				'rebaja' => 0,
+				'motivoRebaja' => 'Creado por membresía',
+				'descuento' => 0,
+				'motivoDescuento' => ''
+			]);
+
+		}
 
 
 		foreach($fechas as $fecha){
@@ -193,7 +242,7 @@ class ExtrasController extends Controller
 				$pagoExtra->appointment_id = 0;
 				$pagoExtra->type = 7; //pago de membresía
 				$pagoExtra->observation = '';
-				$pagoExtra->continuo = 1;
+				$pagoExtra->continuo = 3;
 				$pagoExtra->user_id = $request->input('user_id');
 				$pagoExtra->save();
 			}else{
@@ -209,6 +258,7 @@ class ExtrasController extends Controller
 		}
 
 		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
+		
 	}
 
 	public function reservarCitaDoctor(Request $request, Appointment $appointment){
@@ -287,7 +337,8 @@ class ExtrasController extends Controller
 
 	public function listarPrecios(){
 		return DB::table('precios')->where('activo', 1)
-		->whereNotIn('id', [15,28] )
+		/* ->whereNotIn('id', [28] ) //15
+		->where('servicio', 1) */
 		->orderBy('descripcion', 'asc')
 		->get();
 	}
@@ -315,6 +366,40 @@ class ExtrasController extends Controller
 		} catch (\Throwable $th) {
 			echo $th;
 		}
+	}
+	public function verAdjuntoPago($id){
+		$foto = DB::table('payments_files')->where('payment_id', $id)->get();
+		return response()->json([ 'archivo' => $foto ]);
+	}
+	public function eliminarAdjunto($id, Request $request){
+		$archivo = public_path('storage/adjuntos/'. $request->get('archivo') );
+		unlink($archivo);
+		DB::table('payments_files')->where('payment_id', $id)->delete();
+		return response()->json([ 'mensaje' => 'foto borrada' ]);
+	}
+	public function subirArchivoPago( Request $request){
+		$file = $request->file('file');
+		$filename = uniqid() . '.' . $file->getClientOriginalExtension();
+		//$file->storeAs('adjuntos', $filename,'public');
+		$file->move(public_path('storage/adjuntos'), $filename);
+
+
+		DB::table('payments_files')->insert([
+			'file' => $filename,
+			'payment_id' => $request->get('idPago')
+		]);
 		
+		return response()->json([ 'archivo' => $filename ]);
+	}
+
+	public function respuestaInteresado(Request $request){
+		//var_dump($request->all()); die();
+		$responde = json_decode ($request->input('respuesta'));
+		DB::table('interesados')->where('id', $request->get('id'))
+		->update([
+			'respuesta' => $responde->respuesta,
+			'atendido' => $responde->tipo
+		]);
+		return response()->json([ 'mensaje' => 'Respuesta guardada']);
 	}
 }

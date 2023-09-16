@@ -34,12 +34,16 @@
 									<td>{{ indice+1 }}</td>
 									<td  @click="modalInfo(horasMalas[hora.indexOcupado])" class="puntero" data-bs-toggle="modal" data-bs-target="#infoModal">{{ horaLatam1(hora.check_time) }} - {{ horaLatam2(hora.departure_date) }}</td>
 									<td v-if="hora.libre=='0'">
-										<span v-if="horasMalas[hora.indexOcupado].clasification==1">Psiquiatría</span>
-										<span v-if="horasMalas[hora.indexOcupado].clasification==2">Psicología</span>
-										<span v-if="horasMalas[hora.indexOcupado].clasification==3">Certificado</span>
-										<span v-if="horasMalas[hora.indexOcupado].clasification==4">Kurame</span>
-										<span v-if="horasMalas[hora.indexOcupado].formato_nuevo=='0'">{{ tipoViejo[horasMalas[hora.indexOcupado].type-1] }}:</span>
-										<span v-else>{{ queServicio(horasMalas[hora.indexOcupado].type) }}</span>
+										<span v-if="horasMalas[hora.indexOcupado].formato_nuevo=='0'">
+											<span v-if="horasMalas[hora.indexOcupado].clasification==1">Psiquiatría</span>
+											<span v-if="horasMalas[hora.indexOcupado].clasification==2">Psicología</span>
+											<span v-if="horasMalas[hora.indexOcupado].clasification==3">Certificado</span>
+											<span v-if="horasMalas[hora.indexOcupado].clasification==4">Kurame</span>
+										</span>
+										<span v-else>
+											<span>{{ queServicio(horasMalas[hora.indexOcupado].type) }}</span>
+										</span>
+										<!-- <span v-if="horasMalas[hora.indexOcupado].formato_nuevo=='0'">{{ tipoViejo[horasMalas[hora.indexOcupado].type-1] }}:</span> -->
 									</td>
 									<td v-else></td>
 									<td class="puntero" v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#patientModal" @click="asignar(horasMalas[hora.indexOcupado]); modalInfo(horasMalas[hora.indexOcupado]);">
@@ -169,7 +173,7 @@
     <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
 		<modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario" @ocultarCita="actualizarListadoCitas"></reprog-modal>
-		<info-modal v-if="cita" :dataCit="cita"></info-modal>
+		<info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>
 		<modal-search-patient></modal-search-patient>
 		<ModalIntercambio :posibles="posibles" :primero="primero" @actualizar="actualizarListadoCitas"></ModalIntercambio>
 
@@ -323,6 +327,7 @@
 				this.axios(`/api/verRecetaPorId/${id}`)
 				.then(res =>{
 					this.recetas = res.data;
+					this.$parent.recetas = this.recetas;
 				})
 			},
 			intercambiarHorario(laCita){

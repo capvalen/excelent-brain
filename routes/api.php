@@ -135,6 +135,10 @@ Route::get('cargarUsuarios/', [ExtrasController::class,'cargarUsuarios']);
 Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);
 Route::post('guardarMembresia/', [ExtrasController::class, 'guardarMembresia']);
 Route::post('reservarCitaDoctor/', [ExtrasController::class, 'reservarCitaDoctor']);
+Route::get('verAdjuntoPago/{id}', [ExtrasController::class, 'verAdjuntoPago']);
+Route::post('subirArchivoPago/', [ExtrasController::class, 'subirArchivoPago']);
+Route::post('eliminarAdjunto/{id}', [ExtrasController::class, 'eliminarAdjunto']);
+Route::post('respuestaInteresado', [ExtrasController::class, 'respuestaInteresado']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);

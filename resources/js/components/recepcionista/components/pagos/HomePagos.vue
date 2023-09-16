@@ -30,7 +30,7 @@
 						<td>Fact. Bol.</td>
 						<td>Cita</td>
 						<td>Cliente - Motivo</td>
-						<td>N/C</td>
+						<td>Tipo</td>
 						<td>Obs.</td>
 						<td>Monto</td>
 						<td>Motivo</td>
@@ -38,7 +38,7 @@
 						<td>N° Op.</td>
 						<td>Prof.</td>
 						<td>Hora</td>
-						<td>Ticket</td>
+						<td>@</td>
 					</tr>
         </thead>
         <tbody>
@@ -59,6 +59,7 @@
 							<td>
 								<span v-if="payment.continuo=='1'">N</span>
 								<span v-else-if="payment.continuo=='2'">C</span>
+								<span v-else-if="payment.continuo=='3'">M</span>
 								<span v-else>
 									<span v-if="payment.continuo=='-1'">X</span>
 									<span v-if="payment.continuo==null">X</span>
@@ -86,6 +87,7 @@
 							<td>{{ payment.profesional_name }}</td>
 							<td>{{ payment.horario }}</td>
 							<td>
+								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 								<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
@@ -126,7 +128,7 @@
 						<td>Medio de pago</td>
 						<td>N° Op.</td>
 						<td>Hora</td>
-						<td>Ticket</td>
+						<td>@</td>
 					</tr>
         </thead>
         <tbody>
@@ -158,6 +160,7 @@
 							<td>{{ payment.voucher_issued }}</td>
 							<td>{{ horaLatam(payment.created_at) }}</td>
 							<td>
+								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 								<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
@@ -192,14 +195,14 @@
 						<td>Fact. Bol.</td>
 						<td>Cita</td>
 						<td>Cliente - Motivo</td>
-						<td>N/C</td>
+						<td>Tipo</td>
 						<td>Obs.</td>
 						<td>Monto</td>
 						<td>Moneda</td>
 						<td>Medio de pago</td>
 						<td>N° Op.</td>
 						<td>Hora</td>
-						<td>Ticket</td>
+						<td>@</td>
 					</tr>
         </thead>
 				<tbody>
@@ -216,9 +219,12 @@
 							<td v-else-if="payment.pay_status == 2">Cancelado</td> -->
 						<td>
 							<span v-if="payment.continuo=='1'">N</span>
-							<span v-if="payment.continuo=='2'">C</span>
-							<span v-if="payment.continuo=='-1'">X</span>
-							<span v-if="payment.continuo==null">X</span>
+							<span v-else-if="payment.continuo=='2'">C</span>
+							<span v-else-if="payment.continuo=='3'">M</span>
+							<span v-else>
+								<span v-if="payment.continuo=='-1'">X</span>
+								<span v-if="payment.continuo==null">X</span>
+							</span>
 						</td>
 						<td>{{ payment.observation }}</td>
 						<td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{ retornarFloat(payment.price)}}</td>
@@ -236,6 +242,7 @@
 						<td>{{ payment.profesional_name }}</td>
 						<td>{{ horaLatam(payment.created_at) }}</td>
 						<td>
+								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
 							<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 							<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 						</td>
@@ -316,6 +323,7 @@
 		
 		<modal-pagos-extras />
     <modal-egresos-extras />
+		<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto"></OffcanvasAdjuntos>
 	</div>
 </template>
 
@@ -323,18 +331,24 @@
 import ModalMembresias from "./ModalMembresias.vue"
 import ModalPagosExtras from './../citas/ModalPagosExtras.vue'
 import ModalEgresosExtras from './../citas/ModalEgresosExtras.vue'
+import OffcanvasAdjuntos from './OffcanvasAdjuntos.vue'
 import moment from 'moment'
 
 	export default{
 		data(){
 			return{
-				payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'],
-				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:''}
+				payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'], idSeleccionado:-1,
+				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:''}, foto:''
 			}
 		},
 		props:{},
-		components:{ ModalMembresias, ModalPagosExtras, ModalEgresosExtras },
+		components:{ ModalMembresias, ModalPagosExtras, ModalEgresosExtras, OffcanvasAdjuntos },
 		methods:{
+			verAdjunto(id){
+				this.idSeleccionado=id;
+				this.axios.get('/api/verAdjuntoPago/'+id)
+				.then(res=> {this.foto = res.data.archivo ? res.data.archivo[0].file : '' } )
+			},
 				getAllExtraPayments(){
 						this.axios.get('/api/getAllExtraPayments')
 						.then(res =>{ console.log(res.data)

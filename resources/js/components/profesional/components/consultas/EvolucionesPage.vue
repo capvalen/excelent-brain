@@ -513,15 +513,16 @@
 											:alt="evolution.professional ? evolution.professional.signing : null ? 'Firma del doctor' : 'Sin firma'">
 									</div>
 								</div>
-								<div class="d-flex flex-gap">
-									<button @click="updateModal(evolution)" data-bs-toggle="modal" data-bs-target="#updatedModal" class="btn btn-outline-secondary" v-if="evolution.professional_id == dataUser.id  || evolution.auth == 1"> <!-- && evolution.date === getDateNow() --> <!-- btn--edit -->
+								<div class="d-flex flex-gap" v-if="evolution.date === getDateNow()">
+									<button @click="updateModal(evolution)" data-bs-toggle="modal" data-bs-target="#updatedModal" class="btn btn-outline-secondary" v-if="evolution.professional_id == dataUser.id && 
+                      evolution.date === getDateNow() || evolution.auth == 1">
 										<i class="fas fa-edit"></i> Redactar evolución
 									</button>
 									<button @click="editEvolution(evolution)" class="btn btn-success d-none"
 										v-if="evolution.professional_id == dataUser.id" data-bs-toggle="modal" data-bs-target="#editModal">
 										<i class="fas fa-edit"></i>
 									</button>
-								<!-- 	<div v-if="evolution.professional_id == dataUser.id &&
+									<!-- <div v-if="evolution.professional_id == dataUser.id &&
 										evolution.date === getDateNow()" class="btn-group">
 										<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)"
 											class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuClickableInside"

@@ -16,11 +16,10 @@
 							<div class="col-sm-12 mb-0">
 								<label for="date">Fecha: {{fechaLatam(form.date)}}</label> 
 							</div>
-              <div class="col-sm-12 d-none" id="divClienteNuevo">
+              <div class="col-sm-12 " id="divClienteNuevo">
                 <div class="form-group">
                   <label for="customer">Cliente</label>
-                  <input type="text" name="customer" required id="customer" class="form-control"
-                    v-model="form.customer">
+                  <input type="text" name="customer" required id="customer" class="form-control" v-model="form.customer" autocomplete="off">
                 </div>
               </div>
 
@@ -108,6 +107,7 @@ export default {
 	
 				this.axios.post('/api/paymentExtra', this.form)
 				.then(res => {
+					this.$parent.actualizar()
 					for (let value in this.form) {
 						this.form[value] = ''
 					}

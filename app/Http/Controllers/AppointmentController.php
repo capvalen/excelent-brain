@@ -649,6 +649,7 @@ class AppointmentController extends Controller
 			'link'=>$request->get('link'),
 			'status'=> 1,
 			'patient_id' =>$request->get('patient_id'),
+			'formato_nuevo' => 1
 		]);
 
 		$fechado = Carbon::create($cita->payment->created_at);

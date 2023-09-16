@@ -16,8 +16,14 @@
 						<option value="4">Pendiente</option>
 						<option value="5">Cancelado</option>
 					</select>
-					<label for="">¿Observaciones?</label>
-					<input type="text" class="form-control" id="fechaHora" v-model="aviso.observaciones" autocomplete="off">
+					<div v-if="aviso.tipo!=3">
+						<label for="">¿Observaciones?</label>
+						<input type="text" class="form-control" id="fechaHora" v-model="aviso.observaciones" autocomplete="off">
+					</div>
+					<div v-else>
+						<label for="">Respuesta del cliente:</label>
+						<input type="text" class="form-control" id="txtRespuesta" v-model="aviso.respuesta" autocomplete="off">
+					</div>
 				</div>
 				<div class="modal-footer border-0">
 					<button type="button" class="btn btn-primary" @click="guardar()">Actualizar</button>
@@ -36,7 +42,7 @@
 		data(){
 			return{
 				aviso:{
-					tipo:1, observaciones:''
+					tipo:1, observaciones:'', respuesta:''
 				}
 			}
 		},
@@ -48,10 +54,11 @@
 					datos.append('id', this.queAviso.id)
 					datos.append('tipo', this.aviso.tipo)
 					datos.append('observaciones', this.aviso.observaciones)
+					datos.append('respuesta', this.aviso.respuesta)
 					datos.append('actualizador', this.usuario)
 					await axios.post('/api/actualizarAviso', datos)
 					.then(texto=>{
-
+						this.$parent.actualizarAvisos();
 						this.cerrarModal()
 						if( texto.data.mensaje )
 							this.$swal('Se actualizó exitosamente');

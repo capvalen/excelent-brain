@@ -212,7 +212,7 @@
 						<div class="col-sm-4">
 							<label for="">Tipo de servicio</label>
 							<select  class="form-select" name="type" id="sltServicio" v-model="cita.type" @change="precioDinamico()">
-								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification ">{{ precio.descripcion }}</option>
+								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification && precio.servicio=='1' ">{{ precio.descripcion }}</option>
 							</select>
 						</div>
 						<div class="col-sm-4">

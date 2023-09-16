@@ -19,18 +19,23 @@
 
               <tr>
                 <th scope="row">Tipo</th>
-                <td v-if=" dataCit.type === 1">Terapia Inicial niño/adolescente</td>
-                <td v-else-if=" dataCit.type === 2">Terapia Inicial adulto</td>
-                <td v-else-if=" dataCit.type === 3">Terapia Inicial pareja</td>
-                <td v-else-if=" dataCit.type === 4">Terapia Inicial familiar</td>
-                <td v-else-if=" dataCit.type === 5">Terapia continua niño/adolescente</td>
-                <td v-else-if=" dataCit.type === 6">Terapia continua adulto</td>
-                <td v-else-if=" dataCit.type === 7">Terapia continua pareja</td>
-                <td v-else-if=" dataCit.type === 8">Terapia continua familiar</td>
-                <td v-else-if=" dataCit.type === 9">Orientación Vocacional</td>
-                <td v-else-if=" dataCit.type === 10">Sucamec inicial</td>
-                <td v-else-if=" dataCit.type === 11">Sucamec renovación</td>
-                <td v-else-if=" dataCit.type === 12">Kurame</td>
+                <td v-if="dataCit.formato_nuevo==0">
+									<span v-if=" dataCit.type === 1">Terapia Inicial niño/adolescente</span>
+									<span v-else-if=" dataCit.type === 2">Terapia Inicial adulto</span>
+									<span v-else-if=" dataCit.type === 3">Terapia Inicial pareja</span>
+									<span v-else-if=" dataCit.type === 4">Terapia Inicial familiar</span>
+									<span v-else-if=" dataCit.type === 5">Terapia continua niño/adolescente</span>
+									<span v-else-if=" dataCit.type === 6">Terapia continua adulto</span>
+									<span v-else-if=" dataCit.type === 7">Terapia continua pareja</span>
+									<span v-else-if=" dataCit.type === 8">Terapia continua familiar</span>
+									<span v-else-if=" dataCit.type === 9">Orientación Vocacional</span>
+									<span v-else-if=" dataCit.type === 10">Sucamec inicial</span>
+									<span v-else-if=" dataCit.type === 11">Sucamec renovación</span>
+									<span v-else-if=" dataCit.type === 12">Kurame</span>
+								</td>
+								<td v-else>
+									<span>{{ queServicio(dataCit.type) }}</span>
+								</td>
               </tr>
 
               <tr>
@@ -41,11 +46,7 @@
               
               <tr>
                 <th scope="row">Clasificación</th>
-                <td v-if=" dataCit.clasification === 2">Psicológico</td>
-                <td v-if=" dataCit.clasification === 1">Psiquiátrico</td>            
-                <td v-if=" dataCit.clasification === 3">Certificado</td>            
-                <td v-if=" dataCit.clasification === 4">Kurame</td>            
-                <td v-if=" dataCit.clasification === 5">Clínica de día</td>            
+                <td>{{clasificaciones[dataCit.clasification]}}</td>
               </tr>
 
               <tr>
@@ -59,7 +60,7 @@
                 <td>{{ dataCit.recomendation }}</td>
               </tr>
 
-              <tr>
+              <tr v-if="dataCit.payment">
                 <th scope="row">Monto</th>
                 <td>S./ {{ dataCit.payment.price }}</td>
               </tr>
@@ -82,12 +83,13 @@
     
     data() {
       return{
-        data: null
+        data: null,
+				clasificaciones:{1:'Psiquiátrico', 2:'Psicológico', 3:'Certificado', 4:'Kurame', 5:'Clínica de día', 6:'Por membresía'}
       }
     },
     
     props: {
-      dataCit: Object
+      dataCit: Object, precios: Array
     },
 
     computed : {
@@ -100,6 +102,9 @@
       lowerCase (text) {
         return text.toLowerCase();
       },
+			queServicio(idTipo){ //console.log('queTipo', idTipo);
+				return this.precios.find(x=> x.id == idTipo).descripcion
+			},
     },
 
     created () {
