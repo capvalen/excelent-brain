@@ -273,6 +273,8 @@
 								<div v-if="tieneAdelanto">
 									<label class="mb-0 mt-2" for="">Adelanto en S/:</label>
 									<input type="number" min="0" step="1" class="form-control" v-model="descuentoAdelanto" @keyup="precioDinamico()">
+									<label for="">Descripción adicional</label>
+									<input type="text" class="form-control my-2" placeholder="Ingresa una razón para la rebaja" v-model="razonAdelanto">
 								</div>
 							</div>
 						</div>
@@ -319,7 +321,7 @@ export default {
 	data(){
 		return{
 			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
-			switchReciec: 1, tieneAdelanto:false, descuentoAdelanto:0,
+			switchReciec: 1, tieneAdelanto:false, descuentoAdelanto:0, razonAdelanto:'',
 			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
 			patientNew: false, alertaDeudas:false, mensajeDeudas:'', recomendaciones:['Facebook', 'instagram', 'TikTok', 'Linkedin', 'Youtube', 'spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio'],
 			cita:{
@@ -445,6 +447,7 @@ export default {
 				formData.append('motivoDescuento', this.razonPorcentaje);
 				formData.append('new_status', this.cita.new_status);
 				formData.append('adelanto', this.descuentoAdelanto);
+				formData.append('razonAdelanto', this.razonAdelanto);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => { //Trabaja en api -> modelo>store()
 					console.log(response.data)

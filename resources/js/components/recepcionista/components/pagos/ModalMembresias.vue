@@ -41,7 +41,7 @@
 						<p class="mb-0"><strong>Última atención</strong> {{ pacienteElegido.etiqueta == '' ? 'Sin registro' :
 							pacienteElegido.etiqueta }}</p>
 						<label class="mt-3" for="">Tipo de membresía</label>
-						<select name="" class="form-select" v-model="membresia.tipo" @change="calcularFechas()">
+						<select name="" class="form-select" id="sltMembresia" v-model="membresia.tipo" @change="calcularFechas()">
 							<option v-for="precio in precios" :value="precio.id">{{ precio.descripcion }}</option>
 						</select>
 						<label for="">Cantidad de sesiones: {{ cantSesiones }}</label>
@@ -257,12 +257,15 @@ export default {
 			if (this.membresia.cuotas <= 0) alertify.notify('<i class="fa-solid fa-bomb"></i> El número de cuotas mínimo debe ser 1', 'danger', 10);
 			else if (!this.membresia.fin) alertify.notify('<i class="fa-solid fa-bomb"></i> Ingrese el último día de la memebresía', 'danger', 10);
 			else {
+				var mem = document.getElementById("sltMembresia");
+
 				let datos = new FormData();
 				datos.append('idPaciente', this.pacienteElegido.id)
 				datos.append('customer', this.pacienteElegido.name)
 				datos.append('motivo', this.pacienteElegido.id)
 				datos.append('membresia', JSON.stringify(this.membresia))
 				datos.append('user_id', this.idUsuario)
+				datos.append('nombreMembresia', mem.options[mem.selectedIndex].text )
 				datos.append('fechas', JSON.stringify(this.fechas))
 				datos.append('fechas_membresias', JSON.stringify(this.sesionesAcumuladas))
 

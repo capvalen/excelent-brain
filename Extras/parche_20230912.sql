@@ -9,3 +9,7 @@ ALTER TABLE `payments_files` ADD `fecha` DATETIME NULL DEFAULT CURRENT_TIMESTAMP
 ALTER TABLE `extra_payments` CHANGE `continuo` `continuo` INT(11) NULL DEFAULT '1' COMMENT '1= nuevo, 2=continuo, 3 Membres';
 ALTER TABLE `recordatorios` ADD `respuesta` TEXT NULL DEFAULT '' AFTER `observaciones`;
 ALTER TABLE `interesados` ADD `atendido` INT NULL DEFAULT '0' AFTER `respuesta`;
+ALTER TABLE `deudas` ADD `idPago` INT NULL DEFAULT '0' AFTER `activo`;
+ALTER TABLE `deudas` ADD `observaciones` TEXT NULL DEFAULT '' AFTER `fechaActualiza`;
+ALTER TABLE `extra_payments` ADD `razonAdelanto` TEXT NULL DEFAULT '' AFTER `motivoDescuento`;
+ALTER TABLE `payments` ADD `razonAdelanto` TEXT NULL DEFAULT '' AFTER `motivoDescuento`;

@@ -30,7 +30,7 @@
 					<p class="lead">Cumpleaños</p>
 
 					<div class="input-group mb-3 col-sm-4">
-						<span class="input-group-text" id="basic-addon1">Cambiar fecha:</span>
+						<span class="input-group-text" id="basic-addon1">Mes de cumpleaños:</span>
 						<input type="date" class="form-control" v-model="fechaCumple" id="fechaCumple" @change="cambiarFecha('cumpleaños')">
 					</div>
 					<table class="table table-striped mt-4">
@@ -173,6 +173,11 @@
 						<p class="lead">Listado de interesados</p>
 
 						<div class="d-flex justify-content-between">
+							<div class="input-group mb-3 col-sm-4">
+								<span class="input-group-text" id="basic-addon1">Fecha:</span>
+								<input type="date" class="form-control" v-model="fechaInteresados" id="fechInteresados" @change="cargarDatos('interesados')">
+							</div>
+
 							<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
 								<label class="btn btn-outline-primary" for="btnradio1" @click="filtro='todos'">Todos</label>
@@ -183,9 +188,19 @@
 								<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
 								<label class="btn btn-outline-primary" for="btnradio3" @click="filtro='2'"><i class="far fa-times-circle"></i> Sin respuestas</label>
 							</div>
-							<div class="d-grid mb-2">
+							<div>
+								<select class="form-select" v-model="filtroDoc">
+									<option value="-1">Todos</option>
+									<option v-for="doctor in doctores" :value="doctor.id">{{ doctor.nombre }}</option>
+								</select>
+							</div>
+							
+							
+							<div class="d-grid d-flex mb-2">
+								<button class="btn btn-outline-success" @click="cargarDatos('interesados')"><i class="fas fa-redo-alt"></i> Actualizar </button>
 								<button class="btn btn-outline-primary mx-2" data-bs-toggle="modal" data-bs-target="#nuevoInteresado"><i class="fa-regular fa-circle-user"></i> Nuevo seguimiento</button>
 							</div>
+							
 						</div>
 
 					<table class="table table-hover">
@@ -205,7 +220,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(interesado, index) in interesados" :class="{'todos':interesado.atendido==0, 'con':interesado.atendido==1, 'sin':interesado.atendido==2}" v-show="filtro=='todos' || filtro== interesado.atendido ">
+							<tr v-for="(interesado, index) in interesados" :class="{'todos':interesado.atendido==0, 'con':interesado.atendido==1, 'sin':interesado.atendido==2}" v-show="(filtro=='todos' || filtro== interesado.atendido) && (interesado.idProfesional == filtroDoc || filtroDoc==-1) ">
 								<td>{{ index+1 }}</td>
 								<td class="text-capitalize">{{ interesado.nombre }}</td>
 								<td>{{ interesado.celular }}</td>
@@ -261,6 +276,7 @@
 								<th>N°</th>
 								<th>Nombre</th>
 								<th>Motivo</th>
+								<th>Monto</th>
 								<th>Fecha de deuda</th>
 								<th>Estado</th>
 								<th>@</th>
@@ -271,14 +287,15 @@
 								<td>{{ index+1 }}</td>
 								<td class="text-capitalize" @click="dataProps(deuda)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ deuda.name }}</td>
 								<td class="text-capitalize">{{ deuda.motivo }}</td>
+								<td>S/ {{ parseFloat(deuda.monto).toFixed(2) }}</td>
 								<td>{{ fechaLatam(deuda.fecha) }} <small>({{ fechaFrom(deuda.fecha) }})</small></td>
 								<td>
-									<span v-if="deuda.estado == 1">Deuda pendiente</span>
-									<span v-if="deuda.estado == 2">Deuda cobrada</span>
-									<span v-if="deuda.estado == 3">Deuda perdida</span>
+									<span v-if="deuda.estado == 1"><span title="Deuda pendiente">⚪</span></span>
+									<span v-if="deuda.estado == 2"><span title="Deuda cobrada">🟢</span></span>
+									<span v-if="deuda.estado == 3"><span title="Deuda perdida">🔴</span></span>
 								</td>
-								<td>
-									<button class="btn btn-outline-info btn-sm" title="Cambiar de estado" @click="modificarDeuda(deuda.id, index)"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+								<td >
+									<button v-if="deuda.estado==1" class="btn btn-outline-primary btn-sm" title="Cambiar pago" @click="queDeuda = deuda" data-bs-target="#modalPagarDeuda" data-bs-toggle="modal"><i class="fas fa-hand-holding-usd"></i></button>
 								</td>
 							</tr>
 						</tbody>
@@ -292,6 +309,7 @@
 		<ModalNuevoInteresado :usuario="idUsuario"></ModalNuevoInteresado>
 		<ModalEditPatients v-if="data" :dataPatient="data"></ModalEditPatients>
 		<ModalResponderInteresado :queInteresado="queInteresado"></ModalResponderInteresado>
+		<ModalPagarDeuda :deuda="queDeuda" :usuario="idUsuario"></ModalPagarDeuda>
 		
 	</main>
 	
@@ -302,20 +320,22 @@ import ModalEditarAviso from './ModalEditarAviso.vue'
 import ModalNuevoInteresado from './ModalNuevoInteresado.vue'
 import ModalEditPatients from '../pacientes/ModalEditPatients.vue'
 import ModalResponderInteresado from './ModalResponderInteresado.vue'
+import ModalPagarDeuda from './ModalPagarDeuda.vue'
 
 import moment from 'moment';
 
 export default {
-	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditPatients, ModalResponderInteresado },
+	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditPatients, ModalResponderInteresado, ModalPagarDeuda },
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos'
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos', filtroDoc:-1, fechaInteresados: moment().format('YYYY-MM-DD'), queDeuda:null
 		}
 	},
 	mounted(){
 		this.axios.get('/api/user').
 		then(res=> this.idUsuario = res.data.user.id )
+		this.listarProfesionales();
 	},
 	methods: {
 		async cargarDatos(tipo) {
@@ -338,8 +358,8 @@ export default {
 						break;
 					case 'interesados':
 						this.activoInteresado = true;
-						await this.axios.get(`/api/listarInteresados/`)
-						.then(response => this.interesados = response.data)
+						await this.axios.get(`/api/listarInteresados/${this.fechaInteresados}`)
+						.then(response => this.interesados = response.data.interesados )
 						break;
 					case 'deudas':
 						this.activoDeudas = true;
@@ -387,10 +407,16 @@ export default {
 		},
 		fechaFrom(fecha){
 			moment.locale('es')
-			return moment(fecha, 'YYYY-MM-DD').fromNow();
+			return moment(fecha, 'YYYY-MM-DD').fromNow(true);
 		},
 		responderInteresado(interesado, index){
 			this.queInteresado = interesado;
+		},
+		async listarProfesionales() {
+			await this.axios.get('/api/profesional')
+				.then(response => {
+					this.doctores = response.data;
+				})
 		}
 	}
 	

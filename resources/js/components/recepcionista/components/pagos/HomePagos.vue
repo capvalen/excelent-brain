@@ -28,7 +28,7 @@
 						<td>N°</td>
 						<td>Fecha</td>
 						<td>Fact. Bol.</td>
-						<td>Cita</td>
+						<!-- <td>Cita</td> -->
 						<td>Cliente - Motivo</td>
 						<td>Tipo</td>
 						<td>Obs.</td>
@@ -52,7 +52,7 @@
 							<td>{{payment.created_at | formatedDate}}</td>
 							<td>{{payment.voucher}}</td>
 
-							<td>{{ payment.id}}</td>
+							<!-- <td>{{ payment.id}}</td> -->
 							<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''"></span></td>
 							<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
 								<td v-else-if="payment.pay_status == 2">Cancelado</td> -->
@@ -119,7 +119,7 @@
 						<td>N°</td>
 						<td>Fecha</td>
 						<td>Fact. Bol.</td>
-						<td>Cita</td>
+						<!-- <td>Cita</td> -->
 						<td>Cliente - Motivo</td>
 						
 						<td>Obs.</td>
@@ -142,7 +142,7 @@
 							<td>{{payment.created_at | formatedDate}}</td>
 							<td>{{payment.voucher}}</td>
 
-							<td>{{ payment.id}}</td>
+							<!-- <td>{{ payment.id}}</td> -->
 							<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''"></span></td>
 							<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
 								<td v-else-if="payment.pay_status == 2">Cancelado</td> -->
@@ -193,7 +193,7 @@
 						<td>N°</td>
 						<td>Fecha</td>
 						<td>Fact. Bol.</td>
-						<td>Cita</td>
+						<!-- <td>Cita</td> -->
 						<td>Cliente - Motivo</td>
 						<td>Tipo</td>
 						<td>Obs.</td>
@@ -213,7 +213,7 @@
 						<td>{{payment.created_at | formatedDate}}</td>
 						<td>{{payment.voucher}}</td>
 
-						<td>{{ payment.id}}</td>
+						<!-- <td>{{ payment.id}}</td> -->
 						<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!='' && payment.observacion!=null"> <br />Obs. {{ payment.observation }}</span> <span class="text-danger"><br><strong>Motivo: </strong>{{payment.razon}}</span></td>
 						<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
 							<td v-else-if="payment.pay_status == 2">Cancelado</td> -->

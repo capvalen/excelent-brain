@@ -124,7 +124,7 @@ Route::post('nuevoAviso/', [ExtrasController::class, 'nuevoAviso']);
 Route::post('actualizarAviso/', [ExtrasController::class, 'actualizarAviso']);
 Route::get('listarAvisos/{fecha}', [ExtrasController::class, 'listarAvisos']);
 Route::post('nuevoInteresado/', [ExtrasController::class, 'nuevoInteresado']);
-Route::get('listarInteresados/', [ExtrasController::class, 'listarInteresados']);
+Route::get('listarInteresados/{fecha}', [ExtrasController::class, 'listarInteresados']);
 Route::get('listarDeudas/{fecha}', [ExtrasController::class, 'listarDeudas']);
 Route::get('borrarInteresados/{id}', [ExtrasController::class, 'borrarInteresados']);
 Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
@@ -139,6 +139,7 @@ Route::get('verAdjuntoPago/{id}', [ExtrasController::class, 'verAdjuntoPago']);
 Route::post('subirArchivoPago/', [ExtrasController::class, 'subirArchivoPago']);
 Route::post('eliminarAdjunto/{id}', [ExtrasController::class, 'eliminarAdjunto']);
 Route::post('respuestaInteresado', [ExtrasController::class, 'respuestaInteresado']);
+Route::post('pagarDeudaMembresia', [ExtrasController::class, 'pagarDeudaMembresia']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);

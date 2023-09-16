@@ -81,17 +81,31 @@ class ExtrasController extends Controller
 			'mensaje' => $ultimoID
 		]);
 	}
-	public function listarInteresados(){
+	public function listarInteresados($fecha){
 		try {
-			$interesados = DB::table('interesados as i')
-		->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
-		->join('users as u', 'i.idUsuario', '=', 'u.id')
-		->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
-		->where('i.activo', '=', '1')
-		->orderBy('atendido', 'asc')
-		->orderBy('fecha', 'asc')
-		->get();
-		return $interesados;
+			
+			if( $fecha== Carbon::now()->format('Y-m-d') ){
+				$interesados = DB::table('interesados as i')
+				->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
+				->join('users as u', 'i.idUsuario', '=', 'u.id')
+				->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
+				->where('i.activo', '=', '1')
+				->orderBy('atendido', 'asc')
+				->orderBy('fecha', 'asc')
+				->get();
+			}else{
+				$interesados = DB::table('interesados as i')
+			->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
+			->join('users as u', 'i.idUsuario', '=', 'u.id')
+			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
+			->where('i.activo', '=', '1')
+			->whereDate('fecha', '=', $fecha)
+			->orderBy('atendido', 'asc')
+			->orderBy('fecha', 'asc')
+			->get();
+			}
+		
+		return response()->json([ 'interesados'=> $interesados]);
 		} catch (\Throwable $th) {
 			echo $th;
 		}
@@ -111,11 +125,25 @@ class ExtrasController extends Controller
 	}
 
 	public function listarDeudas($fecha){
-		$resultados = DB::table('deudas as d')->where('d.activo', 1)
-		->join('patients as p', 'p.id', '=', 'd.patient_id' )
-		->whereDate('d.fecha', '<=', $fecha)
-		->orderBy('d.fecha', 'asc')
-		->get();
+		if( $fecha== Carbon::now()->format('Y-m-d') ){
+			$resultados = DB::table('deudas as d')->where('d.activo', 1)
+			->join('patients as p', 'p.id', '=', 'd.patient_id' )
+			->whereDate('d.fecha', '<=', $fecha)
+			//->whereNotIn('estado', [2,3]) Ver la forma de disminuir la lista de hoy, porque se hará larga
+			->orderBy('estado', 'asc')
+			->orderBy('d.fecha', 'asc')
+			->select( 'd.*', 'p.*', 'd.id as idDeuda')
+			->get();
+		}else{
+			$resultados = DB::table('deudas as d')->where('d.activo', 1)
+			->join('patients as p', 'p.id', '=', 'd.patient_id' )
+			->whereDate('d.fecha', '=', $fecha)
+			->orderBy('estado', 'asc')
+			->orderBy('d.fecha', 'asc')
+			->select( 'd.*', 'p.*', 'd.id as idDeuda')
+			->get();
+
+		}
 
 		foreach ($resultados as $resultado) {
 			$direccion = DB::table('addresses')->where('patient_id', $resultado->patient_id)->get();
@@ -248,11 +276,12 @@ class ExtrasController extends Controller
 			}else{
 				DB::table('deudas')->insert([
 					'patient_id' => $request->input('idPaciente'),
-					'motivo' => $membresia['tipo']=='15' ? 'Pago de membresía Kurame': 'Pago de membresía Clínica de día',
+					'motivo' => $request->input('nombreMembresia'),
 					'user_id' => $request->input('user_id'),
 					'fecha' => $fecha->dia,
 					'monto' => $fecha->monto,
-					'idMembresia' => $idMembresia
+					'idMembresia' => $idMembresia,
+					'idPago' => $membresia['tipo']
 				]);
 			}
 		}
@@ -401,5 +430,30 @@ class ExtrasController extends Controller
 			'atendido' => $responde->tipo
 		]);
 		return response()->json([ 'mensaje' => 'Respuesta guardada']);
+	}
+
+	public function pagarDeudaMembresia(Request $request){
+		DB::table('deudas')->where('id', $request->input('idDeuda'))
+		->update([
+			'idActualiza' => $request->input('user_id'),
+			'fechaActualiza' => Carbon::now(),
+			'estado' => $request->input('estado'),
+			'observaciones' => $request->input('observacion')
+		]);
+		if($request->input('estado')=='2'){//realizó el pago
+			$pagoExtra = new Extra_payment;
+				$pagoExtra->customer = $request->input('nombre');
+				$pagoExtra->price = $request->input('precio');
+				$pagoExtra->moneda = 1;
+				$pagoExtra->voucher = '';
+				$pagoExtra->appointment_id = 0;
+				$pagoExtra->type = $request->input('tipo');
+				$pagoExtra->observation = 'Cancelación de deuda';
+				$pagoExtra->continuo = 3;
+				$pagoExtra->user_id = $request->input('user_id');
+				$pagoExtra->save();
+		}
+		return response()->json(['mensaje' => 'Actualizado con éxito']);
+		
 	}
 }
