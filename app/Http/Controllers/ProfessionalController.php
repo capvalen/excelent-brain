@@ -134,34 +134,46 @@ class ProfessionalController extends Controller
     public function update($id,Request $request)
     {
         if($request->file('photo') && $request->file('signing')){
-            $urlPhoto = $request->file('photo')->store('img_profesionales','public');
-            $urlFirma = $request->file('signing')->store('firmas','public');
+					$foto = $request->file('photo');
+					$fotoNombre = uniqid() . '.' . $foto->getClientOriginalExtension();
+					$firma = $request->file('signing');
+					$firmaNombre = uniqid() . '.' . $firma->getClientOriginalExtension();
+						$urlPhoto = $foto->move(public_path('img/img_profesionales'), $fotoNombre);
+						$urlFirma = $firma->move(public_path('img/firmas'), $firmaNombre);
+            //$urlPhoto = $request->file('photo')->store('img_profesionales','public');
+            //$urlFirma = $request->file('signing')->store('firmas','public');
             Professional::where('id',$id)->update([
                 'name' => $request->get('name'),
                 'phone' => $request->get('phone'),
                 'profession' => $request->get('profession'),
                 'cv_description' => $request->get('cv_description'),
-                'photo'=> $urlPhoto,
-                'signing'=> $urlFirma
+                'photo'=> 'img_profesionales/'. $fotoNombre,
+                'signing'=> 'firmas/'.$firmaNombre
             ]);
         }
         else if($request->file('photo')){
-            $urlPhoto = $request->file('photo')->store('img_profesionales','public');
+					$foto = $request->file('photo');
+					$fotoNombre = uniqid() . '.' . $foto->getClientOriginalExtension();
+					$foto->move(public_path('img/img_profesionales'), $fotoNombre);
+					//$urlPhoto = $request->file('photo')->store('img_profesionales','public');
             Professional::where('id',$id)->update([
                 'name' => $request->get('name'),
                 'phone' => $request->get('phone'),
                 'profession' => $request->get('profession'),
                 'cv_description' => $request->get('cv_description'),
-                'photo'=> $urlPhoto
+                'photo'=> 'img_profesionales'. $fotoNombre
             ]);
         }else if($request->file('signing')){
-            $urlFirma = $request->file('signing')->store('firmas','public');
+					$firma = $request->file('signing');
+					$firmaNombre = uniqid() . '.' . $firma->getClientOriginalExtension();
+					$urlFirma = $firma->move(public_path('img/firmas'), $firmaNombre);
+            //$urlFirma = $request->file('signing')->store('firmas','public');
             Professional::where('id',$id)->update([
                 'name' => $request->get('name'),
                 'phone' => $request->get('phone'),
                 'profession' => $request->get('profession'),
                 'cv_description' => $request->get('cv_description'),
-                'signing'=> $urlFirma
+                'signing'=> 'firmas'.$firmaNombre
             ]);
         }
         else{

@@ -5,7 +5,7 @@
 			<div class="modal-content">
 				<div class="modal-header border-0">
 					<h5 class="modal-title " id="exampleModalLabel">Nuevo aviso, recordatorio, llamada</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<button type="button" id="closeModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<label for="">Fecha y hora</label>

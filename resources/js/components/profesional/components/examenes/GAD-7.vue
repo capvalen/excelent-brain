@@ -78,7 +78,7 @@ export default {
     async saveData () {
       await saveExams({
         patient_id: this.dataPersonalPatient.patient_id,
-				professional_id: this.$attrs.professional.id,
+				professional_id: this.$attrs.dataUser.id,
         exam: JSON.stringify({name: this.name, result: this.values})
       })
       .then(res => {

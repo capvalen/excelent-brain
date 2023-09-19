@@ -30,7 +30,11 @@
     </div>
 </main>
 </template>
+
 <script>
+import io from 'socket.io-client'
+import alertify from 'alertifyjs';
+
 import SideBar from './layout/Sidebar.vue'
 import NavBar from './layout/Nav.vue'
 
@@ -58,37 +62,63 @@ export default {
     components: { NavBar, SideBar },
 
     methods: {
-        routePathValidation () {
-            if (this.$router.history.current.path.split("/")[1] !== this.currentUser.rol) {
-                this.$router.push({ path: `/${this.currentUser.rol}/home` })    
-            }
-        }
+			routePathValidation () {
+				if (this.$router.history.current.path.split("/")[1] !== this.currentUser.rol) {
+						this.$router.push({ path: `/${this.currentUser.rol}/home` })    
+				}
+			},
+			capitalizarPrimeraLetra(texto) {
+				// Obtenemos la primera letra del texto
+				const primeraLetra = texto.charAt(0);
+				// Convertimos la primera letra a mayúscula
+				const primeraLetraMayuscula = primeraLetra.toUpperCase();
+				// Devolvemos el texto con la primera letra en mayúscula
+				return primeraLetraMayuscula + texto.slice(1);
+			}
     },
 
     mounted(){
-        window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-        this.axios.get('/api/user')
-        .then((res) => {
-            console.log('home page', res.data.user)
-            const {id, email, rol} = res.data.user
+			const socket = io("http://localhost:3001");
 
-            this.datosUsuario = res.data.user.professional
-            this.currentUser.id = id.toString()
-            this.currentUser.rol = rol
-            this.currentUser.email = email
+			window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+			this.axios.get('/api/user')
+			.then((res) => {
+					console.log('home page', res.data.user)
+					const {id, email, rol} = res.data.user
 
-            window.addEventListener('popstate', e => {
-                this.routePathValidation()
-            })
+					this.datosUsuario = res.data.user.professional
+					this.currentUser.id = id.toString()
+					this.currentUser.rol = rol
+					this.currentUser.email = email
 
-            this.routePathValidation()
-            
-        }).catch((err) => {
-            console.log(err)
-        });
+					window.addEventListener('popstate', e => {
+							this.routePathValidation()
+					})
+
+					socket.emit('pedirAvisosDeAhora');
+
+					this.routePathValidation()
+					
+			}).catch((err) => {
+					console.log(err)
+			});
+
+			socket.on('update', (avisos)=>{
+				if(this.currentUser.rol=="recepcionista"){
+					if(avisos.length>0)
+						alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio ${avisos.length} mensaje${avisos.length>1? 's':''}! <br> 1°. ${this.capitalizarPrimeraLetra(avisos[0].actividad)}</span>`, false)
+						if(avisos[1])
+							alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio ! <br> 2°. ${this.capitalizarPrimeraLetra(avisos[1].actividad)}</span>`, false)
+				}
+			});
     },
-
-   
 }
 </script>
 
+<style>
+.alertify-notifier .ajs-message{
+	background: rgb(8 8 8 / 95%)!important;
+    color: #fff!important;
+    text-align: left!important;
+}
+</style>

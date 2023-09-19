@@ -100,12 +100,15 @@ class PaymentController extends Controller
 					$appointment = Appointment::find($payment->appointment_id);
 					if( isset($appointment->professional_id) ){
 						$profesional = Professional::find($appointment->professional_id);
+						$payment->professional_id= $profesional->professional_id ?? 0;
 						$payment->profesional_name= $profesional->nombre ?? '';
 						$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
-						$payment->horar = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H');
+						$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
 					}
 				}else{
+					$payment->professional_id= 0;
 					$payment->profesional_name= '';
+					$payment->horar = 0;
 					$payment->horario = '';
 				}
 			}
@@ -131,8 +134,11 @@ class PaymentController extends Controller
 				->where('activo', 0)
 				->get();
 			
-			$ordenados = $payments->sortBy('horar');
-			
+			$ordenados =  $payments->sortBy([
+				fn ($a, $b) => $a['profesional_name'] <=> $b['profesional_name'],
+				fn ($a, $b) => $a['horar'] <=> $b['horar'],
+			]);
+		
 			return response()->json(['activos'=>$ordenados->values()->all(), 'eliminados'=>$noactivo, 'salidas'=> $salidas]);
     }
 
@@ -156,7 +162,12 @@ class PaymentController extends Controller
 				$noactivo = Extra_payment::where('created_at', 'like', $date.'%')
 				->where('activo', 0)
 				->get();
-        return response()->json(['activos'=>$payments, 'eliminados'=>$noactivo]);
+				$ordenados =  $payments->sortBy([
+					['professional_id', 'desc'],
+					['horar', 'asc']
+				]);
+				//$ordenados2 = $ordenados->sortBy('horar');
+        return response()->json(['activos'=>$ordenados, 'eliminados'=>$noactivo]);
     }
 
 		public function editarPagoExtra(Request $request){

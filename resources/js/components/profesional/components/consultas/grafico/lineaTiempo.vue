@@ -13,94 +13,26 @@
 			</div>
 			<div class="row">
 				<div class="col-12">
-					<!-- Timeline Area-->
-					<div class="apland-timeline-area">
+					<div class="apland-timeline-area" v-for="clave in claves">
 						<!-- Single Timeline Content-->
 						<div class="single-timeline-area">
 							<div class="timeline-date wow fadeInLeft" data-wow-delay="0.1s"
 								style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
-								<p>Near Future</p>
+								<p>{{queMes(clave)}}</p>
 							</div>
 							<div class="row">
-								<div class="col-12 col-md-6 col-lg-5">
+								<div class="col-12 col-md-6 col-lg-5" v-for="evento in agrupado[clave]">
 									<div class="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s"
 										style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInLeft;">
 										<div class="timeline-icon"><i class="fa fa-address-card" aria-hidden="true"></i></div>
 										<div class="timeline-text">
-											<h6>Updated 5.0</h6>
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+											<h6>Acontecimiento: {{evento.acontecimiento}}</h6>
+											<p>Síntomas: {{ evento.sintomas }}</p>
+											<p>Edad: {{ evento.edad }}</p>
+											<p>Profesional: {{ evento.nomProfesional }}</p>
 										</div>
 									</div>
 								</div>
-								<div class="col-12 col-md-6 col-lg-5">
-									<div class="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.5s"
-										style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInLeft;">
-										<div class="timeline-icon"><i class="fa fa-archive" aria-hidden="true"></i></div>
-										<div class="timeline-text">
-											<h6>Fixed bug</h6>
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- Single Timeline Content-->
-						<div class="single-timeline-area">
-							<div class="timeline-date wow fadeInLeft" data-wow-delay="0.1s"
-								style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
-								<p>2020</p>
-							</div>
-							<div class="row">
-								<div class="col-12 col-md-6 col-lg-5">
-									<div class="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s"
-										style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInLeft;">
-										<div class="timeline-icon"><i class="fa fa-briefcase" aria-hidden="true"></i></div>
-										<div class="timeline-text">
-											<h6>Updated 4.4.0</h6>
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-										</div>
-									</div>
-								</div>
-								<div class="col-12 col-md-6 col-lg-5">
-									<div class="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.5s"
-										style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInLeft;">
-										<div class="timeline-icon"><i class="fa fa-desktop" aria-hidden="true"></i></div>
-										<div class="timeline-text">
-											<h6>Fixed bug</h6>
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- Single Timeline Content-->
-						<div class="single-timeline-area">
-							<div class="timeline-date wow fadeInLeft" data-wow-delay="0.1s"
-								style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
-								<p>2019</p>
-							</div>
-							<div class="row">
-								<div class="col-12 col-md-6 col-lg-5">
-									<div class="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s"
-										style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInLeft;">
-										<div class="timeline-icon"><i class="fa fa-id-card" aria-hidden="true"></i></div>
-										<div class="timeline-text">
-											<h6>Updated 4.0</h6>
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-										</div>
-									</div>
-								</div>
-								<div class="col-12 col-md-6 col-lg-5">
-									<div class="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.5s"
-										style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInLeft;">
-										<div class="timeline-icon"><i class="fa fa-desktop" aria-hidden="true"></i></div>
-										<div class="timeline-text">
-											<h6>Fixed bug</h6>
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-										</div>
-									</div>
-								</div>
-
 							</div>
 						</div>
 					</div>
@@ -109,6 +41,55 @@
 		</div>
 	</section>
 </template>
+
+<script>
+import moment from 'moment'
+export default{
+	name: 'lineaDeTiempo',
+	props:['id'],
+	data(){return{
+		agrupado:{}, lineas:[], claves:[]
+	}},
+	mounted(){
+		//this.$parent.$on('ordenarLineas', this.ordenar );
+		this.cargarLineas();
+	},
+	methods:{
+		cargarLineas(){
+			this.axios('/api/cargarLineas/'+this.id)
+			.then(res=> { //console.log(res.data);
+				this.lineas=res.data;
+				this.ordenar()
+			})
+		},
+		ordenar(){
+			this.agrupado={};
+			this.lineas.forEach(elemento => {
+				const fecha = new Date(elemento.fecha);
+				const año = fecha.getFullYear();
+				const mes = fecha.getMonth() + 1; // Los meses en JavaScript son 0-indexados, por lo que sumamos 1
+
+				const clave = `${año}-${mes < 10 ? '0' : ''}${mes}`;
+
+				if (!this.agrupado[clave]) {
+					this.agrupado[clave] = [];
+				}
+				this.agrupado[clave].push(elemento);
+
+				this.claves = Object.keys(this.agrupado);
+			});
+		},
+		queMes(mes){
+			moment.locale('es')
+			return moment(mes, 'YYYY-MM').format('MMMM YYYY')
+		}
+	},
+	computed:{
+		
+	}
+
+}
+</script>
 
 <style scoped>
 body {

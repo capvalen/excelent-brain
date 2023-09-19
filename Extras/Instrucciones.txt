@@ -96,4 +96,7 @@ Ejecutar en la terminal:
   npm i vue-select-picker-bootstrap
 
 
+Ejecutar para el socket:
+	npm install socket.io socket.io-client
+
 */

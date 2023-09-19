@@ -44,7 +44,7 @@ export default{
 	name:'modalArchivos',
 	data() {
     return {
-      archivoSeleccionado: null, archivos:null
+      archivoSeleccionado: null, archivos:[]
     };
   },
 	props:['idPaciente', 'idProfesional'],

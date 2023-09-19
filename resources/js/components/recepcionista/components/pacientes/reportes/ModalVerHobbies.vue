@@ -14,11 +14,11 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<template>
-											<VSelect addClass="text-capitalize" searchable="true" searchPlaceholder="Buscar hobbies" defaultTitle="Hobbies" searchNotFound="No hay resultados" v-model="selected" :options="actividades" />
+											<VSelect addClass="text-capitalize" :searchable="true" searchPlaceholder="Buscar hobbies" defaultTitle="Hobbies" searchNotFound="No hay resultados" v-model="selected" :options="actividades" />
 										</template>		
-										<select class="form-select text-capitalize" id="sltHobbie" >
+										<!-- <select class="form-select text-capitalize" id="sltHobbie" >
 											<option v-for="(hobbie, index) in hobbies" class="text-capitalize" :value="index">{{hobbie}}</option>
-										</select>
+										</select> -->
 									</div>
 									<div class="col-sm-6">
 										<button class="btn btn-outline-secondary" @click="addHobbie()"><i class="fas fa-paperclip"></i> Agregar</button>
@@ -67,6 +67,9 @@ export default{
       ],
 		selected: {value: null},
 	}},
+	mounted(){
+		this.recargarLista()
+	},
 	methods:{
 		async addHobbie(){
 			this.misHobbies.push( this.selected.value );	 //document.getElementById('sltHobbie').value
@@ -86,15 +89,15 @@ export default{
 			palabra = palabra.toLowerCase();
 			palabra = palabra.charAt(0).toUpperCase() + palabra.slice(1);
 			return palabra;
-		}
-
-	},
-	watch:{
-		hobbies(){
+		},
+		recargarLista(){
 			this.hobbies.forEach((hob, index)=>{
 				this.actividades.push({ value: index, text: this.capitalizarPrimeraLetra(hob) })
 			})
 		}
+	},
+	watch:{
+		//hobbies(){ this.recargarLista() }
 	}
 }</script>
 
