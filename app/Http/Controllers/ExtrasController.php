@@ -10,6 +10,7 @@ use App\Models\Professional;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Stmt\TryCatch;
 
 class ExtrasController extends Controller
@@ -66,6 +67,20 @@ class ExtrasController extends Controller
 		->get();
 		return response()->json([
 			'avisos'=>$avisos, 'anteriores'=> $anteriores
+		]);
+	}
+	public function listarAvisosAhora(){
+		$ahora = Carbon::now();
+		$hace = $ahora->copy()->subMinutes(1, 'minute');
+		$hasta = $ahora->copy()->addMinutes(8);
+
+		$avisos = DB::table('recordatorios as r')
+		->where('estado', 1)
+		->where('fecha', '>=', $hace->toDateTimeString())
+		->where('fecha', '<=', $hasta->toDateTimeString())
+		->get();
+		return response()->json([
+			'avisos'=>$avisos,  'ahora' => $ahora->toDateTimeString(), 'hace'=>  $hace->toDateTimeString(), 'hasta' =>  $hasta->toDateTimeString()
 		]);
 	}
 	public function nuevoInteresado(Request $request){
@@ -291,7 +306,9 @@ class ExtrasController extends Controller
 	public function cargarUsuarios(){
 		$usuarios = DB::table('users')
 		->where('activo', 1)
-		->select('id', 'nombre', 'email', 'rol', 'privilegios')
+		->whereIn('rol', ['recepcionista', 'administrador', 'interno'])
+		->select('id', 'nombre', 'email', 'rol', 'privilegios', 'password')
+		->orderBy('nombre')
 		->get();
 		return response()->json( $usuarios );
 
@@ -549,6 +566,71 @@ class ExtrasController extends Controller
 				$pagoExtra->save();
 		}
 		return response()->json(['mensaje' => 'Actualizado con éxito']);		
+	}
+
+	public function nuevoUsuarioBasico(Request $request){
+		$idUsuario = DB::table('users')
+		->insertGetId([
+			'nombre'=>$request->input('usuario.nombre'),
+			'email'=>$request->input('usuario.email'),
+			'rol'=>$request->input('usuario.rol'),
+			'privilegios'=>$request->input('usuario.privilegios'),
+			'password'=> Hash::make($request->input('usuario.clave')),
+		]);
+		return response()->json(['mensaje'=>'Creado con éxito', 'id' => $idUsuario]);
+	}
+
+	public function actualizarDatosUsuarioBasico(Request $request){
+		$clave = $request->get('clave')=='' ? '' : Hash::make($request->get('clave'));
+		
+		DB::table('users')->where('id', $request->input('usuario.id'))
+		->update([
+			'nombre'=>$request->input('usuario.nombre'),
+			'email'=>$request->input('usuario.email'),
+			'rol'=>$request->input('usuario.rol'),
+			'privilegios'=>$request->input('usuario.privilegios')
+		]);
+		if($clave){
+			DB::table('users')->where('id', $request->input('usuario.id'))
+			->update([ 'password'=>$clave ]);
+		}
+		return response()->json(['mensaje' => 'Actualizado con éxito']);
+	}
+
+	public function eliminarUsuario(Request $request){
+		DB::table('users')->where('id', $request->get('id'))
+		->update([
+			'activo'=>0
+		]);
+		return response()->json(['mensaje' => 'Actualizado con éxito']);
+	}
+
+	public function crearAcontecimiento(Request $request){
+		$id = DB::table('acontecimientos')
+		->insertGetId([
+			'idProfesional'=>$request->input('idProfesional'),
+			'idPaciente'=>$request->input('idPaciente'),
+			'edad'=>$request->input('acontecimiento.edad'),
+			'acontecimiento'=>$request->input('acontecimiento.acontecimiento'),
+			'sintomas'=>$request->input('acontecimiento.sintomas'),
+			
+		]);
+		return response()->json(['mensaje'=>'Creado con éxito', 'id' => $id]);
+	}
+
+	public function cargarLineas($id){
+	try {
+		$lineas = DB::table('acontecimientos as a')->where('a.idPaciente', $id)
+		->join('professionals as p', 'p.id', '=', 'a.idProfesional')
+		->select('a.*', 'p.name as nomProfesional')
+		->where('a.activo', 1)
+		->orderBy('a.fecha', 'desc')
+		->get();
+
+		return $lineas;
+	} catch (\Throwable $th) {
+		echo $th;
+	}
 	}
 
 	public function buscarMembresias($id){

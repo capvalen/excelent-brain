@@ -36,7 +36,7 @@
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" @click="dataProps(paciente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ paciente.name ? lowerCase(paciente.name) : 'Sin nombre' }}</td>
 					<td>
-						<button class="btn btn-outline-primary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" @click="misHobbies=JSON.parse(paciente.hobbies); queId = paciente.id">
+						<button class="btn btn-outline-primary btn-circle btn-md" title="Panel de Hobbies" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" @click="misHobbies=JSON.parse(paciente.hobbies); queId = paciente.id; this.$emit('cargarHobbies')">
 							<i class="fa-solid fa-baseball-bat-ball"></i>
 						</button>
 					</td>

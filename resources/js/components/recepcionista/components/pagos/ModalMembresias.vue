@@ -340,19 +340,27 @@ export default {
 		fechaLatam(fecha) { return moment(fecha).format('DD/MM/YYYY'); },
 		horaLatam1(horita) { return moment(horita, 'HH:mm:ss').format('hh:mm') },
 		horaLatam2(horita) { return moment(horita, 'HH:mm:ss').format('hh:mm a') },
+		notifica(){ console.info('notificado');}
 	},
 	computed: {
-		mostrarPrecio() { return parseFloat(this.precios.find(x => x.id == this.membresia.tipo).nuevos).toFixed(2) },
+		mostrarPrecio() { 
+			const nuevos = this.precios.find(x => x.id == this.membresia.tipo)
+			return nuevos ? parseFloat(nuevos.nuevos).toFixed(2) : 0;
+		},
 		cuentaMes() {
 			moment.locale('es')
 			return moment(this.membresia.fin).fromNow()
 		},
-		cantSesiones() { return this.precios.find(x => x.id == this.membresia.tipo).sesiones }
-
+		cantSesiones() { 
+			const precio = this.precios.find(x => x.id == this.membresia.tipo)
+			return precio ? precio.sesiones :''
+		}
 	},
 	mounted() {
 		this.preciosMembresias();
 		this.listarProfesionales();
+		this.$on('alertaSimple', this.notifica())
 	}
-}</script>
+}
+</script>
 <style></style>

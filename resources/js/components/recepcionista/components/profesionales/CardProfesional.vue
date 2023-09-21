@@ -1,6 +1,6 @@
 <template>
 <div class="card" style="width: 16rem;">
-  <img v-if="prof.photo != '-'" class="card-img-top" :src="'/storage/'+prof.photo" width="254px" height="254px" alt="Card image cap" style="object-fit:cover;">
+  <img v-if="prof.photo != '-'" class="card-img-top" :src="'/img/'+prof.photo" width="254px" height="254px" alt="Card image cap" style="object-fit:cover;">
   <img v-else class="card-img-top" src="https://excelentemente.org/logo/logoexcel.jpeg" width="254px" height="254px" alt="Card image cap" style="object-fit:cover;">  
   <div class="card-body">
     <h5 class="m-0 font-weight-bold text-nowrap text-dark w-100" :title="profesional.name" style="overflow:hidden; text-overflow:ellipsis;">{{profesional.name}}</h5>

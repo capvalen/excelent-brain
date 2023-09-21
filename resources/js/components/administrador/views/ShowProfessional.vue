@@ -69,6 +69,21 @@
     </div>
     <div class="row mt-4">
       <h2 class="admin-title">Consultas</h2>
+			<div class="row">
+				<div class="col">
+					<label for="">Filtros</label>
+					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked @click="empezarFiltro('todos')">
+						<label class="btn btn-outline-primary" for="btnradio1">Todos</label>
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" @click="empezarFiltro('siRellenado')">
+						<label class="btn btn-outline-primary" for="btnradio2">Rellenados</label>
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" @click="empezarFiltro('noRellenado')">
+						<label class="btn btn-outline-primary" for="btnradio3">No rellenados</label>
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" @click="empezarFiltro('noConfirmado')">
+						<label class="btn btn-outline-primary" for="btnradio4">No confirmados</label>
+					</div>
+				</div>
+			</div>
       <table class="table">
         <thead class="thead-dark">
           <tr>
@@ -81,7 +96,7 @@
             <th scope="col">Evolución</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="bodyConsultas">
           <tr v-for="(appointment, index) in appointments" :key="index">
             <th>{{ index + 1 }}</th>
             <th>{{ appointment.id }}</th>
@@ -102,14 +117,11 @@
                 <td v-else>Sin tipo de consulta</td>
             <td>{{appointment.payment ? `S/.${appointment.payment.price}` : 'Sin pago' }}</td>
             <td>
-              <button v-if="appointment.patient.medical_evolutions[0] && appointment.patient.medical_evolutions[0].content === null" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])">No rellenado</button>
-              <button
-              v-else-if="!appointment.patient.medical_evolutions[0]" 
-              class="btn btn-danger"
-              >No confirmado</button>
-              <button v-else class="btn btn-success" data-bs-toggle="modal" data-bs-target="#evolutionModal"  @click="getEvolutions(appointment.patient.medical_evolutions[0])">Rellenado</button>
+              <button v-if="appointment.patient.medical_evolutions[0] && appointment.patient.medical_evolutions[0].content === null" class="btn btn-warning btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])" data-contenido="noRellenado">No rellenado</button>
+              <button v-else-if="!appointment.patient.medical_evolutions[0]" class="btn btn-danger btnRellenado" data-contenido="noConfirmado">No confirmado</button>
+              <button v-else class="btn btn-success btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])"  data-contenido="siRellenado">Rellenado</button>
               <button v-if="appointment.patient.medical_evolutions[0]" @click="deleteEvolution(appointment.patient.medical_evolutions[0])" class="btn btn-danger">Eliminar</button>
-              <p  v-if="!appointment.patient.medical_evolutions[0]" class="text-danger">Evolución no generada o eliminada</p>
+              <p v-if="!appointment.patient.medical_evolutions[0]" class="text-danger">Evolución no generada o eliminada</p>
             </td>
           </tr>
         </tbody>
@@ -190,6 +202,22 @@ export default {
   },
 
   methods:{
+		empezarFiltro(tipo){
+			const filas = document.querySelectorAll('#bodyConsultas tr')
+			
+			filas.forEach(fila=>{
+				let contiene = fila.querySelector('.btnRellenado').getAttribute('data-contenido')
+				console.log(contiene , tipo)
+				if( tipo=='todos')
+					fila.classList.remove('d-none')
+				else if(contiene == tipo )
+					fila.classList.remove('d-none')
+				else
+					fila.classList.add('d-none')
+
+			})
+
+		},
     showSelect(e){
       if(e.target.value == 1){
         this.show = 1

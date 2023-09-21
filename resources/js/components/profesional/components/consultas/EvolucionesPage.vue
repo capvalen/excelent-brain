@@ -504,6 +504,7 @@
 							<div class="card-body">
 								<div class="card-evolution">
 									<div class="historia-info">
+										<p><b>Clase:</b> {{ dondeEsta2(evolution.type) }}</p>
 										<p><b>Profesional:</b> {{ evolution.professional ? evolution.professional.name : 'Sin asignar' }} </p>
 										<p><b>Comentario: </b> {{ evolution ? maxStringCharacter(evolution.content, 50) : '...' }} </p>
 									</div>
@@ -542,7 +543,7 @@
 			<div class="tab-pane fade py-5 px-3 bg-light-subtle border border-top-0" id="linea-tab-pane" role="tabpanel" aria-labelledby="linea-tab" tabindex="0">
 				
 				<button class="btn btn-outline-success" data-bs-target="#nuevoAcontecimiento" data-bs-toggle="modal"><i class="far fa-comment-alt"></i> Agregar nuevo acontecimiento</button>
-				<lineaTiempo></lineaTiempo>
+				<lineaTiempo :id="$route.params.idPaciente" ></lineaTiempo>
 				
 			</div>
 			
@@ -619,7 +620,7 @@
 		<ModalComentarios :comentarios="comentarios" :idProfesional="dataUser.id" @refrescarComentarios="updateComentarios" ></ModalComentarios>
 		<ModalProximaCita :profesional="dataUser" :paciente="datosPaciente"></ModalProximaCita>
 		<ModalArchivos :idPaciente="datosConsulta.id" :idProfesional="dataUser.id" ></ModalArchivos>
-		<ModalNuevoAcontecimiento></ModalNuevoAcontecimiento>
+		<ModalNuevoAcontecimiento :idPaciente="datosConsulta.id" :idProfesional="dataUser.id"></ModalNuevoAcontecimiento>
 	</div>
 </template>
 
@@ -952,72 +953,50 @@ export default {
 			// Psicplogia
 			switch (prop) {
 				case 'Psicologia_illness':
-					this.inicialInputPsychological.illness = value
-					break;
+					this.inicialInputPsychological.illness = value; break;
 				case 'antecedent':
-					this.inicialInputPsychological.antecedent = value
-					break;
+					this.inicialInputPsychological.antecedent = value; break;
 				case 'dynamic':
-					this.inicialInputPsychological.dynamic = value
-					break;
+					this.inicialInputPsychological.dynamic = value; break;
 				case 'attitude':
-					this.inicialInputPsychological.attitude = value
-					break;
+					this.inicialInputPsychological.attitude = value; break;
 				case 'dx':
-					this.inicialInputPsychological.dx = value
-					break;
+					this.inicialInputPsychological.dx = value; break;
 				case 'Psicologia_plan':
-					this.inicialInputPsychological.plan = value
-					break;
+					this.inicialInputPsychological.plan = value; break;
 			}
 
 			// Psiquiatria
 			switch (prop) {
-				case 'main_signs_symptoms':
-					this.inicialInputPsiquiatria.main_signs_symptoms = value
-					break;
+				case 'main_signs_symptoms': this.inicialInputPsiquiatria.main_signs_symptoms = value; break;
 				case 'general_antecedent':
-					this.inicialInputPsiquiatria.general_antecedent = value
-					break;
+					this.inicialInputPsiquiatria.general_antecedent = value; break;
 				case 'psiquiatria_illness':
-					this.inicialInputPsiquiatria.illness = value
-					break;
+					this.inicialInputPsiquiatria.illness = value; break;
 				case 'apc':
-					this.inicialInputPsiquiatria.apc = value
-					break;
+					this.inicialInputPsiquiatria.apc = value; break;
 				case 'languaje':
-					this.inicialInputPsiquiatria.languaje = value
-					break;
+					this.inicialInputPsiquiatria.languaje = value; break;
 				case 'thought':
-					this.inicialInputPsiquiatria.thought = value
-					break;
+					this.inicialInputPsiquiatria.thought = value; break;
 				case 'affect':
-					this.inicialInputPsiquiatria.affect = value
-					break;
+					this.inicialInputPsiquiatria.affect = value; break;
 				case 'percetion':
-					this.inicialInputPsiquiatria.percetion = value
-					break;
+					this.inicialInputPsiquiatria.percetion = value; break;
 				case 'superior_function':
-					this.inicialInputPsiquiatria.superior_function = value
-					break;
+					this.inicialInputPsiquiatria.superior_function = value; break;
 				case 'abstraction':
-					this.inicialInputPsiquiatria.abstraction = value
-					break;
+					this.inicialInputPsiquiatria.abstraction = value; break;
 				case 'conscience':
-					this.inicialInputPsiquiatria.conscience = value
-					break;
+					this.inicialInputPsiquiatria.conscience = value; break;
 				case 'insight':
-					this.inicialInputPsiquiatria.insight = value
-					break;
+					this.inicialInputPsiquiatria.insight = value; break;
 				case 'diagnostic_problems':
-					this.inicialInputPsiquiatria.diagnostic_problems = value
-					break;
+					this.inicialInputPsiquiatria.diagnostic_problems = value; break;
 				case 'diagnostic':
-					this.inicialInputPsiquiatria.diagnostic = value
-					break;
+					this.inicialInputPsiquiatria.diagnostic = value; break;
 				case 'psiquiatria_plan':
-					this.inicialInputPsiquiatria.plan = true
-					break;
+					this.inicialInputPsiquiatria.plan = true; break;
 			}
 		},
 
@@ -1165,6 +1144,16 @@ export default {
 			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'evolucionPsicologia'
 			else return 'evoOtro'
 		},
+		dondeEsta2(tips){
+			let valor = null
+			if (valor = this.evolucionPsiquiatria.indexOf(tips)>-1) return 'Psiquiatría'
+			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'Psicología'
+			else return 'Otro sin especificar'
+		},
+		/* cargarLineas(){
+			this.axios('/api/cargarLineas/'+this.datosPaciente.id)
+			.then(res=> { this.lineas=res.data; this.$emit('ordenarLineas')})
+		} */
 	},
 
 	computed: {

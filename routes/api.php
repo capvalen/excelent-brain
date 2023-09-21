@@ -123,6 +123,7 @@ Route::post('editarPariente/{id}', [PatientController::class, 'editarPariente'])
 Route::post('nuevoAviso/', [ExtrasController::class, 'nuevoAviso']);
 Route::post('actualizarAviso/', [ExtrasController::class, 'actualizarAviso']);
 Route::get('listarAvisos/{fecha}', [ExtrasController::class, 'listarAvisos']);
+Route::get('listarAvisosAhora/{fecha}', [ExtrasController::class, 'listarAvisosAhora']);
 Route::post('nuevoInteresado/', [ExtrasController::class, 'nuevoInteresado']);
 Route::get('listarInteresados/{fecha}', [ExtrasController::class, 'listarInteresados']);
 Route::get('listarDeudas/{fecha}', [ExtrasController::class, 'listarDeudas']);
@@ -143,6 +144,11 @@ Route::post('pagarDeudaMembresia', [ExtrasController::class, 'pagarDeudaMembresi
 Route::get('buscarMembresias/{id}', [ExtrasController::class, 'buscarMembresias']);
 Route::get('pedirCitasMembresia/{id}', [ExtrasController::class, 'pedirCitasMembresia']);
 Route::post('ampliarFechaMembresia', [ExtrasController::class, 'ampliarFechaMembresia']);
+Route::post('actualizarDatosUsuarioBasico', [ExtrasController::class, 'actualizarDatosUsuarioBasico']);
+Route::post('nuevoUsuarioBasico', [ExtrasController::class, 'nuevoUsuarioBasico']);
+Route::post('eliminarUsuario', [ExtrasController::class, 'eliminarUsuario']);
+Route::post('crearAcontecimiento', [ExtrasController::class, 'crearAcontecimiento']);
+Route::get('cargarLineas/{id}', [ExtrasController::class, 'cargarLineas']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);

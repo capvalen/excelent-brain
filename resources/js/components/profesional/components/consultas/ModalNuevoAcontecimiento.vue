@@ -8,14 +8,14 @@
 			</div>
 			<div class="modal-body">
 				<label for="">Edad</label>
-				<input type="text" class="form-control">
+				<input type="number" class="form-control" v-model="acontecimiento.edad" min="0" step="1">
 				<label for="">Acontecimiento</label>
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" v-model="acontecimiento.acontecimiento">
 				<label for="">Síntomas</label>
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" v-model="acontecimiento.sintomas">
 			</div>
 			<div class="modal-footer border-0">
-				<button type="button" class="btn btn-outline-success" data-bs-dismiss="modal"><i class="far fa-save"></i> Agregar</button>
+				<button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" @click="guardar()"><i class="far fa-save"></i> Agregar</button>
 			</div>
 		</div>
 	</div>
@@ -23,5 +23,19 @@
 </template>
 <script>
 export default{
-	name: 'nuevoAcontecimiento'
+	name: 'nuevoAcontecimiento',
+	props:['idPaciente', 'idProfesional'],
+	data(){ return {
+		acontecimiento:{}
+	}},
+	methods:{
+		guardar(){
+			this.axios.post('/api/crearAcontecimiento', {acontecimiento: this.acontecimiento, idProfesional: this.idProfesional, idPaciente:this.idPaciente})
+			.then(res=> {
+				this.$parent.cargarLineas()
+				alertify.notify('<i class="fa-regular fa-calendar-check"></i> ' + res.data.mensaje, 'success', 5);
+			})
+			
+		}
+	}
 }</script>

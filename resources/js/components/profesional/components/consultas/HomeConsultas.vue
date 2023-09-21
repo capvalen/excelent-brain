@@ -5,12 +5,7 @@
             <div class="d-flex consultas-btn-top align-content-stretch my-3" style="gap: 5px">
                 <div class="d-flex gap fecha-restablecer">
                     <input @change="calendarActive" type="date" class="form-control" name="" id="calendar" >
-                    <a 
-                    @click="now" 
-                    class="btn btn-sm btn-primary d-flex align-items-center"
-                    >
-                    Restablecer
-                    </a>
+                    <a @click="now" class="btn btn-sm btn-primary d-flex align-items-center">Restablecer</a>
                 </div>
                 
                 <ul class="d-flex justify-content-start align-content-stretch nav nav-pills" id="pills-tab" role="tablist" v-if="dayActive">
@@ -24,8 +19,7 @@
                             role="tab" 
                             aria-controls="pills-home" 
                             aria-selected="true"
-                            @click="consultaActiva(false, true)"
-                        >
+                            @click="consultaActiva(false, true)">
                         Todas las consultas
                         </button>
                     </li>
@@ -40,8 +34,7 @@
                             role="tab" 
                             aria-controls="pills-profile" 
                             aria-selected="false"
-                            @click="consultaActiva(true, true)"
-                        >
+                            @click="consultaActiva(true, true)">
                         Consultas pendientes
                         </button>
                     </li>
@@ -50,7 +43,11 @@
         </div>
 
         <div class="card pb-4">
-            <div class="row px-1 shadow consult-content pb-3">
+					<div class="row px-1 shadow consult-content pb-3">
+						<div class="col-12 mt-3">
+							<button class="btn btn-outline-secondary" @click="showConsult()"><i class="fas fa-redo-alt"></i> Actualizar listado</button>
+						</div>
+
                 <!-- Ayer -->
                 <div class="col-md-4 dayCalendar before">
                     <div class="date text-strong text-center text-dark mt-3 notNow" v-if="dayActive">
@@ -187,6 +184,7 @@
 </template>
 
 <script>
+import alertify from 'alertifyjs'
 import { parse } from 'postcss'
 import ConsultCard from './Consult.vue'
 
@@ -263,6 +261,8 @@ export default {
                 this.consultas = res.data.consult
                 this.todasConsultas = this.consultas
                 this.consultWeek()
+								alertify.notify('<i class="fa-regular fa-calendar-check"></i> Citas actualizadas ', 'success', 5);
+
             })
             .catch(error => {
                 console.log(error)
