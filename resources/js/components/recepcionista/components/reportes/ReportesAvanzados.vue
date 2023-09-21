@@ -269,26 +269,7 @@
 						</tbody>
 					</table>
 				</div>
-				<table class="table table-sm table-hover" v-if="idReporte==6" >
-					<thead>
-						<tr>
-							<th>N°</th>
-							<th>Profesional</th>
-							<th>Total de citas confirmadas</th>
-							<th>Total de citas pagadas</th>
-							<th>Acumulado</th>
-						</tr>
-					</thead>
-					<tbody >
-						<tr v-for="(doctor, index) in resultados.doctores">
-							<td>{{index+1}}</td>
-							<td>{{ doctor.name }}</td>
-							<td> <span v-if="suma[doctor.id]">{{ suma[doctor.id].confirmado  }}</span> <span v-else>0</span></td>
-							<td> <span v-if="suma[doctor.id]">{{ suma[doctor.id].pagado  }}</span> <span v-else>0</span></td>
-							<td>S/ <span v-if="suma[doctor.id]">{{ parseFloat(suma[doctor.id].monto).toFixed(2)  }}</span> <span v-else>0.00</span></td>
-						</tr>
-					</tbody>
-				</table>
+				
 				<table class="table table-sm table-hover" v-if="idReporte==10" >
 					<thead>
 						<tr>
@@ -340,6 +321,70 @@
 						</tbody>
 					</table>
 				</div>
+				<table class="table table-sm table-hover" v-if="idReporte==11" >
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Tipo</th>
+							<th>N° Citas</th>
+							<th>Acumulado</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr>
+							<td>1</td>
+							<td>Psicología</td>
+							<td>{{resultados.cuantosPsicologia}}</td>
+							<td>S/ {{resultados.montoPsicologia}}</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>Psiquiatría</td>
+							<td>{{resultados.cuantosPsiquiatria}}</td>
+							<td>S/ {{resultados.montoPsiquiatria}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==12" >
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Estado</th>
+							<th>Total de pacientes</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr v-for="(estado, index) in resultados.estados">
+							<td>{{index+1}}</td>
+							<td>{{ estado.seguimiento }}</td>
+							<td> <span v-if="suma[estado.id]">{{ suma[estado.id].contador  }}</span> <span v-else>0</span></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==13" >
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Fecha</th>
+							<th>Cliente</th>
+							<th>Monto</th>
+							<th>N° Bol./Fact.</th>
+							<th>N° Operación</th>
+							<th>Observaciones</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr v-for="(pago, index) in resultados.pagos">
+							<td>{{index+1}}</td>
+							<td>{{ pago.date }}</td>
+							<td>{{ pago.customer }}</td>
+							<td>{{ parseFloat(pago.price).toFixed(2) }}</td>
+							<td>{{ pago.voucher }}</td>
+							<td>{{ pago.voucher_issued }}</td>
+							<td>{{ pago.observation }}</td>
+						</tr>
+					</tbody>
+				</table>
 				
 			</div>
 		</div>
@@ -367,6 +412,9 @@ import moment from 'moment';
 				{id: 8, nombrado: 'Pacientes nuevos'},
 				{id: 9, nombrado: 'Pacientes continuantes'},
 				{id: 10, nombrado: 'Recaudaciones por medio de pago'},
+				{id: 11, nombrado: 'Atenciones (Psicológicas y Psiquiátricas) recaudadas'},
+				{id: 12, nombrado: 'Seguimiento de Pacientes'},
+				{id: 13, nombrado: 'Comprobantes emitidos'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
 			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}
@@ -387,6 +435,7 @@ import moment from 'moment';
 					if(this.idReporte==6) this.sumaProfesionales();
 					if(this.idReporte==7) this.sumaServicios();
 					if(this.idReporte==10) this.sumaMedios();
+					if(this.idReporte==12) this.sumaEstados();
 				})
 			},
 			configurarVista(){
@@ -394,7 +443,7 @@ import moment from 'moment';
 				//incluidos a ocultar: 1,2,3,4,
 				this.ocultarFechas=true;
 				switch(this.idReporte){
-					case 0: case 6: case 7: case 8: case 9: case 10:
+					case 0: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13:
 						this.ocultarFechas=false;
 				}
 			},
@@ -453,6 +502,25 @@ import moment from 'moment';
 						this.suma[idMedio].monto+=monto
 					}
 				});
+			},
+			sumaEstados(){
+				this.suma={}
+				this.resultados.seguimientos.forEach(seguido => {
+					const idSeguido = seguido.idSeguimiento;
+					//const monto = parseFloat(seguido.payment.price ?? 0);
+					if(!this.suma[idSeguido]){
+						this.suma[idSeguido] = {contador:1}
+					}else{
+						this.suma[idSeguido].contador++
+					}
+					
+				});
+			},
+			queEstado(id){
+				console.log('queentra', id)
+				const servi= this.resultados.estados.find(x=> x.id==id)
+				if(servi) return servi.seguimiento
+				else return 'Otros'
 			}
 		},
 		mounted(){

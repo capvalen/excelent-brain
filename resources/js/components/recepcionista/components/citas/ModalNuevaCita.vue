@@ -363,7 +363,7 @@ export default {
 			},
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
 			provincias:[], distritos:[],
-			token:'087d16c0688f5150268342d085a55d54b5064c7649596011f03b35b935899a50',          
+			token:'087d16c0688f5150268342d085a55d54b5064c7649596011f03b35b935899a50',
 			horario:[], descuentoPorcentaje:0
 		}
 	},
@@ -532,7 +532,7 @@ export default {
 				if (res.data.patient == null) { //Buscar en reniec
 					if(this.cita.type_dni==1){
 						window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-						this.axios.get(`https://apiperu.dev/api/dni/${this.cita.dni}`)
+						this.axios.get(`https://apiperu.dev/api/dni/${this.cita.dni}`) 
 						.then(response => {
 							console.log(response.data)
 							this.cita.name = response.data.message || `${response.data.data.apellido_paterno} ${response.data.data.apellido_materno} ${response.data.data.nombres}`;

@@ -9,46 +9,58 @@ import moment from 'moment';
 
 export default{
 	name: 'myChart',
-	props:['citas'],
+	props:['citas', 'medical_evolutions'],
 	data(){ return {
-		etiquetas:[], datos:[], bandera:[]
+		etiquetas:['psi', 'psco', 'otro'], datos:{'Psiquiatría':0, 'Psicología':0, 'Otros': 0}, bandera:[], datosPsico:[], datosPsy:[],
+		evolucionPsiquiatria: [1,2,3,4,5,6,16,17], //Ver tabla de precios, son los IDs
+		evolucionPsicologia: [7,8,9,10,11,12,18,22,27], //Ver tabla de precios, son los IDs
 	}},
+	methods:{
+		dondeEsta2(tips){
+			let valor = null
+			if (valor = this.evolucionPsiquiatria.indexOf(tips)>-1) return 'Psiquiatría'
+			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'Psicología'
+			else return 'Otros'
+		},
+	},
 	mounted(){
 
+		this.medical_evolutions.forEach(cita=>{
+			console.log('quetipo', this.dondeEsta2(cita.type))
+			this.datos[this.dondeEsta2(cita.type)]+=1;
+		})
+
 		
-		this.citas.forEach(cita=>{
+	/* 	this.evolucionPsicologia.forEach(cita=>{
 			let año = moment(cita.date).format('YYYY')
-			
-			/* let existe = this.bandera.filter( x => moment(x.date).format('YYYY') == cita.año && x.clasification==cita.clasification)
-			console.log('existe', existe);
-			if(existe){
-				this.bandera[existe].count +=1;
-			}else{
-				this.bandera.push({
-					year: x.clasification==1? 'PSI':'PSCO'+ cita.año,
-					count:1
-				})
-			} */
-			
-			
-			let indice= -1;
 			if( this.etiquetas.indexOf(año) >-1 ){ //ya tiene
 				let queIndice = this.etiquetas.indexOf(año)
-				this.datos[queIndice] +=1 
+				this.datosPsico[queIndice] +=1 
 			}else{
-				this.etiquetas.push(año);
-				this.datos.push(1)
+				//this.etiquetas.push(año);
+				this.datosPsico.push(1)
 			}
 			//console.log( indice,  this.etiquetas.indexOf(año) )
 
 		})
+		this.evolucionPsiquiatria.forEach(cita=>{
+			let año = moment(cita.date).format('YYYY')
+			if( this.etiquetas.indexOf(año) >-1 ){ //ya tiene
+				let queIndice = this.etiquetas.indexOf(año)
+				this.datosPsy[queIndice] +=1 
+			}else{
+				//this.etiquetas.push(año);
+				this.datosPsy.push(1)
+			}
+		}) */
 		
 		const ctx = document.getElementById('myChart').getContext('2d');
 		const myChart = new Chart(ctx, {
 				type: 'bar',
 				data: {
-						labels: this.etiquetas,
-						datasets: [{
+						//labels: this.etiquetas,
+						datasets: [
+							{
 								label: 'N° de visitas',
 								data: this.datos,
 								backgroundColor: [
@@ -68,7 +80,9 @@ export default{
 										'rgba(255, 159, 64, 1)'
 								],
 								borderWidth: 1
-						}]
+						},
+
+					]
 				},
 				options: {
 						scales: {

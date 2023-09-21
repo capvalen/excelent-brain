@@ -282,7 +282,6 @@ class ExtrasController extends Controller
 				return response()->json(['citas'=>$citasAgrupadas, 'conteo'=> $citasAgrupadas->count() ]);
 				break;
 			case '10':
-				try {
 					$servicios = DB::table('precios')->where('servicio', 1)->get();
 					$resultados = DB::table('extra_payments as e')->where('e.activo', 1)
 					->join('payment_method as p', 'p.id', '=', 'e.moneda')
@@ -292,10 +291,65 @@ class ExtrasController extends Controller
 					->orderBy('date', 'asc')
 					->get();
 					$monedas = DB::table('payment_method')->get();
-				} catch (\Throwable $th) {
-					echo $th;
-				}
+				
 				return response()->json(['pagos'=>$resultados, 'monedas'=>$monedas, 'servicios'=>$servicios ]);
+				break;
+			case '11':
+				$cuantosPsicologia = Appointment::where('status', 2)
+					->join('payments as pa', 'pa.appointment_id', '=', 'appointments.id')
+					->join('precios as p', 'p.id', '=', 'appointments.type')
+					->where('p.idClasificacion', 1)
+					->whereHas('payment', function ($query){ $query->where('pay_status', 2); })
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->orderBy('date', 'asc')->count();
+				$montoPsicologia = Appointment::where('status', 2)
+					->join('payments as pa', 'pa.appointment_id', '=', 'appointments.id')
+					->join('precios as p', 'p.id', '=', 'appointments.type')
+					->where('p.idClasificacion', 1)
+					->whereHas('payment', function ($query){ $query->where('pay_status', 2); })
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->orderBy('date', 'asc')->sum('price');
+					$cuantosPsiquiatria = Appointment::where('status', 2)
+					->join('payments as pa', 'pa.appointment_id', '=', 'appointments.id')
+					->join('precios as p', 'p.id', '=', 'appointments.type')
+					->where('p.idClasificacion', 2)
+					->whereHas('payment', function ($query){ $query->where('pay_status', 2); })
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->orderBy('date', 'asc')->count();
+				$montoPsiquiatria = Appointment::where('status', 2)
+					->join('payments as pa', 'pa.appointment_id', '=', 'appointments.id')
+					->join('precios as p', 'p.id', '=', 'appointments.type')
+					->where('p.idClasificacion', 2)
+					->whereHas('payment', function ($query){ $query->where('pay_status', 2); })
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->orderBy('date', 'asc')->sum('price');
+				
+				return response()->json(['montoPsicologia'=>$montoPsicologia, 'cuantosPsicologia'=> $cuantosPsicologia, 'montoPsiquiatria'=> $montoPsiquiatria, 'cuantosPsiquiatria'=> $cuantosPsiquiatria  ]);
+				
+				break;
+			case '12':
+				
+				$seguimientos = DB::table('pacient_seguimiento as ps')->where('ps.activo', 1)
+					->join('patients as p', 'p.id', '=', 'ps.patient_id')
+					->whereYear('ps.registro', $request->get('año'))
+					->whereMonth('ps.registro', $request->get('mes') )
+					->get();
+					$estados = DB::table('seguimientos')->where('id','<>', 1)->orderBy('seguimiento', 'asc')->get();
+				return response()->json(['seguimientos'=>$seguimientos, 'estados'=>$estados]);
+			case '13':
+				$pagos = DB::table('extra_payments')
+				->where('voucher','<>','')->whereNotNull('voucher')
+				->where('voucher_issued','<>','')->whereNotNull('voucher_issued')
+				->where('type','<>',6)
+				->whereYear('created_at', $request->get('año'))
+				->whereMonth('created_at', $request->get('mes') )
+				->get();
+
+				return response()->json(['pagos'=>$pagos]);
 				break;
 			default:
 				# code...

@@ -295,8 +295,7 @@ class PatientController extends Controller
 		$scrs = DB::table('scrs')->where('patient_id', $evoluciones->id)->get();
 		$zung_anxieties = DB::table('zung_anxieties')->where('patient_id', $evoluciones->id)->get();
 		$zung_depressions = DB::table('zung_depressions')->where('patient_id', $evoluciones->id)->get();
-		$evoluciones->examenes_personalizados =  
-			 array( 'scrs' => $scrs, 'burns' => $burns, 'gads' => $gads, 'zung_anxieties' => $zung_anxieties, 'zung_depressions' => $zung_depressions);
+		$evoluciones->examenes_personalizados =  array( 'scrs' => $scrs, 'burns' => $burns, 'gads' => $gads, 'zung_anxieties' => $zung_anxieties, 'zung_depressions' => $zung_depressions);
 
 		return response()->json($evoluciones);
 	}

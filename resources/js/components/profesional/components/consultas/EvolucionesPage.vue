@@ -153,7 +153,7 @@
 						</div>
 						<p class="mt-2 mb-0">Visitas:</p>
 
-					<BarChart v-if="datosConsulta.appointments" :citas="datosConsulta.appointments" ></BarChart>
+						<BarChart v-if="datosConsulta.medical_evolutions" :medical_evolutions="datosConsulta.medical_evolutions" :evolucionPsiquiatria="evolucionPsiquiatria" :evolucionPsicologia="evolucionPsicologia" ></BarChart>
 
 					</div>
 
