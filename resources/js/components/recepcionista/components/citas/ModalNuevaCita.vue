@@ -212,7 +212,9 @@
 						<div class="col-sm-4">
 							<label for="">Tipo de servicio</label>
 							<select  class="form-select" name="type" id="sltServicio" v-model="cita.type" @change="precioDinamico()">
-								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification && precio.servicio=='1' ">{{ precio.descripcion }}</option>
+								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification && precio.servicio=='1' && precio.id!=48 && precio.id!=49 ">{{ precio.descripcion }}</option>
+								<option v-if="cita.club=='1' && cita.clasification=='1'" value="48">Terapia Club Excelentemente</option>
+								<option v-if="cita.club=='1' && cita.clasification=='2'" value="48">Terapia Club Excelentemente</option>
 							</select>
 						</div>
 						<div class="col-sm-4">
@@ -596,6 +598,7 @@ export default {
 					this.cita.etiqueta = res.data.patient.etiqueta;
 					this.cita.deudas = res.data.patient.deudas;
 					this.cita.prev_status = res.data.patient.new_status;
+					this.cita.club = res.data.patient.club;
 					this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()
@@ -609,7 +612,6 @@ export default {
 				document.querySelector(".btnReniec").classList.replace('btn-danger', 'btn-info')
 			})
 		},    
-
 		horaSimple1(horita){ return moment(horita, 'HH:mm:ss').format('h:mm')},
 		horaSimple2(horita){ return moment(horita, 'HH:mm:ss').format('h:mm a')},
 

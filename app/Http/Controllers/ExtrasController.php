@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Extra_payment;
 use App\Models\Patient;
 use App\Models\Payment;
+use App\Models\Professional;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -184,7 +185,103 @@ class ExtrasController extends Controller
 				order by date desc;") );
 				return response()->json($results);
 				break;
-				
+			case '2':
+				$pacientes = Patient::where('hobbies', '<>', '[]')
+				->whereNotNull('hobbies')
+				->orderBy('name', 'asc')
+				->get();
+				return response()->json($pacientes);
+				break;
+			case '3':
+				$pacientes = Patient::where('club', 1)
+				->orderBy('name', 'asc')->get();
+				return response()->json($pacientes); break;
+			case '4':
+				$pacientes = Patient::where('club', 2)
+				->orderBy('name', 'asc')->get();
+				return response()->json($pacientes); break;
+			case '5':
+				$resultados = DB::table('semaforo as s')
+				->join('patients as p', 'p.id', '=', 's.patient_id')
+				->select('p.name', 's.*')
+				->orderBy('p.name', 'asc')
+				->get();
+				return response()->json($resultados); break;
+			case '6':
+				try {
+					$resultados = Professional::where('activo', 1)->orderBy('name', 'asc')->get();
+					$citas = collect();
+				foreach ($resultados as $profesional) {
+					$cita = Appointment::where('professional_id', $profesional->id)
+					->with('payment')
+					->with('schedule')
+					->with('patient')
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->where('status', 2) //confirmado
+					->get();
+					$citas = $citas->merge($cita);
+				}
+				return response()->json(['doctores'=>$resultados, 'citas'=>$citas ]);
+				} catch (\Throwable $th) {
+					echo $th;
+				}
+			case '7':
+				try {
+					$servicios = DB::table('precios')->where('servicio', 1)->get();
+				$citas = collect();
+				foreach($servicios as $servicio){
+					$cita = Appointment::where('type', $servicio->id)
+					->with('payment')
+					->with('schedule')
+					->with('patient')
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->where('status', 2) //confirmado
+					->get();
+					$citas = $citas->merge($cita);
+				}
+				return response()->json(['servicios'=>$servicios, 'citas'=>$citas ]);
+				} catch (\Throwable $th) {
+					echo $th;
+				}
+				break;
+			case '8':
+				$citas = Appointment::where('patient_condition', 1)
+					->with('patient')
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->orderBy('date', 'asc')
+					->get();
+				$citasAgrupadas=$citas->groupBy('patient_id');
+				return response()->json(['citas'=>$citasAgrupadas, 'conteo'=> $citasAgrupadas->count() ]);
+				break;
+			case '9':
+				$citas = Appointment::where('patient_condition', 2)
+					->with('patient')
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->orderBy('date', 'asc')
+					->get();
+				$citasAgrupadas=$citas->groupBy('patient_id');
+				return response()->json(['citas'=>$citasAgrupadas, 'conteo'=> $citasAgrupadas->count() ]);
+				break;
+			case '10':
+				try {
+					$servicios = DB::table('precios')->where('servicio', 1)->get();
+					$resultados = DB::table('extra_payments as e')->where('e.activo', 1)
+					->join('payment_method as p', 'p.id', '=', 'e.moneda')
+					->select('e.*', 'p.tipo')
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes') )
+					->orderBy('date', 'asc')
+					->get();
+					$monedas = DB::table('payment_method')->get();
+				} catch (\Throwable $th) {
+					echo $th;
+				}
+				return response()->json(['pagos'=>$resultados, 'monedas'=>$monedas, 'servicios'=>$servicios ]);
+				break;
 			default:
 				# code...
 				break;
@@ -240,6 +337,7 @@ class ExtrasController extends Controller
 				'formato_nuevo'=>1,
 				'verAviso'=>1,
 				'byDoctor'=>0,
+				'idMembresia'=>$idMembresia
 			]);
 
 			Payment::create([
@@ -271,6 +369,7 @@ class ExtrasController extends Controller
 				$pagoExtra->type = 7; //pago de membresía
 				$pagoExtra->observation = '';
 				$pagoExtra->continuo = 3;
+				$pagoExtra->idMembresia = $idMembresia;
 				$pagoExtra->user_id = $request->input('user_id');
 				$pagoExtra->save();
 			}else{
@@ -381,7 +480,6 @@ class ExtrasController extends Controller
 	}
 	public function insertarSeguimiento(Request $request){
 		//var_dump($request->all()); die();
-		try {
 			Patient::find($request->get('patient_id'))->update([
 				'seguimiento' =>  $request->get('idSeguimiento')
 			]);
@@ -392,9 +490,6 @@ class ExtrasController extends Controller
 				'idSeguimiento' => $request->get('idSeguimiento')
 			]);
 			return $idSeguimiento;
-		} catch (\Throwable $th) {
-			echo $th;
-		}
 	}
 	public function verAdjuntoPago($id){
 		$foto = DB::table('payments_files')->where('payment_id', $id)->get();
@@ -453,7 +548,39 @@ class ExtrasController extends Controller
 				$pagoExtra->user_id = $request->input('user_id');
 				$pagoExtra->save();
 		}
-		return response()->json(['mensaje' => 'Actualizado con éxito']);
-		
+		return response()->json(['mensaje' => 'Actualizado con éxito']);		
 	}
+
+	public function buscarMembresias($id){
+		$membresias = DB::table('membresias as m')
+		->join('precios as p', 'p.id', '=', 'm.tipo')
+		->select('m.*', 'p.descripcion')
+		->where('patient_id', $id)->orderBy('inicio', 'desc')->get();
+		foreach ($membresias as $membresia) {
+			if($membresia->cuotas>0){
+				#buscar Pagos realizados y deudas
+				$membresia->pagados = Extra_payment::where('idMembresia', $membresia->id)->get();
+				$membresia->deudas = DB::table('deudas')->where('idMembresia', $membresia->id)->where('estado', 1)->where('activo', 1)->get();
+			}else{
+				$membresia->pagados=[];
+				$membresia->deudas=[];
+			}
+		}
+		return response()->json($membresias);
+	}
+
+	public function pedirCitasMembresia($id){
+		$citas = Appointment::where('idMembresia', $id)
+		->with('professional')
+		->with('schedule')
+		->get();
+		return response()->json($citas);
+	}
+
+	public function ampliarFechaMembresia(Request $request){
+		DB::table('deudas')->where('id', $request->get('id'))
+		->update(['fecha' => $request->get('fecha')]);
+		return response()->json(['mensaje' => 'Actualizdo con éxito']);
+	}
+	
 }

@@ -1,6 +1,6 @@
 <template>
 		<ul
-		class="navbar-nav sidebar sidebar-dark accordion"
+		class="navbar-nav sidebar sidebar-dark accordion d-print-none"
 		:class="{ 'bg-warning': rolUser === 'profesional',
 		'bg-dark': rolUser === 'administrador',
 		'bg-success': rolUser === 'recepcionista',

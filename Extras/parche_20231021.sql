@@ -1,0 +1,13 @@
+ALTER TABLE `deudas` CHANGE `idPago` `idPago` INT(11) NULL DEFAULT '0' COMMENT 'Es el id precio';
+ALTER TABLE `extra_payments` ADD `idMembresia` INT NULL DEFAULT '0' AFTER `razonAdelanto`;
+ALTER TABLE `membresias` ADD `registro` DATETIME NULL DEFAULT CURRENT_TIMESTAMP AFTER `activo`;
+ALTER TABLE `membresias` CHANGE `tipo` `tipo` INT(11) NOT NULL COMMENT 'tabla de precios';
+ALTER TABLE `appointments` ADD `idMembresia` INT NULL DEFAULT '0' AFTER `byDoctor`;
+INSERT INTO `precios` (`id`, `descripcion`, `nuevos`, `continuos`, `idClasificacion`, `sesiones`, `servicio`, `activo`) VALUES (NULL, 'Club Excelentemente', '50', '50', '4', '0', '0', '1');
+INSERT INTO `precios` (`id`, `descripcion`, `nuevos`, `continuos`, `idClasificacion`, `sesiones`, `servicio`, `activo`) VALUES (NULL, 'Terapia Club Excelentemente', '0', '0', '1', '0', '1', '1');
+INSERT INTO `precios` (`id`, `descripcion`, `nuevos`, `continuos`, `idClasificacion`, `sesiones`, `servicio`, `activo`) VALUES (NULL, 'Terapia Club Excelentemente', '0', '0', '2', '0', '1', '1');
+UPDATE `patients` SET `email`='' where email = 'null';
+UPDATE `patients` SET `phone`='' where phone = 'null';
+UPDATE `relatives` SET `name`='' where name ='null';
+UPDATE `relatives` SET `phone`='' where phone ='null';
+UPDATE `relatives` SET `kinship`='' where `kinship` ='null';

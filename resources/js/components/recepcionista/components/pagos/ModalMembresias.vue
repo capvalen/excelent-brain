@@ -184,7 +184,7 @@ export default {
 	name: 'ModalMembresias',
 	data() {
 		return {
-			txtBusqueda: '44475064', pacientes: [], vista: 'buscar', indexGlobal: null, pacienteElegido: {}, precios: [], membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD') }, fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') }, doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:''
+			txtBusqueda: '', pacientes: [], vista: 'buscar', indexGlobal: null, pacienteElegido: {}, precios: [], membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD') }, fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') }, doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:''
 		}
 	},
 	props: ['idUsuario'],

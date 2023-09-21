@@ -1,7 +1,6 @@
 <template>
 	<div>
 		<h1>Reportes avanzados</h1>
-		<p>Filtros:</p>
 		<div class="card">
 			<div class="card-body">
 				<div class="row">
@@ -71,6 +70,277 @@
 						<td colspan="4">No hay registros</td></tr>
 					</tbody>
 				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==2">
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Paciente</th>
+							<th>Hobbies</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(resultado, index) in resultados">
+							<td>{{ index+1 }}</td>
+							<td>{{ resultado.name }}</td>
+							<td>
+								<span class="text-capitalize" v-for="actividad in JSON.parse(resultado.hobbies) ">
+									{{ hobbies[actividad] }},
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==3 || idReporte==4">
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Paciente</th>
+							<th>Club</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(resultado, index) in resultados">
+							<td>{{ index+1 }}</td>
+							<td>{{ resultado.name }}</td>
+							<td> 
+								<span v-if="resultado.club==1">Sí pertenece</span>
+								<span v-if="resultado.club==2">No desea pertenecer</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==5">
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Paciente</th>
+							<th>Semáforo</th>
+							<th>Observaciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(resultado, index) in resultados">
+							<td>{{ index+1 }}</td>
+							<td class="text-capitalize">{{ resultado.name.toLowerCase() }}</td>
+							<td class="text-capitalize"> 
+								{{ estados[resultado.codigo].valor }}
+							</td>
+							<td class="text-capitalize">{{ resultado.observaciones }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==6" >
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Profesional</th>
+							<th>Total de citas confirmadas</th>
+							<th>Total de citas pagadas</th>
+							<th>Acumulado</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr v-for="(doctor, index) in resultados.doctores">
+							<td>{{index+1}}</td>
+							<td>{{ doctor.name }}</td>
+							<td> <span v-if="suma[doctor.id]">{{ suma[doctor.id].confirmado  }}</span> <span v-else>0</span></td>
+							<td> <span v-if="suma[doctor.id]">{{ suma[doctor.id].pagado  }}</span> <span v-else>0</span></td>
+							<td>S/ <span v-if="suma[doctor.id]">{{ parseFloat(suma[doctor.id].monto).toFixed(2)  }}</span> <span v-else>0.00</span></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==6" v-for="doctor in resultados.doctores">
+					<thead>
+						<tr>
+							<th colspan="4">{{ doctor.name }}</th>
+						</tr>
+						<tr>
+							<th>N°</th>
+							<th>Fecha</th>
+							<th>Paciente</th>
+							<th>Estado</th>
+							<th>Monto</th>
+							<th>Pagado</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(cita, indice) in resultados.citas" v-if="cita.professional_id == doctor.id">
+							<td>{{ indice+1 }}</td> <!-- {{ cita.id }} -->
+							<td class="text-capitalize">{{ cita.patient.name }}</td>
+							<td>{{ cita.date }} {{ cita.schedule.check_time }}</td>
+							<td>
+								<span v-if="cita.status==1">Sin confirmar</span>
+								<span v-if="cita.status==2">Confirmado</span>
+								<span v-if="cita.status==3">Anulado</span>
+							</td>
+							<td>{{ cita.payment.price }}</td>
+							<td>
+								<span v-if="cita.payment.pay_status==1">Sin pagar</span>
+								<span v-if="cita.payment.pay_status==2">Pagado</span>
+								<span v-if="cita.payment.pay_status==3">Anulado</span>
+							</td>
+						</tr>
+						
+					</tbody>
+				</table>
+				<div v-if="idReporte==7">
+					<table class="table table-sm table-hover" >
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Servicio</th>
+								<th>Total de citas confirmadas</th>
+								<th>Total de citas pagadas</th>
+								<th>Acumulado</th>
+							</tr>
+						</thead>
+						<tbody >
+							<tr v-for="(servicio, index) in resultados.servicios">
+								<td>{{index+1}}</td>
+								<td> 
+									<span v-if="servicio.idClasificacion==1">Psiquiatría</span>
+									<span v-if="servicio.idClasificacion==2">Psicología</span>
+									<span v-if="servicio.idClasificacion==3">Certificado</span>
+									<span v-if="servicio.idClasificacion==4">Membresía</span>
+									<span>{{ servicio.descripcion }}</span>
+								</td>
+								<td> <span v-if="suma[servicio.id]">{{ suma[servicio.id].confirmado  }}</span> <span v-else>0</span></td>
+								<td> <span v-if="suma[servicio.id]">{{ suma[servicio.id].pagado  }}</span> <span v-else>0</span></td>
+								<td>S/ <span v-if="suma[servicio.id]">{{ parseFloat(suma[servicio.id].monto).toFixed(2) }}</span> <span v-else>0.00</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==7" >
+					<p>Ojo: Recuerde que la nueva lista de servicios se aplicó a partir de Julio 2023</p>
+					<table class="table table-sm table-hover" v-for="servicio in resultados.servicios">
+						<thead>
+							<tr>
+								<th colspan="4">{{ servicio.descripcion }}</th>
+							</tr>
+							<tr>
+								<th>N°</th>
+								<th>Fecha</th>
+								<th>Servicio</th>
+								<th>Paciente</th>
+								<th>Estado</th>
+								<th>Monto</th>
+								<th>Pagado</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(cita, indice) in resultados.citas" v-if="cita.professional_id == servicio.id">
+								<td>{{ indice+1 }}</td> <!-- {{ cita.id }} -->
+								<td class="text-capitalize">{{ cita.patient.name }}</td>
+								<td>{{ queServicio(cita.type) }}</td>
+								<td>{{ cita.date }} {{ cita.schedule.check_time }}</td>
+								<td>
+									<span v-if="cita.status==1">Sin confirmar</span>
+									<span v-if="cita.status==2">Confirmado</span>
+									<span v-if="cita.status==3">Anulado</span>
+								</td>
+								<td>{{ cita.payment.price }}</td>
+								<td>
+									<span v-if="cita.payment.pay_status==1">Sin pagar</span>
+									<span v-if="cita.payment.pay_status==2">Pagado</span>
+									<span v-if="cita.payment.pay_status==3">Anulado</span>
+								</td>
+							</tr>
+					
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==8 || idReporte==9">
+					<p><strong>Total de pacientes:</strong> {{ resultados.conteo }} </p>
+					<table class="table table-sm table-hover" >
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Fecha</th>
+								<th>Paciente</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(cita, indice, item) in resultados.citas">
+								<td>{{ item+1 }}</td> <!-- {{ cita.id }} -->
+								<td>{{ cita[0].date }}</td>
+								<td class="text-capitalize">{{ cita[0].patient.name }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<table class="table table-sm table-hover" v-if="idReporte==6" >
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Profesional</th>
+							<th>Total de citas confirmadas</th>
+							<th>Total de citas pagadas</th>
+							<th>Acumulado</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr v-for="(doctor, index) in resultados.doctores">
+							<td>{{index+1}}</td>
+							<td>{{ doctor.name }}</td>
+							<td> <span v-if="suma[doctor.id]">{{ suma[doctor.id].confirmado  }}</span> <span v-else>0</span></td>
+							<td> <span v-if="suma[doctor.id]">{{ suma[doctor.id].pagado  }}</span> <span v-else>0</span></td>
+							<td>S/ <span v-if="suma[doctor.id]">{{ parseFloat(suma[doctor.id].monto).toFixed(2)  }}</span> <span v-else>0.00</span></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==10" >
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Tipo de medio de pago</th>
+							<th>Acumulado</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr v-for="(medio, index) in resultados.monedas">
+							<td>{{index+1}}</td>
+							<td>{{ medio.tipo }}</td>
+							<td>S/ <span v-if="suma[medio.id]">{{ parseFloat(suma[medio.id].monto).toFixed(2)  }}</span> <span v-else>0.00</span></td>
+						</tr>
+					</tbody>
+				</table>
+				<div v-if="idReporte==10" >
+					<p>Ojo: Recuerde que los pagos fueron aplicados desde Julio 2023</p>
+					<table class="table table-sm table-hover" >
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Paciente</th>
+								<th>Fecha</th>
+								<th>Servicio</th>
+								<th>Monto</th>
+								<th>Pagado</th>
+								<th>Observaciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(pago, indice) in resultados.pagos">
+								<td>{{ indice+1 }}</td> <!-- {{ pago.id }} -->
+								<td class="text-capitalize">{{ pago.customer }}</td>
+								<td>{{ pago.date }}</td>
+								<td>{{ queServicio(pago.type) }}</td>
+								
+								
+								<td>{{ pago.price }}</td>
+								<td>
+									<span v-if="pago.pay_status==1">Sin pagar</span>
+									<span v-if="pago.pay_status==2">Pagado</span>
+									<span v-if="pago.pay_status==3">Anulado</span>
+									<span v-if="!pago.pay_status">Pagado</span>
+								</td>
+								<td>{{ pago.observation }}</td>
+							</tr>
+					
+						</tbody>
+					</table>
+				</div>
+				
 			</div>
 		</div>
 	</div>
@@ -88,7 +358,18 @@ import moment from 'moment';
 			reportes:[
 				{id: 1, nombrado: 'Pacientes ausentes mayor a 7 días'},
 				{id: 0, nombrado: 'Recetas sueltas'},
-			]
+				{id: 2, nombrado: 'Hobbies de los pacientes'},
+				{id: 3, nombrado: 'Pacientes integrantes al club'},
+				{id: 4, nombrado: 'Pacientes no desean el club'},
+				{id: 5, nombrado: 'Pacientes semáforo'},
+				{id: 6, nombrado: 'Recaudaciones por profesional - N° Atenciones'},
+				{id: 7, nombrado: 'Recaudaciones por servicio - N° Atenciones'},
+				{id: 8, nombrado: 'Pacientes nuevos'},
+				{id: 9, nombrado: 'Pacientes continuantes'},
+				{id: 10, nombrado: 'Recaudaciones por medio de pago'},
+			],
+			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
+			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}
 		}},
 		methods:{
 			cargarDatos(){
@@ -103,13 +384,18 @@ import moment from 'moment';
 				})
 				.then(serv=> { console.log(serv.data);
 					this.resultados=serv.data
-				})	
+					if(this.idReporte==6) this.sumaProfesionales();
+					if(this.idReporte==7) this.sumaServicios();
+					if(this.idReporte==10) this.sumaMedios();
+				})
 			},
 			configurarVista(){
-				this.ocultarFechas=false;
+				this.resultados=[];
+				//incluidos a ocultar: 1,2,3,4,
+				this.ocultarFechas=true;
 				switch(this.idReporte){
-					case 0: break;
-					case 1: this.ocultarFechas=true; break;
+					case 0: case 6: case 7: case 8: case 9: case 10:
+						this.ocultarFechas=false;
 				}
 			},
 			fechaFrom(fecha){
@@ -118,10 +404,67 @@ import moment from 'moment';
 			},
 			fechaLatam(fecha){
 				return moment(fecha).format('DD/MM/YYYY');
+			},
+			sumaProfesionales(){
+				this.suma={}
+				this.resultados.citas.forEach(cita => {
+					const idProfesional = cita.professional_id;
+					const monto = parseFloat(cita.payment.price ?? 0);
+					if(!this.suma[idProfesional]){
+						this.suma[idProfesional] = {monto: monto, confirmado:0, pagado:0}
+					}else{
+						this.suma[idProfesional].monto+=monto
+					}
+					if(cita.status=='2') //confirmado
+						this.suma[idProfesional].confirmado++;
+					if(cita.payment.pay_status=='2') //confirmado
+						this.suma[idProfesional].pagado++;
+				});
+			},
+			queServicio(id){
+				const servi= this.resultados.servicios.find(x=> x.id==id)
+				if(servi) return servi.descripcion
+				else return 'Otros'
+			},
+			sumaServicios(){
+				this.suma={}
+				this.resultados.citas.forEach(cita => {
+					const idServicio = cita.type;
+					const monto = parseFloat(cita.payment.price ?? 0);
+					if(!this.suma[idServicio]){
+						this.suma[idServicio] = {monto: monto, confirmado:0, pagado:0}
+					}else{
+						this.suma[idServicio].monto+=monto
+					}
+					if(cita.status=='2') //confirmado
+						this.suma[idServicio].confirmado++;
+					if(cita.payment.pay_status=='2') //confirmado
+						this.suma[idServicio].pagado++;
+				});
+			},
+			sumaMedios(){
+				this.suma={}
+				this.resultados.pagos.forEach(medio => {
+					const idMedio = medio.moneda;
+					const monto = parseFloat(medio.price ?? 0);
+					if(!this.suma[idMedio]){
+						this.suma[idMedio] = {monto: monto, confirmado:0, pagado:0}
+					}else{
+						this.suma[idMedio].monto+=monto
+					}
+				});
 			}
 		},
 		mounted(){
+			this.reportes.sort((a, b) => {
+				if (a.nombrado < b.nombrado) return -1;
+				if (a.nombrado > b.nombrado) return 1;
+				return 0;
+			});
 			this.cargarDatos()
+		},
+		computed:{
+			
 		}
 	}
 </script>

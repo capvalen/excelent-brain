@@ -22,6 +22,7 @@
           <th>Nombre y apellidos</th>
           <th>Hobbie</th>
           <th>Club</th>
+          <th>Membresía</th>
           <th>Semáforo</th>
           <th>Triaje</th>
           <th>Faltas</th>
@@ -43,6 +44,9 @@
 						<button class="btn btn-light" v-if="paciente.club=='0'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(paciente.club, paciente.id)"><i class="fa-regular fa-hand-back-fist"></i></button>
 						<button class="btn btn-primary" v-if="paciente.club=='1'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(paciente.club, paciente.id)"><i class="fa-solid fa-thumbs-up"></i></button>
 						<button class="btn btn-danger" v-if="paciente.club=='2'" data-bs-toggle="modal" data-bs-target="#editarClub" @click="datosLike(paciente.club, paciente.id)"><i class="fa-solid fa-thumbs-down"></i></button>
+					</td>
+					<td>
+						<button class="btn btn-outline-primary btn-circle"  data-bs-toggle="offcanvas" data-bs-target="#offVerMembresias" @click="queId = paciente.id; nombrePaciente= paciente.name"><i class="far fa-calendar-alt"></i></button>
 					</td>
 					<td>
 						<div v-if="paciente.semaforo[0]">
@@ -114,7 +118,8 @@
 		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
 		<ModalVerFaltas :queId="queId" :cantFaltas="cantFaltas"></ModalVerFaltas>
-		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies> 
+		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies>
+		<OffVerMembresias :queId="queId" :nombrePaciente="nombrePaciente"></OffVerMembresias>
 		
   </main>
 </template>
@@ -131,6 +136,7 @@ import ModalVerEstados from './ModalVerEstados.vue'
 import ModalCambiarLike from './ModalCambiarLike.vue'
 import ModalVerFaltas from './reportes/ModalVerFaltas.vue'
 import ModalVerHobbies from './reportes/ModalVerHobbies.vue'
+import OffVerMembresias from './OffVerMembresias.vue';
 
 export default {
   name: 'Pacientes',
@@ -140,7 +146,7 @@ export default {
       dataPatients: [], queId:null,
       data: null, dataTriajes:null,
       busqueda: [], like:0, id:-1, cantFaltas:-1, reprogramaciones:[],
-      totalPatients:[], profesionales:[],
+      totalPatients:[], profesionales:[], nombrePaciente:'',
 			estados:[
 				{id: 1, valor: 'Neutro'},
 				{id: 2, valor: 'excelente'},
@@ -157,7 +163,7 @@ export default {
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies, ModalVerReprogramacionesViejos },
+  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies, ModalVerReprogramacionesViejos, OffVerMembresias },
 
   props: {
     dataPatient: Object

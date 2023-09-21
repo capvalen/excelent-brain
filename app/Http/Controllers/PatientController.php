@@ -275,10 +275,6 @@ class PatientController extends Controller
 		}else{
 			return response()->json([ 'patient'=>$paciente ]);
 		}
-	
-			
-
-	  
 	}
 
 	public function showEvolution ($idPaciente) {

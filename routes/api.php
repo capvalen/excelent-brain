@@ -140,6 +140,9 @@ Route::post('subirArchivoPago/', [ExtrasController::class, 'subirArchivoPago']);
 Route::post('eliminarAdjunto/{id}', [ExtrasController::class, 'eliminarAdjunto']);
 Route::post('respuestaInteresado', [ExtrasController::class, 'respuestaInteresado']);
 Route::post('pagarDeudaMembresia', [ExtrasController::class, 'pagarDeudaMembresia']);
+Route::get('buscarMembresias/{id}', [ExtrasController::class, 'buscarMembresias']);
+Route::get('pedirCitasMembresia/{id}', [ExtrasController::class, 'pedirCitasMembresia']);
+Route::post('ampliarFechaMembresia', [ExtrasController::class, 'ampliarFechaMembresia']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);

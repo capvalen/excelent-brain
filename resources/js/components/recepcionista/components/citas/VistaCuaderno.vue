@@ -47,6 +47,7 @@
 									</td>
 									<td v-else></td>
 									<td class="puntero" v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#patientModal" @click="asignar(horasMalas[hora.indexOcupado]); modalInfo(horasMalas[hora.indexOcupado]);">
+										<span class="badge rounded-5 p-2 bg-danger" v-if="faltanDatos(horasMalas[hora.indexOcupado].patient)"><i class="fas fa-brain"></i></span>
 										<span class="text-capitalize" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} </span>
 									</td>
 									<td v-else>
@@ -334,6 +335,11 @@
 				let idProf = laCita.professional_id
 				this.primero = laCita;
 				this.posibles = this.horasMalas.filter(posible=> posible.professional_id == idProf && posible.date == this.fecha && laCita.id != posible.id )
+			},
+			faltanDatos(paciente){
+				if( paciente.name=='' || paciente.phone=='' || paciente.email=='' || paciente.gender==2 || paciente.address.address=='' || paciente.relative.name=='' || paciente.relative.phone=='' || paciente.kinship=='')
+					return true
+				else return false
 			}
 		},
 		mounted(){

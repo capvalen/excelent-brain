@@ -2,12 +2,12 @@
     <div>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Pagos</h1>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center d-print-none">
                 <input type="date" class="form-control" @change="selectDate">
             </div>
     </div>
-    <div class="card px-1 pt-2">
-			<div class="m-4">
+    <div class="card px-1 pt-2 ">
+			<div class="m-4 d-print-none">
 				<button class="btn btn-outline-success d-none" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
 				<button class="btn btn-outline-primary" @click="membresias()" data-bs-target="#modalMembresias" data-bs-toggle="modal"><i class="fa-solid fa-arrow-up-right-dots"></i> Ingresar membresía</button>
 				<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary ms-auto"><i class="fas fa-plus"></i> Pagos extras</button>
@@ -24,7 +24,7 @@
 						<th class="text-primary" colspan="15"><i class="fas fa-angle-right"></i> Cuadro de entradas de dinero</th>
 					</tr>
 					<tr>
-						<td v-if="tienePrivilegios=='1'">@</td>
+						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td>N°</td>
 						<td>Fecha</td>
 						<td>Fact. Bol.</td>
@@ -38,12 +38,12 @@
 						<td>N° Op.</td>
 						<td>Prof.</td>
 						<td>Hora</td>
-						<td>@</td>
+						<td class="d-print-none">@</td>
 					</tr>
         </thead>
         <tbody>
             <tr v-for="(payment, index) in payments" >
-							<td v-if="tienePrivilegios=='1'">
+							<td class="d-print-none" v-if="tienePrivilegios=='1'">
 								<button class="btn btn-sm btn-outline-danger" @click="mostrarModalBorrar(payment.id, index)" data-bs-toggle="modal" data-bs-target="#modalMotivoBorrar" ><i class="fa-solid fa-xmark"></i></button>
 							</td>
 							<td>
@@ -86,7 +86,7 @@
 							<td>{{ payment.voucher_issued }}</td>
 							<td>{{ payment.profesional_name }}</td>
 							<td>{{ payment.horario }}</td>
-							<td>
+							<td class="d-print-none">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
@@ -115,7 +115,7 @@
 						<th class="text-danger" colspan="15"><i class="fas fa-angle-right"></i> Cuadro de salidas de dinero</th>
 					</tr>
 					<tr>
-						<td v-if="tienePrivilegios=='1'">@</td>
+						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td>N°</td>
 						<td>Fecha</td>
 						<td>Fact. Bol.</td>
@@ -128,12 +128,12 @@
 						<td>Medio de pago</td>
 						<td>N° Op.</td>
 						<td>Hora</td>
-						<td>@</td>
+						<td class="d-print-none">@</td>
 					</tr>
         </thead>
         <tbody>
             <tr v-for="(payment, index) in salidas">
-							<td v-if="tienePrivilegios=='1'">
+							<td class="d-print-none" v-if="tienePrivilegios=='1'">
 								<button class="btn btn-sm btn-outline-danger" @click="mostrarModalBorrar(payment.id, index)" data-bs-toggle="modal" data-bs-target="#modalMotivoBorrar" ><i class="fa-solid fa-xmark"></i></button>
 							</td>
 							<td>
@@ -159,7 +159,7 @@
 							<td class="text-capitalize"> <span>{{monedas[payment.moneda-1]}}</span> </td>
 							<td>{{ payment.voucher_issued }}</td>
 							<td>{{ horaLatam(payment.created_at) }}</td>
-							<td>
+							<td class="d-print-none">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
@@ -189,7 +189,7 @@
 						<th class="text-warning" colspan="15"><i class="fas fa-angle-right"></i>  Cuadro anulados</th>
 					</tr>
 					<tr>
-						<td v-if="tienePrivilegios=='1'">@</td>
+						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td>N°</td>
 						<td>Fecha</td>
 						<td>Fact. Bol.</td>
@@ -202,7 +202,7 @@
 						<td>Medio de pago</td>
 						<td>N° Op.</td>
 						<td>Hora</td>
-						<td>@</td>
+						<td class="d-print-none">@</td>
 					</tr>
         </thead>
 				<tbody>
@@ -241,7 +241,7 @@
 						<td>{{ payment.voucher_issued }}</td>
 						<td>{{ payment.profesional_name }}</td>
 						<td>{{ horaLatam(payment.created_at) }}</td>
-						<td>
+						<td class="d-print-none">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
 							<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 							<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
