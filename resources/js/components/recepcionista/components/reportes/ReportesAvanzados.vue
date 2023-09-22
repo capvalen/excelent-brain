@@ -167,7 +167,7 @@
 						<tr v-for="(cita, indice) in resultados.citas" v-if="cita.professional_id == doctor.id">
 							<td>{{ indice+1 }}</td> <!-- {{ cita.id }} -->
 							<td class="text-capitalize">{{ cita.patient.name }}</td>
-							<td>{{ cita.date }} {{ cita.schedule.check_time }}</td>
+							<td>{{ cita.date }} <span v-if="cita.schedule">{{ cita.schedule.check_time }}</span></td>
 							<td>
 								<span v-if="cita.status==1">Sin confirmar</span>
 								<span v-if="cita.status==2">Confirmado</span>

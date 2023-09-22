@@ -514,9 +514,9 @@
 											:alt="evolution.professional ? evolution.professional.signing : null ? 'Firma del doctor' : 'Sin firma'">
 									</div>
 								</div>
-								<div class="d-flex flex-gap" v-if="evolution.date === getDateNow()">
+								<div class="d-flex flex-gap">
 									<button @click="updateModal(evolution)" data-bs-toggle="modal" data-bs-target="#updatedModal" class="btn btn-outline-secondary" v-if="evolution.professional_id == dataUser.id && 
-                      evolution.date === getDateNow() || evolution.auth == 1">
+                      calcularDias(evolution.date)<=2 || evolution.auth == 1">
 										<i class="fas fa-edit"></i> Redactar evolución
 									</button>
 									<button @click="editEvolution(evolution)" class="btn btn-success d-none"
@@ -1076,6 +1076,10 @@ export default {
 
 		getDateNow() {
 			return dateNow()
+		},
+		calcularDias(fecha){
+			let hoy = moment()
+			return hoy.diff(fecha, 'days')
 		},
 		maxStringCharacter(character, num) {
 			character === null ? character = '...' : character
