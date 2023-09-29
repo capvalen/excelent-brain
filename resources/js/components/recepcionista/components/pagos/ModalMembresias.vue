@@ -251,7 +251,7 @@ export default {
 			}
 		},
 		borrarSesionAcumulada(index){
-			this.sesionesAcumuladas[index].splice(index,1)
+			this.sesionesAcumuladas.splice(index,1)
 		},
 		async guardar() {
 			if (this.membresia.cuotas <= 0) alertify.notify('<i class="fa-solid fa-bomb"></i> El número de cuotas mínimo debe ser 1', 'danger', 10);

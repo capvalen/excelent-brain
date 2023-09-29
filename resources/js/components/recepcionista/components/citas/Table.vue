@@ -21,18 +21,9 @@
 							<div class="d-none d-sm-inline-block form-inline w-75">
 								<div class="input-group">
 									<div class="input-group-prepend">
-										<button class="btn btn-success" type="submit" @click="searchHistoria()">
-												<i class="fas fa-search fa-sm"></i>
-										</button>
+										<button class="btn btn-success" type="submit" @click="searchHistoria()"> <i class="fas fa-search fa-sm"></i> </button>
 									</div>
-									<input
-									type="text"
-									class="form-control bg-white shadow-sm border-0 small"
-									placeholder="Nombre, D.N.I."
-									aria-label="Search"
-									aria-describedby="basic-addon2"
-									id="searchInputAppointment" @keyup.enter="searchHistoria()"
-									>
+									<input type="text" class="form-control bg-white shadow-sm border-0 small" placeholder="Nombre, D.N.I." aria-label="Search" aria-describedby="basic-addon2" id="searchInputAppointment" @keyup.enter="searchHistoria()" >
 								</div>
 							</div>
 
@@ -104,6 +95,7 @@
 										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 2">Cancelado</span>
 										<span class="text labels" v-else-if="qCita.payment && [3, null].includes( qCita.payment.pay_status )">Anulado</span>
 										<span class="text labels" v-else-if="!qCita.payment">Error</span>
+										
 									</button>
 								</td>
 								<td>
@@ -127,6 +119,7 @@
 										<span class="text labels" v-else-if="qCita.status == 3">Cancelado</span>
 										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
 									</button>
+									<span v-if="qCita.status == 3 && qCita.faltas.length>0"><br>{{qCita.faltas[0].observaciones}}</span>
 								</td>
 								<td>
 									<div class="row d-flex align-items-center justify-content-around gap-1">
@@ -358,6 +351,7 @@ export default {
       }) */
     },
     async searchHistoria () {
+			console.log('seeeeeeeeeeeeeeeeeeeee')
       let search = document.getElementById("searchInputAppointment").value.split('/'),
         nombre = search[0],
         profesional = search[1] || null,
@@ -372,7 +366,7 @@ export default {
 
       await this.axios.get(`/api/searchAppointment/${nombre}/${profesional}/${fecha}/${dni}`)
       .then(res => {
-				console.log(res.data);
+				console.log('otros',res.data);
         this.citas = res.data;
       })
       .catch(err => {

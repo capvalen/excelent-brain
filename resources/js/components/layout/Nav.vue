@@ -15,7 +15,7 @@
 									class="img-profile rounded"
 									:src="professional.imagen" 
 									>
-									<img v-else src="https://excelentemente.org/logo/logoexcel.jpeg" width="50">
+									<img v-else src="/img/logoexcel.jpg" width="50">
 							</a>
 							<ul class="dropdown-menu">
 								<li>

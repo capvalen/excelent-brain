@@ -105,7 +105,7 @@
 										<a v-else @click="modalInfo(horasMalas[hora.indexOcupado])" title="Reprogramar cita" data-bs-target="#reprogModal" data-bs-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
 										
 										<!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
-										<!-- <a @click="eliminar(horasMalas[hora.indexOcupado].id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a> -->
+										<a @click="eliminar(horasMalas[hora.indexOcupado].id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
 
 										<!-- Sin numero -->
 										<a v-if="horasMalas[hora.indexOcupado].patient.phone ? false : true"
@@ -147,9 +147,6 @@
 										>
 										<i class="fa fa-align-justify"></i>
 										</a>
-										<!-- <a class="btn btn-info btn-circle btn-sm" :href="`/api/ticket/${horasMalas[hora.indexOcupado].id}`" target="_blank" title="Ver cupón de cita">
-											<i class="fas fa-file"></i>
-										</a> -->
 										<button data-bs-toggle="modal" @click="buscarRecetas(horasMalas[hora.indexOcupado].patient.id)" data-bs-target="#recetasModal" class="btn btn-info btn-circle btn-sm" title="Ver recetas">
 											<i class="fas fa-file"></i>
 										</button>
@@ -177,8 +174,6 @@
 		<info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>
 		<modal-search-patient></modal-search-patient>
 		<ModalIntercambio :posibles="posibles" :primero="primero" @actualizar="actualizarListadoCitas"></ModalIntercambio>
-
-		
 		
 
 	</div>
@@ -240,8 +235,7 @@
               .then((res) => {
                 this.$swal('Cita eliminada con exito')
               });
-              this.citas=result.data;
-              this.listar();
+            this.obtenerHorarios();
           }
       })
    	 },

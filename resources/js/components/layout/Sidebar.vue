@@ -46,6 +46,19 @@
 										<span>Reportes</span>
 								</router-link>
 						</li>
+						<!-- Nav Item - Dashboard -->
+						<li class="nav-item nav__list" @click="activeSidebar()">
+								<router-link  to="/administrador/admistracion-profesionales" class="nav-link">
+										<i class="fas fa-home"></i>
+										<span>Admin. Profesionales</span>
+								</router-link>
+						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
+							<router-link  to="/administrador/usuarios-simples" class="nav-link">
+									<i class="fas fa-file-alt"></i>
+									<span>Usuarios</span>
+							</router-link>
+						</li>
 				</div>
 
 				<!-- Rol del profesional -->
@@ -213,13 +226,6 @@
 								Secciones
 						</div>
 
-						<!-- Nav Item - Dashboard -->
-						<li class="nav-item nav__list" @click="activeSidebar()">
-								<router-link  to="/recepcionista/profesionales" class="nav-link">
-										<i class="fas fa-home"></i>
-										<span>Profesionales</span>
-								</router-link>
-						</li>
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/recepcionista/pagos" class="nav-link">
 										<i class="fas fa-file-alt"></i>
@@ -272,12 +278,7 @@
 									<span>Reportes</span>
 							</router-link>
 						</li>
-						<li class="nav-item nav__list" @click="activeSidebar()">
-							<router-link  to="/recepcionista/usuarios-simples" class="nav-link">
-									<i class="fas fa-file-alt"></i>
-									<span>Usuarios</span>
-							</router-link>
-						</li>
+						
 				</div>
 
 				<!-- Divider -->

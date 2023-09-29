@@ -90,8 +90,6 @@ class ScheduleController extends Controller
                 $cita->patient->relative= $relacion[0];
             else
                 $cita->patient->relative= [];
-            
-
         }
 
 

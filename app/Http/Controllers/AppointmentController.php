@@ -46,7 +46,7 @@ class AppointmentController extends Controller
 		$date = date('Y-m-d');
 
 		try {
-			return Appointment::where('date', '=', $date)
+			$citas =  Appointment::where('date', '=', $date)
 			->where('schedule_id','!=', null)
 			->with(['professional','patient','payment','schedule','patient.address','patient.relative',
 			'patient.semaforo' => function ($query){
@@ -55,6 +55,15 @@ class AppointmentController extends Controller
 			])
 			->orderBy('professional_id')
 			->get();
+
+			foreach($citas as $cita){
+				//Ver si tiene falta
+				if($cita->status == '3'){
+					$cita->faltas = DB::table('faltas')->where('idCita', $cita->id)->get();
+				}
+			}
+
+			return $citas;
 		} catch (\Throwable $th) {
 			echo $th;
 		}
@@ -404,7 +413,6 @@ class AppointmentController extends Controller
 
 	public function searchAppointment ($nombre, $profesional, $fecha, $dni)
 	{
-
 		$queryAppointments = [];
 		$appointments = Appointment::with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
 		->get();
@@ -429,10 +437,18 @@ class AppointmentController extends Controller
 					array_push($queryAppointments, $appointment);
 				}
 			}
-						//comparar si el DNI coincide
-						if( preg_match("/$dni/", $appointment->patient->dni ) ){
-							array_push($queryAppointments, $appointment);
-						}
+			//comparar si el DNI coincide
+			if( preg_match("/$dni/", $appointment->patient->dni ) ){
+				array_push($queryAppointments, $appointment);
+			}
+
+			//Ver si tiene falta
+			if($appointment->status == '3'){
+				$faltas = DB::table('faltas')->where('idCita', $appointment->id)->get();
+			}else{
+				$faltas = [];
+			}
+			array_push($queryAppointments, array( 'faltas' => $faltas) );
 		}
 
 		return response()->json($queryAppointments);
@@ -442,6 +458,13 @@ class AppointmentController extends Controller
 		$appointments = Appointment::where('date', $date)
 						->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
 						->get();
+		foreach($appointments as $appointment){
+			//Ver si tiene falta
+			if($appointment->status == '3'){
+				$appointment->faltas = DB::table('faltas')->where('idCita', $appointment->id)->get();
+			}
+			
+		}
 		return response()->json($appointments);                
 	}
 
@@ -720,7 +743,8 @@ class AppointmentController extends Controller
 				'idProfesional' => $appointment->professional_id,
 				'idHorario' => $appointment->schedule_id,
 				'fecha' => $appointment->date,
-				'observaciones' => $request->input('motivo')
+				'observaciones' => 'Anulado por '. $request->input('motivo'),
+				'idCita' => $idAppointment,
 			]);
 			
 			DB::table('interesados')->insert([

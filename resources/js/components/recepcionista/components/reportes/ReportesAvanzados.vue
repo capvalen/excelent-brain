@@ -229,7 +229,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(cita, indice) in resultados.citas" v-if="cita.professional_id == servicio.id">
+							<tr v-for="(cita, indice) in resultados.citas" v-if="cita.type == servicio.id">
 								<td>{{ indice+1 }}</td> <!-- {{ cita.id }} -->
 								<td class="text-capitalize">{{ cita.patient.name }}</td>
 								<td>{{ queServicio(cita.type) }}</td>

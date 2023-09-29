@@ -14,7 +14,7 @@
 							<div class="col-lg-6">
 								<div class="p-5">
 									<div class="text-center">
-										<img src="http://excelentemente.org/consultorio-online/public/img/logoem.png" width="100%" alt="Logo">
+										<img src="/img/logoem.png" width="100%" alt="Logo">
 										<h1 class="h4 text-gray-900 mb-4">Bienvenido al Consultorio Online</h1>
 									</div>
 									<form class="user" v-on:submit.prevent>
@@ -51,7 +51,7 @@ export default {
 				device_name: 'browser'
 			},
 			errors: {},
-			version: '4.61 Build 23.0909'
+			version: '4.64 Build 23.0928'
 		}
 	},
 	methods: {

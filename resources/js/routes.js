@@ -363,6 +363,17 @@ export const routes = [
         name: 'showAdminProf',
         component: ShowProfessional
       },
+			{
+				path:'/administrador/usuarios-simples',
+				name: 'usuariosSimples',
+				component: HomeUsuarios
+			},
+			
+			{
+				path: '/administrador/admistracion-profesionales',
+				name: 'profesionalRecepcionista',
+				component: HomeRecepcionistaProfesional
+			},
       {
         path: '/administrador/reportes',
         name: 'HomeAdministradorRouterReportes',
@@ -392,9 +403,10 @@ export const routes = [
             path: 'chart',
             name: 'ChartMensual',
             component: ChartMensual
-          }
+          },
         ]
-      }
+      },
+			
     ]
   },
   {
@@ -407,11 +419,6 @@ export const routes = [
           path: 'home',
           name: 'homeRecepcionista',
           component: HomeRecepcionista
-        },
-        {
-          path: 'profesionales',
-          name: 'profesionalRecepcionista',
-          component: HomeRecepcionistaProfesional
         },
         {
           path: 'pacientes',
@@ -452,11 +459,6 @@ export const routes = [
           path:'recordatorios',
           name: 'recordatorios',
           component: HomeRecordatorios
-        },
-				{
-          path:'usuarios-simples',
-          name: 'usuariosSimples',
-          component: HomeUsuarios
         }
       ]
   },

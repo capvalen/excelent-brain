@@ -1001,6 +1001,7 @@ export default {
 		},
 
 		convertir(prop) {
+			console.log(event)
 			if (event.target.dataset.rol == "true") {
 				if (this.dobleClick == false) {
 					this.dobleClick = "hola";
