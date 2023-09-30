@@ -135,7 +135,7 @@ class PrescriptionController extends Controller
 				
         $pdf = PDF::loadView('profesional.pdf', compact('receta', 'professional'));
         $pdf->setPaper('a4', 'landscape');
-        return $pdf->stream('mi-archivo.pdf');
+        return $pdf->stream('receta.pdf');
     }
 
 
