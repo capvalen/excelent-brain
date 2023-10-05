@@ -281,6 +281,7 @@
 			prepararAutomaticos(indexProfesional, indexHorario){
 				this.profesionalElegido = this.doctores[indexProfesional];
 				this.horaElegida = this.profesionalElegido.horarios[indexHorario];
+				this.$emit('limpiarDescuentos')
 			},
 			async listarPrecios(){
 				await this.axios.get('/api/listarPrecios')

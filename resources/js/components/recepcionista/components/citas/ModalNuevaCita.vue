@@ -367,6 +367,9 @@ export default {
 			horario:[], descuentoPorcentaje:0
 		}
 	},
+	mounted(){
+		this.$parent.$on('limpiarDescuentos', this.limpiarInputs(false) );
+	},
 	 
 	methods: {
 		horaLatam1(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm') },
@@ -666,6 +669,7 @@ export default {
 			this.cita.status = '';
 			this.descuentoAdelanto = 0; this.descuentoPorcentaje=0; this.descuentoPorcentual=0;
 			this.tieneAdelanto=false; this.tieneDescuento=false; this.tieneRebaja=false;
+			this.descuentoRebaja=0; this.razonPorcentaje=''; this.razonRebaja=''
 		},
 
 		dynamicPrice () {

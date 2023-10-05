@@ -41,7 +41,7 @@
 										<div><span class="fw-bold">Fecha de pago:</span> {{ fechaLatam(deuda.fecha) }} </div>
 										<p class="mb-0">Monto: S/ {{ parseFloat(deuda.monto).toFixed(2) }} </p>
 									</div>
-									<span title="Ampliar fecha" class="badge bg-primary rounded-pill p-2" @click="queDeuda = deuda.id; ampliacion=deuda.fecha" data-bs-toggle="modal" data-bs-target="#modalAmpliar" style="cursor: pointer;"><i class="far fa-clock"></i></span>
+									<span title="Ampliar fecha" class="badge bg-primary rounded-pill p-2" @click="ampliarFechaDeuda(deuda.id, ampliacion=deuda.fecha)" data-bs-toggle="modal" data-bs-target="#modalAmpliarFechaMembresia" style="cursor: pointer;"><i class="far fa-clock"></i></span>
 								</li>
 							</ol>
 							<p v-if="membresia.deudas.length==0">No hay deudas pendientes</p>
@@ -90,17 +90,22 @@
 				</div>
 			</div>
 		</div>
+
+		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha"></ModalAmpliarFechaMembresia>
 	</div>
 </template>
 
 <script>
 import moment from 'moment';
 import alertify from 'alertifyjs';
+import ModalAmpliarFechaMembresia from './ModalAmpliarFechaMembresia.vue'
+
 export default{
 	name:'offVerMembresias',
 	props:['queId', 'nombrePaciente'],
+	components:{ ModalAmpliarFechaMembresia },
 	data(){return {
-		membresias:[], ampliacion:null, queDeuda:null, citas:[]
+		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null
 	}},
 	mounted(){
 		//this.buscarMembresias()
@@ -110,15 +115,10 @@ export default{
 			this.axios('/api/buscarMembresias/'+this.queId)
 			.then(res=> this.membresias = res.data)
 		},
-		ampliarFecha(){
-			this.axios.post('/api/ampliarFechaMembresia', { fecha:this.ampliacion, id:this.queDeuda})
-			.then(res=>{
-				if(res.data.mensaje){
-					this.buscarMembresias();
-					alertify.notify('<i class="fa-regular fa-calendar-check"></i> Datos actualizados ', 'success', 5)
-				}else
-				 alertify.notify('<i class="fas fa-bug"></i> Hubo un error actualizando ', 'danger', 5)
-			})
+		ampliarFechaDeuda(id, fecha){
+			this.queCita = id;
+			this.queFecha = fecha
+			$('#modalAmpliarFechaMembresia').modal('show')
 		},
 		pedirCitasMembresia(id){
 			this.axios('/api/pedirCitasMembresia/'+id)
