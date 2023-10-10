@@ -119,7 +119,7 @@
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
 		<ModalVerFaltas :queId="queId" :cantFaltas="cantFaltas"></ModalVerFaltas>
 		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies>
-		<OffVerMembresias :queId="queId" :nombrePaciente="nombrePaciente"></OffVerMembresias>
+		<OffVerMembresias :queId="queId" :nombrePaciente="nombrePaciente" :idUser="$attrs.idUser"></OffVerMembresias>
 		
   </main>
 </template>

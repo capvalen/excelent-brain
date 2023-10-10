@@ -46,6 +46,12 @@
 										<span>Reportes</span>
 								</router-link>
 						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
+								<router-link to="/administrador/reportes-avanzados" class="nav-link">
+										<i class="fas fa-home"></i>
+										<span>Reportes Complementarios</span>
+								</router-link>
+						</li>
 						<!-- Nav Item - Dashboard -->
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/administrador/admistracion-profesionales" class="nav-link">

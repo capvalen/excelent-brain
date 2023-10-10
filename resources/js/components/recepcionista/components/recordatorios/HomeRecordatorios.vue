@@ -220,7 +220,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(interesado, index) in interesados" :class="{'todos':interesado.atendido==0, 'con':interesado.atendido==1, 'sin':interesado.atendido==2}" v-show="(filtro=='todos' || filtro== interesado.atendido) && (interesado.idProfesional == filtroDoc || filtroDoc==-1) ">
+							<tr v-for="(interesado, index) in interesados" :class="{'todos':interesado.atendido==0, 'con':interesado.atendido==1, 'sin':interesado.atendido==2}" v-show="(filtro=='todos' || filtro==1 && interesado.respuesta !='' || filtro==2 && interesado.respuesta=='') && (interesado.idProfesional == filtroDoc || filtroDoc==-1) ">
 								<td>{{ index+1 }}</td>
 								<td class="text-capitalize">{{ interesado.nombre }}</td>
 								<td>{{ interesado.celular }}</td>

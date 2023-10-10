@@ -11,7 +11,7 @@
 				<p><strong>Membresías asignadas:</strong></p>
 			</div>
 			<div class="accordion" id="accordionExample">
-				<div class="accordion-item" v-for="membresia in membresias">
+				<div class="accordion-item" v-for="(membresia, index) in membresias">
 					<h2 class="accordion-header">
 						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse'+membresia.id" aria-expanded="false" :aria-controls="'#collapse'+membresia.id">
 							{{membresia.descripcion}} - {{ fechaLatam(membresia.inicio) }}
@@ -24,7 +24,7 @@
 							<p class="mb-0"><strong>Fecha límite final</strong> <span>{{ fechaLatam(membresia.fin) }}</span></p>
 							<p class="mb-0"><strong>N° cuotas</strong> <span>{{ membresia.cuotas }}</span></p>
 							<p class="mb-0"><strong>Monto Total</strong> <span>S/ {{ parseFloat(membresia.monto).toFixed(2) }}</span></p>
-							<p class="mt-2 mb-0">Cuotas pagadas:</p>
+							<p class="mt-2 mb-0">Cuotas pagadas: <span class="badge bg-primary rounded-pull p-2 m-1" style="cursor: pointer;" title="Voucher de pagos acumulados" @click="voucherAcumulados(index)"><i class="far fa-sticky-note"></i></span></p>
 							<ol class="list-group">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="pagado in membresia.pagados">
 									<div class="ms-2 me-auto">
@@ -36,12 +36,13 @@
 							<p v-if="membresia.pagados.length==0">No hay pagos registrados aún</p>
 							<p class="mt-2 mb-0">Cuotas pendientes de pago:</p>
 							<ol class="list-group">
-								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="deuda in membresia.deudas">
+								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="(deuda, indice) in membresia.deudas">
 									<div class="ms-2 me-auto">
 										<div><span class="fw-bold">Fecha de pago:</span> {{ fechaLatam(deuda.fecha) }} </div>
 										<p class="mb-0">Monto: S/ {{ parseFloat(deuda.monto).toFixed(2) }} </p>
 									</div>
-									<span title="Ampliar fecha" class="badge bg-primary rounded-pill p-2" @click="ampliarFechaDeuda(deuda.id, ampliacion=deuda.fecha)" data-bs-toggle="modal" data-bs-target="#modalAmpliarFechaMembresia" style="cursor: pointer;"><i class="far fa-clock"></i></span>
+									<span title="Ampliar fecha" class="badge bg-primary rounded-pill p-2 ms-1" @click="ampliarFechaDeuda(deuda.id, ampliacion=deuda.fecha)" data-bs-toggle="modal" data-bs-target="#modalAmpliarFechaMembresia" style="cursor: pointer;"><i class="far fa-clock"></i></span>
+									<span title="Aplicar pago" class="badge bg-success rounded-pill p-2 ms-1" @click="pagarDeuda(index, indice)" style="cursor: pointer;"><i class="far fa-gem"></i></span>
 								</li>
 							</ol>
 							<p v-if="membresia.deudas.length==0">No hay deudas pendientes</p>
@@ -102,7 +103,7 @@ import ModalAmpliarFechaMembresia from './ModalAmpliarFechaMembresia.vue'
 
 export default{
 	name:'offVerMembresias',
-	props:['queId', 'nombrePaciente'],
+	props:['queId', 'nombrePaciente', 'idUser'],
 	components:{ ModalAmpliarFechaMembresia },
 	data(){return {
 		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null
@@ -120,9 +121,56 @@ export default{
 			this.queFecha = fecha
 			$('#modalAmpliarFechaMembresia').modal('show')
 		},
+		pagarDeuda(index, indice){
+			const swalWithBootstrapButtons = this.$swal.mixin({
+				customClass: {
+					confirmButton: 'btn btn-success',
+					cancelButton: 'btn btn-danger mx-2'
+				},
+				buttonsStyling: false
+			})
+
+			swalWithBootstrapButtons.fire({
+				title: '¿Deseas cancelar la deuda?',
+				text: "Se pondrá en caja automáticamente",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Si, pagar deuda',
+				cancelButtonText: 'Cancelar',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.isConfirmed){
+					let datos = new FormData();
+					datos.append('idDeuda', this.membresias[index].deudas[indice].id)
+					datos.append('idMembresia', this.membresias[index].id)
+					datos.append('user_id', this.idUser)
+					datos.append('nombre', this.nombrePaciente)
+					datos.append('precio', this.membresias[index].deudas[indice].monto)
+					datos.append('tipo', this.membresias[index].tipo)
+					datos.append('observación', this.membresias[index].motivo)
+					datos.append('estado', 2)
+					
+					this.axios.post('/api/pagarDeudaMembresia/', datos)
+					.then(res =>{
+						console.log(res.data)
+						this.buscarMembresias();
+						swalWithBootstrapButtons.fire( 'Deuda Pagada', '', 'success' )
+					})
+				}
+			})
+		},
 		pedirCitasMembresia(id){
 			this.axios('/api/pedirCitasMembresia/'+id)
 			.then(res=> this.citas = res.data )
+		},
+		voucherAcumulados(index){
+			var sumasa = 0;
+			this.membresias[index].pagados.forEach(pago => {
+				sumasa += parseFloat(pago.price)
+			});
+			//window.location.href = `/api/cuponMembresia/${this.membresias[index].pagados[0].idMembresia}/${sumasa}`
+			window.open( `/api/cuponMembresia/${this.membresias[index].pagados[0].idMembresia}/${sumasa}` , '_blank')
+
 		},
 		fechaLatam(fecha) { return moment(fecha).format('DD/MM/YYYY'); },
 	},

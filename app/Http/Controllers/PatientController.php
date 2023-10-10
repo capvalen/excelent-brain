@@ -258,7 +258,6 @@ class PatientController extends Controller
 	{
 	  $paciente = Patient::where('dni',$dni)->with('address')->first();
 	 
-		//code...
 		if( $paciente ){
 			$relaciones = Relative::where('patient_id', $paciente->id)->first();
 			$deudas = DB::table('deudas')->where('patient_id', $paciente->id )
@@ -267,10 +266,22 @@ class PatientController extends Controller
 			->whereDate('fecha','<=', Carbon::now())
 			->orderBy('fecha', 'desc')
 			->get();
+
+			//Verificar si tiene membresía activa
+			$membresia = DB::table('membresias as m')
+			->join('precios as p', 'p.id', '=', 'm.tipo')
+			->select('m.*', 'p.descripcion')
+			->where('patient_id', $paciente->id)
+			->where('m.activo', 1)
+			->whereDate( 'm.inicio', '<=', Carbon::now() )
+			->whereDate( 'm.fin', '>=', Carbon::now() )
+			->first();
+
 			return response()->json([
 				'patient'=>$paciente,
 				'relacion' => $relaciones,
-				'deudas' => $deudas
+				'deudas' => $deudas,
+				'membresia' => $membresia
 				]);
 		}else{
 			return response()->json([ 'patient'=>$paciente ]);

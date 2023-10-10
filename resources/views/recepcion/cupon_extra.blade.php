@@ -206,7 +206,7 @@
                                     @elseif($extra_payment->type == 1)
                                     Paquete de Membresía
                                     @elseif($extra_payment->type == 2)
-                                    Pauete de Kurame
+                                    Paquete de Kurame
                                     @elseif($extra_payment->type == 3)
                                     Informe
                                     @elseif($extra_payment->type == 4)

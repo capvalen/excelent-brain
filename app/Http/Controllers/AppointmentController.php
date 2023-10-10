@@ -1099,9 +1099,21 @@ class AppointmentController extends Controller
 
 	}
 
+	public function cuponMembresia ($id, $monto){
+		$membresia = DB::table('membresias as m')
+		->join('patients as p', 'p.id', '=', 'm.patient_id')
+		->where('m.id', $id)
+		->first();
+		//return  compact('membresia', 'monto' ); die();
+		$pdf = PDF::loadView('recepcion.cupon_membresia', compact('membresia', 'monto' )); //, 'monto'
 		
 
+		$pdf->setPaper('a7');
+		return $pdf->stream('cupon_membresia.pdf');
+	}
+
 }
+
 
 function object_sorter($clave,$orden=null) {
 	return function ($a, $b) use ($clave,$orden) {

@@ -9,12 +9,9 @@
             <!-- Nav Item - User Information -->
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								<span class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize">{{ professional.name }}</span>
-									<img
-									v-if="checkImage(professional.imagen)"
-									class="img-profile rounded"
-									:src="professional.imagen" 
-									>
+								<span v-if="nombreUser" class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize"><i class="far fa-user-circle"></i> {{ nombreUser }}</span>
+								<span v-else class="mr-2 d-none d-lg-inline text-gray-600 small text-capitalize"><i class="far fa-user-circle"></i> {{ professional.name }}</span>
+									<img v-if="checkImage(professional.imagen)" class="img-profile rounded" :src="professional.imagen">
 									<img v-else src="/img/logoexcel.jpg" width="50">
 							</a>
 							<ul class="dropdown-menu">
@@ -68,7 +65,7 @@ export default {
     props:{
         idUser: String,
         rolUser: String,
-        professional: Object,
+        professional: Object, nombreUser: String
     },
 }
 </script>

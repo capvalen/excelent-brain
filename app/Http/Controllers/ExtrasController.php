@@ -616,12 +616,13 @@ class ExtrasController extends Controller
 				$pagoExtra->type = $request->input('tipo');
 				$pagoExtra->observation = 'Cancelación de deuda';
 				$pagoExtra->continuo = 3;
+				$pagoExtra->idMembresia = $request->input('idMembresia');
 				$pagoExtra->user_id = $request->input('user_id');
 				$pagoExtra->save();
 		}
 		return response()->json(['mensaje' => 'Actualizado con éxito']);		
 	}
-
+	
 	public function nuevoUsuarioBasico(Request $request){
 		$idUsuario = DB::table('users')
 		->insertGetId([
@@ -718,5 +719,8 @@ class ExtrasController extends Controller
 		->update(['fecha' => $request->get('fecha')]);
 		return response()->json(['mensaje' => 'Actualizdo con éxito']);
 	}
+
+	
+
 	
 }

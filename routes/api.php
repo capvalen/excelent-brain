@@ -173,6 +173,7 @@ Route::get('ticket/{id}', [AppointmentController::class , 'createTicket']);
 //Route::get('pdfCupon/{id}', [AppointmentController::class , 'cupon']);
 Route::get('pdfCupon/{id}', [AppointmentController::class , 'cuponMismaSerie']);
 Route::get('pdfExtraCupon/{id}', [AppointmentController::class , 'pdfExtraCupon']);
+Route::get('cuponMembresia/{id}/{monto}', [AppointmentController::class , 'cuponMembresia']);
 
 Route::get('triajePDF/{id}', [AppointmentController::class , 'pdfTriaje']);
 

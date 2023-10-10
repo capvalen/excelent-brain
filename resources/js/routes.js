@@ -374,6 +374,11 @@ export const routes = [
 				name: 'profesionalRecepcionista',
 				component: HomeRecepcionistaProfesional
 			},
+			{
+				path: '/administrador/reportes-avanzados',
+				name: 'reportesAvanzadosAdministracion',
+				component: RecepcionistaReportesAvanzados
+			},
       {
         path: '/administrador/reportes',
         name: 'HomeAdministradorRouterReportes',

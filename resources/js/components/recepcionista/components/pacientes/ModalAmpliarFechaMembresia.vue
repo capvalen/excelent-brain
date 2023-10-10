@@ -11,8 +11,7 @@
 					<input class="form-control" type="date" v-model="fechaBase" :min="fechaBase">
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
+					<button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" @click="ampliarFecha()"><i class="far fa-edit"></i> Actualizar</button>
 				</div>
 			</div>
 		</div>
@@ -20,7 +19,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+import alertify from 'alertifyjs';
 
 export default{
 	name: 'ModalAmpliarFechaMembresia',
@@ -29,10 +28,10 @@ export default{
 	props:['fechaBase', 'queCita'],
 	methods:{
 		ampliarFecha(){
-			this.axios.post('/api/ampliarFechaMembresia', { fecha:this.fechaNueva, id: this.queCita})
+			this.axios.post('/api/ampliarFechaMembresia', { fecha:this.fechaBase, id: this.queCita})
 			.then(res=>{
 				if(res.data.mensaje){
-					this.buscarMembresias();
+					this.$parent.buscarMembresias();
 					alertify.notify('<i class="fa-regular fa-calendar-check"></i> Datos actualizados ', 'success', 5)
 				}else
 				 alertify.notify('<i class="fas fa-bug"></i> Hubo un error actualizando ', 'danger', 5)

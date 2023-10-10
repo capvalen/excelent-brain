@@ -5,7 +5,7 @@
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <nav-bar 
-                v-if="currentUser.id" 
+                v-if="currentUser.id" :nombreUser = "currentUser.nombre"
                 :professional="{ 
                     name: datosUsuario 
                         ? datosUsuario.name 
@@ -21,7 +21,7 @@
                     v-if="currentUser.id"
                     :idUser="currentUser.id"
                     :rolUser="currentUser.rol"
-                    :dataUser="datosUsuario"
+                    :dataUser="datosUsuario" :nombreUser = "currentUser.nombre"
                     >
                     </router-view>
                 </div>
@@ -45,7 +45,7 @@ export default {
        return{
            currentUser:{
                id:'',
-               rol:'',
+               rol:'', nombre:''
            },
            datosUsuario: {},
            token: localStorage.getItem('token'),
@@ -90,6 +90,7 @@ export default {
 					this.currentUser.id = id.toString()
 					this.currentUser.rol = rol
 					this.currentUser.email = email
+					this.currentUser.nombre = res.data.user.nombre
 
 					window.addEventListener('popstate', e => {
 							this.routePathValidation()

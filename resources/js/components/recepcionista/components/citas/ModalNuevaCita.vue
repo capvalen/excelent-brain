@@ -168,6 +168,10 @@
 								<span title="Última atención" v-if="cita.etiqueta==''" class="badge rounded-pill text-bg-dark"><i class="fa-solid fa-asterisk"></i> Sin registro previo</span>
 								<span title="Última atención" v-if="cita.etiqueta" class="badge rounded-pill text-bg-primary"><i class="fa-solid fa-genderless"></i> {{cita.etiqueta}}</span>
 							</p>
+							<p class="mb-0" v-if="cita.membresia"><strong>Membresía activa:</strong> 
+								<span title="Última atención" class="badge rounded-pill text-bg-success"><i class="fa-solid fa-asterisk"></i> {{cita.membresia.descripcion}}</span>
+							</p>
+						
 						</div>
 						<div class="col">
 							<p class="mb-0"><strong>Fecha:</strong> {{ fechaElegida }}</p>							
@@ -560,7 +564,7 @@ export default {
 							console.error(err)
 						})
 					}
-				}else{ //encontro en la DB
+				}else{ //encontró en la DB
 					this.$swal.fire({
 						title: 'Buscando paciente',
 						timer: 10,
@@ -602,6 +606,7 @@ export default {
 					this.cita.deudas = res.data.patient.deudas;
 					this.cita.prev_status = res.data.patient.new_status;
 					this.cita.club = res.data.patient.club;
+					this.cita.membresia = res.data.membresia;
 					this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()
@@ -655,6 +660,7 @@ export default {
 			this.cita.etiqueta='';
 			this.cita.new_status=1;
 			this.cita.recomendation='';
+			this.cita.membresia = null
 			
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 
