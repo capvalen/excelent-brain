@@ -17,7 +17,7 @@ class Appointment extends Model
     public function professional() {
         return $this->belongsTo("App\Models\Professional");
     }
-    //Relacion uno a muchos inverso Schedule-Appoinment
+		//Relacion uno a muchos inverso Schedule-Appoinment
     public function schedule()
     {
         return $this->belongsTo("App\Models\Schedule");
@@ -37,5 +37,8 @@ class Appointment extends Model
     {
         return $this->hasOne("App\Models\Payment");
     }
+		public function precio(){
+			return $this->hasOne('App\Models\Precio', 'id', 'type');
+		}
    
 }

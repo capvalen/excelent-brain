@@ -199,7 +199,7 @@
 				address:{patient:{address:{}}}
 			}, posibles:[], primero:{}
 		}},
-		props:[ 'idUsuario'],
+		props:[ 'idUsuario', 'nombreUser'],
 		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio },
 		methods:{
 			dayWeek (day) {
@@ -225,14 +225,17 @@
 			},
 			async eliminar(id){
       this.$swal({
-          title: 'Quieres eliminar esta cita?',
-          showDenyButton: true,
+          title: '¿Quieres eliminar esta cita?',
+					text: 'Ingrese un motivo para eliminar la cita 1',
+					input: 'text',
+          showCancelButton: true,
           confirmButtonText: 'Si',
-          denyButtonText: `No`,
+          cancelButtonText: `No`, //denyButtonText
       }).then((result) => {
           if(result.isConfirmed){
-              this.axios.delete('/api/appointment/'+id)
+              this.axios.post('/api/eliminarCita/'+id, {razon: result.value, usuario: this.nombreUser })
               .then((res) => {
+								console.log(res.data)
                 this.$swal('Cita eliminada con exito')
               });
             this.obtenerHorarios();

@@ -5,7 +5,11 @@
         <div class="d-flex align-items-center">
         </div>
     </div>
-    <table-citas></table-citas>
+    <table-citas :nombreUser="nombreUser"></table-citas>
     </main>
 </template>
 
+<script>
+export default{
+	props:['nombreUser']
+}</script>

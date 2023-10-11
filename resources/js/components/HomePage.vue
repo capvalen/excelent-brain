@@ -21,8 +21,7 @@
                     v-if="currentUser.id"
                     :idUser="currentUser.id"
                     :rolUser="currentUser.rol"
-                    :dataUser="datosUsuario" :nombreUser = "currentUser.nombre"
-                    >
+                    :dataUser="datosUsuario" :nombreUser = "currentUser.nombre" >
                     </router-view>
                 </div>
             </div>
@@ -105,12 +104,17 @@ export default {
 			});
 
 			socket.on('update', (avisos)=>{
-				if(this.currentUser.rol=="recepcionista"){
+				avisos.forEach((aviso, index) => {
+					if(aviso.idResponsable == this.currentUser.id){
+						alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio para ${aviso.responsable}! <br> ${index+1}°. ${this.capitalizarPrimeraLetra(aviso.actividad)}</span>`, false)
+					}
+				});
+				/* if(this.currentUser.rol=="recepcionista"){
+					console.log('avisos',avisos)
 					if(avisos.length>0)
-						alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio ${avisos.length} mensaje${avisos.length>1? 's':''}! <br> 1°. ${this.capitalizarPrimeraLetra(avisos[0].actividad)}</span>`, false)
 						if(avisos[1])
-							alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio ! <br> 2°. ${this.capitalizarPrimeraLetra(avisos[1].actividad)}</span>`, false)
-				}
+							alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio! <br> 2°. ${this.capitalizarPrimeraLetra(avisos[1].actividad)}</span>`, false)
+				} */
 			});
     },
 }

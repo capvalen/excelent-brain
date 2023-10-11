@@ -64,7 +64,7 @@
 							<td class="text-capitalize">{{ resultado.name }}</td>
 							<td>{{ fechaLatam(resultado.date) }}</td>
 							<td>{{ fechaFrom(resultado.date) }}</td>
-							<td><a class="btn btn-outline-primary btn-sm" :href="'/api/pdf/'+resultado.id" target="_blank"><i class="fa-solid fa-network-wired"></i> Pasar a seguimiento</a></td>
+							<td><span @click="pasarSeguimiento(index)"><i class="fa-solid fa-network-wired"></i> Pasar a seguimiento</span></td>
 						</tr>
 						<tr v-if="resultados.length==0">
 						<td colspan="4">No hay registros</td></tr>
@@ -158,6 +158,7 @@
 							<th>N°</th>
 							<th>Fecha</th>
 							<th>Paciente</th>
+							<th>Servicio</th>
 							<th>Estado</th>
 							<th>Monto</th>
 							<th>Pagado</th>
@@ -166,8 +167,9 @@
 					<tbody>
 						<tr v-for="(cita, indice) in resultados.citas" v-if="cita.professional_id == doctor.id">
 							<td>{{ indice+1 }}</td> <!-- {{ cita.id }} -->
+							<td>{{ fechaLatam(cita.date) }} <span v-if="cita.schedule">{{ horaLatam(cita.schedule.check_time) }}</span></td>
 							<td class="text-capitalize">{{ cita.patient.name }}</td>
-							<td>{{ cita.date }} <span v-if="cita.schedule">{{ cita.schedule.check_time }}</span></td>
+							<td>{{ cita.precio.descripcion }}</td>
 							<td>
 								<span v-if="cita.status==1">Sin confirmar</span>
 								<span v-if="cita.status==2">Confirmado</span>
@@ -220,9 +222,10 @@
 							</tr>
 							<tr>
 								<th>N°</th>
-								<th>Fecha</th>
-								<th>Servicio</th>
 								<th>Paciente</th>
+								<th>Servicio</th>
+								<th>Profesional</th>
+								<th>Fecha</th>
 								<th>Estado</th>
 								<th>Monto</th>
 								<th>Pagado</th>
@@ -233,7 +236,8 @@
 								<td>{{ indice+1 }}</td> <!-- {{ cita.id }} -->
 								<td class="text-capitalize">{{ cita.patient.name }}</td>
 								<td>{{ queServicio(cita.type) }}</td>
-								<td>{{ cita.date }} {{ cita.schedule.check_time }}</td>
+								<td> {{ cita.professional.nombre }}</td>
+								<td>{{ fechaLatam(cita.date) }} {{ horaLatam(cita.schedule.check_time) }}</td>
 								<td>
 									<span v-if="cita.status==1">Sin confirmar</span>
 									<span v-if="cita.status==2">Confirmado</span>
@@ -269,7 +273,6 @@
 						</tbody>
 					</table>
 				</div>
-				
 				<table class="table table-sm table-hover" v-if="idReporte==10" >
 					<thead>
 						<tr>
@@ -285,6 +288,12 @@
 							<td>S/ <span v-if="suma[medio.id]">{{ parseFloat(suma[medio.id].monto).toFixed(2)  }}</span> <span v-else>0.00</span></td>
 						</tr>
 					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2" class="text-center fw-bold">Total</td>
+							<td>{{ parseFloat(sumaTodoMedio).toFixed(2) }}</td>
+						</tr>
+					</tfoot>
 				</table>
 				<div v-if="idReporte==10" >
 					<p>Ojo: Recuerde que los pagos fueron aplicados desde Julio 2023</p>
@@ -388,14 +397,17 @@
 				
 			</div>
 		</div>
+		<ModalSeguimiento :profesionales="profesionales" :idProfesional="7"></ModalSeguimiento>
 	</div>
 	
 </template>
 <script>
+import ModalSeguimiento from 'resources/js/components/recepcionista/components/adicionales/ModalSeguimiento.vue'
 import moment from 'moment';
 
 	export default{
 		name: 'reportesAvanzados',
+		components:{ ModalSeguimiento },
 		data(){ return{
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
 			idReporte:0, resultados:[], ocultarFechas:false,
@@ -417,7 +429,7 @@ import moment from 'moment';
 				{id: 13, nombrado: 'Comprobantes emitidos'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
-			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}
+			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}, sumaTodoMedio:0, profesionales:{id:7, name:'Recepción'}, elegido:[]
 		}},
 		methods:{
 			cargarDatos(){
@@ -438,6 +450,11 @@ import moment from 'moment';
 					if(this.idReporte==12) this.sumaEstados();
 				})
 			},
+			pasarSeguimiento(index){
+				this.elegido.name = this.resultados[index].name;
+				this.elegido.phone = this.resultados[index].phone;
+				this.elegido.motivo = '';
+			},
 			configurarVista(){
 				this.resultados=[];
 				//incluidos a ocultar: 1,2,3,4,
@@ -451,9 +468,8 @@ import moment from 'moment';
 				moment.locale('es')
 				return moment(fecha, 'YYYY-MM-DD').fromNow();
 			},
-			fechaLatam(fecha){
-				return moment(fecha).format('DD/MM/YYYY');
-			},
+			fechaLatam(fecha){ return moment(fecha).format('DD/MM/YYYY'); },
+			horaLatam(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm a') },
 			sumaProfesionales(){
 				this.suma={}
 				this.resultados.citas.forEach(cita => {
@@ -493,9 +509,11 @@ import moment from 'moment';
 			},
 			sumaMedios(){
 				this.suma={}
+				this.sumaTodo=0;
 				this.resultados.pagos.forEach(medio => {
 					const idMedio = medio.moneda;
 					const monto = parseFloat(medio.price ?? 0);
+					this.sumaTodoMedio+=monto;
 					if(!this.suma[idMedio]){
 						this.suma[idMedio] = {monto: monto, confirmado:0, pagado:0}
 					}else{

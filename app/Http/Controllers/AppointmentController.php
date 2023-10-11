@@ -802,9 +802,29 @@ class AppointmentController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(Appointment $appointment)
+	public function destroy(Request $request, Appointment $appointment )
 	{
 		$appointment->delete();
+	}
+
+	public function eliminarCita($id, Request $request){
+		//var_dump($request->all()); die();
+		try {
+			$cita = Appointment::find($id);
+		DB::table('faltas')->insert([
+			'idPaciente' => $cita->patient_id,
+			'idCita' => $cita->id,
+			'idProfesional' => $cita->professional_id,
+			'fecha' => $cita->date,
+			'idHorario' => $cita->schedule_id,
+			'observaciones' => 'Eliminado desde vista cuaderno por '. $request->get('usuario') . ' motivo '. $request->get('razon') ,
+			'esFalta' => 2
+		]); //2 para indicar que viene de eliminado
+
+		$cita->delete();
+		} catch (\Throwable $th) {
+			echo $th;
+		}
 	}
 
 	/**

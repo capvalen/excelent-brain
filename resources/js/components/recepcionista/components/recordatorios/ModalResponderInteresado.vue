@@ -5,7 +5,7 @@
 			<div class="modal-content">
 				<div class="modal-header border-0 pb-0">
 					<h5 class="modal-title " id="exampleModalLabel">Respuesta del interesado</h5>
-					<button type="button" id="closeModal" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+					<button type="button" id="closeModal" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<label for="">Opciones</label>
@@ -45,8 +45,8 @@
 				await axios.post('/api/respuestaInteresado', datos)
 				.then(texto=>{
 					this.$parent.cargarDatos('interesados');
+					this.cerrarModal()
 					if(texto.data.mensaje){
-						this.cerrarModal()
 						this.$swal(texto.data.mensaje);
 					}else{
 						this.$swal({icon:'error',title: 'Hubo un error interno'});
@@ -54,7 +54,7 @@
 				})
 			},
 			cerrarModal(){
-				document.querySelector("#editarAviso #closeModal").click()
+				document.querySelector("#modalResponderInteresado #closeModal").click()
 			}
 		},
 		watch:{

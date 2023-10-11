@@ -17,12 +17,12 @@ class ExtrasController extends Controller
 {
 	//
 	public function nuevoAviso(Request $request){
-		DB::insert("INSERT INTO `recordatorios`(`fecha`, `actividad`, `responsable`, `creador`, `actualizador`, `tipo`) VALUES 
+		DB::insert("INSERT INTO `recordatorios`(`fecha`, `actividad`, `responsable`, `creador`, `actualizador`, `tipo`, `idResponsable`) VALUES 
 		(?,?,?,?,?,
-		?)",
+		?, ?)",
 		[
 			$request->input('fecha'), $request->input('actividad'), $request->input('responsable'), $request->input('creador'), $request->input('creador'),
-			$request->input('tipo')
+			$request->input('tipo'), $request->input('idResponsable')
 		]);
 		$ultimoID = DB::getPdo()->lastInsertId();
 		return response()->json([
@@ -97,36 +97,34 @@ class ExtrasController extends Controller
 			'mensaje' => $ultimoID
 		]);
 	}
-	public function listarInteresados($fecha){
-		try {
-			
-			if( $fecha== Carbon::now()->format('Y-m-d') ){
-				$interesados = DB::table('interesados as i')
-				->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
-				->join('users as u', 'i.idUsuario', '=', 'u.id')
-				->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
-				->where('i.activo', '=', '1')
-				->orderBy('atendido', 'asc')
-				->orderBy('fecha', 'asc')
-				->get();
-			}else{
-				$interesados = DB::table('interesados as i')
+
+	public function listarInteresados($fecha = null){
+		if($fecha == null) Carbon::now()->format('Y-m-d');
+		
+		$todos = DB::table('interesados as i')
 			->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
 			->join('users as u', 'i.idUsuario', '=', 'u.id')
 			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
-			->where('i.activo', '=', '1')
 			->whereDate('fecha', '=', $fecha)
+			->where('i.atendido', '!=', 0)
+			->where('i.activo', 1)
 			->orderBy('atendido', 'asc')
 			->orderBy('fecha', 'asc')
 			->get();
-			}
+
+		$interesados = DB::table('interesados as i')
+			->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
+			->join('users as u', 'i.idUsuario', '=', 'u.id')
+			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
+			->where('i.atendido', 0)
+			->where('i.activo', 1)
+			->orderBy('atendido', 'asc')
+			->orderBy('fecha', 'asc')
+			->get();
 		
-		return response()->json([ 'interesados'=> $interesados]);
-		} catch (\Throwable $th) {
-			echo $th;
-		}
-		
+		return response()->json([ 'anteriores'=> $todos, 'interesados' => $interesados ]);
 	}
+
 	public function borrarInteresados($id){
 		$resultado = DB::table('interesados')->where('id', '=', $id)
 		->update([
@@ -231,6 +229,7 @@ class ExtrasController extends Controller
 					->with('payment')
 					->with('schedule')
 					->with('patient')
+					->with('precio')
 					->whereYear('date', $request->get('año'))
 					->whereMonth('date', $request->get('mes') )
 					->where('status', 2) //confirmado
@@ -242,13 +241,13 @@ class ExtrasController extends Controller
 					echo $th;
 				}
 			case '7':
-				try {
-					$servicios = DB::table('precios')->where('servicio', 1)->get();
+				$servicios = DB::table('precios')->where('servicio', 1)->get();
 				$citas = collect();
 				foreach($servicios as $servicio){
 					$cita = Appointment::where('type', $servicio->id)
 					->with('payment')
 					->with('schedule')
+					->with('professional')
 					->with('patient')
 					->whereYear('date', $request->get('año'))
 					->whereMonth('date', $request->get('mes') )
@@ -257,9 +256,6 @@ class ExtrasController extends Controller
 					$citas = $citas->merge($cita);
 				}
 				return response()->json(['servicios'=>$servicios, 'citas'=>$citas ]);
-				} catch (\Throwable $th) {
-					echo $th;
-				}
 				break;
 			case '8':
 				$citas = Appointment::where('patient_condition', 1)

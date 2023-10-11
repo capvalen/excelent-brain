@@ -66,6 +66,7 @@ Route::get('kairoDelete/{id}', [PrescriptionController::class, 'kairoDelete']);
 
 
 Route::resource('appointment', AppointmentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
+Route::post('eliminarCita/{id}', [AppointmentController::class, 'eliminarCita']);
 Route::put('pagarCita/{id}', [AppointmentController::class, 'pagarCita']);
 Route::get('appointmentKurame/{id}', [AppointmentController::class, 'showKurame']);
 Route::get('appoitmentShow/{idUser}/{idDate}', [AppointmentController::class, 'showConsult']);

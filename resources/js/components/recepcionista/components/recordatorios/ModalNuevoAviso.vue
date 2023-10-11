@@ -19,7 +19,9 @@
 					<label for="">Actividad</label>
 					<input type="text" class="form-control" id="fechaHora" v-model="aviso.actividad" autocomplete="off">
 					<label for="">Responsable</label>
-					<input type="text" class="form-control" v-model="aviso.responsable" >
+					<select class="form-select" id="sltUsuarios" v-model="aviso.idResponsable">
+						<option v-for="usuario in usuarios" :value="usuario.id">{{ usuario.nombre =='' ? '-': usuario.nombre }}</option>
+					</select>
 				</div>
 				<div class="modal-footer border-0">
 					<button type="button" class="btn btn-primary" @click="guardar()">Guardar</button>
@@ -40,20 +42,31 @@
 			return{
 				aviso:{
 					fecha: moment().format('YYYY-MM-DD[T]HH:mm'),
-					actividad:'', responsable:'', tipo:1
-				}
+					actividad:'', responsable:'', tipo:1, idResponsable:-1,
+				}, usuarios:[]
 			}
 		},
+		mounted(){
+			this.cargarUsuarios();
+		},
 		methods:{
+			cargarUsuarios(){
+				this.axios('/api/cargarUsuarios')
+				.then(res => this.usuarios = res.data )
+			},
 			guardar(){
 				if(this.aviso.fecha==''){alertify.notify('La fecha debe ser rellenada correctamente', 'danger', 10);}
 				else if(this.aviso.actividad==''){alertify.notify('La actividad no puede estar vacío', 'danger', 10);}
-				else if(this.aviso.responsable==''){alertify.notify('Debe haber un responsable', 'danger', 10);}
+				else if(this.aviso.idResponsable=='' || this.aviso.idResponsable==-1 ){alertify.notify('Debe haber un responsable', 'danger', 10);}
 				else{
+					const select = document.getElementById("sltUsuarios");
+					const selectedOption = select.options[select.selectedIndex];
+					this.aviso.responsable = selectedOption.textContent;
 					let datos = new FormData();
 					datos.append('fecha', this.aviso.fecha)
 					datos.append('actividad', this.aviso.actividad)
 					datos.append('responsable', this.aviso.responsable)
+					datos.append('idResponsable', this.aviso.idResponsable)
 					datos.append('creador', this.usuario )
 					datos.append('tipo', this.aviso.tipo )
 					fetch('/api/nuevoAviso',{

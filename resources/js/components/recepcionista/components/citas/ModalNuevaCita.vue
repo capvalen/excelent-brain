@@ -461,6 +461,7 @@ export default {
 				.then(response => { //Trabaja en api -> modelo>store()
 					console.log(response.data)
 					this.closeModal();
+					this.cita.membresia=''
 					this.$emit('actualizarListadoCitas', true)
 					//console.log(response.data.cita.id)
 					this.$swal('Cita inserdata con éxito')
@@ -677,7 +678,6 @@ export default {
 			this.tieneAdelanto=false; this.tieneDescuento=false; this.tieneRebaja=false;
 			this.descuentoRebaja=0; this.razonPorcentaje=''; this.razonRebaja=''
 		},
-
 		dynamicPrice () {
 			if (document.getElementById('clasification').value &&
 				document.getElementById('type').value &&

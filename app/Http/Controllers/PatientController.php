@@ -521,6 +521,7 @@ class PatientController extends Controller
 			->join('professionals as p', 'p.id', '=', 'f.idProfesional')
 			->join('schedules as s', 's.id', '=', 'f.idHorario')
 			->where('f.idPaciente', $id)
+			->where('esFalta', 1)
 			->select('f.*', 'p.name', 's.check_time as hora' )->get();
 
 			return response()->json($faltas);

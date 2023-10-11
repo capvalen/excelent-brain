@@ -26,7 +26,10 @@ const io = new Server(server, options);
 async function busquedaApi (){
 	const response = await fetch('http://127.0.0.1:8000/api/listarAvisosAhora/'+hoy);
 	const result = await response.json();
-	if(result.avisos.length>=0) {console.log('Mensajes para enviar hay', result.avisos.length, 'a las', moment().format('HH:mm:ss a') ); io.emit('update', result.avisos);}
+	if(result.avisos.length>=0) {
+		console.log('Mensajes para enviar hay', result.avisos.length, 'a las', moment().format('HH:mm:ss a') );
+		io.emit('update', result.avisos);
+	}
 	else console.log('No hay eventos en el bloque de 5 minutos a las', moment().format('HH:mm:ss a'));
 }
 
