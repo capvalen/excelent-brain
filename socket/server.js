@@ -6,8 +6,8 @@ import moment from 'moment'
 
 const options = {
 	cors: true,
-	origin: ['http://localhost:3001']
-	//origin: ['http://192.168.0.134:3001']
+	//origin: ['http://localhost:3001']
+	origin: ['http://192.168.0.134:3001']
 	
 }
 
@@ -26,8 +26,8 @@ const io = new Server(server, options);
 
 
 async function busquedaApi (){
-	//const response = await fetch('http://192.168.0.134:8000/api/listarAvisosAhora/'+hoy);
-	const response = await fetch('http://127.0.0.1:8000/api/listarAvisosAhora/'+hoy);
+	const response = await fetch('http://192.168.0.134:8000/api/listarAvisosAhora/'+hoy);
+	//const response = await fetch('http://127.0.0.1:8000/api/listarAvisosAhora/'+hoy);
 	const result = await response.json();
 	if(result.avisos.length>=0) {
 		console.log('Mensajes para enviar hay', result.avisos.length, 'a las', moment().format('HH:mm:ss a') );
