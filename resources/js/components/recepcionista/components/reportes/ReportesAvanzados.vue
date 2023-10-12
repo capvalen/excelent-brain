@@ -64,7 +64,7 @@
 							<td class="text-capitalize">{{ resultado.name }}</td>
 							<td>{{ fechaLatam(resultado.date) }}</td>
 							<td>{{ fechaFrom(resultado.date) }}</td>
-							<td><span @click="pasarSeguimiento(index)"><i class="fa-solid fa-network-wired"></i> Pasar a seguimiento</span></td>
+							<td><button class="btn btn-sm btn-primary" @click="pasarSeguimiento(index)" data-bs-toggle="modal" data-bs-target="#modalSeguimiento"><span><i class="fa-solid fa-network-wired"></i> Pasar a seguimiento</span></button></td>
 						</tr>
 						<tr v-if="resultados.length==0">
 						<td colspan="4">No hay registros</td></tr>
@@ -215,7 +215,7 @@
 				</div>
 				<div v-if="idReporte==7" >
 					<p>Ojo: Recuerde que la nueva lista de servicios se aplicó a partir de Julio 2023</p>
-					<table class="table table-sm table-hover" v-for="servicio in resultados.servicios">
+					<table class="table table-sm table-hover" v-for="servicio in resultados.servicios" >
 						<thead>
 							<tr>
 								<th colspan="4">{{ servicio.descripcion }}</th>
@@ -397,12 +397,12 @@
 				
 			</div>
 		</div>
-		<ModalSeguimiento :profesionales="profesionales" :idProfesional="7"></ModalSeguimiento>
+		<ModalSeguimiento :profesionales="profesionales" :idProfesional="7" :elegido="elegido"></ModalSeguimiento>
 	</div>
 	
 </template>
 <script>
-import ModalSeguimiento from 'resources/js/components/recepcionista/components/adicionales/ModalSeguimiento.vue'
+import ModalSeguimiento from "../../../recepcionista/components/adicionales/ModalSeguimiento.vue"
 import moment from 'moment';
 
 	export default{
@@ -427,9 +427,10 @@ import moment from 'moment';
 				{id: 11, nombrado: 'Atenciones (Psicológicas y Psiquiátricas) recaudadas'},
 				{id: 12, nombrado: 'Seguimiento de Pacientes'},
 				{id: 13, nombrado: 'Comprobantes emitidos'},
+				{id: 14, nombrado: 'Atenciones por citas'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
-			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}, sumaTodoMedio:0, profesionales:{id:7, name:'Recepción'}, elegido:[]
+			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}, sumaTodoMedio:0, profesionales:[{id:7, name:'Recepción'}], elegido:{name:'', phone:'', motivo:''}
 		}},
 		methods:{
 			cargarDatos(){

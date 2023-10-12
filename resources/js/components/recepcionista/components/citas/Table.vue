@@ -34,6 +34,9 @@
 									@change="searchByDate"
 									>
 							</div>
+							<div>
+								<button class="btn btn-outline-success" @click="searchByDate()" title="Actualizar la lista"><i class="fas fa-sync-alt"></i></button>
+							</div>
 							
 							<!-- <div class="d-flex justify-content-start" style="flex-shrink: 0;">
 									<button data-bs-toggle="modal" data-bs-target="#addCitaModal" class="btn btn-outline-success"><i class="fas fa-plus"></i> Crear nueva Cita</button>
@@ -399,8 +402,8 @@ export default {
 
     async searchByDate(e){
 
-      this.$swal({title: 'Actualizando citas con fecha: '+e.target.value,})
-      await this.axios.get(`/api/searchByDateAppointment/${e.target.value}`)
+      this.$swal({title: 'Actualizando citas con fecha: '+ this.fechaSinImportancia })
+      await this.axios.get(`/api/searchByDateAppointment/${this.fechaSinImportancia}`)
       .then(res => {
         this.citas = res.data;
         this.$swal.close()

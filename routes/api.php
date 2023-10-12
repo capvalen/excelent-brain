@@ -154,6 +154,7 @@ Route::get('cargarLineas/{id}', [ExtrasController::class, 'cargarLineas']);
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);
 Route::post('insertarSeguimiento', [ExtrasController::class,'insertarSeguimiento']);
+Route::get('pedirHistorialSeguimientos/{id}', [ExtrasController::class,'pedirHistorialSeguimientos']);
 
 
 

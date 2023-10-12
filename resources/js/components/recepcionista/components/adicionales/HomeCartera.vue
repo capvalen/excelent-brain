@@ -102,7 +102,7 @@
 			</div>
 		</div>
 	</div>
-	<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="idGlobal" @cambiar="cambiarItem"></ModalCambiarSeguimiento>
+	<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="idGlobal" @cambiar="cambiarItem" @borrarIDSeguimiento="idGlobal=-1"></ModalCambiarSeguimiento>
 	<ModalSeguimiento :profesionales="profesionales" :elegido="elegido" :idProfesional="filtro.idProfesional"></ModalSeguimiento>
 
 	</div>

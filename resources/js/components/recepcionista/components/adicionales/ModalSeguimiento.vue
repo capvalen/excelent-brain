@@ -7,14 +7,14 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<p class="mb-0">Ingrese un motivo para realizar el seguimiento.</p>
+					<p class="mb-0">Seguimiento a <strong>{{ elegido.name }}</strong></p>
+					<p class="mb-0">Ingrese un motivo:</p>
 					<input class="form-control" v-model="seguimiento.motivo" type="text" autocomplete="off">
 					<p class="mt-2 mb-0">Seleccione un profesional asignado al caso</p>
 					<select class="text-capitalize form-select" v-model="seguimiento.idProfesional" id="">
 						<option value="1">Ninguno</option>
 						<option class="text-capitalize" v-for="profesional in profesionales" :value="profesional.id">{{ profesional.name }}</option>
 					</select>
-					
 				</div>
 				<div class="modal-footer border-0">
 					<button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="guardar()" ><i class="far fa-paper-plane"></i> Enviar a seguimiento</button>
@@ -29,7 +29,7 @@ export default{
 	name: 'modalSeguimiento',
 	props:[ 'profesionales', 'idProfesional', 'elegido' ],
 	data(){ return{
-		seguimiento:{motivo:'', idProfesional:1}
+		seguimiento:{motivo:'', idProfesional: this.idProfesional}
 	}},
 	watch:{
 		idProfesional(){
@@ -47,6 +47,7 @@ export default{
 					datos.append('correo', '')
 					datos.append('referencia', 7)
 					datos.append('idProfesional', this.seguimiento.idProfesional)
+					datos.append('idSeguimiento', this.elegido.seguimiento ?? 1)
 					datos.append('origen', 2)
 					fetch('/api/nuevoInteresado',{
 						method:'POST', body:datos

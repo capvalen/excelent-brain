@@ -85,12 +85,12 @@ class ExtrasController extends Controller
 	}
 	public function nuevoInteresado(Request $request){
 		DB::insert("INSERT INTO `interesados`(`nombre`, `celular`, `motivo`, `referencia`, `correo`, 
-		`idProfesional`, `origen`, `idUsuario`) VALUES 
+		`idProfesional`, `origen`, `idUsuario`, `idSeguimiento`) VALUES 
 		(?,?,?,?,?,
-		?,?, 1)",
+		?,?, 1, ?)",
 		[
 			$request->input('nombre'), $request->input('celular'), $request->input('motivo'), $request->input('referencia'), $request->input('correo'),
-			$request->input('idProfesional'), $request->input('origen')
+			$request->input('idProfesional'), $request->input('origen'), $request->input('idSeguimiento')
 		]);
 		$ultimoID = DB::getPdo()->lastInsertId();
 		return response()->json([
@@ -490,6 +490,16 @@ class ExtrasController extends Controller
 		return response()->json($recommendations);
 	}
 
+	public function pedirHistorialSeguimientos($id){
+		$seguimientos = DB::table('pacient_seguimiento as p')
+		->join('seguimientos as s', 's.id', '=', 'p.idSeguimiento')
+		->where('p.patient_id', $id)
+		->where('p.activo', 1)
+		->orderBy('registro', 'desc')
+		->get();
+		return response()->json($seguimientos);
+	}
+
 	public function buscarCartera(Request $request){
 		
 		
@@ -554,7 +564,8 @@ class ExtrasController extends Controller
 			$idSeguimiento = DB::table('pacient_seguimiento')->insertGetId([
 				'patient_id' => $request->get('patient_id'),
 				'user_id' => $request->get('idUsuario'),
-				'idSeguimiento' => $request->get('idSeguimiento')
+				'idSeguimiento' => $request->get('idSeguimiento'),
+				'observaciones' => $request->get('motivo')
 			]);
 			return $idSeguimiento;
 	}
