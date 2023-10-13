@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Extra_payment;
+use App\Models\Faltas;
 use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\Professional;
+use App\Models\Reschedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -104,7 +106,8 @@ class ExtrasController extends Controller
 		$todos = DB::table('interesados as i')
 			->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
 			->join('users as u', 'i.idUsuario', '=', 'u.id')
-			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
+			->join('seguimientos as s', 's.id', '=', 'i.idSeguimiento')
+			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre', 's.seguimiento as nomSeguimiento', 's.color')
 			->whereDate('fecha', '=', $fecha)
 			->where('i.atendido', '!=', 0)
 			->where('i.activo', 1)
@@ -115,7 +118,8 @@ class ExtrasController extends Controller
 		$interesados = DB::table('interesados as i')
 			->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
 			->join('users as u', 'i.idUsuario', '=', 'u.id')
-			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre')
+			->join('seguimientos as s', 's.id', '=', 'i.idSeguimiento')
+			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre', 's.seguimiento as nomSeguimiento', 's.color')
 			->where('i.atendido', 0)
 			->where('i.activo', 1)
 			->orderBy('atendido', 'asc')
@@ -189,8 +193,10 @@ class ExtrasController extends Controller
 			case '1':
 				DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
 
-				$results = DB::select( DB::raw("SELECT MAX(ap.date) as fechaMax, ap.*, p.* FROM `appointments` ap
+				$results = DB::select( DB::raw("SELECT MAX(ap.date) as fechaMax, ap.*, p.*, pre.descripcion as nomServicio, pre.idClasificacion
+				FROM `appointments` ap
 				inner join patients p on p.id = ap.patient_id
+				inner join precios pre on pre.id = ap.type
 				where status not like 3 and datediff(now(), date) between 7 and 90
 				and p.discharge = 0 and 
 				date = (SELECT MAX(date) from appointments apo where apo.patient_id = ap.patient_id GROUP BY apo.patient_id )
@@ -328,13 +334,19 @@ class ExtrasController extends Controller
 				
 				break;
 			case '12':
-				
-				$seguimientos = DB::table('pacient_seguimiento as ps')->where('ps.activo', 1)
+				if($request->get('mes')=='-1'){
+					$seguimientos = DB::table('pacient_seguimiento as ps')->where('ps.activo', 1)
+					->join('patients as p', 'p.id', '=', 'ps.patient_id')
+					->whereYear('ps.registro', $request->get('año'))
+					->get();
+				}else{
+					$seguimientos = DB::table('pacient_seguimiento as ps')->where('ps.activo', 1)
 					->join('patients as p', 'p.id', '=', 'ps.patient_id')
 					->whereYear('ps.registro', $request->get('año'))
 					->whereMonth('ps.registro', $request->get('mes') )
 					->get();
-					$estados = DB::table('seguimientos')->where('id','<>', 1)->orderBy('seguimiento', 'asc')->get();
+				}
+				$estados = DB::table('seguimientos')->where('id','<>', 1)->orderBy('seguimiento', 'asc')->get();
 				return response()->json(['seguimientos'=>$seguimientos, 'estados'=>$estados]);
 			case '13':
 				$pagos = DB::table('extra_payments')
@@ -346,6 +358,41 @@ class ExtrasController extends Controller
 				->get();
 
 				return response()->json(['pagos'=>$pagos]);
+				break;
+			case '14':
+				$reprogramados = Reschedule::whereYear('created_at', $request->get('año') )
+				->whereMonth('created_at', $request->get('mes') )
+				->with('appointment')
+				->with('appointment.professional')
+				->with('appointment.patient')
+				->with('appointment.precio')
+				->with('appointment.schedule')
+				->get();
+				return $reprogramados;
+				break;
+			case '15':
+				$reprogramados = Faltas::whereYear('fecha', $request->get('año') )
+				->whereMonth('fecha', $request->get('mes') )
+				->where('esFalta', 1)
+				->where('idCita', '!=', 0)
+				->with('appointment')
+				->with('appointment.professional')
+				->with('appointment.patient')
+				->with('appointment.precio')
+				->with('appointment.schedule')
+				->get();
+				return $reprogramados;
+				break;
+			case '16':
+				$citas = Appointment::where('status', 2)
+				->whereYear('date', $request->get('año') )
+				->whereMonth('date', $request->get('mes') )
+				->with('patient')
+				->with('precio')
+				->with('schedule')
+				->with('professional')
+				->get();
+				return $citas;
 				break;
 			default:
 				# code...

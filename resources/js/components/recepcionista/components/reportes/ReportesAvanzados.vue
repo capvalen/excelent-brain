@@ -19,6 +19,7 @@
 					<div class="col-12 col-md-3" v-show="!ocultarFechas">
 						<label for="">Mes</label>
 						<select class="form-select text-capitalize" v-model="fecha.mes">
+							<option v-if="filtroAnual" value="-1" class="text-capitalize">Todo el año</option>
 							<option class="text-capitalize" v-for="(mes, index) in meses" :value="index+1">{{ mes }}</option>
 						</select>
 					</div>
@@ -50,26 +51,45 @@
 						<td colspan="4">No hay registros</td></tr>
 					</tbody>
 				</table>
-				<table class="table table-sm table-hover" v-if="idReporte==1">
-					<thead>
-						<th>N°</th>
-						<th>Paciente</th>
-						<th>Última cita</th>
-						<th>Diferencia</th>
-						<th>@</th>
-					</thead>
-					<tbody>
-						<tr v-for="(resultado, index) in resultados">
-							<td>{{ index+1 }}</td>
-							<td class="text-capitalize">{{ resultado.name }}</td>
-							<td>{{ fechaLatam(resultado.date) }}</td>
-							<td>{{ fechaFrom(resultado.date) }}</td>
-							<td><button class="btn btn-sm btn-primary" @click="pasarSeguimiento(index)" data-bs-toggle="modal" data-bs-target="#modalSeguimiento"><span><i class="fa-solid fa-network-wired"></i> Pasar a seguimiento</span></button></td>
-						</tr>
-						<tr v-if="resultados.length==0">
-						<td colspan="4">No hay registros</td></tr>
-					</tbody>
-				</table>
+				<div v-if="idReporte==1">
+					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked @click="filtro=-1">
+						<label class="btn btn-outline-primary" for="btnradio1">Todos</label>
+
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" @click="filtro=1">
+						<label class="btn btn-outline-primary" for="btnradio2">Psiquiatría</label>
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" @click="filtro=2">
+						<label class="btn btn-outline-primary" for="btnradio3">Psicología</label>
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" @click="filtro=4">
+						<label class="btn btn-outline-primary" for="btnradio4">Kurame</label>
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" @click="filtro=5">
+						<label class="btn btn-outline-primary" for="btnradio5">Membresía</label>
+					</div>
+					<table class="table table-sm table-hover">
+						<thead>
+							<th>N°</th>
+							<th>Paciente</th>
+							<th>Grupo</th>
+							<th>Servicio</th>
+							<th>Última cita</th>
+							<th>Diferencia</th>
+							<th>@</th>
+						</thead>
+						<tbody>
+							<tr v-for="(resultado, index) in resultados" v-show="filtro==-1 || filtro ==resultado.idClasificacion ">
+								<td>{{ index+1 }}</td>
+								<td class="text-capitalize">{{ resultado.name.toLowerCase() }}</td>
+								<td>{{ equipo[resultado.idClasificacion-1] }}</td>
+								<td>{{ resultado.nomServicio }}</td>
+								<td>{{ fechaLatam(resultado.date) }}</td>
+								<td>{{ fechaFrom(resultado.date) }}</td>
+								<td><button class="btn btn-sm btn-outline-primary" @click="pasarSeguimiento(index)" data-bs-toggle="modal" data-bs-target="#modalSeguimiento"><span><i class="fa-solid fa-network-wired"></i> Pasar a seguimiento</span></button></td>
+							</tr>
+							<tr v-if="resultados.length==0">
+							<td colspan="4">No hay registros</td></tr>
+						</tbody>
+					</table>
+				</div>
 				<table class="table table-sm table-hover" v-if="idReporte==2">
 					<thead>
 						<tr>
@@ -394,6 +414,51 @@
 						</tr>
 					</tbody>
 				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==14 || idReporte==15">
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Fecha de cita</th>
+							<th>Cliente</th>
+							<th>Profesional</th>
+							<th>Servicio</th>
+							<th>Registrado</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr v-for="(cita, index) in resultados">
+							<td>{{index+1}}</td>
+							<td>{{ fechaLatam(cita.created_at) }} {{ horaLatam(cita.appointment.schedule.check_time) }}</td>
+							<td class="text-capitalize">{{ cita.appointment.patient.name.toLowerCase() }}</td>
+							<td>{{ cita.appointment.professional.name }}</td>
+							<td>{{ cita.appointment.precio.descripcion }}</td>
+							<td>{{ fechaLatam(cita.fecha ? cita.fecha: cita.created_at ) }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==16">
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Fecha de cita</th>
+							<th>Cliente</th>
+							<th>Profesional</th>
+							<th>Servicio</th>
+							<th>Registrado</th>
+						</tr>
+					</thead>
+					<tbody >
+						<tr v-for="(cita, index) in resultados">
+							<td>{{index+1}}</td>
+							<td>{{ fechaLatam(cita.created_at) }} {{ horaLatam(cita.schedule.check_time) }}</td>
+							<td class="text-capitalize">{{ cita.patient.name.toLowerCase() }}</td>
+							<td>{{ cita.professional.name }}</td>
+							<td>{{ cita.precio.descripcion }}</td>
+							<td>{{ fechaLatam(cita.date) }}</td>
+						</tr>
+					</tbody>
+				</table>
+				
 				
 			</div>
 		</div>
@@ -427,10 +492,13 @@ import moment from 'moment';
 				{id: 11, nombrado: 'Atenciones (Psicológicas y Psiquiátricas) recaudadas'},
 				{id: 12, nombrado: 'Seguimiento de Pacientes'},
 				{id: 13, nombrado: 'Comprobantes emitidos'},
-				{id: 14, nombrado: 'Atenciones por citas'},
+				{id: 14, nombrado: 'Citas reprogramadas'},
+				{id: 15, nombrado: 'Citas anuladas con faltas'},
+				{id: 16, nombrado: 'Citas confirmadas'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
-			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}, sumaTodoMedio:0, profesionales:[{id:7, name:'Recepción'}], elegido:{name:'', phone:'', motivo:''}
+			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}, sumaTodoMedio:0, profesionales:[{id:7, name:'Recepción'}], elegido:{name:'', phone:'', motivo:''}, filtroAnual:false, filtro:-1,
+			equipo:['Psicología', 'Psiquiatría', 'Certificado', 'Kurame', 'Membresía']
 		}},
 		methods:{
 			cargarDatos(){
@@ -460,8 +528,9 @@ import moment from 'moment';
 				this.resultados=[];
 				//incluidos a ocultar: 1,2,3,4,
 				this.ocultarFechas=true;
+				this.filtroAnual = this.idReporte==12 ? true : false;
 				switch(this.idReporte){
-					case 0: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13:
+					case 0: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16:
 						this.ocultarFechas=false;
 				}
 			},

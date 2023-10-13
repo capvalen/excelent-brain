@@ -12,6 +12,6 @@ class Reschedule extends Model
     //Relacion uno a uno Appointment_reschedule
     public function appointment()
     {
-        return $this->hasOne("App\Models\Appointmet");
+        return $this->belongsTo("App\Models\Appointment");
     }
 }

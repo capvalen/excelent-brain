@@ -232,9 +232,11 @@
 									</td>
 									<td>{{ fechaLatam(interesado.fecha) }} {{ horaLatam(interesado.fecha) }}</td>
 									<td>
-										<span class="text-muted" v-if="interesado.atendido=='0'"><span title="Recién creado"><i class="far fa-circle"></i></span></span>
+										<span v-if="interesado.idSeguimiento==1" :class="interesado.color" ><span :title="interesado.nomSeguimiento"><i class="fa-regular fa-circle"></i></span></span>
+										<span v-else :class="interesado.color" ><span :title="interesado.nomSeguimiento"><i class="fas fa-circle"></i></span></span>
+										<!-- <span class="text-muted" v-if="interesado.atendido=='0'"><span title="Recién creado"><i class="far fa-circle"></i></span></span>
 										<span class="text-success" v-if="interesado.atendido=='1'"><span title="Cliente respondió"><i class="fas fa-check"></i></span></span>
-										<span class="text-danger" v-if="interesado.atendido=='2'"><span title="Cliente no respondió"><i class="far fa-times-circle"></i></span></span>
+										<span class="text-danger" v-if="interesado.atendido=='2'"><span title="Cliente no respondió"><i class="far fa-times-circle"></i></span></span> -->
 									</td>
 									<td>
 										<button class="btn btn-outline-primary btn-sm " v-if="interesado.atendido=='0'" @click="responderInteresado(interesado, index)" data-bs-target="#modalResponderInteresado" data-bs-toggle="modal"><i class="far fa-comment-dots"></i></button>
@@ -306,9 +308,8 @@
 									</td>
 									<td>{{ fechaLatam(interesado.fecha) }} {{ horaLatam(interesado.fecha) }}</td>
 									<td>
-										<span class="text-muted" v-if="interesado.atendido=='0'"><span title="Recién creado"><i class="far fa-circle"></i></span></span>
-										<span class="text-success" v-if="interesado.atendido=='1'"><span title="Cliente respondió"><i class="fas fa-check"></i></span></span>
-										<span class="text-danger" v-if="interesado.atendido=='2'"><span title="Cliente no respondió"><i class="far fa-times-circle"></i></span></span>
+										<span v-if="interesado.idSeguimiento==1" :class="interesado.color" ><span :title="interesado.nomSeguimiento"><i class="fa-regular fa-circle"></i></span></span>
+										<span v-else :class="interesado.color" ><span :title="interesado.nomSeguimiento"><i class="fas fa-circle"></i></span></span>
 									</td>
 									<td>
 										<button class="btn btn-outline-primary btn-sm " v-if="interesado.atendido=='0'" @click="responderInteresado(interesado, index)" data-bs-target="#modalResponderInteresado" data-bs-toggle="modal"><i class="far fa-comment-dots"></i></button>
@@ -495,4 +496,7 @@ export default {
 	border-top-left-radius: 5px!important;
 	border-bottom-left-radius: 6px!important;
 }
+.puntero{ cursor: pointer; }
+.text-amarillo{ color: yellow}
+
 </style>
