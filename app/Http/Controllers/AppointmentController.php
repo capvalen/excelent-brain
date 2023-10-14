@@ -414,11 +414,21 @@ class AppointmentController extends Controller
 	public function searchAppointment ($nombre, $profesional, $fecha, $dni)
 	{
 		$queryAppointments = [];
-		$appointments = Appointment::with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
+
+		$appointments =Appointment::
+		join('patients as p', 'p.id', '=', 'appointments.patient_id')
+		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
+		->where('p.name', 'like', '%'.$nombre.'%')
+		->orWhere('p.dni', $dni)
 		->get();
+		
+
+		return $appointments; die();
+		
+
 
 		foreach($appointments as $appointment) {
-			if (preg_match("/$nombre/i", $appointment->patient->name)) {
+			/* if (preg_match("/$nombre/i", $appointment->patient->name)) {
 				// --- Si existen los parametros
 				// ---- Si existe la variable professional
 				if ($profesional && preg_match("/$profesional/i", $appointment->professional->name)) {
@@ -436,7 +446,7 @@ class AppointmentController extends Controller
 				if ($profesional == 'null' && $fecha == 'null') {
 					array_push($queryAppointments, $appointment);
 				}
-			}
+			} */
 			//comparar si el DNI coincide
 			if( preg_match("/$dni/", $appointment->patient->dni ) ){
 				array_push($queryAppointments, $appointment);

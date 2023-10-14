@@ -280,7 +280,7 @@
 									<label class="mb-0 mt-2" for="">Adelanto en S/:</label>
 									<input type="number" min="0" step="1" class="form-control" v-model="descuentoAdelanto" @keyup="precioDinamico()">
 									<label for="">Descripción adicional</label>
-									<input type="text" class="form-control my-2" placeholder="Ingresa una razón para la rebaja" v-model="razonAdelanto">
+									<input type="text" class="form-control my-2" placeholder="Ingresa la fecha del adelanto" v-model="razonAdelanto">
 								</div>
 							</div>
 						</div>
