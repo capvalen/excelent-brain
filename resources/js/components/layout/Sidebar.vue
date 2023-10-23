@@ -38,7 +38,19 @@
 						<div class="sidebar-heading">
 								Secciones
 						</div>
-
+						<!-- Nav Item - Dashboard -->
+						<li class="nav-item nav__list" @click="activeSidebar()">
+								<router-link  to="/administrador/admistracion-profesionales" class="nav-link">
+										<i class="fas fa-home"></i>
+										<span>Admin. Profesionales</span>
+								</router-link>
+						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
+							<router-link  to="/administrador/precios-servicios" class="nav-link">
+								<i class="fas fa-money-bill-wave-alt"></i>
+									<span>Precios de servicios</span>
+							</router-link>
+						</li>
 						<!-- Nav Item - Dashboard -->
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link to="/administrador/reportes/total" class="nav-link">
@@ -50,13 +62,6 @@
 								<router-link to="/administrador/reportes-avanzados" class="nav-link">
 										<i class="fas fa-home"></i>
 										<span>Reportes Complementarios</span>
-								</router-link>
-						</li>
-						<!-- Nav Item - Dashboard -->
-						<li class="nav-item nav__list" @click="activeSidebar()">
-								<router-link  to="/administrador/admistracion-profesionales" class="nav-link">
-										<i class="fas fa-home"></i>
-										<span>Admin. Profesionales</span>
 								</router-link>
 						</li>
 						<li class="nav-item nav__list" @click="activeSidebar()">

@@ -237,6 +237,7 @@ class AppointmentController extends Controller
 			$citas = DB::table('appointments as a')
 			->join('medical_evolutions as m', 'm.patient_id', '=', 'a.patient_id')
 			->where('a.patient_id' , '=', $paciente_prueba->id)
+			->where('m.activo', '=', 1)
 			->where('a.clasification' , '=', $request->get('clasification'))->get()
 			;
 
@@ -594,7 +595,7 @@ class AppointmentController extends Controller
 		]);
 
 		
-		if($request->input('caso.pago') == '2'){ // Modo Cancelado
+		if($request->input('caso.pago') == '2'){ // Modo pagado
 			
 				$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $request->input('dataCita.patient.name');
@@ -627,7 +628,8 @@ class AppointmentController extends Controller
 							'date' => $request->input('dataCita.date'),
 							'auth' => 0,
 							'patient_id'=> $request->input('dataCita.patient.id'),
-							'professional_id'=> $request->input('dataCita.professional.id')
+							'professional_id'=> $request->input('dataCita.professional.id'),
+							'schedule' => $request->input('dataCita.schedule.check_time'),
 						]);
 					}
 				}
@@ -641,6 +643,14 @@ class AppointmentController extends Controller
 				'user_id'=> $request->input('caso.user_id'),
 				'activo' => 0
 			]);
+			Medical_evolution::where('patient_id', $request->input('dataCita.patient_id'))
+			->where('professional_id', $request->input('dataCita.professional_id'))
+			->where('date', $request->input('dataCita.date') )
+			->where('schedule', $request->input('dataCita.schedule.check_time') )
+			->update([
+				'activo' => 0
+			]);
+			
 		}
 
 
@@ -1065,7 +1075,10 @@ class AppointmentController extends Controller
 		return $pdf->stream('cupon.pdf');
 	}
 	public function cuponMismaSerie($id){ //Viene el appointment_id
-		$extra_payment = Extra_payment::where('appointment_id', $id)->first();
+		$extra_payment = Extra_payment::where('appointment_id', $id)
+		->with('appointment')
+		->with('appointment.schedule')
+		->first();
 		//print_r($extra_payment);die();
 		//->where('activo', '=', 1)
 		//return $extra_payment; die();

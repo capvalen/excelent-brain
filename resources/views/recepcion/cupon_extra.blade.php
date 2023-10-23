@@ -6,6 +6,130 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel = "preconnect" href = "https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    
+    <title>Imprimir Cupón</title>
+</head>
+<body>
+@php
+	use Carbon\Carbon;
+	$monedas =['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin'];
+@endphp
+    <div class="container">
+        <div class="container-fluid p-0">
+            <div class="header">
+                <div class="text-header">
+                    <h2 class="titulo">Centro Psicológico y Psiquiátrico Excelentemente </h2>
+                    <h2 class="titulo-oficial">EXCELENTEMENTE E.I.R.L.</h2>
+                    <h3>RUC: 20601862329</h3>
+                    <p class="address">Jr.Rebagliatti Nro 166 - El Tambo - Huancayo</p>
+                    <p class="phones">064 603228 - 984894659 - 996644350 - https://excelentemente.org</p>
+                </div>
+            </div>
+            <div class="body">
+							
+							@if( $extra_payment->type==6)
+								<h2>EGRESO</h2>
+							@else
+								<h2>TICKET INTERNO</h2>
+								<h2>E002-00{{$extra_payment->id}}</h2>
+							@endif
+							
+                    <div class="main-data">
+											<p> 
+												<span>@php
+                                                if( $extra_payment->appointment):
+                                                    $fecha = Carbon::parse( $extra_payment->date. " " . $extra_payment->appointment->schedule->check_time);
+                                                    echo "FECHA: ";
+                                                else:
+                                                    $fecha = Carbon::parse( $extra_payment->created_at );
+                                                    echo "REGISTRO: ";
+                                                endif;
+                                                echo $fecha->format('d/m/Y H:i a');
+												@endphp</span>
+											</p>
+											<p class="name">CLIENTE: {{$extra_payment->customer}}</p>
+											<p>USUARIO: -</p>
+											{{-- <p>DNI: {{$patient[0]->dni}}</p> --}}
+											{{-- <p>DIRECCIÓN: {{$patient[0]->address->address}}</p> --}}
+											 <p>MEDIO DE PAGO: {{ $monedas[$extra_payment->moneda-1] }}</p>
+                    </div>
+                    <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
+                        <thead>
+                            <tr style="font-weight: bold;">
+                                <td>SERVICIO</td>
+                                <td style="text-align: right;">SUBTOTAL</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @if($extra_payment->type == 0)
+                                    Certificado
+                                    @elseif($extra_payment->type == 1)
+                                    Paquete de Membresía
+                                    @elseif($extra_payment->type == 2)
+                                    Paquete de Kurame
+                                    @elseif($extra_payment->type == 3)
+                                    Informe
+                                    @elseif($extra_payment->type == 4)
+                                    Otros
+                                    @elseif($extra_payment->type == 5)
+                                    Pago de cita
+                                    @elseif($extra_payment->type == 6)
+                                    Salida de dinero
+                                    @endif
+                                </td>
+                                <td style="text-align: right;">
+                                    {{$extra_payment->price}}
+                                </td>
+                            </tr>
+														@if($extra_payment->observation <>'')
+														<tr><td><strong>Obs.:</strong> {{$extra_payment->observation}}</td></tr>
+														@endif
+														@if($extra_payment->voucher <>'')
+														<tr><td><strong>Comprobante:</strong> {{$extra_payment->voucher}}</td></tr>
+														@endif
+														@if($extra_payment->voucher_issued <>'' && $extra_payment->voucher_issued <> null )
+														<tr><td><strong>Serie-Correlativo:</strong> {{strtoupper($extra_payment->voucher_issued)}}</td></tr>
+														@endif
+                        </tbody>
+                    </table>
+                    <hr style="width: 90%; margin:3px 5px; padding-left: 5px; ">
+                    <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
+                        <thead>
+                            <tr>
+                                <td>DESCUENTO</td>
+                                <td style="text-align: right;">
+																<span>
+																@if($extra_payment->rebaja >0)
+																	{{ 'S/'.number_format($extra_payment->rebaja,2)}}
+																@elseif($extra_payment->descuento >0)
+																{{ $extra_payment->rebaja . '%'}}
+																@endif
+																</span>
+																</td>
+                            </tr>
+                            <tr>
+                                <td>OP.GRAVADA</td>
+                                <td style="text-align: right;">S/ {{$extra_payment->price - $extra_payment->price*.18}}</td>
+                            </tr>
+                            <tr>
+                                <td>I.G.V</td>
+                                <td style="text-align: right;">S/ {{$extra_payment->price*.18}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IMPORTE TOTAL</strong></td>
+                                <td style="text-align: right;">S/ {{$extra_payment->price}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+            </div>
+            <p class="slogan" style="margin-top:10px;">Tu salud mental es lo más importante</p>
+            <p class="note_slogan">NOTAS: Este doc. es intercambiable por una Boleta o Factura</p>
+            <p class="note_slogan">No hay devoluciones. Todo adelanto expira en 3 meses</p>
+        </div>
+    </div>
+
     <style>
         *{
             margin: 0;
@@ -152,121 +276,6 @@
             margin-top: 10px;
         }
     </style>
-    <title>Imprimir Cupón</title>
-</head>
-<body>
-@php
-	use Carbon\Carbon;
-	$monedas =['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin'];
-@endphp
-    <div class="container">
-        <div class="container-fluid p-0">
-            <div class="header">
-                <div class="text-header">
-                    <h2 class="titulo">Centro Psicológico y Psiquiátrico Excelentemente </h2>
-                    <h2 class="titulo-oficial">EXCELENTEMENTE E.I.R.L.</h2>
-                    <h3>RUC: 20601862329</h3>
-                    <p class="address">Jr.Rebagliatti Nro 166 - El Tambo - Huancayo</p>
-                    <p class="phones">064 603228 - 984894659 - 996644350 - https://excelentemente.org</p>
-                </div>
-            </div>
-            <div class="body">
-							
-							@if( $extra_payment->type==6)
-								<h2>EGRESO</h2>
-							@else
-								<h2>TICKET INTERNO</h2>
-								<h2>E002-00{{$extra_payment->id}}</h2>
-							@endif
-							
-                    <div class="main-data">
-											<p>FECHA:  
-												<span>@php
-												$fecha = Carbon::parse( $extra_payment->date ); echo $fecha->format('d/m/Y');
-												@endphp</span>
-											</p>
-											<p class="name">CLIENTE: {{$extra_payment->customer}}</p>
-											<p>USUARIO: -</p>
-											{{-- <p>DNI: {{$patient[0]->dni}}</p> --}}
-											{{-- <p>DIRECCIÓN: {{$patient[0]->address->address}}</p> --}}
-											 <p>MEDIO DE PAGO: {{ $monedas[$extra_payment->moneda-1] }}</p>
-                    </div>
-                    <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
-                        <thead>
-                            <tr style="font-weight: bold;">
-                                <td>SERVICIO</td>
-                                <td style="text-align: right;">SUBTOTAL</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    @if($extra_payment->type == 0)
-                                    Certificado
-                                    @elseif($extra_payment->type == 1)
-                                    Paquete de Membresía
-                                    @elseif($extra_payment->type == 2)
-                                    Paquete de Kurame
-                                    @elseif($extra_payment->type == 3)
-                                    Informe
-                                    @elseif($extra_payment->type == 4)
-                                    Otros
-                                    @elseif($extra_payment->type == 5)
-                                    Pago de cita
-                                    @elseif($extra_payment->type == 6)
-                                    Salida de dinero
-                                    @endif
-                                </td>
-                                <td style="text-align: right;">
-                                    {{$extra_payment->price}}
-                                </td>
-                            </tr>
-														@if($extra_payment->observation <>'')
-														<tr><td><strong>Obs.:</strong> {{$extra_payment->observation}}</td></tr>
-														@endif
-														@if($extra_payment->voucher <>'')
-														<tr><td><strong>Comprobante:</strong> {{$extra_payment->voucher}}</td></tr>
-														@endif
-														@if($extra_payment->voucher_issued <>'' && $extra_payment->voucher_issued <> null )
-														<tr><td><strong>Serie-Correlativo:</strong> {{strtoupper($extra_payment->voucher_issued)}}</td></tr>
-														@endif
-                        </tbody>
-                    </table>
-                    <hr style="width: 90%; margin:3px 5px; padding-left: 5px; ">
-                    <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
-                        <thead>
-                            <tr>
-                                <td>DESCUENTO</td>
-                                <td style="text-align: right;">
-																<span>
-																@if($extra_payment->rebaja >0)
-																	{{ 'S/'.number_format($extra_payment->rebaja,2)}}
-																@elseif($extra_payment->descuento >0)
-																{{ $extra_payment->rebaja . '%'}}
-																@endif
-																</span>
-																</td>
-                            </tr>
-                            <tr>
-                                <td>OP.GRAVADA</td>
-                                <td style="text-align: right;">S/ {{$extra_payment->price - $extra_payment->price*.18}}</td>
-                            </tr>
-                            <tr>
-                                <td>I.G.V</td>
-                                <td style="text-align: right;">S/ {{$extra_payment->price*.18}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>IMPORTE TOTAL</strong></td>
-                                <td style="text-align: right;">S/ {{$extra_payment->price}}</td>
-                            </tr>
-                        </thead>
-                    </table>
-            </div>
-            <p class="slogan" style="margin-top:10px;">Tu salud mental es lo más importante</p>
-            <p class="note_slogan">NOTAS: Este doc. es intercambiable por una Boleta o Factura</p>
-            <p class="note_slogan">No hay devoluciones. Todo adelanto expira en 3 meses</p>
-        </div>
-    </div>
 
 </body>
 </html>

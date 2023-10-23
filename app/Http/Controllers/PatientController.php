@@ -292,6 +292,9 @@ class PatientController extends Controller
 		$evoluciones = Patient::where('id',$idPaciente)
 		->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'medical_evolutions', 'appointments', 'prescriptions')
 		->with('medical_evolutions.professional')
+		->with(['medical_evolutions'=> function($query) {
+			$query->where('activo','=', 1);
+		}])
 		->first();
 
 		//return response()->json([$evoluciones]); die();

@@ -7,6 +7,7 @@ use App\Models\Extra_payment;
 use App\Models\Faltas;
 use App\Models\Patient;
 use App\Models\Payment;
+use App\Models\Precio;
 use App\Models\Professional;
 use App\Models\Reschedule;
 use Carbon\Carbon;
@@ -774,6 +775,16 @@ class ExtrasController extends Controller
 		return response()->json(['mensaje' => 'Actualizdo con éxito']);
 	}
 
+	public function actualizarPrecio(Request $request){
+		try {
+			$precio = Precio::find($request->get('id'));
+			$precio->update($request->all() );
+			return response()->json(['mensaje' => 'Actualizado ']);
+			//code...
+		} catch (\Throwable $th) {
+			echo $th;
+		}
+	}
 	
 
 	

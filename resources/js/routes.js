@@ -14,6 +14,7 @@ const MainSuperUser = () => import('./components/administrador/Main.vue');
 // --- ADMINISTRADOR
 const HomeAdministrador = () => import('./components/administrador/views/HomeAdministrador.vue');
 const ShowProfessional = () => import('./components/administrador/views/ShowProfessional.vue');
+const HomePrecios = () => import('./components/administrador/views/HomePrecios.vue')
 
 const HomeAdministradorRouterReportes = () => import('./components/administrador/views/reportes/HomeRouterReportes.vue');
 const HomeAdministradorReportes = () => import('./components/administrador/views/reportes/HomeReportes.vue');
@@ -362,6 +363,11 @@ export const routes = [
         path: '/administrador/profesional/:profId',
         name: 'showAdminProf',
         component: ShowProfessional
+      },
+      {
+        path: '/administrador/precios-servicios',
+        name: 'preciosServicios',
+        component: HomePrecios
       },
 			{
 				path:'/administrador/usuarios-simples',
