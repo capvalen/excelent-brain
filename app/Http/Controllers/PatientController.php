@@ -7,6 +7,7 @@ use App\Models\Address;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\Patient;
+use App\Models\Patient_seguimiento;
 use App\Models\Prescription;
 use App\Models\Reschedule;
 use App\Models\Triaje;
@@ -380,10 +381,18 @@ class PatientController extends Controller
 		return response()->json($cantTotal);
 	}
 
-	public function discharge($id){
+	public function discharge($id, $idProfesional){
 		$patient = Patient::find($id);
 		$patient->update([
 			'discharge' => 1
+		]);
+		Patient_seguimiento::insert([
+			'registro' => Carbon::now(),
+			'patient_id'=>$id,
+			'user_id' => $idProfesional,
+			'idSeguimiento' => 4,
+			'observaciones' => 'Dado de alta por un profesional',
+			'activo' => 1
 		]);
 		return response()->json([
 			'msg'=> 'success'

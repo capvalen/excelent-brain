@@ -1,0 +1,1 @@
+INSERT INTO `professionals` (`id`, `name`, `nombre`, `phone`, `idProfesion`, `profession`, `cv_description`, `photo`, `signing`, `user_id`, `created_at`, `updated_at`, `activo`) VALUES (NULL, 'Recepción', 'Recepción', NULL, '1', 'Ninguna', NULL, NULL, NULL, '25', NULL, NULL, '0');

@@ -157,7 +157,6 @@
 								<tr v-if="doctor.horarios.length==0">
 									<td colspan="3">El profesional no trabaja este día</td>
 								</tr>
-								
 							</tbody>
 						</table>
 
@@ -274,7 +273,6 @@
 								horario.libre=1;
 								horario.indexOcupado=-1
 							} */
-							
 						})
 					})
 				})

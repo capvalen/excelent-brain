@@ -19,5 +19,9 @@ class Prescription extends Model
     {
         return $this->belongsTo("App\Models\Patient");
     }
+    public function professional()
+    {
+        return $this->belongsTo("App\Models\Professional");
+    }
 
 }

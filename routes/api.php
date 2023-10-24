@@ -223,7 +223,7 @@ Route::resource('paymentExtra', ExtrapaymentController::class)->only(['index', '
 Route::post('egresoExtra', [ExtrapaymentController::class, 'egresoExtra']);
 Route::post('borrarPagoExtra', [ExtrapaymentController::class, 'borrarPagoExtra']);
 
-Route::get('discharge/{id}',[PatientController::class, 'discharge']);
+Route::get('discharge/{id}/{idProfesional}',[PatientController::class, 'discharge']);
 
 Route::get('agePerMonth/{month}', [PatientController::class, 'agePerMonth']);
 

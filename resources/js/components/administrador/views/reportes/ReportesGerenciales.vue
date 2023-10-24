@@ -29,6 +29,213 @@
 				</div>
 			</div>
 		</div>
+		<div class="card mt-2">
+			<div class="card-body">
+				<div  v-if="idReporte==1">
+					<table class="table table_hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Tipo de paciente</th>
+								<th>Cantidad</th>
+								<th>Porcentaje</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>Pacientes Nuevos de Psiquiatría</td>
+								<td>{{conteo.psiquiatria.nuevo}}</td>
+								<td>{{parseFloat(conteo.psiquiatria.nuevo / conteo.total*100).toFixed(2)}}%</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Pacientes Contninuos de Psiquiatría</td>
+								<td>{{conteo.psiquiatria.continuo}}</td>
+								<td>{{parseFloat(conteo.psiquiatria.continuo / conteo.total*100).toFixed(2)}}%</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Pacientes Nuevos de Psicología</td>
+								<td>{{conteo.psicologia.nuevo}}</td>
+								<td>{{parseFloat(conteo.psicologia.nuevo / conteo.total*100).toFixed(2)}}%</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Pacientes Continuos de Psicología</td>
+								<td>{{conteo.psicologia.continuo}}</td>
+								<td>{{parseFloat(conteo.psicologia.continuo / conteo.total*100).toFixed(2)}}%</td>
+							</tr>
+							<tr>
+								<td colspan="2">Total</td>
+								<td>{{conteo.total}}</td>
+								<td>100%</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==2">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<td>N°</td>
+								<td>Profesional</td>
+								<td>N° Pacientes atendidos</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(doctor, indice) in conteoR2">
+								<td>{{indice+1}}</td>
+								<td>{{doctor.nombre}}</td>
+								<td>{{doctor.conteo}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<p>Detallado:</p>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Professional</th>
+								<th>Paciente</th>
+								<th>Servicio</th>
+								<th>Fecha y Hora</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(cita, index) in resultados" >
+								<td>{{index+1}}</td>
+								<td v-if="cita.professional">{{cita.professional.name}}</td>
+								<td v-else></td>
+								<td v-if="cita.patient">{{cita.patient.name}}</td>
+								<td v-else></td>
+								<td v-if="cita.precio">{{cita.precio.descripcion}}</td>
+								<td v-else></td>
+								<td v-if="cita.schedule">{{cita.schedule.check_time}}</td>
+								<td v-else></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==3">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<td>N°</td>
+								<td>Profesión</td>
+								<td>Profesional</td>
+								<td>N° Pacientes atendidos</td>
+								<td>N° Pacientes nuevos</td>
+								<td>N° Pacientes continuos</td>
+								<td>N° Reevaluaciones</td>
+								<td>N° Certificados</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(doctor, indice) in conteoR2">
+								<td>{{indice+1}}</td>
+								<td>{{doctor.profesion}}</td>
+								<td>{{doctor.nombre}}</td>
+								<td>{{doctor.conteo}}</td>
+								<td>{{doctor.nuevo}}</td>
+								<td>{{doctor.continuo}}</td>
+								<td>{{doctor.revaluaciones}}</td>
+								<td>{{doctor.certificados}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==4">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Profesión</th>
+								<th>Profesional</th>
+								<th>N° Pacientes</th>
+								<th>Monto</th>
+							</tr>
+						</thead>
+						<tbody v-for="(doctor, indice) in conteoR2">
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>{{doctor.profesion}}</td>
+								<td>{{doctor.nombre}}</td>
+								<td>{{doctor.conteo}}</td>
+								<td>{{doctor.ganancia.toFixed(2)}}</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan=4 class="text-end">Total</td>
+								<td>{{sumaMontosRegistrados}}</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<div v-if="idReporte==5">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Profesión</th>
+								<th>Profesional</th>
+								<th>N° Reprogramaciones</th>
+							</tr>
+						</thead>
+						<tbody v-for="(doctor, indice) in conteoR2">
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>{{doctor.profesion}}</td>
+								<td>{{doctor.nombre}}</td>
+								<td>{{doctor.reprogramaciones}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==6">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Profesión</th>
+								<th>Profesional</th>
+								<th>N° Altas</th>
+							</tr>
+						</thead>
+						<tbody v-for="(doctor, indice) in conteoR2">
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>{{doctor.profesion}}</td>
+								<td>{{doctor.nombre}}</td>
+								<td>{{doctor.altas}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==7">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Profesión</th>
+								<th>Profesional</th>
+								<th>N° Recetas	</th>
+							</tr>
+						</thead>
+						<tbody v-for="(doctor, indice) in conteoR2">
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>{{doctor.profesion}}</td>
+								<td>{{doctor.nombre}}</td>
+								<td>{{doctor.recetas}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
 	</div>
 </template>
 <script>
@@ -39,22 +246,156 @@ export default {
 	data() {
 		return {
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-			idReporte:0, resultados:[], ocultarFechas:false,
-			fecha:{ año: moment().format('YYYY'), mes: moment().format('M') },
+			idReporte:0, resultados:[], ocultarFechas:false, conteo:{total:0, psiquiatria:{nuevo:0, continuo:0}, psicologia: {nuevo:0, continuo:0}},
+			fecha:{ año: moment().format('YYYY'), mes: moment().format('M') }, conteoR2:[],
 			reportes:[
 				{id: 1, nombrado: 'Tipos de pacientes'},
+				{id: 2, nombrado: 'Cartera de clientes'},
+				{id: 3, nombrado: 'Producción mes'},
+				{id: 4, nombrado: 'Montos registrados'},
+				{id: 5, nombrado: 'Reprogramaciones por profesional'},
+				{id: 6, nombrado: 'Pacientes dados de alta'},
+				{id: 7, nombrado: 'Recetas por profesional'},
 			],
 			filtroAnual:false, filtro:-1,
 		}
 	},
 	methods: {
+		cargarDatos(){
+			for(let i=2022; i<=moment().format('YYYY'); i++){
+				this.años.push(i);
+			}
+			this.años.reverse();
+		},
 		pedirReporte(){
+			this.resultados=[];
 			this.axios.post('/api/pedirReporteGerencial/'+this.idReporte,{
 				año: this.fecha.año, mes: this.fecha.mes
 			})
 			.then(serv=> { console.log(serv.data);
 				this.resultados=serv.data;
+				switch (this.idReporte) {
+					case 1: this.contarTiposPaciente(); break;
+					case 2: this.contarReporte2(); break;
+					case 3: this.contarProduccion(); break;
+					case 4: this.contarMontosRegistrados(); break;
+					case 5: this.contarReprogramaciones(); break;
+					case 6: this.contarAltas(); break;
+					case 7: this.contarRecetas(); break;
+					
+					default: break;
+				}
+				
 			})
+		},
+		contarTiposPaciente(){
+			this.conteo={total:0, psiquiatria:{nuevo:0, continuo:0}, psicologia: {nuevo:0, continuo:0}}
+			this.resultados.nuevos.forEach(nuevo => {
+				if( nuevo.precio)
+					if( nuevo.precio.idClasificacion==1) //es Psiquiatria
+						{this.conteo.psiquiatria.nuevo+=1; this.conteo.total++; }
+					else if( nuevo.precio.idClasificacion==2) //es Psicologia
+						{this.conteo.psicologia.nuevo+=1; this.conteo.total++; }
+			});
+			this.resultados.continuos.forEach(continuo => {
+				if( continuo.precio)
+					if( continuo.precio.idClasificacion==1) //es Psiquiatria
+						{this.conteo.psiquiatria.continuo+=1; this.conteo.total++; }
+					else if( continuo.precio.idClasificacion==2) //es Psicologia
+						{this.conteo.psicologia.continuo+=1; this.conteo.total++; }
+			});
+		},
+		contarReporte2(){
+			this.conteoR2=[];
+			this.conteoR2.push({idProfesional:this.resultados[0].professional_id, conteo:0, nombre: this.resultados[0].professional.name})
+			this.resultados.forEach(cita=>{
+				
+				if(cita.professional_id !== this.conteoR2[this.conteoR2.length-1].idProfesional ){
+					this.conteoR2.push({idProfesional: cita.professional_id, conteo:1, nombre: cita.professional.name})
+				}else
+					this.conteoR2[this.conteoR2.length-1].conteo++
+			})
+		},
+		contarProduccion(){
+			this.conteoR2=[];
+			this.conteoR2.push({idProfesional:this.resultados[0].professional_id, nombre: this.resultados[0].professional.name, profesion: this.resultados[0].professional.profession,
+				nuevo:0, continuo:0, revaluaciones:0,certificados:0, conteo:0, 
+			})
+			this.resultados.forEach(cita=>{
+				if(cita.professional_id !== this.conteoR2[this.conteoR2.length-1].idProfesional ){
+					this.conteoR2.push({idProfesional: cita.professional_id, conteo:1, nombre: cita.professional.name, profesion: cita.professional.profession, nuevo:0, continuo:0, revaluaciones:0,certificados:0 })
+				}else
+					this.conteoR2[this.conteoR2.length-1].conteo++
+
+				if(cita.patient_condition==1)//nuevos
+					this.conteoR2[this.conteoR2.length-1].nuevo++
+				else if(cita.precio.idClasificacion==2)
+					this.conteoR2[this.conteoR2.length-1].continuo++
+
+				if(cita.precio.id == 17)
+					this.conteoR2[this.conteoR2.length-1].revaluaciones++
+				if(cita.precio.idClasificacion == 3)
+					this.conteoR2[this.conteoR2.length-1].certificados++
+			})
+		},
+		contarMontosRegistrados(){
+			this.conteoR2=[];
+			this.conteoR2.push({idProfesional:this.resultados[0].professional_id, nombre: this.resultados[0].professional.name, profesion: this.resultados[0].professional.profession,
+				nuevo:0, continuo:0, revaluaciones:0,certificados:0, conteo:0, ganancia: parseFloat(this.resultados[0].payment.price)
+			})
+			this.resultados.forEach(cita=>{
+				if(cita.professional_id !== this.conteoR2[this.conteoR2.length-1].idProfesional ){
+					this.conteoR2.push({idProfesional: cita.professional_id, conteo:1, nombre: cita.professional.name, profesion: cita.professional.profession, nuevo:0, continuo:0, revaluaciones:0,certificados:0, ganancia: parseFloat(cita.payment.price)})
+				}else{
+					this.conteoR2[this.conteoR2.length-1].conteo++
+					this.conteoR2[this.conteoR2.length-1].ganancia+= parseFloat(cita.payment.price)
+				}
+			})
+		},
+		contarReprogramaciones(){
+			this.conteoR2=[];
+			this.conteoR2.push({idProfesional:this.resultados[0].appointment.professional_id, nombre: this.resultados[0].appointment.professional.name, profesion: this.resultados[0].appointment.professional.profession,
+				reprogramaciones:0
+			})
+			this.resultados.forEach(cita=>{
+				if(cita.appointment.professional_id !== this.conteoR2[this.conteoR2.length-1].idProfesional ){
+					this.conteoR2.push({idProfesional: cita.appointment.professional_id, conteo:1, nombre: cita.appointment.professional.name, profesion: cita.appointment.professional.profession, reprogramaciones:1 })
+				}else
+					this.conteoR2[this.conteoR2.length-1].reprogramaciones++
+			})
+		},
+		contarAltas(){
+			this.conteoR2=[];
+			this.conteoR2.push({idProfesional:this.resultados[0].user.professional.id, nombre: this.resultados[0].user.professional.name, profesion: this.resultados[0].user.professional.profession,
+				altas:0
+			})
+			this.resultados.forEach(cita=>{
+				if(cita.user.professional.id !== this.conteoR2[this.conteoR2.length-1].idProfesional )
+					this.conteoR2.push({idProfesional: cita.user.professional.id, conteo:1, nombre: cita.user.professional.name, profesion: cita.user.professional.profession, altas:1 })
+				else
+					this.conteoR2[this.conteoR2.length-1].altas++
+			})
+		},
+		contarRecetas(){
+			this.conteoR2=[];
+			this.conteoR2.push({idProfesional:this.resultados[0].professional.id, nombre: this.resultados[0].professional.name, profesion: this.resultados[0].professional.profession,
+				recetas:0
+			})
+			this.resultados.forEach(cita=>{
+				if(cita.professional.id !== this.conteoR2[this.conteoR2.length-1].idProfesional )
+					this.conteoR2.push({idProfesional: cita.professional.id, conteo:1, nombre: cita.professional.name, profesion: cita.professional.profession, recetas:1 })
+				else
+					this.conteoR2[this.conteoR2.length-1].recetas++
+			})
+		},
+		configurarVista(){
+			this.resultados=[];
+			this.ocultarFechas=false;
+			this.filtroAnual = this.idReporte==12 ? true : false;
+			switch(this.idReporte){
+				case 0:
+					this.ocultarFechas=true;
+			}
 		},
 		fechaFrom(fecha){
 			moment.locale('es')
@@ -63,6 +404,15 @@ export default {
 		fechaLatam(fecha){ return moment(fecha).format('DD/MM/YYYY'); },
 		horaLatam(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm a') },
 		
+	},
+	computed:{
+		sumaMontosRegistrados(){
+			let suma = 0;
+			this.conteoR2.forEach(conteo => {
+				suma += parseFloat(conteo.ganancia)
+			});
+			return suma.toFixed(2);
+		}
 	},
 	mounted() {
 		this.reportes.sort((a, b) => {

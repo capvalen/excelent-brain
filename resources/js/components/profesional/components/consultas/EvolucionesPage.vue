@@ -771,7 +771,7 @@ export default {
 				denyButtonText: 'No',
 			}).then((result) => {
 				if (result.isConfirmed) {
-					this.axios.get(`/api/discharge/${this.$route.params.idPaciente}`)
+					this.axios.get(`/api/discharge/${this.$route.params.idPaciente}/${this.$attrs.idUser}`)
 						.then((res) => {
 							this.$swal(res.data.msg)
 						});

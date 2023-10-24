@@ -6,8 +6,10 @@ use App\Models\Appointment;
 use App\Models\Extra_payment;
 use App\Models\Faltas;
 use App\Models\Patient;
+use App\Models\Patient_seguimiento;
 use App\Models\Payment;
 use App\Models\Precio;
+use App\Models\Prescription;
 use App\Models\Professional;
 use App\Models\Reschedule;
 use Carbon\Carbon;
@@ -788,8 +790,79 @@ class ExtrasController extends Controller
 		return response()->json(['mensaje' => 'Actualizado ']);
 	}
 
-	function pedirReporteGerencial(Request $request){
-		
+	function pedirReporteGerencial($id, Request $request){
+		switch ($id) {
+			case '1': //Reporte de tipo de paciente
+				$nuevos = Appointment::whereYear('created_at', $request->get('año'))
+				->whereMonth('created_at', $request->get('mes'))
+				->where('patient_condition', 1)
+				->with('precio')
+				->get();
+				$continuos = Appointment::whereYear('created_at', $request->get('año'))
+				->whereMonth('created_at', $request->get('mes'))
+				->where('patient_condition', 2)
+				->with('precio')
+				->get();
+				return response()->json(array('nuevos'=>$nuevos, 'continuos'=> $continuos)); break;
+
+			case '2': case '3':
+				$cartera = Appointment::whereYear('created_at', $request->get('año'))
+				->whereMonth('created_at', $request->get('mes'))
+				->where('patient_condition', 1)
+				->with('professional')
+				->with('precio')
+				->with('schedule')
+				->with('patient')
+				->orderBy('professional_id', 'asc')
+				->get();
+				return response()->json($cartera); break;
+
+			case '4': 
+				$cartera = Appointment::whereYear('created_at', $request->get('año'))
+				->whereMonth('created_at', $request->get('mes'))
+				->where('patient_condition', 1)
+				->with('professional')
+				->with('payment')
+				->with('schedule')
+				->with('patient')
+				->orderBy('professional_id', 'asc')
+				->get();
+				return response()->json($cartera); break;
+			case '5':
+				$citas = Reschedule::whereYear('reschedules.created_at', $request->get('año'))
+				->whereMonth('reschedules.created_at', $request->get('mes'))
+				->join('appointments', 'reschedules.appointment_id', '=', 'appointments.id')
+				->with('appointment')
+				->with('appointment.professional')
+				->with('appointment.patient')
+				->orderBy('appointments.professional_id', 'asc')
+				->get();
+				return response()->json($citas); break;
+			case '6':
+				$altas = Patient_seguimiento::
+				whereYear('registro', $request->get('año'))
+				->whereMonth('registro', $request->get('mes'))
+				->where('idSeguimiento', 4)
+				->where('activo', 1)
+				->with('patient')
+				->with('user')
+				->with('user.professional')
+				->get();
+				return response()->json($altas); break;
+				
+			case '7':
+				$recetas = Prescription::
+				whereYear('attention_date', $request->get('año'))
+				->whereMonth('attention_date', $request->get('mes'))
+				->with('patient')
+				->with('professional')
+				->orderBy('professional_id', 'asc')
+				->get();
+				return response()->json($recetas); break;
+				
+			default: break;
+		}
+
 	}
 	
 }
