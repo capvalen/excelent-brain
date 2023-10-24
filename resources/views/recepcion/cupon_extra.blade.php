@@ -47,6 +47,20 @@
                                                 echo $fecha->format('d/m/Y H:i a');
 												@endphp</span>
 											</p>
+                                            @php
+                                            if( $extra_payment->appointment ):
+                                                @endphp
+                                                <p>REGISTRADO:
+                                                    <span>
+                                                    @php
+                                                        $fecha = Carbon::parse( $extra_payment->created_at );
+                                                        echo $fecha->format('d/m/Y H:i a');
+                                                    @endphp
+                                                    </span>
+                                                </p>
+                                                @php
+                                            endif;
+                                            @endphp
 											<p class="name">CLIENTE: {{$extra_payment->customer}}</p>
 											<p>USUARIO: -</p>
 											{{-- <p>DNI: {{$patient[0]->dni}}</p> --}}

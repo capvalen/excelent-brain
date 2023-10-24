@@ -56,9 +56,9 @@
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked @click="filtro=-1">
 						<label class="btn btn-outline-primary" for="btnradio1">Todos</label>
 
-						<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" @click="filtro=1">
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" @click="filtro=2">
 						<label class="btn btn-outline-primary" for="btnradio2">Psiquiatría</label>
-						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" @click="filtro=2">
+						<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" @click="filtro=1">
 						<label class="btn btn-outline-primary" for="btnradio3">Psicología</label>
 						<input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" @click="filtro=4">
 						<label class="btn btn-outline-primary" for="btnradio4">Kurame</label>
