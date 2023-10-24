@@ -152,9 +152,10 @@ Route::post('crearAcontecimiento', [ExtrasController::class, 'crearAcontecimient
 Route::get('cargarLineas/{id}', [ExtrasController::class, 'cargarLineas']);
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
+Route::post('pedirReporteGerencial/{idReporte}', [ExtrasController::class,'pedirReporteGerencial']);
 Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);
 Route::post('insertarSeguimiento', [ExtrasController::class,'insertarSeguimiento']);
-Route::post('actualizarPrecio', [ExtrasController::class,'actualizarPrecio']);
+Route::post('actualizarPrecioAdmin', [ExtrasController::class,'actualizarPrecioAdmin']);
 Route::get('pedirHistorialSeguimientos/{id}', [ExtrasController::class,'pedirHistorialSeguimientos']);
 
 

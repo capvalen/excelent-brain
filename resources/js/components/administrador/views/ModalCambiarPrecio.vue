@@ -40,7 +40,7 @@ export default {
 	},
 	methods: {
 		actualizar(){
-			this.axios.post('/api/actualizarPrecio', this.precio)
+			this.axios.post('/api/actualizarPrecioAdmin', this.precio)
 			.then(res => console.log(res.data) )
 		}
 	},

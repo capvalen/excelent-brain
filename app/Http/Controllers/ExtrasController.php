@@ -775,17 +775,21 @@ class ExtrasController extends Controller
 		return response()->json(['mensaje' => 'Actualizdo con éxito']);
 	}
 
-	public function actualizarPrecio(Request $request){
-		try {
-			$precio = Precio::find($request->get('id'));
-			$precio->update($request->all() );
-			return response()->json(['mensaje' => 'Actualizado ']);
-			//code...
-		} catch (\Throwable $th) {
-			echo $th;
-		}
+	public function actualizarPrecioAdmin(Request $request){
+		//$precio = DB::table('precios')->where('id', $request->get('id'));
+		$precio = Precio::where('id', $request->get('id'));
+		$precio->update([
+			'nuevos' => $request->get('nuevos'),
+			'continuos' => $request->get('continuos'),
+			'descripcion' => $request->get('descripcion'),
+			'sesiones' => $request->get('sesiones'),
+			'servicio' => $request->get('servicio')
+		]);
+		return response()->json(['mensaje' => 'Actualizado ']);
 	}
-	
 
+	function pedirReporteGerencial(Request $request){
+		
+	}
 	
 }

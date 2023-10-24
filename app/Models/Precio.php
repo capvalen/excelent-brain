@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Precio extends Model
 {
-    protected $fillable=['descripcion', 'nuevos', 'continuos', 'idClasificacion', 'sesiones', 'servicio'];
+    public $timestamps = false;
     use HasFactory;
+    protected $fillable=['descripcion', 'nuevos', 'continuos', 'idClasificacion', 'sesiones', 'servicio'];
     //Relacion uno a uno Appointment-Payment
     public function appointment()
     {

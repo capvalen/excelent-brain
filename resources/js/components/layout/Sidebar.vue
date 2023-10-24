@@ -59,9 +59,9 @@
 								</router-link>
 						</li>
 						<li class="nav-item nav__list" @click="activeSidebar()">
-								<router-link to="/administrador/reportes-avanzados" class="nav-link">
+								<router-link to="/administrador/reportes-gerenciales" class="nav-link">
 										<i class="fas fa-home"></i>
-										<span>Reportes Complementarios</span>
+										<span>Reportes Gerenciales</span>
 								</router-link>
 						</li>
 						<li class="nav-item nav__list" @click="activeSidebar()">
