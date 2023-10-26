@@ -704,7 +704,7 @@ class AppointmentController extends Controller
 			$precioNuevo =  floatval($request->input('payment.price'));
 		endif;
 		$payment = Payment::create([
-			'observation'=>'Viene de reprogramación, del día: ' . $fechado->format('d/m/Y'),
+			'observation'=>'Viene de reprogramación, el pago se encuentra en el día: ' . $fechado->format('d/m/Y'),
 			'bank'=>'',
 			'voucher' => $request->input('payment.voucher'),
 			'pay_status'=> $cita->payment->pay_status,

@@ -6,16 +6,21 @@
 		</div>
 		<div class="offcanvas-body">
 			<img class="img-fluid" src="/img/celular_fondo.jpeg" alt="">
-			<div v-if="fotoNueva==''">
-				<label class="mt-2" for="">Adjunte su comprobante de pago, aquí</label>
-				<div class="input-group" >
-					<input type="file" class="form-control" id="fileArchivo"  aria-label="Upload">
-					<button class="btn btn-outline-secondary" type="button" @click="subirArchivo">Subir archivo</button>
+			<div v-if="habilitarEliminado">
+				<div v-if="fotoNueva==''">
+					<label class="mt-2" for="">Adjunte su comprobante de pago, aquí</label>
+					<div class="input-group" >
+						<input type="file" class="form-control" id="fileArchivo"  aria-label="Upload" accept="image/*,application/pdf">
+						<button class="btn btn-outline-secondary" type="button" @click="subirArchivo">Subir archivo</button>
+					</div>
+				</div>
+				<div v-else>
+					<img class="img-fluid my-2" :src="'/storage/adjuntos/'+this.fotoNueva" alt="">
+					<button class="btn btn-danger mt-2" @click="eliminarAdjunto()"><i class="fas fa-unlink"></i> Eliminar adjunto</button>
 				</div>
 			</div>
 			<div v-else>
-				<img class="img-fluid my-2" :src="'/storage/adjuntos/'+this.fotoNueva" alt="">
-				<button class="btn btn-danger" @click="eliminarAdjunto()"><i class="fas fa-unlink"></i> Eliminar adjunto</button>
+				<p class="my-2">Por políticas, no se puede adjuntar archivos fuera del día de operaciones.</p>
 			</div>
 		</div>
 	</div>
@@ -24,7 +29,7 @@
 
 export default{
 	name: 'offAdjunto',
-	props:['id', 'foto'],
+	props:['id', 'foto', 'habilitarEliminado'],
 	data(){ return { fotoNueva: '' }},
 	methods:{
 		subirArchivo(){

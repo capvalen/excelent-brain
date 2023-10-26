@@ -87,21 +87,15 @@
                 name="diagnostico"
                 id="diagnostico" 
                 v-model="searchCie"
-                @keyup="getDiagnostico" 
-              >
+                @keyup="getDiagnostico" >
                 <!-- v-model="inicialPsiquiatria.diagnostic" -->
               <div class="cie-content rounded">
-                <div 
-                v-for="(cie, index) in dataCies"
-               :key="index"
-               >
+                <div v-for="(cie, index) in dataCies" :key="index">
                   <span 
                   class="w-100 px-2 py-2 cie--hover d-inline-block pointer cie-item" 
                   :class="{ 'cie-danger': cieAdd.find(el => el.trim() == `${cie.id} - ${cie.code} - ${cie.description}`) }"
                   :data-id="cie.id"
-                  @click="addCie"
-                  
-                  >
+                  @click="addCie">
                   {{ cie.id }} - {{ cie.code }} - {{ cie.description }}
                   </span>
                 </div>
@@ -113,8 +107,7 @@
                 v-if="cieAdd" 
                 v-for="(cieAgregado, index) in cieAdd" 
                 :key="`cie${index}`"
-                class="bg-warning rounded text-light p-2"
-                >
+                class="bg-warning rounded text-light p-2">
                   {{ cieAgregado }} 
                   <span :data-cie="index" class="cie-item ml-2 pointer" @click="deleteCie"><i class="fas fa-times"></i></span>
                 </div>

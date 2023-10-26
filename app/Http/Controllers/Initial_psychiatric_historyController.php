@@ -65,7 +65,9 @@ class Initial_psychiatric_historyController extends Controller
     {
         $initialPsychiatric->update($request->all());
         $patient = Patient::find($request->patient_id);
-        $patient->cies()->sync($request->diagnostic);    
+        $patient->cies()->sync($request->diagnostic);
+        $patient->load('cies');
+
 
         return response()->json($initialPsychiatric);
     }

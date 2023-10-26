@@ -225,7 +225,7 @@
 			async eliminar(id){
       this.$swal({
           title: '¿Quieres eliminar esta cita?',
-					text: 'Ingrese un motivo para eliminar la cita 1',
+					html: 'Ingrese un motivo para eliminar la cita. <br> <small>No se generará falta</small>',
 					input: 'text',
           showCancelButton: true,
           confirmButtonText: 'Si',

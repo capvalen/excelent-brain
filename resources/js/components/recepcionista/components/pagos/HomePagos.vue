@@ -87,7 +87,7 @@
 							<td>{{ payment.profesional_name }}</td>
 							<td>{{ payment.horario }}</td>
 							<td class="d-print-none">
-								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
+								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 								<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
@@ -160,7 +160,7 @@
 							<td>{{ payment.voucher_issued }}</td>
 							<td>{{ horaLatam(payment.created_at) }}</td>
 							<td class="d-print-none">
-								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
+								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 								<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
@@ -242,7 +242,7 @@
 						<td>{{ payment.profesional_name }}</td>
 						<td>{{ horaLatam(payment.created_at) }}</td>
 						<td class="d-print-none">
-								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)"><i class="far fa-file"></i></button>
+								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 							<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 							<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 						</td>
@@ -323,7 +323,7 @@
 		
 		<modal-pagos-extras />
     <modal-egresos-extras />
-		<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto"></OffcanvasAdjuntos>
+		<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto" :habilitarEliminado="habilitarEliminado" ></OffcanvasAdjuntos>
 	</div>
 </template>
 
@@ -338,7 +338,7 @@ import moment from 'moment'
 		data(){
 			return{
 				payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'], idSeleccionado:-1,
-				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:''}, foto:''
+				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:''}, foto:'', habilitarEliminado:false
 			}
 		},
 		props:{},
@@ -350,7 +350,9 @@ import moment from 'moment'
 				.then(res=> {this.foto = res.data.archivo ? res.data.archivo[0].file : '' } )
 			},
 				getAllExtraPayments(){
-						this.axios.get('/api/getAllExtraPayments')
+					this.habilitarEliminado=true;
+					this.foto=''
+					this.axios.get('/api/getAllExtraPayments')
 						.then(res =>{ console.log(res.data)
 							this.payments = res.data.activos
 							this.salidas = res.data.salidas
@@ -358,11 +360,13 @@ import moment from 'moment'
 						})
 				},
 				selectDate(e){
-						this.axios.get(`/api/getExtraPaymentsByDay/${e.target.value}`)
-						.then(res =>{ console.log(res.data)
-							this.payments = res.data.activos
-							this.eliminados = res.data.eliminados
-						})
+					this.habilitarEliminado = (e.target.value == moment().format('YYYY-MM-DD') ) ? true : false;
+					this.foto=''
+					this.axios.get(`/api/getExtraPaymentsByDay/${e.target.value}`)
+					.then(res =>{ console.log(res.data)
+						this.payments = res.data.activos
+						this.eliminados = res.data.eliminados
+					})
 				},
 				exportar(){
 					var table2excel = new Table2Excel();
