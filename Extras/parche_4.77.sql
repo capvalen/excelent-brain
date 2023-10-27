@@ -1,0 +1,1 @@
+ALTER TABLE `cie_patient` CHANGE `created_at` `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;

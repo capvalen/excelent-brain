@@ -13,4 +13,8 @@ class Extra_payment extends Model
     public function appointment() {
         return $this->belongsTo("App\Models\Appointment");
     }
+
+    public function precio(){
+        return $this->hasOne("App\Models\Precio", 'id', 'type');
+    }
 }

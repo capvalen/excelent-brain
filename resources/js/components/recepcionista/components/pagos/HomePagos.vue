@@ -301,6 +301,12 @@
 								</select>
 							</div>
 							<div class="col-sm-12">
+								<label for="">Tipo de comprobante</label>
+								<option value="1">Factura</option>
+								<option value="3">Boleta</option>
+								<option value="-1">Ninguno</option>
+							</div>
+							<div class="col-sm-12">
 								<label for="">Boleta / Factura</label>
 								<input type="text" class="form-control" v-model="caso.boleta">
 							</div>

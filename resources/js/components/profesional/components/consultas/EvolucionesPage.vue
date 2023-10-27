@@ -323,7 +323,7 @@
 										</div>
 									</div>
 									<div>
-										<p class="mb-0"><b> Diagnóstico</b></p>
+										<p class="mb-0"><b>Diagnóstico</b></p>
 										<div class="form-group position-relative diagnostico-input" style="min-height: 100px;">
 											<div class="position-relative">
 												<input type="text" class="form-control" autocomplete="off" name="diagnostico" id="diagnostico"

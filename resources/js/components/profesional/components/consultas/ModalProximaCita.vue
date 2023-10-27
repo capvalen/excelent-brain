@@ -73,7 +73,7 @@ export default{
 					mode: this.esPresencial ? 1: 2,
 					status:1,// sin confirmar
 					clasification: this.profesional.idProfesion,
-					recomendation: 'Auto Generado por Profesional',
+					recomendation: 'Auto Generado por Profesional '+ this.profesional.name,
 					professional_id: this.profesional.id,
 					patient_id: this.paciente.id,
 					schedule_id: this.cita.idHora,

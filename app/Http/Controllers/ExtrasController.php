@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use PhpOffice\PhpSpreadsheet\Calculation\TextData\Extract;
 use PhpParser\Node\Stmt\TryCatch;
 
 class ExtrasController extends Controller
@@ -860,7 +861,66 @@ class ExtrasController extends Controller
 				->get();
 				return response()->json($recetas); break;
 				
-			default: break;
+			case '8':
+				$diagnosticos = DB::select("SELECT count(cie_id) as contador, cie_id, c.code, c.description
+				FROM `cie_patient` as ci
+				inner join cies as c on c.id = ci.cie_id
+				where year(ci.created_at) = {$request->get('año')}
+				and month(ci.created_at) = {$request->get('mes')}
+				group by cie_id, c.code, c.description
+				order by contador desc;");
+				return response()->json($diagnosticos); break;
+			case '9':
+				$pacientes = Appointment::whereYear('date', $request->get('año'))
+				->whereMonth('date', $request->get('mes'))
+				->with('patient')
+				->get();
+				$contador = count($pacientes);
+				$edades = $pacientes->groupBy(function ($item) {
+					$edad = now()->diffInYears($item->patient->birth_date);
+					// Agrupamos por edad
+					return $edad; //. ' años'
+				});
+				$edades = $edades->sortKeys(); //sortKeysDesc
+				
+				$sexos = $pacientes->groupBy(function($item){
+					$sexo = $item->patient->gender ?? 'sin_dato';
+					return $sexo;
+				});
+
+				$recomendados = DB::select("SELECT recomendation, count(recomendation) as contador FROM `appointments`
+				where recomendation is not null
+				and year(date) = {$request->get('año')}
+				and month(date) = {$request->get('mes')}
+				group by recomendation
+				order by contador desc;");
+			
+				return response()->json(array( 'edades'=> $edades, 'sexos'=> $sexos, 'recomendados' => $recomendados, 'total'=>$contador )); break;
+
+			case '10':
+				$pagos = Extra_payment::whereYear('date', $request->get('año'))
+				->whereMonth('date', $request->get('mes'))
+				->where('type', '!=', 6)
+				->get();
+			case '11':
+				$medios = DB::select("SELECT sum(price) as suma, ti.descripcion
+				FROM `extra_payments` as ex
+				inner join tipo_pagos as ti on ti.id = ex.type
+				where year(date) = {$request->get('año')}
+				and month(date) = {$request->get('mes')}
+				and ex.type<>6
+				group by ex.type, ti.descripcion;");
+				/* $medios = Extra_payment::whereYear('date', $request->get('año'))
+				->whereMonth('date', $request->get('mes'))
+				->with('precio')
+				->get(); */
+				/* $pagos = $medios->groupBy(function($item){
+					$pago = $item->precio->descripcion;
+					return $pago;
+				}); */
+				$contador = count($medios);
+			return response()->json(array('pagos'=> $medios, 'total'=>$contador)); break;
+				default: break;
 		}
 
 	}

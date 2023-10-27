@@ -233,7 +233,173 @@
 						</tbody>
 					</table>
 				</div>
-
+				<div v-if="idReporte==8">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Código</th>
+								<th>Diagnóstico</th>
+								<th>Cant. Diag.</th>
+							</tr>
+						</thead>
+						<tbody v-for="(cie, indice) in resultados">
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>{{cie.code}}</td>
+								<td>{{cie.description}}</td>
+								<td>{{cie.contador}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==9">
+					<p class="mt-2"><strong>Reporte de pacientes por edades</strong></p>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Edad</th>
+								<th>Cantidad</th>
+								<th>Porcentajes</th>
+							</tr>
+						</thead>
+						<tbody v-for="(edad, key, indice) in resultados.edades" :key='key'>
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>{{key}} años</td>
+								<td>{{edad.length}}</td>
+								<td>{{ parseFloat(edad.length/resultados.total*100).toFixed(2) }}%</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td></td>
+								<td>Total</td>
+								<td>{{ resultados.total }}</td>
+								<td>100%</td>
+							</tr>
+						</tfoot>
+					</table>
+					<p class="mt-2"><strong>Reporte de pacientes por sexos</strong></p>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Género</th>
+								<th>Cantidad</th>
+								<th>Porcentajes</th>
+							</tr>
+						</thead>
+						<tbody v-for="(edad, key, indice) in resultados.sexos" :key='key'>
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>
+									<span v-if="key==0">Femenino</span>
+									<span v-if="key==2">Masculino</span>
+									<span v-if="key==1">Masculino</span>
+									<span v-if="key==null">Sin definir</span>
+									<span v-if="key=='sin_dato'">Sin definir</span>
+								</td>
+								<td>{{edad.length}}</td>
+								<td>{{ parseFloat(edad.length/resultados.total*100).toFixed(2) }}%</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td></td>
+								<td>Total</td>
+								<td>{{ resultados.total }}</td>
+								<td>100%</td>
+							</tr>
+						</tfoot>
+					</table>
+					<p class="mt-2"><strong>Reporte de recomendaciones</strong></p>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Género</th>
+								<th>Cantidad</th>
+								<th>Porcentajes</th>
+							</tr>
+						</thead>
+						<tbody v-for="(reco, indice) in resultados.recomendados" >
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>{{reco.recomendation}}</td>
+								<td>{{reco.contador}}</td>
+								<td>{{ parseFloat(reco.contador/contarRecomendados*100).toFixed(2) }}%</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td></td>
+								<td>Total</td>
+								<td>{{ contarRecomendados }}</td>
+								<td>100%</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<div v-if="idReporte==10">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Comprobante</th>
+								<th>Monto recaudado</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>Boleta de venta</td>
+								<td>S/ 0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Factura</td>
+								<td>S/ 0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Recibo por honorarios</td>
+								<td>S/ 0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Ninguno</td>
+								<td>S/ 0.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==11">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Medio de pago</th>
+								<th>Monto recaudado</th>
+								</tr>
+						</thead>
+						<tbody v-for="(pago, indice) in resultados.pagos">
+							<tr>
+								<td>{{indice+1}}</td>
+								<td>{{pago.descripcion}}</td>
+								<td>{{pago.suma}}</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td></td>
+								<td>Total</td>
+								<td>{{sumaRecaudadoMedios}}</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -256,6 +422,11 @@ export default {
 				{id: 5, nombrado: 'Reprogramaciones por profesional'},
 				{id: 6, nombrado: 'Pacientes dados de alta'},
 				{id: 7, nombrado: 'Recetas por profesional'},
+				{id: 8, nombrado: 'Diagnósticos más frecuentes'},
+				{id: 9, nombrado: 'Reporte demográfico por clientes'},
+				{id: 10, nombrado: 'Comprobantes emitidos'},
+				{id: 11, nombrado: 'Medios de pago'},
+
 			],
 			filtroAnual:false, filtro:-1,
 		}
@@ -282,6 +453,7 @@ export default {
 					case 5: this.contarReprogramaciones(); break;
 					case 6: this.contarAltas(); break;
 					case 7: this.contarRecetas(); break;
+					case 7: this.contarDemografia(); break;
 					
 					default: break;
 				}
@@ -397,6 +569,9 @@ export default {
 					this.ocultarFechas=true;
 			}
 		},
+		contarDemografia(){
+
+		},
 		fechaFrom(fecha){
 			moment.locale('es')
 			return moment(fecha, 'YYYY-MM-DD').fromNow();
@@ -411,6 +586,21 @@ export default {
 			this.conteoR2.forEach(conteo => {
 				suma += parseFloat(conteo.ganancia)
 			});
+			return suma.toFixed(2);
+		},
+		contarRecomendados(){
+			let contador =0
+			
+			this.resultados.recomendados.forEach(item=>{
+				contador += item.contador
+			})
+			return contador;
+		},
+		sumaRecaudadoMedios(){
+			let suma = 0;
+			this.resultados.pagos.forEach(item=>{
+				suma+=parseFloat(item.suma)
+			})
 			return suma.toFixed(2);
 		}
 	},
