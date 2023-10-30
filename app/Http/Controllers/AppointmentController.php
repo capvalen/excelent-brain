@@ -764,10 +764,12 @@ class AppointmentController extends Controller
 			DB::table('interesados')->insert([
 				'nombre' => $patient->name,
 				'celular' => $patient->phone,
-				'motivo' => 'Anuló la cita',
+				'motivo' => 'Anuló la cita. Indicó: ' . $request->get('motivo'),
 				'referencia' => 7, //Ninguno
+				'origen' => $request->input('origen'),
+				'idProfesional' => $appointment->professional_id, //Ninguno
 				'idPaciente' => $patient->id,
-				'idUsuario' => 1
+				'idUsuario' => $request->input('idUsuario')
 			]);
 
 			/* $appointment->update([

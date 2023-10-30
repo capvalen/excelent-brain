@@ -65,8 +65,10 @@ export default{
 	},
 	methods:{
 		async addHobbie(){
-			this.misHobbies.push( this.selected.value );	 //document.getElementById('sltHobbie').value
-			this.guardarJSON();
+			if(this.selected.value!=null){
+				this.misHobbies.push( this.selected.value );	 //document.getElementById('sltHobbie').value
+				this.guardarJSON();
+			}
 		},
 		 borrarHobbie(index){
 			this.misHobbies.splice(index,1);

@@ -27,7 +27,7 @@
 <script>
 export default{
 	name: 'modalSeguimiento',
-	props:[ 'profesionales', 'idProfesional', 'elegido' ],
+	props:[ 'profesionales', 'idProfesional', 'elegido', 'idUsuario' ],
 	data(){ return{
 		seguimiento:{motivo:'', idProfesional: this.idProfesional}
 	}},
@@ -47,6 +47,7 @@ export default{
 					datos.append('correo', '')
 					datos.append('referencia', 7)
 					datos.append('idProfesional', this.seguimiento.idProfesional)
+					datos.append('idUsuario', this.idUsuario)
 					datos.append('idSeguimiento', this.elegido.seguimiento ?? 1)
 					datos.append('origen', 2)
 					fetch('/api/nuevoInteresado',{

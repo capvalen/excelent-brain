@@ -104,8 +104,8 @@
 			</div>
 		</div>
 	</div>
-	<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="idGlobal" @cambiar="cambiarItem" @borrarIDSeguimiento="idGlobal=-1"></ModalCambiarSeguimiento>
-	<ModalSeguimiento :profesionales="profesionales" :elegido="elegido" :idProfesional="filtro.idProfesional"></ModalSeguimiento>
+	<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="idGlobal" @cambiar="cambiarItem" @borrarIDSeguimiento="idGlobal=-1" :idUsuario="$attrs.idUser"></ModalCambiarSeguimiento>
+	<ModalSeguimiento :profesionales="profesionales" :elegido="elegido" :idProfesional="filtro.idProfesional" :idUsuario="$attrs.idUser"></ModalSeguimiento>
 
 	</div>
 </template>
@@ -207,6 +207,7 @@ export default{
 		
 	},
 	mounted(){
+		//this.idUsuario = this.
 		for(let i=moment().format('YYYY'); i>=2020 ; i--){
 			this.años.push(i)
 		}

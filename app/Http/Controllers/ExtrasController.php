@@ -93,10 +93,10 @@ class ExtrasController extends Controller
 		DB::insert("INSERT INTO `interesados`(`nombre`, `celular`, `motivo`, `referencia`, `correo`, 
 		`idProfesional`, `origen`, `idUsuario`, `idSeguimiento`) VALUES 
 		(?,?,?,?,?,
-		?,?, 1, ?)",
+		?,?,?,?)",
 		[
 			$request->input('nombre'), $request->input('celular'), $request->input('motivo'), $request->input('referencia'), $request->input('correo'),
-			$request->input('idProfesional'), $request->input('origen'), $request->input('idSeguimiento')
+			$request->input('idProfesional'), $request->input('origen'), $request->input('idUsuario'),  $request->input('idSeguimiento')
 		]);
 		$ultimoID = DB::getPdo()->lastInsertId();
 		return response()->json([
@@ -572,6 +572,7 @@ class ExtrasController extends Controller
 				->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
 				->groupBy('patient_id')
 				->with('patient')
+				->orderBy('date', 'desc')
 				->get();
 			$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
 				->whereYear('date', $request->get('año'))
@@ -585,6 +586,7 @@ class ExtrasController extends Controller
 				->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
 				->groupBy('patient_id')
 				->with('patient')
+				->orderBy('date', 'desc')
 				->get();
 			$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
 				->whereYear('date', $request->get('año'))

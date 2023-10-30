@@ -166,7 +166,7 @@
 			
 		</div>
 		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha' @actualizarListadoCitas="actualizarListadoCitas"></ModalNuevaCita>
-    <modal-estado v-if="cita" :dataCit="cita"></modal-estado>
+    <modal-estado v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></modal-estado>
     <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
 		<modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario" @ocultarCita="actualizarListadoCitas"></reprog-modal>

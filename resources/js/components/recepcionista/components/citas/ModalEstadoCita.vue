@@ -60,7 +60,7 @@ import alertify from 'alertifyjs';
 
       async updateStatuAppointment () {
         console.log('id_appointment',this.dataCit.id)
-        await this.axios.post(`/api/updateStatus/${this.dataCit.id}/${this.dataCit.status}`,{dataCit: this.dataCit, motivo: this.motivo})
+        await this.axios.post(`/api/updateStatus/${this.dataCit.id}/${this.dataCit.status}`,{dataCit: this.dataCit, motivo: this.motivo, idUsuario:this.idUsuario, origen:1 })
         .then(res => {
           console.log("actualizado",res.data)
           this.closeModal()
@@ -80,7 +80,7 @@ import alertify from 'alertifyjs';
     },
   
     props:{
-      dataCit: Object
+      dataCit: Object, idUsuario:Number
     },  
 
     computed: {

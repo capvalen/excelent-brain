@@ -212,7 +212,7 @@
 									<td>{{ interesado.celular }}</td>
 									<td>{{ interesado.nomProf }}</td>
 									<td>
-										<span v-if="interesado.origen=='1'">Manual</span>
+										<span v-if="interesado.origen=='1'">Sist. recepción</span>
 										<span v-if="interesado.origen=='2'">Cartera de clientes</span>
 										<span v-if="interesado.origen=='3'">Cita anulada</span>
 									</td>
@@ -222,13 +222,8 @@
 									</td>
 									<td>{{ interesado.usuNombre }}</td>
 									<td>
-										<span v-if="interesado.referencia=='1'">Ninguno</span>
-										<span v-if="interesado.referencia=='2'">Recomendación</span>
-										<span v-if="interesado.referencia=='3'">Publicidad de internet</span>
-										<span v-if="interesado.referencia=='4'">Publicidad Escrita</span>
-										<span v-if="interesado.referencia=='5'">Publicidad de TV/Radio</span>
-										<span v-if="interesado.referencia=='6'">Referido</span>
-										<span v-if="interesado.referencia=='7'"> </span> <!-- Sistema recepcion -->
+										<span>{{referencias[interesado.referencia]}}</span>
+								
 									</td>
 									<td>{{ fechaLatam(interesado.fecha) }} {{ horaLatam(interesado.fecha) }}</td>
 									<td>
@@ -393,7 +388,8 @@ export default {
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos', filtroDoc:-1, fechaInteresados: moment().format('YYYY-MM-DD'), queDeuda:null, anteriores:[]
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos', filtroDoc:-1, fechaInteresados: moment().format('YYYY-MM-DD'), queDeuda:null, anteriores:[],
+			referencias:[{1:'Ninguno', 2:'Recomendación', 3:'Publicidad de internet', 4:'Publicidad Escrita',5:'Publicidad de TV/Radio',6:'Referido',7:'Sist. Recepción',}]
 		}
 	},
 	mounted(){
