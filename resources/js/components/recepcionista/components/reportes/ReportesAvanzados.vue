@@ -458,24 +458,44 @@
 						</tr>
 					</tbody>
 				</table>
+				<table class="table table-sm table-hover" v-if="idReporte==17">
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Paciente</th>
+							<th>@</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(paciente, index) in resultados">
+							<td>{{index+1}}</td>
+							<td>{{paciente.name}}</td>
+							<td>
+								<button class="btn btn-outline-primary" @click="dataPaciente = paciente" data-bs-target="#patientModal" data-bs-toggle="modal"><i class="far fa-edit" ></i> Editar</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 				
 				
 			</div>
 		</div>
 		<ModalSeguimiento :profesionales="profesionales" :idProfesional="7" :elegido="elegido"></ModalSeguimiento>
+		<ModalEditPatients :dataPatient="dataPaciente"></ModalEditPatients>
 	</div>
 	
 </template>
 <script>
 import ModalSeguimiento from "../../../recepcionista/components/adicionales/ModalSeguimiento.vue"
+import ModalEditPatients from '../../..//recepcionista/components/pacientes/ModalEditPatients.vue'
 import moment from 'moment';
 
 	export default{
 		name: 'reportesAvanzados',
-		components:{ ModalSeguimiento },
+		components:{ ModalSeguimiento, ModalEditPatients },
 		data(){ return{
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-			idReporte:0, resultados:[], ocultarFechas:false,
+			idReporte:0, resultados:[], ocultarFechas:false, dataPaciente:[],
 			fecha:{ año: moment().format('YYYY'), mes: moment().format('M') },
 			reportes:[
 				{id: 1, nombrado: 'Pacientes ausentes mayor a 7 días'},
@@ -495,9 +515,20 @@ import moment from 'moment';
 				{id: 14, nombrado: 'Citas reprogramadas'},
 				{id: 15, nombrado: 'Citas anuladas con faltas'},
 				{id: 16, nombrado: 'Citas confirmadas'},
+				{id: 17, nombrado: 'Pacientes con datos incompletos'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
-			estados:[{id: 1, valor: 'Neutro'},{id: 2, valor: 'excelente'},{id: 3, valor: 'promotor'},{id: 4, valor: 'wow'},{id: 5, valor: 'reprogramador'},{id: 6, valor: 'exigente'},{id: 7, valor: 'deudor'},{id: 8, valor: 'insatisfecho'},{id: 9, valor: 'peligroso'},], suma:{}, sumaTodoMedio:0, profesionales:[{id:7, name:'Recepción'}], elegido:{name:'', phone:'', motivo:''}, filtroAnual:false, filtro:-1,
+			estados:[
+				{id: 1, valor: 'Neutro', detalle: 'No tiene ningún registro de actitud'},
+				{id: 2, valor: 'cumplidor', detalle: 'es un paciente exclente'},
+				{id: 3, valor: 'promotor', detalle: 'promueve actividades entre sus compañeros o la empresa'},
+				{id: 4, valor: 'wow', detalle: 'es involucrado en actividades, participativo'},
+				{id: 5, valor: 'reprogramador', detalle: 'suele aplazarcitas y actividades'},
+				{id: 6, valor: 'exigente', detalle: 'un paciente/cliente que siempre pide un trato especial'},
+				{id: 7, valor: 'deudor', detalle: 'paciente con deudas'},
+				{id: 8, valor: 'insatisfecho', detalle: 'suele quejarse de los servicios'},
+				{id: 9, valor: 'peligroso', detalle: 'paciente con amenazas o actos de violencia.'},
+			], suma:{}, sumaTodoMedio:0, profesionales:[{id:7, name:'Recepción'}], elegido:{name:'', phone:'', motivo:''}, filtroAnual:false, filtro:-1,
 			equipo:['Psicología', 'Psiquiatría', 'Certificado', 'Kurame', 'Membresía']
 		}},
 		methods:{

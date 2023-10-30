@@ -118,12 +118,6 @@ class AppointmentController extends Controller
 	public function getschedules(){
 		return Schedule::get();
 	}
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
 	public function store(Request $request)
 	{
 		try {
@@ -1078,10 +1072,8 @@ class AppointmentController extends Controller
 		$extra_payment = Extra_payment::where('appointment_id', $id)
 		->with('appointment')
 		->with('appointment.schedule')
-		->first();
-		//print_r($extra_payment);die();
-		//->where('activo', '=', 1)
-		//return $extra_payment; die();
+		->get();
+		return $extra_payment; die();
 		$pdf = PDF::loadView('recepcion.cupon_extra', compact('extra_payment'));
 		$pdf->setPaper('a7');
 		return $pdf->stream('cupon_extra.pdf');

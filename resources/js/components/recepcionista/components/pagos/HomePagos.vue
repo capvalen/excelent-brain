@@ -89,8 +89,8 @@
 							<td class="d-print-none">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
-								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-								<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+								<!-- <a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a> -->
+								<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 							</td>
             </tr>
         </tbody>
@@ -163,7 +163,7 @@
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-								<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+								<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 							</td>
             </tr>
         </tbody>
@@ -301,19 +301,24 @@
 								</select>
 							</div>
 							<div class="col-sm-12">
-								<label for="">Tipo de comprobante</label>
-								<option value="1">Factura</option>
-								<option value="3">Boleta</option>
-								<option value="-1">Ninguno</option>
-							</div>
-							<div class="col-sm-12">
-								<label for="">Boleta / Factura</label>
-								<input type="text" class="form-control" v-model="caso.boleta">
-							</div>
-							<div class="col-sm-12">
 								<label for="">N° de Operación</label>
 								<input type="text" class="form-control" v-model="caso.comprobante">
 							</div>
+							<div class="col-sm-12">
+								<label for="">Tipo de comprobante</label>
+								<select class="form-select" id="sltTipoComprobante" v-model="caso.tipo">
+									<option value="1">Factura</option>
+									<option value="4">Contrato</option>
+									<option value="3">Boleta de venta</option>
+									<option value="2">Recibo por honorarios</option>
+									<option value="-1">Ninguno</option>
+								</select>
+							</div>
+							<div class="col-sm-12" v-show="caso.tipo!=-1">
+								<label for="">Boleta / Factura</label>
+								<input type="text" class="form-control" v-model="caso.boleta">
+							</div>
+						
 							<div class="form-group">
 								<label for="">Observación</label>
 								<textarea class="form-control" name="observation" id="observation" cols="10" rows="2" v-model="caso.observacion"></textarea>
@@ -344,7 +349,7 @@ import moment from 'moment'
 		data(){
 			return{
 				payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'], idSeleccionado:-1,
-				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:''}, foto:'', habilitarEliminado:false
+				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false
 			}
 		},
 		props:{},
@@ -426,7 +431,9 @@ import moment from 'moment'
 							this.payments[this.caso.index].voucher = this.caso.boleta
 							this.payments[this.caso.index].voucher_iss = this.caso.comprobante
 							this.payments[this.caso.index].observation = this.caso.observacion
+							this.payments[this.caso.index].tipo= this.caso.tipo
 						}
+						this.caso.tipo=-1
 					})
 				},
 				actualizar(){ this.getAllExtraPayments() },

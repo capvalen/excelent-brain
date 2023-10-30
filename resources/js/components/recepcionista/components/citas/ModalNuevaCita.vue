@@ -517,7 +517,8 @@ export default {
 			this.cita.type_amount=1;
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 			this.etiqueta =''; this.descuentoAdelanto = 0; this.descuentoPorcentaje=0; this.descuentoPorcentual=0;
-			this.tieneAdelanto=false; this.tieneDescuento=false; this.tieneRebaja=false;
+			this.tieneAdelanto=false; this.tieneDescuento=false; this.tieneRebaja=false; this.razonAdelanto=''; this.razonRebaja=''
+			this.cita.contacto =''; this.cita.contacto_celular=''; this.cita.parentezco=''
 		},
 		reniec(){ 
 			if (this.switchReciec === 0) return;

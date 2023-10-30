@@ -11,17 +11,20 @@
 						</select>
 					</div>
 					<div class="col-12 col-md-3" v-show="!ocultarFechas">
-						<label for="">Año</label>
-						<select class="form-select" v-model="fecha.año">
+						<label for="">Fecha Inicial</label>
+						<input type="date" class="form-control" v-model="fecha.inicio">
+						<!-- <select class="form-select" v-model="fecha.año">
 							<option v-for="año in años" :value="año">{{ año }}</option>
-						</select>
+						</select> -->
 					</div>
 					<div class="col-12 col-md-3" v-show="!ocultarFechas">
-						<label for="">Mes</label>
+						<label for="">Fecha Final</label>
+						<input type="date" class="form-control" v-model="fecha.fin">
+						<!-- <label for="">Mes</label>
 						<select class="form-select text-capitalize" v-model="fecha.mes">
 							<option v-if="filtroAnual" value="-1" class="text-capitalize">Todo el año</option>
 							<option class="text-capitalize" v-for="(mes, index) in meses" :value="index+1">{{ mes }}</option>
-						</select>
+						</select> -->
 					</div>
 					<div class="col-12 col-md-3 d-flex align-items-end">
 						<button class="btn btn-outline-primary" @click="pedirReporte()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
@@ -152,7 +155,7 @@
 								<th>N°</th>
 								<th>Profesión</th>
 								<th>Profesional</th>
-								<th>N° Pacientes</th>
+								<th># de atenciones</th>
 								<th>Monto</th>
 							</tr>
 						</thead>
@@ -352,25 +355,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Boleta de venta</td>
-								<td>S/ 0.00</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>Factura</td>
-								<td>S/ 0.00</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>Recibo por honorarios</td>
-								<td>S/ 0.00</td>
-							</tr>
-							<tr>
-								<td>4</td>
-								<td>Ninguno</td>
-								<td>S/ 0.00</td>
+							<tr v-for="(pago, key, indice) in resultados"" :key="key">
+								<td>{{indice+1}}</td>
+								<td>{{key}}</td>
+								<td>S/ {{ sumaTipoComprobante(key) }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -380,12 +368,12 @@
 						<thead>
 							<tr>
 								<th>N°</th>
-								<th>Medio de pago</th>
+								<th>Servicio</th>
 								<th>Monto recaudado</th>
 								</tr>
 						</thead>
-						<tbody v-for="(pago, indice) in resultados.pagos">
-							<tr>
+						<tbody>
+							<tr v-for="(pago, indice) in resultados.pagos">
 								<td>{{indice+1}}</td>
 								<td>{{pago.descripcion}}</td>
 								<td>{{pago.suma}}</td>
@@ -400,11 +388,30 @@
 						</tfoot>
 					</table>
 				</div>
+				<div v-if="idReporte==12">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Medio de pago</th>
+								<th>Monto recaudado</th>
+								</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(pago, key, indice) in resultados" :key="key">
+								<td>{{indice+1}}</td>
+								<td>{{key}}</td>
+								<td>{{sumaMedios(key)}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
+import { TimeScale } from 'chart.js';
 import moment from 'moment';
 
 export default {
@@ -413,7 +420,7 @@ export default {
 		return {
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
 			idReporte:0, resultados:[], ocultarFechas:false, conteo:{total:0, psiquiatria:{nuevo:0, continuo:0}, psicologia: {nuevo:0, continuo:0}},
-			fecha:{ año: moment().format('YYYY'), mes: moment().format('M') }, conteoR2:[],
+			fecha:{ año: moment().format('YYYY'), mes: moment().format('M'), inicio:moment().format('YYYY-MM-DD'), fin:moment().format('YYYY-MM-DD') }, conteoR2:[],
 			reportes:[
 				{id: 1, nombrado: 'Tipos de pacientes'},
 				{id: 2, nombrado: 'Cartera de clientes'},
@@ -425,7 +432,8 @@ export default {
 				{id: 8, nombrado: 'Diagnósticos más frecuentes'},
 				{id: 9, nombrado: 'Reporte demográfico por clientes'},
 				{id: 10, nombrado: 'Comprobantes emitidos'},
-				{id: 11, nombrado: 'Medios de pago'},
+				{id: 11, nombrado: 'Ingresos'},
+				{id: 12, nombrado: 'Medios de pago'},
 
 			],
 			filtroAnual:false, filtro:-1,
@@ -441,7 +449,8 @@ export default {
 		pedirReporte(){
 			this.resultados=[];
 			this.axios.post('/api/pedirReporteGerencial/'+this.idReporte,{
-				año: this.fecha.año, mes: this.fecha.mes
+				/* año: this.fecha.año, mes: this.fecha.mes */
+				inicio: this.fecha.inicio, fin: this.fecha.fin
 			})
 			.then(serv=> { console.log(serv.data);
 				this.resultados=serv.data;
@@ -453,8 +462,6 @@ export default {
 					case 5: this.contarReprogramaciones(); break;
 					case 6: this.contarAltas(); break;
 					case 7: this.contarRecetas(); break;
-					case 7: this.contarDemografia(); break;
-					
 					default: break;
 				}
 				
@@ -569,9 +576,6 @@ export default {
 					this.ocultarFechas=true;
 			}
 		},
-		contarDemografia(){
-
-		},
 		fechaFrom(fecha){
 			moment.locale('es')
 			return moment(fecha, 'YYYY-MM-DD').fromNow();
@@ -602,7 +606,25 @@ export default {
 				suma+=parseFloat(item.suma)
 			})
 			return suma.toFixed(2);
-		}
+		},
+		sumaTipoComprobante(){
+			return (llave)=>{
+				let suma = 0;
+				this.resultados[llave].forEach(item=>{
+					suma += parseFloat(item.price)
+				})
+				return suma.toFixed(2);
+			}
+		},
+		sumaMedios(){
+			return (llave)=>{
+				let suma = 0;
+				this.resultados[llave].forEach(item=>{
+					suma += parseFloat(item.price)
+				})
+				return suma.toFixed(2);
+			}
+		},
 	},
 	mounted() {
 		this.reportes.sort((a, b) => {

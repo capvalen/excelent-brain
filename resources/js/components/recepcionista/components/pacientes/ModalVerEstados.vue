@@ -23,6 +23,7 @@
 										<button class="btn btn-outline-secondary" @click="enviarSemaforo()"><i class="fas fa-share"></i> Enviar</button>
 									</div>
 								</div>
+								<p class="mt-2 mb-0">Detalle: {{ verDetalle(semaforo.codigo) }}</p>
 							</div>
 						</div>
 						<table class="table table-striped">
@@ -91,7 +92,14 @@ import moment from 'moment';
 						}
 					})
 				}
-			}
+			},
 		},
+		computed:{
+			verDetalle(){
+				return (id)=>{
+					return this.estados.find(x=> x.id == id).detalle
+				}
+			}
+		}
 	}
 </script>

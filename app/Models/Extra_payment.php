@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Extra_payment extends Model
 {
-    protected $fillable=['customer','date','price','type','observation', 'voucher', 'voucher_issued', 'continuo', 'moneda', 'user_id', 'appointment_id', 'activo', 'razon', 'rebaja', 'motivoRebaja', 'descuento', 'motivoDescuento', 'razonAdelanto', 'idMembresia'];
+    protected $fillable=['customer','date','price','type','observation', 'voucher', 'voucher_issued', 'continuo', 'moneda', 'user_id', 'appointment_id', 'activo', 'razon', 'rebaja', 'motivoRebaja', 'descuento', 'motivoDescuento', 'razonAdelanto', 'idMembresia', 'tipo'];
     use HasFactory;
 
     public function appointment() {
@@ -16,5 +16,13 @@ class Extra_payment extends Model
 
     public function precio(){
         return $this->hasOne("App\Models\Precio", 'id', 'type');
+    }
+
+    public function comprobante(){
+        return $this->hasOne("App\Models\TipoComprobante", 'id', 'tipo');
+    }
+
+    public function method_payment(){
+        return $this->hasOne("App\Models\Payment_method", 'id', 'moneda');
     }
 }

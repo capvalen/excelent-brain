@@ -7,7 +7,7 @@
 			<form class="d-sm-inline-block form-inline form-search-historia" @submit.prevent>
 				<div class="input-group">
 					<input type="text" id="searchHistoriaProfesional" class="form-control bg-white shadow-sm border-0 small"
-						placeholder="Buscar..." aria-label="Search" aria-describedby="basic-addon2" @keyup.enter="searchHistoria">
+						placeholder="Buscar..." aria-label="Search" aria-describedby="basic-addon2" @keyup.enter="searchHistoria()">
 					<div class="input-group-append">
 						<button class="btn btn-primary" type="button" @click="searchHistoria()">
 							<i class="fas fa-search fa-sm"></i>

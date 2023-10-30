@@ -163,8 +163,8 @@ class PaymentController extends Controller
 				->where('activo', 0)
 				->get();
 				$ordenados =  $payments->sortBy([
-					['professional_id', 'desc'],
-					['horar', 'asc']
+					fn ($a, $b) => $a['profesional_name'] <=> $b['profesional_name'],
+					fn ($a, $b) => $a['horar'] <=> $b['horar'],
 				]);
 				//$ordenados2 = $ordenados->sortBy('horar');
         return response()->json(['activos'=>$ordenados, 'eliminados'=>$noactivo]);
@@ -177,6 +177,7 @@ class PaymentController extends Controller
 				'voucher' => $request->get('boleta'),
 				'voucher_issued' => $request->get('comprobante'),
 				'observation' => $request->get('observacion'),
+				'tipo' => $request->get('tipo'),
 			]);
 			return response()->json(['msg'=> 'success']);
 		}

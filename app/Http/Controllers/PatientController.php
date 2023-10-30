@@ -67,26 +67,36 @@ class PatientController extends Controller
 
 	public function patientMineText($texto)
 	{
-		try {
-			DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
+		
+		DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
 
-			$patients = Patient::join('appointments as a', 'a.patient_id', '=', 'patients.id')
-			->with('initial_psychiatric_history', 'initial_psychological_history')
+		/* $patients = Patient::join('appointments as a', 'a.patient_id', '=', 'patients.id')
+		->with('initial_psychiatric_history', 'initial_psychological_history')
+
+		->where('a.status', '<>', 3)
+		->where('patients.name', 'like', '%'. $texto.'%' )
+		->orWhere('patients.dni', $texto)
+		->where('activo', 1)
+		->groupBy('patients.id')
+		->havingRaw('COUNT(patients.id) > 1')
+		->latest('a.created_at')
+		->select('patients.*' )->get(); */
+
+
+		$pacientes = Patient::
+		with('appointments')
+		->whereHas('appointments', function($query){
+				$query->where('status', '=', 3)
+				->latest('created_at');
+			})
+		->where('patients.name', 'like', '%'. $texto.'%' )
+		->orWhere('patients.dni', $texto)
+		->where('activo', 1)
+		->groupBy('patients.id')
+		->get();
+
+		return response()->json($pacientes);
 	
-			->where('a.status', '<>', 3)
-			->where('patients.name', 'like', '%'. $texto.'%' )
-			->orWhere('patients.dni', $texto)
-			->where('activo', 1)
-			->groupBy('patients.id')
-			->havingRaw('COUNT(patients.id) > 1')
-			->latest('a.created_at')
-			
-			
-			->select('patients.*' )->get();
-			return response()->json($patients);
-		} catch (\Throwable $th) {
-			echo $th;
-		}
 	
 		
 	}

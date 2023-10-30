@@ -672,8 +672,17 @@ export default {
 				id: '',
 				tipoExam: 'SCL90R'
 			},
-			estados:[ {id: 1, valor: 'Neutro'}, {id: 2, valor: 'excelente'}, {id: 3, valor: 'promotor'}, {id: 4, valor: 'wow'}, {id: 5, valor: 'reprogramador'}, {id: 6, valor: 'exigente'}, {id: 7, valor: 'deudor'},
-				{id: 8, valor: 'insatisfecho'}, {id: 9, valor: 'peligroso'}, ], datosPaciente:{ semaforo:[]},
+			estados:[
+				{id: 1, valor: 'Neutro', detalle: 'No tiene ningún registro de actitud'},
+				{id: 2, valor: 'cumplidor', detalle: 'es un paciente exclente, comprometido'},
+				{id: 3, valor: 'promotor', detalle: 'promueve actividades entre sus compañeros o la empresa'},
+				{id: 4, valor: 'wow', detalle: 'es involucrado en actividades, participativo'},
+				{id: 5, valor: 'reprogramador', detalle: 'suele aplazarcitas y actividades'},
+				{id: 6, valor: 'exigente', detalle: 'un paciente/cliente que siempre pide un trato especial'},
+				{id: 7, valor: 'deudor', detalle: 'paciente con deudas'},
+				{id: 8, valor: 'insatisfecho', detalle: 'suele quejarse de los servicios'},
+				{id: 9, valor: 'peligroso', detalle: 'paciente con amenazas o actos de violencia.'},
+			], datosPaciente:{ semaforo:[]},
 
 			inicialPsiquiatria: {
 				id: '',
@@ -1190,7 +1199,7 @@ export default {
 
 	mounted() {
 		this.getHistories();
-		this.hobbies.sort();
+		//this.hobbies.sort();
 	},
 
 	updated() {

@@ -47,7 +47,7 @@
 					</table>
 				</div>
 			</div>
-		</div>
+		</div>	
 	</div>
 </template>
 <script>
@@ -58,13 +58,6 @@ export default{
 	props:['hobbies','misHobbies', 'id'],
 	components: { VSelect },
 	data(){return { actividades:[],
-		countries: [
-        { value: 1, text: "Pakistan" },
-        { value: 2, text: "China" },
-        { value: 3, text: "Bangladesh" },
-        { value: 4, text: "USA" },
-        { value: 5, text: "Australia" },
-      ],
 		selected: {value: null},
 	}},
 	mounted(){
@@ -91,9 +84,12 @@ export default{
 			return palabra;
 		},
 		recargarLista(){
-			this.hobbies.forEach((hob, index)=>{
+			let temporal = this.hobbies;
+			temporal.sort();
+			temporal.forEach((hob, index)=>{
 				this.actividades.push({ value: index, text: this.capitalizarPrimeraLetra(hob) })
 			})
+			//this.actividades.sort((a,b)=>a.descripcion.localeCompare(b.descripcion))
 		}
 	},
 	watch:{
