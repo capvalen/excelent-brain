@@ -82,12 +82,11 @@ class PatientController extends Controller
 		->latest('a.created_at')
 		->select('patients.*' )->get(); */
 
-
 		$pacientes = Patient::
 		with('appointments')
 		->with('initial_psychiatric_history', 'initial_psychological_history')
 		->whereHas('appointments', function($query){
-				$query->where('status', '=', 3)
+				$query->where('status', '<>', 3)
 				->latest('created_at');
 			})
 		->where('patients.name', 'like', '%'. $texto.'%' )
@@ -97,9 +96,6 @@ class PatientController extends Controller
 		->get();
 
 		return response()->json($pacientes);
-	
-	
-		
 	}
 
 	/**
