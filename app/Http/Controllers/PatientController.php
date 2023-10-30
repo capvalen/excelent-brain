@@ -85,6 +85,7 @@ class PatientController extends Controller
 
 		$pacientes = Patient::
 		with('appointments')
+		->with('initial_psychiatric_history', 'initial_psychological_history')
 		->whereHas('appointments', function($query){
 				$query->where('status', '=', 3)
 				->latest('created_at');
