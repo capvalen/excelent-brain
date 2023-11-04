@@ -402,7 +402,7 @@ class PatientController extends Controller
 			'activo' => 1
 		]);
 		return response()->json([
-			'msg'=> 'success'
+			'msg'=> 'Dado de alta exitósamente'
 		]);
 	}
 

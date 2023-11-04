@@ -130,6 +130,7 @@
 								<td>N° Pacientes atendidos</td>
 								<td>N° Pacientes nuevos</td>
 								<td>N° Pacientes continuos</td>
+								<td>N° Pacientes Anulados</td>
 								<td>N° Reevaluaciones</td>
 								<td>N° Certificados</td>
 							</tr>
@@ -142,6 +143,7 @@
 								<td>{{doctor.conteo}}</td>
 								<td>{{doctor.nuevo}}</td>
 								<td>{{doctor.continuo}}</td>
+								<td>{{doctor.anulado}}</td>
 								<td>{{doctor.revaluaciones}}</td>
 								<td>{{doctor.certificados}}</td>
 							</tr>
@@ -498,20 +500,24 @@ export default {
 		contarProduccion(){
 			this.conteoR2=[];
 			this.conteoR2.push({idProfesional:this.resultados[0].professional_id, nombre: this.resultados[0].professional.name, profesion: this.resultados[0].professional.profession,
-				nuevo:0, continuo:0, revaluaciones:0,certificados:0, conteo:0, 
+				nuevo:0, continuo:0, revaluaciones:0,certificados:0, conteo:0, anulado:0
 			})
 			this.resultados.forEach(cita=>{
 				if(cita.professional_id !== this.conteoR2[this.conteoR2.length-1].idProfesional ){
-					this.conteoR2.push({idProfesional: cita.professional_id, conteo:1, nombre: cita.professional.name, profesion: cita.professional.profession, nuevo:0, continuo:0, revaluaciones:0,certificados:0 })
+					this.conteoR2.push({idProfesional: cita.professional_id, conteo:1, nombre: cita.professional.name, profesion: cita.professional.profession, nuevo:0, continuo:0, revaluaciones:0,certificados:0, anulado:0 })
 				}else
 					this.conteoR2[this.conteoR2.length-1].conteo++
 
-				if(cita.patient_condition==1)//nuevos
-					this.conteoR2[this.conteoR2.length-1].nuevo++
-				else if(cita.precio.idClasificacion==2)
-					this.conteoR2[this.conteoR2.length-1].continuo++
-
-				if(cita.precio.id == 17)
+				switch (cita.patient_condition) {
+					case 1: this.conteoR2[this.conteoR2.length-1].nuevo++; break;
+					case 2: this.conteoR2[this.conteoR2.length-1].continuo++; break;
+					default: break;
+				}
+				
+				if(cita.status == '4' ) this.conteoR2[this.conteoR2.length-1].revaluaciones++
+				if(cita.status == '3' ) this.conteoR2[this.conteoR2.length-1].anulado++
+				
+				if(cita.precio.id == 17 || cita.stauts==4 )
 					this.conteoR2[this.conteoR2.length-1].revaluaciones++
 				if(cita.precio.idClasificacion == 3)
 					this.conteoR2[this.conteoR2.length-1].certificados++
@@ -545,12 +551,16 @@ export default {
 		},
 		contarAltas(){
 			this.conteoR2=[];
-			this.conteoR2.push({idProfesional:this.resultados[0].user.professional.id, nombre: this.resultados[0].user.professional.name, profesion: this.resultados[0].user.professional.profession,
-				altas:0
-			})
+			if(this.resultados[0].user.professional)
+				this.conteoR2.push({idProfesional:this.resultados[0].user.professional.id, nombre: this.resultados[0].user.nombre, profesion: this.resultados[0].user.professional.profession, 				altas:0 })
+			else
+				this.conteoR2.push({idProfesional:-1, nombre: this.resultados[0].user.nombre, profesion: 'Ninguna', altas:0})
 			this.resultados.forEach(cita=>{
-				if(cita.user.professional.id !== this.conteoR2[this.conteoR2.length-1].idProfesional )
-					this.conteoR2.push({idProfesional: cita.user.professional.id, conteo:1, nombre: cita.user.professional.name, profesion: cita.user.professional.profession, altas:1 })
+				if(cita.user.professional)
+					if(cita.user.professional.id !== this.conteoR2[this.conteoR2.length-1].idProfesional )
+						this.conteoR2.push({idProfesional: cita.user.professional.id, conteo:1, nombre: cita.user.professional.nombre, profesion: cita.user.professional.profession, altas:1 })
+					else
+						this.conteoR2[this.conteoR2.length-1].altas++
 				else
 					this.conteoR2[this.conteoR2.length-1].altas++
 			})

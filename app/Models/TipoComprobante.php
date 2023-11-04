@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipoComprobante extends Model
 {
-    protected $table="tipoComprobante";
+    protected $table="tipocomprobante";
     use HasFactory;
     protected $fillable=['descripcion'];
 }
