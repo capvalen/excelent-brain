@@ -145,6 +145,7 @@ class PaymentController extends Controller
     public function getExtraPaymentsByDay($date){
         $payments = Extra_payment::where('created_at', 'like', $date.'%')
 				->where('activo', 1)
+				->where('type', '!=', 6)
 				->get();
 				foreach ($payments as $payment) {
 					if($payment->appointment_id!=0){
@@ -161,6 +162,7 @@ class PaymentController extends Controller
 				}
 				$noactivo = Extra_payment::where('created_at', 'like', $date.'%')
 				->where('activo', 0)
+				->where('type', '=', 6)
 				->get();
 				$ordenados =  $payments->sortBy([
 					fn ($a, $b) => $a['profesional_name'] <=> $b['profesional_name'],

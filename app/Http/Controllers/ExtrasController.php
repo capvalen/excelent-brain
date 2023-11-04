@@ -984,7 +984,6 @@ class ExtrasController extends Controller
 
 				default: break;
 		}
-
 	}
 	
 }

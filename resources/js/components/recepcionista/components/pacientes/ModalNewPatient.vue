@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"> Datos del Nuevo Paciente 1</h5>
+          <h5 class="modal-title" id="exampleModalLabel"> Datos del Nuevo Paciente</h5>
           <button type="button" id="cerrModalPatient" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -180,75 +180,75 @@ import alertify from 'alertifyjs'
     methods:{
 			reniec(){
 				this.$swal.fire({
-				title: 'Buscando paciente',
-				timer: 2500,
-				timerProgressBar: true,
-				didOpen: () => {
+					title: 'Buscando paciente',
+					timer: 2500,
 					timerProgressBar: true,
-					this.$swal.showLoading()
-				},
-			})
+					didOpen: () => {
+						timerProgressBar: true,
+						this.$swal.showLoading()
+					},
+				})
 
-			this.axios.get("/api/buscar/"+this.paciente.dni)
-			.then(res => {
-				if (res.data.patient == null) { //Buscar en reniec
-					window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-					this.axios.get(`https://apiperu.dev/api/dni/${this.paciente.dni}`) //?api_token=${this.token}
-					.then(response => {
-						console.log(response.data)
-						this.paciente.name = response.data.message || `${response.data.data.apellido_paterno} ${response.data.data.apellido_materno} ${response.data.data.nombres}`;
-						if (response.data.success) {
-							this.patientNew = false
+				this.axios.get("/api/buscar/"+this.paciente.dni)
+				.then(res => {
+					if (res.data.patient == null) { //Buscar en reniec
+						window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+						this.axios.get(`https://apiperu.dev/api/dni/${this.paciente.dni}`) //?api_token=${this.token}
+						.then(response => {
+							console.log(response.data)
+							this.paciente.name = response.data.message || `${response.data.data.apellido_paterno} ${response.data.data.apellido_materno} ${response.data.data.nombres}`;
+							if (response.data.success) {
+								this.patientNew = false
 
-							this.$swal.fire({
-								icon: 'success',
-								title: 'Okey',
-								text: 'Paciente nuevo',
-							})
-						} else {
-							this.$swal.fire({
-								icon: 'error',
-								title: 'Oops...',
-								text: 'DNI no encontrado!',
-								footer: 'Vuelve a intentarlo'
-							})
-						}
-					})
-					.catch(err => {
-						console.error(err)
-					})
-				}else{ //encontro en la DB
-					this.$swal.fire({
-						title: 'Buscando paciente',
-						timer: 10,
-					})
-					console.log('datos del paciente',res.data);
+								this.$swal.fire({
+									icon: 'success',
+									title: 'Okey',
+									text: 'Paciente nuevo',
+								})
+							} else {
+								this.$swal.fire({
+									icon: 'error',
+									title: 'Oops...',
+									text: 'DNI no encontrado!',
+									footer: 'Vuelve a intentarlo'
+								})
+							}
+						})
+						.catch(err => {
+							console.error(err)
+						})
+					}else{ //encontro en la DB
+						this.$swal.fire({
+							title: 'Buscando paciente',
+							timer: 10,
+						})
+						console.log('datos del paciente',res.data);
 
-					this.paciente.name = res.data.patient.name;
-					this.paciente.phone = res.data.patient.phone;
-					this.paciente.email = res.data.patient.email;
-					this.paciente.address.address = res.data.address.address;
-					this.paciente.birth_date = res.data.patient.birth_date;
-					this.paciente.marital_status = res.data.patient.marital_status;
-					this.paciente.instruction_degree = res.data.patient.instruction_degree;
-					this.paciente.gender = typeof parseInt(res.data.patient.gender) === 'number' && res.data.patient.gender !==null ? res.data.patient.gender : 2;
-					this.paciente.occupation = res.data.patient.occupation;
-					this.paciente.address = res.data.patient.address.address;
-					this.paciente.department = res.data.patient.address.department;
-					this.paciente.province = res.data.patient.address.province;
-					this.paciente.district = res.data.patient.address.district;
-					this.paciente.name = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
-					this.paciente.phone = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
-					this.paciente.kinship = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
-				}
-			})
-			.catch(err => {
-				console.error(err)
-			})
-			.finally(result => {
-				this.switchReciec = 1;
-				document.querySelector(".btnReniec").classList.replace('btn-danger', 'btn-info')
-			})
+						this.paciente.name = res.data.patient.name;
+						this.paciente.phone = res.data.patient.phone;
+						this.paciente.email = res.data.patient.email;
+						this.paciente.address.address = res.data.address.address;
+						this.paciente.birth_date = res.data.patient.birth_date;
+						this.paciente.marital_status = res.data.patient.marital_status;
+						this.paciente.instruction_degree = res.data.patient.instruction_degree;
+						this.paciente.gender = typeof parseInt(res.data.patient.gender) === 'number' && res.data.patient.gender !==null ? res.data.patient.gender : 2;
+						this.paciente.occupation = res.data.patient.occupation;
+						this.paciente.address = res.data.patient.address.address;
+						this.paciente.department = res.data.patient.address.department;
+						this.paciente.province = res.data.patient.address.province;
+						this.paciente.district = res.data.patient.address.district;
+						this.paciente.name = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
+						this.paciente.phone = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
+						this.paciente.kinship = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
+					}
+				})
+				.catch(err => {
+					console.error(err)
+				})
+				.finally(result => {
+					this.switchReciec = 1;
+					document.querySelector(".btnReniec").classList.replace('btn-danger', 'btn-info')
+				})
 			},
       createDataPatient(){
 				if(this.paciente.dni.length<8){

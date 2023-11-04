@@ -3,7 +3,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Pagos</h1>
             <div class="d-flex align-items-center d-print-none">
-                <input type="date" class="form-control" @change="selectDate">
+                <input type="date" class="form-control" @change="selectDate" v-model="fecha">
             </div>
     </div>
     <div class="card px-1 pt-2 ">
@@ -13,6 +13,7 @@
 				<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary ms-auto"><i class="fas fa-plus"></i> Pagos extras</button>
 				<button data-bs-toggle="modal" data-bs-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
 				<button class="btn btn-outline-secondary border-0" @click="actualizar()"> <i class="fas fa-sync"></i> Actualizar</button>
+				<button class="btn btn-outline-secondary " v-if="consultarFecha()" @click="verTicketCierre()"> <i class="fas fa-print"></i> Ticket de cierre</button>
 				
 				
 			</div>
@@ -88,7 +89,7 @@
 							<td>{{ payment.horario }}</td>
 							<td class="d-print-none">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
-								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
+								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
 								<!-- <a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a> -->
 								<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 							</td>
@@ -349,7 +350,7 @@ import moment from 'moment'
 		data(){
 			return{
 				payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'], idSeleccionado:-1,
-				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false
+				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD') 
 			}
 		},
 		props:{},
@@ -437,7 +438,10 @@ import moment from 'moment'
 					})
 				},
 				actualizar(){ this.getAllExtraPayments() },
-				membresias(){}
+				consultarFecha(){
+					return this.fecha == moment().format('YYYY-MM-DD')
+				},
+				verTicketCierre(){ window.open('/api/ticketCierreCaja/'+this.fecha+'/'+this.$attrs.nombreUser, '_blank'); }
 		},
 		mounted(){
 			this.getAllExtraPayments()
