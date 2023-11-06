@@ -1074,8 +1074,8 @@ class AppointmentController extends Controller
 		$extra_payment = Extra_payment::where('appointment_id', $id)
 		->with('appointment')
 		->with('appointment.schedule')
-		->get();
-		return $extra_payment; die();
+		->first();
+		//return $extra_payment; die();
 		$pdf = PDF::loadView('recepcion.cupon_extra', compact('extra_payment'));
 		$pdf->setPaper('a7');
 		return $pdf->stream('cupon_extra.pdf');
