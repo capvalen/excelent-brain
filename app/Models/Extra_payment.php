@@ -25,4 +25,8 @@ class Extra_payment extends Model
     public function method_payment(){
         return $this->hasOne("App\Models\Payment_method", 'id', 'moneda');
     }
+
+    public function usuario(){
+        return $this->hasOne("App\Models\User", 'id', 'user_id');
+    }
 }

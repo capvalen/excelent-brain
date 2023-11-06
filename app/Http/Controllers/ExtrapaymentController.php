@@ -96,6 +96,7 @@ class ExtrapaymentController extends Controller
 			$pagoExtra->observation = $request->input('observation');
 			$pagoExtra->voucher = $request->input('boleta');
 			$pagoExtra->voucher_issued = $request->input('serie');
+			$pagoExtra->user_id = $request->input('idUsuario');
 
 			$pagoExtra->save();
 	return response()->json('Se registro con éxito');

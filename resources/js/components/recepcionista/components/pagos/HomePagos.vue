@@ -27,7 +27,7 @@
 					<tr>
 						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td>N°</td>
-						<td>Fecha</td>
+						<td><i class="far fa-user"></i> | Fecha</td>
 						<td>Fact. Bol.</td>
 						<td>Ticket</td>
 						<td>Cliente - Motivo</td>
@@ -50,9 +50,9 @@
 							<td>
 								<span>{{index+1}}</span>
 							</td>
-							<td>{{payment.created_at | formatedDate}}</td>
+							<td v-if="payment.usuario" style="white-space: nowrap;" :title="payment.usuario.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.usuario.nombre" ><i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
+							<td v-else style="white-space: nowrap;" title="Sin datos" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Sin datos">{{payment.created_at | formatedDate}}</td>
 							<td>{{payment.voucher}}</td>
-
 							<td>{{ payment.id}}</td>
 							<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''"></span></td>
 							<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
@@ -118,7 +118,7 @@
 					<tr>
 						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td>N°</td>
-						<td>Fecha</td>
+						<td><i class="far fa-user"></i> | Fecha</td>
 						<td>Fact. Bol.</td>
 						<td>Ticket</td>
 						<td>Cliente - Motivo</td>
@@ -140,7 +140,8 @@
 							<td>
 								<span>{{index+1}}</span>
 							</td>
-							<td>{{payment.created_at | formatedDate}}</td>
+							<td v-if="payment.usuario" style="white-space: nowrap;" :title="payment.usuario.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.usuario.nombre" ><i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
+							<td v-else style="white-space: nowrap;" title="Sin datos" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Sin datos">{{payment.created_at | formatedDate}}</td>
 							<td>{{payment.voucher}}</td>
 
 							<td>{{ payment.id}}</td>
@@ -192,7 +193,7 @@
 					<tr>
 						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td>N°</td>
-						<td>Fecha</td>
+						<td><i class="far fa-user"></i> | Fecha</td>
 						<td>Fact. Bol.</td>
 						<td>Ticket</td>
 						<td>Cliente - Motivo</td>
@@ -211,7 +212,8 @@
 						<td>
 							<span>{{index+1}}</span>
 						</td>
-						<td>{{payment.created_at | formatedDate}}</td>
+						<td v-if="payment.usuario" style="white-space: nowrap;" :title="payment.usuario.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.usuario.nombre" ><i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
+						<td v-else style="white-space: nowrap;" title="Sin datos" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Sin datos">{{payment.created_at | formatedDate}}</td>
 						<td>{{payment.voucher}}</td>
 
 						<td>{{ payment.id}}</td>
@@ -334,7 +336,7 @@
 		</div>
 		
 		<modal-pagos-extras />
-    <modal-egresos-extras />
+    <modal-egresos-extras :idUsuario="$attrs.idUser" :nombreUser="$attrs.nombreUser" />
 		<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto" :habilitarEliminado="habilitarEliminado" ></OffcanvasAdjuntos>
 	</div>
 </template>
@@ -370,6 +372,10 @@ import moment from 'moment'
 							this.salidas = res.data.salidas
 							this.eliminados = res.data.eliminados
 						})
+					.finally(()=>{
+						const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+						const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+					})
 				},
 				selectDate(e){
 					this.habilitarEliminado = (e.target.value == moment().format('YYYY-MM-DD') ) ? true : false;
