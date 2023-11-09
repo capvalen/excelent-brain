@@ -432,7 +432,7 @@ export default {
 				.then(response => {
 					console.log(response.data)
 					this.closeModal()
-					this.$swal('Cita inserdata con éxito')
+					this.$swal('Cita insertada con éxito')
 					this.$parent.listar()  
 					this.$emit('actualizarArray', true)              
 					this.clearModal()

@@ -231,6 +231,9 @@
           confirmButtonText: 'Si',
           cancelButtonText: `No`, //denyButtonText
       }).then((result) => {
+				if( result.value =='')
+					alertify.notify('No elimiando, falta rellenar un motivo' , 'danger', 5);
+				else
           if(result.isConfirmed){
               this.axios.post('/api/eliminarCita/'+id, {razon: result.value, usuario: this.nombreUser })
               .then((res) => {

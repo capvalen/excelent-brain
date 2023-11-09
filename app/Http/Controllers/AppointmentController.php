@@ -156,7 +156,7 @@ class AppointmentController extends Controller
 					'birth_date'=>$request->get('birth_date'),
 					'occupation'=>$request->get('occupation'),
 					'instruction_degree'=>$request->get('instruction_degree'),
-					'marital_status'=>$request->get('marital_status'),
+					'marital_status'=> $request->get('marital_status')  == 'null' ? 0 : $request->get('marital_status'),
 					'type_dni'=>$request->get('type_dni'),
 					'etiqueta'=>$request->get('etiqueta'),
 					'new_status'=>$request->get('new_status'),
@@ -284,7 +284,7 @@ class AppointmentController extends Controller
 				'gender'=> $request->get('gender') ?? 2,
 				'birth_date'=> $request->input('birth_date') =='null' ? null: $request->input('birth_date'),
 				'occupation'=> $request->input('occupation') =='null' ? null: $request->input('occupation'),
-				'marital_status'=> $request->get('marital_status'),
+				'marital_status'=> $request->get('marital_status')  == 'null' ? 0 : $request->get('marital_status'),
 				'phone'=>$request->get('phone'),
 				'etiqueta'=>$request->get('etiqueta'),
 				'new_status'=>$request->get('new_status'),
@@ -333,8 +333,25 @@ class AppointmentController extends Controller
 			
 
 		}
+
+		if($request->get('price') == 0){
+			$appointment->update([
+				'status' => 2, //confirmado
+			]);
+			$payment->update([
+				'pay_status' => 2 //pagado
+			]);
+			Medical_evolution::create([
+				'type' => $request->input('dataCita.type'),
+				'date' => $request->input('dataCita.date'),
+				'auth' => 0,
+				'patient_id'=> $request->input('dataCita.patient.id'),
+				'professional_id'=> $request->input('dataCita.professional.id'),
+				'schedule' => $request->input('dataCita.schedule.check_time'),
+			]);
+		}
 				//echo 'nombre: '. trim(str_replace('  ', ' ' , $request->get('name')));
-		return response()->json([ 'cita'=>$appointment ]);
+		return response()->json([ 'cita'=>$appointment, 'estado' => $request->get('price') ]);
 		} catch (\Throwable $th) {
 			echo $th;
 		}

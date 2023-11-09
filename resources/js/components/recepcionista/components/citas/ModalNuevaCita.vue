@@ -464,7 +464,10 @@ export default {
 					this.cita.membresia=''
 					this.$emit('actualizarListadoCitas', true)
 					//console.log(response.data.cita.id)
-					this.$swal('Cita inserdata con éxito')
+					this.$swal({
+						icon: 'success',
+						title: 'Cita registrada con éxito'
+					})
 					//this.$parent.listar()
 					this.clearModal()
 				})
