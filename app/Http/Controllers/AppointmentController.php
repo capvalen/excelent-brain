@@ -342,12 +342,12 @@ class AppointmentController extends Controller
 				'pay_status' => 2 //pagado
 			]);
 			Medical_evolution::create([
-				'type' => $request->input('dataCita.type'),
-				'date' => $request->input('dataCita.date'),
+				'type' => $request->input('type'),
+				'date' => $request->input('date'),
 				'auth' => 0,
-				'patient_id'=> $request->input('dataCita.patient.id'),
-				'professional_id'=> $request->input('dataCita.professional.id'),
-				'schedule' => $request->input('dataCita.schedule.check_time'),
+				'patient_id'=> $paciente_prueba->id,
+				'professional_id'=> $request->input('professional_id'),
+				'schedule' => $request->get('schedule_id'),
 			]);
 		}
 				//echo 'nombre: '. trim(str_replace('  ', ' ' , $request->get('name')));
