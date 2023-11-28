@@ -138,7 +138,7 @@ export default {
 				.then(res => { console.log(res.data);
 					this.closeModal()
 					this.$emit('ocultarCita')
-					this.$swal('Cita reprogramada con éxito')
+					this.$swal({icon:'sucess', title: 'Cita reprogramada con éxito'})
 					//this.$parent.searchHistoria()
 				})
 				.catch(err => {

@@ -852,7 +852,6 @@ export default {
 			.then(res=> this.comentarios= res.data)
 			
 		},
-
 		async updatedConsult() {
 			let data = Object;
 			if (this.dataUser.profession === 'Psiquiatra') {
@@ -1005,7 +1004,7 @@ export default {
 				case 'diagnostic':
 					this.inicialInputPsiquiatria.diagnostic = value; break;
 				case 'psiquiatria_plan':
-					this.inicialInputPsiquiatria.plan = true; break;
+					this.inicialInputPsiquiatria.plan = value; break;
 			}
 		},
 
@@ -1027,7 +1026,7 @@ export default {
 					this.dobleClick = false;
 				}
 			} else {
-				//alert('No tienes acceso para editar a este paciente')
+				//Solo para el profesional que pertenezca al bloque
 				this.$swal.fire({title: 'No tiene acceso para editar este bloque', icon:'error'})
 			}
 		},

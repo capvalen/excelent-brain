@@ -234,7 +234,6 @@
 						<td>
 							<span v-if="payment.type==6">Salida de dinero</span>
 							<span v-if="payment.type==5">Pago de cita</span>
-							<span v-if="payment.type==4">Otros</span>
 							<span v-if="payment.type==3">Informe</span>
 							<span v-if="payment.type==2">Paquete Kurame</span>
 							<span v-if="payment.type==1">Paquete Membresía</span>
@@ -299,8 +298,9 @@
 									<option value="8">Banco: Nación</option>
 									<option value="9">Banco: Scotiabank</option>
 									<option value="2">Depósito bancario</option>
-									<option value="3">POS</option>
+									<option value="12">IziPay</option>
 									<option value="11">Open Pay</option>
+									<option value="3">POS</option>
 								</select>
 							</div>
 							<div class="col-sm-12">

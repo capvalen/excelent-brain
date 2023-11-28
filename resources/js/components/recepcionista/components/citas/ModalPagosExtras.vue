@@ -4,7 +4,7 @@
 		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 			<div class="modal-content">
 				<div class="modal-header border-0">
-					<h5 class="modal-title" id="exampleModalLabel">Pagos Extras</h5>
+					<h5 class="modal-title" id="exampleModalLabel">Nuevo Pago Extra</h5>
 					<button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -16,7 +16,7 @@
 							<div class="col-sm-12 mb-0">
 								<label for="name">Dni</label>
 								<div class="input-group mb-3">
-									<input type="text" class="form-control" name="dni" id="dni" v-model="form.dni" placeholder="Dni del paciente" @keypress.enter="reniec()">
+									<input type="text" class="form-control" name="dni" id="dni" v-model="form.dni" autocomplete="off" placeholder="Dni del paciente" @keypress.enter="reniec()">
 									<button class="btn btn-outline-secondary" type="button" id="button-addon2" @click="reniec()"><i class="fas fa-search"></i></button>
 								</div>
 							</div>
@@ -26,27 +26,27 @@
 							<div class="col-sm-12 " id="divClienteNuevo">
 								<div class="form-group">
 									<label for="customer">Cliente</label>
-									<input type="text" name="customer" required id="customer" class="form-control" v-model="form.customer" autocomplete="off">
+									<input type="text" name="customer" required id="customer" class="form-control" v-model="form.customer" autocomplete="off" readonly>
 								</div>
 							</div>
 
 							<div class="col-sm-12">
 								<div class="form-group">
-									<label for="price">Precio</label>
+									<label for="price">Precio (S/)</label>
 									<input type="number" name="price" required id="price" class="form-control" v-model="form.price">
 								</div>
 							</div>
 							<div class="col-sm-12">
 								<label for="type">Tipo de pago</label>
 								<select class="form-select" id="type" required name="type" v-model="form.type">
-									<option value="0">Certificado</option>
+								<!-- 	<option value="0">Certificado</option>
 									<option value="1">Paquete de membresia</option>
 									<option value="2">Paquete kurame</option>
-									<option value="3">Informe</option>
+									<option value="3">Informe</option> -->
 									<option value="4">Otros</option>
 								</select>
 							</div>
-							<div class="col-sm-12">
+							<div class="col-sm-12 mt-2">
 								<label for="type">Moneda</label>
 								<select class="form-select" id="type" required name="type" v-model="form.moneda">
 									<option v-for="(moneda, index) in monedas" :value="index+1">{{moneda}}</option>
@@ -57,7 +57,7 @@
 								<input type="text" class="form-control" v-model="form.voucher_issued">
 							</div>
 
-							<div class="col-12">
+							<div class="col-12 mt-2">
 								<div class="form-group">
 								<label for="name">Observación</label>
 								<textarea name="observation" class="form-control" id="observation" rows="2" v-model="form.observation"></textarea>
@@ -84,11 +84,11 @@ export default {
 
 	data() {
 		return {
-			monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'],
+			monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay', 'IziPay'],
 			form: {
 				customer: null,
 				price: 0,
-				type: null,
+				type: 4,
 				moneda:1,
 				observation: null,
 				date: moment().format('YYYY-MM-DD'), continuo:-1
@@ -176,7 +176,7 @@ export default {
 						this.form[value] = ''
 					}
 					this.form['date'] = moment().format('YYYY-MM-DD');
-					this.$swal(res.data)
+					this.$swal({icon: "success", text: res.data})
 				})
 				.catch(err => {
 					this.$swal('Hubo un error')

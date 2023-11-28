@@ -397,7 +397,7 @@ class PatientController extends Controller
 			'registro' => Carbon::now(),
 			'patient_id'=>$id,
 			'user_id' => $idProfesional,
-			'idSeguimiento' => 4,
+			'idSeguimiento' => 7,
 			'observaciones' => 'Dado de alta por un profesional',
 			'activo' => 1
 		]);

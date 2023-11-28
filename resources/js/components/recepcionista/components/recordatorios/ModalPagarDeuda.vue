@@ -5,7 +5,7 @@
 			<div class="modal-content">
 				<div class="modal-header border-0 pb-0">
 					<h5 class="modal-title " id="exampleModalLabel">Procesar pago</h5>
-					<button type="button" id="closeModal" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+					<button type="button" id="closeModal" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 				</div>
 				<div class="modal-body">
 					<p>A favor de <strong class="text-capitalize">{{ deuda.name }}</strong></p>

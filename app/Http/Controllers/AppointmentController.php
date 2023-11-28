@@ -426,6 +426,9 @@ class AppointmentController extends Controller
 	public function searchAppointment ($nombre, $profesional, $fecha, $dni)
 	{
 		$queryAppointments = [];
+		$citas  = Appointment::
+		with('professional','patient', 'payment', 'schedule','patient.address','patient.relative');
+		
 
 		$appointments =Appointment::
 		join('patients as p', 'p.id', '=', 'appointments.patient_id')
@@ -434,10 +437,7 @@ class AppointmentController extends Controller
 		->orWhere('p.dni', $dni)
 		->get();
 		
-
 		return $appointments; die();
-		
-
 
 		foreach($appointments as $appointment) {
 			/* if (preg_match("/$nombre/i", $appointment->patient->name)) {
@@ -449,7 +449,6 @@ class AppointmentController extends Controller
 					if ($fecha && $appointment->date == $fecha) {
 						array_push($queryAppointments, $appointment);
 					}
-
 					if ($fecha == 'null') {
 						array_push($queryAppointments, $appointment);
 					}
@@ -485,7 +484,6 @@ class AppointmentController extends Controller
 			if($appointment->status == '3'){
 				$appointment->faltas = DB::table('faltas')->where('idCita', $appointment->id)->get();
 			}
-			
 		}
 		return response()->json($appointments);                
 	}

@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<h1 class="h3 mb-0 text-gray-800 mb-2">Precios de servicios</h1>
+		<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoServicio"><i class="fas fa-plus"></i> Nuevo servicio</button>
 		<div class="card my-2">
 			<div class="card-body">
 				<p class="text-muted"><strong>Precios de Psiquiatría</strong></p>
@@ -107,17 +108,19 @@
 			</div>
 		</div>
 		<ModalCambiarPrecio :precio="precioElegido"></ModalCambiarPrecio>
+		<modalNuevoServicio></modalNuevoServicio>
 
 	</div>
 </template>
 <script>
 import ModalCambiarPrecio from "./ModalCambiarPrecio.vue";
+import modalNuevoServicio from "./ModalNuevoServicio.vue";
 export default{
 	name: 'HomePrecios',
 	data(){ return {
 		precios:null, precioElegido:[]
 	}},
-	components:{ModalCambiarPrecio},
+	components:{ModalCambiarPrecio, modalNuevoServicio},
 	mounted(){
 		this.cargarPrecios()
 	},

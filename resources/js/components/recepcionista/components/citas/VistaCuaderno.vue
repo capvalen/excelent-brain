@@ -251,7 +251,7 @@
 				await this.axios.get(`/api/horarioCuadernoOcupado/${this.fecha}/${dia}`)
 				.then(res => { console.log(res.data);
 					moment.locale('es')
-					alertify.notify('<i class="fa-regular fa-calendar-check"></i> Datos actualizados del ' + moment(this.fecha).format('DD [de] MMMM') , 'success', 5);
+					alertify.notify('<i class="fa-regular fa-calendar-check"></i> Datos del ' + moment(this.fecha).format('DD [de] MMMM') , 'success', 5);
 					this.horasSolas = res.data.solos;
 					this.horasMalas = res.data.invalidos;
 

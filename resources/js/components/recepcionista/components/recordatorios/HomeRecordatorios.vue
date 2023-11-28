@@ -359,6 +359,46 @@
 							</tr>
 						</tbody>
 					</table>
+					<p v-if="deudas.length==0">No hay datos</p>
+
+
+					<p class="lead">Deudas finalizadas</p>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Nombre</th>
+								<th>Motivo y Comentarios</th>
+								<th>Monto</th>
+								<th>Fecha de actualización</th>
+								<th>Estado</th>
+								<th>@</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(deuda, index) in cobrados">
+								<td>{{ index+1 }}</td>
+								<td class="text-capitalize" @click="dataProps(deuda)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ deuda.name }}</td>
+								<td class="text-capitalize">{{ deuda.motivo }}
+									<span v-if="deuda.observaciones!=''"><br>
+										{{ deuda.observaciones }}
+									</span>
+								</td>
+								<td>S/ {{ parseFloat(deuda.monto).toFixed(2) }}</td>
+								<td>{{ fechaLatam(deuda.fechaActualizacion) }} </td>
+								<td>
+									<span v-if="deuda.estado == 1"><span title="Deuda pendiente">⚪</span></span>
+									<span v-if="deuda.estado == 2"><span title="Deuda cobrada">🟢</span></span>
+									<span v-if="deuda.estado == 3"><span title="Deuda perdida">🔴</span></span>
+								</td>
+								<td >
+									<button v-if="deuda.estado==1" class="btn btn-outline-primary btn-sm" title="Cambiar pago" @click="queDeuda = deuda" data-bs-target="#modalPagarDeuda" data-bs-toggle="modal"><i class="fas fa-hand-holding-usd"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<p v-if="cobrados.length==0">No hay datos</p>
+
 					</div>
 				</div>
 			</div></section>
@@ -388,7 +428,7 @@ export default {
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos', filtroDoc:-1, fechaInteresados: moment().format('YYYY-MM-DD'), queDeuda:null, anteriores:[],
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], cobrados:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos', filtroDoc:-1, fechaInteresados: moment().format('YYYY-MM-DD'), queDeuda:null, anteriores:[],
 			referencias:[{1:'Ninguno', 2:'Recomendación', 3:'Publicidad de internet', 4:'Publicidad Escrita',5:'Publicidad de TV/Radio',6:'Referido',7:'Sist. Recepción',}]
 		}
 	},
@@ -424,7 +464,7 @@ export default {
 					case 'deudas':
 						this.activoDeudas = true;
 						await this.axios.get(`/api/listarDeudas/`+this.nFecha)
-						.then(response => this.deudas = response.data.deudas)
+						.then(response => {this.deudas = response.data.deudas; this.cobrados = response.data.cobrados;})
 						break;
 				default:
 					break;

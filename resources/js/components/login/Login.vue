@@ -20,7 +20,7 @@
 									<form class="user" v-on:submit.prevent>
 										<div class="form-group">
 											<input type="email" v-model="formData.email" class="form-control form-control-user"
-												id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Ingrese su correo">
+												id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Ingrese su correo">
 											<p class="text-danger" v-text="errors.email"></p>
 										</div>
 										<div class="form-group">
@@ -51,7 +51,7 @@ export default {
 				device_name: 'browser'
 			},
 			errors: {},
-			version: '4.81 Build 23.1109'
+			version: '4.82 Build 23.1128'
 		}
 	},
 	methods: {

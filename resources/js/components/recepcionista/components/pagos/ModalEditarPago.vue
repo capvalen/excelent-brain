@@ -24,6 +24,7 @@
 										<option value="8">Banco: Nación</option>
 										<option value="9">Banco: Scotiabank</option>
 										<option value="2">Depósito bancario</option>
+										<option value="12">IziPay</option>
 										<option value="11">Open Pay</option>
 										<option value="3">POS</option>
 									</select>

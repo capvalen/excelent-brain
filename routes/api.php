@@ -157,6 +157,7 @@ Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);
 Route::post('insertarSeguimiento', [ExtrasController::class,'insertarSeguimiento']);
 Route::post('actualizarPrecioAdmin', [ExtrasController::class,'actualizarPrecioAdmin']);
 Route::get('pedirHistorialSeguimientos/{id}', [ExtrasController::class,'pedirHistorialSeguimientos']);
+Route::post('crearPrecioNuevo', [ExtrasController::class,'crearPrecioNuevo']);
 
 
 

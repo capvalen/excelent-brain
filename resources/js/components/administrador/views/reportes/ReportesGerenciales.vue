@@ -301,9 +301,10 @@
 								<td>{{indice+1}}</td>
 								<td>
 									<span v-if="key==0">Femenino</span>
-									<span v-if="key==2">Masculino</span>
+									<span v-if="key==3">LGTB+</span>
 									<span v-if="key==1">Masculino</span>
-									<span v-if="key==null">Sin definir</span>
+									<span v-if="key==2">Sin Definir</span>
+									<span v-if="key==null">No data</span>
 									<span v-if="key=='sin_dato'">Sin definir</span>
 								</td>
 								<td>{{edad.length}}</td>

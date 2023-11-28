@@ -130,6 +130,7 @@
 								<option value="2">Sin definir</option>
 								<option value="0">Femenino</option>
 								<option value="1">Masculino</option>
+								<option value="3">LGTB+</option>
 							</select>
 						</div>
 					</div>

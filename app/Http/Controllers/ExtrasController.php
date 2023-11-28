@@ -112,7 +112,7 @@ class ExtrasController extends Controller
 			->join('users as u', 'i.idUsuario', '=', 'u.id')
 			->join('seguimientos as s', 's.id', '=', 'i.idSeguimiento')
 			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre', 's.seguimiento as nomSeguimiento', 's.color')
-			->whereDate('fecha', '=', $fecha)
+			->whereDate('fecha', '<=', $fecha)
 			->where('i.atendido', '!=', 0)
 			->where('i.activo', 1)
 			->orderBy('atendido', 'asc')
@@ -124,6 +124,7 @@ class ExtrasController extends Controller
 			->join('users as u', 'i.idUsuario', '=', 'u.id')
 			->join('seguimientos as s', 's.id', '=', 'i.idSeguimiento')
 			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre', 's.seguimiento as nomSeguimiento', 's.color')
+			->whereDate('fecha', '<=', $fecha)
 			->where('i.atendido', 0)
 			->where('i.activo', 1)
 			->orderBy('atendido', 'asc')
@@ -151,7 +152,16 @@ class ExtrasController extends Controller
 			$resultados = DB::table('deudas as d')->where('d.activo', 1)
 			->join('patients as p', 'p.id', '=', 'd.patient_id' )
 			->whereDate('d.fecha', '<=', $fecha)
+			->where('estado', 1)
 			//->whereNotIn('estado', [2,3]) Ver la forma de disminuir la lista de hoy, porque se hará larga
+			->orderBy('estado', 'asc')
+			->orderBy('d.fecha', 'asc')
+			->select( 'd.*', 'p.*', 'd.id as idDeuda')
+			->get();
+			$cobrados = DB::table('deudas as d')->where('d.activo', 1)
+			->join('patients as p', 'p.id', '=', 'd.patient_id' )
+			->whereDate('d.fechaActualiza', '=', $fecha)
+			->where('estado',"<>", 1)
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
 			->select( 'd.*', 'p.*', 'd.id as idDeuda')
@@ -159,7 +169,16 @@ class ExtrasController extends Controller
 		}else{
 			$resultados = DB::table('deudas as d')->where('d.activo', 1)
 			->join('patients as p', 'p.id', '=', 'd.patient_id' )
-			->whereDate('d.fecha', '=', $fecha)
+			->whereDate('d.fecha', '<=', $fecha)
+			->where('estado', 1)
+			->orderBy('estado', 'asc')
+			->orderBy('d.fecha', 'asc')
+			->select( 'd.*', 'p.*', 'd.id as idDeuda')
+			->get();
+			$cobrados = DB::table('deudas as d')->where('d.activo', 1)
+			->join('patients as p', 'p.id', '=', 'd.patient_id' )
+			->whereDate('d.fechaActualiza', '=', $fecha)
+			->where('estado','<>', 1)
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
 			->select( 'd.*', 'p.*', 'd.id as idDeuda')
@@ -172,7 +191,7 @@ class ExtrasController extends Controller
 			$resultado->address = $direccion[0];
 		}
 
-		return array('deudas' => $resultados);
+		return array('deudas' => $resultados, 'cobrados' => $cobrados);
 	}
 
 	public function cambiarLike($id, $like){
@@ -778,6 +797,20 @@ class ExtrasController extends Controller
 		return response()->json($membresias);
 	}
 
+
+	public function crearPrecioNuevo(Request $request){
+		
+		Precio::insert([
+			'descripcion' => $request->input('precioNuevo.nombre'),
+			'idClasificacion' => $request->input('precioNuevo.tipo'),
+			'nuevos' => 0,
+			'continuos' => 0,
+			'sesiones' => 0,
+			'servicio' => in_array($request->input('precioNuevo.tipo'), [1,2,3]) ? 1 : 0,
+		]);
+		return response()->json([ 'mensaje' => 'Registro exitoso' ]);
+	}
+	
 	public function pedirCitasMembresia($id){
 		$citas = Appointment::where('idMembresia', $id)
 		->with('professional')
@@ -971,7 +1004,7 @@ class ExtrasController extends Controller
 				$contador = count($medios);
 				return response()->json(array('pagos'=> $medios, 'total'=>$contador)); break;
 			case '12':
-					$pagos = Extra_payment::
+				$pagos = Extra_payment::
 				whereBetween('date', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
 				->where('type', '!=', 6)
 				->with('method_payment')
@@ -985,5 +1018,5 @@ class ExtrasController extends Controller
 				default: break;
 		}
 	}
-	
+
 }

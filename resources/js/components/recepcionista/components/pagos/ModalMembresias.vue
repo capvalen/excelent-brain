@@ -249,6 +249,7 @@ export default {
 				})
 				hoy = moment(hoy).add(1, 'month')
 			}
+			this.membresia.fin = this.membresia.tipo==47 ?  moment().add(1,'year').format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
 		},
 		borrarSesionAcumulada(index){
 			this.sesionesAcumuladas.splice(index,1)

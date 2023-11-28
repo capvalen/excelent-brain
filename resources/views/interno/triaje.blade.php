@@ -82,6 +82,8 @@
 							Femenino
 						@elseif($paciente->gender==1)
 							Masculino
+						@elseif($paciente->gender==2)
+							LGTB+
 						@else
 							No indica
 						@endif

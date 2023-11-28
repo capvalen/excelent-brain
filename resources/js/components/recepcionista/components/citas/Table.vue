@@ -364,7 +364,6 @@ export default {
       }) */
     },
     async searchHistoria () {
-			console.log('seeeeeeeeeeeeeeeeeeeee')
       let search = document.getElementById("searchInputAppointment").value.split('/'),
         nombre = search[0],
         profesional = search[1] || null,
