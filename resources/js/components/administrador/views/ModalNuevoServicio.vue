@@ -14,8 +14,7 @@
 						<option value="1">Psiquiatría</option>
 						<option value="2">Psicología</option>
 						<option value="3">Certificados</option>
-						<option value="4">Kurame</option>
-						<option value="5">Membresía</option>
+						<option value="4">Membresía</option>
 					</select>
 				</div>
 				<div class="modal-footer">

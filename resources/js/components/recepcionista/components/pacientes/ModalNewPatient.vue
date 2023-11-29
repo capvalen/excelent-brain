@@ -32,13 +32,13 @@
 
             <div class="form-group row">                   
               <div class="col-sm-12">
-                <label for="name">Dirección de paciente</label>
+                <label for="name">Dirección</label>
                 <input type="text" class="form-control" name="address" id="address" v-model="paciente.address.address" placeholder="Dirección del paciente">
               </div>
 
               <div class="col-sm-6 d-none">
-                <label for="name">Email de paciente</label>
-                <input type="email" class="form-control" name="email" id="email" v-model="paciente.email"  placeholder="Email de paciente"> 
+                <label for="name">Correo electrónico</label>
+                <input type="email" class="form-control" name="email" id="email" v-model="paciente.email"  placeholder="Correo electrónico"> 
               </div>
             </div>
 

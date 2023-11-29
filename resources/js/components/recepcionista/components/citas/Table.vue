@@ -122,7 +122,8 @@
 										<span class="text labels" v-else-if="qCita.status == 3">Cancelado</span>
 										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
 									</button>
-									<span v-if="qCita.status == 3 && qCita.faltas"><br>{{qCita.faltas[0].observaciones}}</span>
+									<span v-if="qCita.status == 3 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].observaciones}}</span>
+									<span v-if="qCita.status == 4 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].reason}} <span v-if="qCita.faltas[0].fechaProxima!=''">- Proxima cita: {{ fechaLatam(qCita.faltas[0].fechaProxima )}}</span></span>
 								</td>
 								<td>
 									<div class="row d-flex align-items-center justify-content-around gap-1">

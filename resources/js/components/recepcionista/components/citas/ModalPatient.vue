@@ -23,19 +23,19 @@
             </div>
 
             <div class="form-group">
-              <label for="name">Paciente</label>
+              <label for="name">Nombres y Apellidos del paciente</label>
               <input type="text" class="form-control"  name="name" id="name" v-model="dataCit.patient.name" placeholder="Nombre del paciente">
             </div>
 
             <div class="form-group row">                   
               <div class="col-sm-12">
-                <label for="name">Dirección de paciente</label>
+                <label for="name">Dirección</label>
                 <input type="text" class="form-control" name="address" id="address" v-model="dataCit.patient.address.address" placeholder="Direccion del paciente">
               </div>
 
-              <div class="col-sm-6 d-none">
-                <label for="name">Email de paciente</label>
-                <input type="email" class="form-control" name="email" id="email" v-model="dataCit.patient.email"  placeholder="Email de paciente"> 
+              <div class="col-sm-6 ">
+                <label for="name">Correo electrónico</label>
+                <input type="email" class="form-control" name="email" id="email" v-model="dataCit.patient.email"  placeholder="Correo electrónico"> 
               </div>
             </div>
 

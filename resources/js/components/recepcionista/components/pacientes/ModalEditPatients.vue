@@ -2,7 +2,7 @@
   <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header border-0">
           <h5 class="modal-title" id="exampleModalLabel"> Datos del Paciente</h5>
           <button type="button" id="cerrModalPatient" class="close"  data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -28,13 +28,13 @@
 
             <div class="form-group row">                   
               <div class="col-sm-6">
-                <label for="name">Direccion de paciente</label>
+                <label for="name">Dirección</label>
                 <input type="text" class="form-control" name="address" id="address" v-model="dataPatient.address.address" placeholder="Direccion del paciente">
               </div>
 
               <div class="col-sm-6">
-                <label for="name">Email de paciente</label>
-                <input type="email" class="form-control" name="email" id="email" v-model="dataPatient.email" placeholder="Email de paciente"> 
+                <label for="name">Correo electrónico</label>
+                <input type="email" class="form-control" name="email" id="email" v-model="dataPatient.email" placeholder="Correo electrónico"> 
               </div>
             </div>
 
@@ -123,9 +123,9 @@
 
           </form>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" @click="updatePatient()" class="btn btn-primary">Editar</button>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" @click="updatePatient()" class="btn btn-outline-primary"><i class="fas fa-sync-alt"></i> Actualizar</button>
         </div>
       </div>
     </div>

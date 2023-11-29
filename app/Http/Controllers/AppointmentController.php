@@ -61,6 +61,9 @@ class AppointmentController extends Controller
 				if($cita->status == '3'){
 					$cita->faltas = DB::table('faltas')->where('idCita', $cita->id)->get();
 				}
+				if($cita->status == '4'){
+					$cita->faltas = Reschedule::where('appointment_id', $cita->id)->get();
+				}
 			}
 
 			return $citas;
@@ -379,7 +382,11 @@ class AppointmentController extends Controller
 			->with('patient', 'professional', 'schedule', 'payment')
 			->with('patient.initial_psychiatric_history')
 			->with('patient.initial_psychological_history')
-			->orderBy('date', 'asc')
+			->orderBy(function ($query) {
+				$query->selectRaw('check_time')
+					->from('schedules')
+					->whereColumn('schedules.id', 'appointments.schedule_id');
+    	})
 			->get();
 
 
@@ -435,6 +442,7 @@ class AppointmentController extends Controller
 		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
 		->where('p.name', 'like', '%'.$nombre.'%')
 		->orWhere('p.dni', $dni)
+		->orderBy('professional_id')
 		->get();
 		
 		return $appointments; die();
@@ -466,6 +474,8 @@ class AppointmentController extends Controller
 			//Ver si tiene falta
 			if($appointment->status == '3'){
 				$faltas = DB::table('faltas')->where('idCita', $appointment->id)->get();
+			}elseif($appointment->status == '4'){
+				$appointment->faltas = Reschedule::where('appointment_id', $appointment->id)->get();
 			}else{
 				$faltas = [];
 			}
@@ -478,11 +488,15 @@ class AppointmentController extends Controller
 	public function searchByDateAppointment($date){
 		$appointments = Appointment::where('date', $date)
 						->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
+						->orderBy('professional_id')
 						->get();
 		foreach($appointments as $appointment){
 			//Ver si tiene falta
 			if($appointment->status == '3'){
 				$appointment->faltas = DB::table('faltas')->where('idCita', $appointment->id)->get();
+			}
+			if($appointment->status == '4'){
+				$appointment->faltas = Reschedule::where('appointment_id', $appointment->id)->get();
 			}
 		}
 		return response()->json($appointments);                
@@ -739,7 +753,8 @@ class AppointmentController extends Controller
 		if ($request->reschedule) {
 			$reschedule = Reschedule::create([
 				'reason' => $request->reschedule,
-				'appointment_id' => $request->id
+				'appointment_id' => $request->id,
+				'fechaProxima' => $request->get('date')
 			]);
 		}
 		

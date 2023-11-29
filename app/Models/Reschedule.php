@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reschedule extends Model
 {
     use HasFactory;
-    protected $fillable=['reason','appointment_id'];
+    protected $fillable=['reason','appointment_id', 'fechaProxima'];
     //Relacion uno a uno Appointment_reschedule
     public function appointment()
     {
