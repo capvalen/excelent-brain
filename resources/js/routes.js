@@ -33,6 +33,7 @@ const HomeProfesionalStories = () => import('./components/profesional/components
 const HomeProfesionalRecursos = () => import('./components/profesional/components/recursos/HomeRecursos.vue')
 const HomeProfesionalRecetas = () => import('./components/profesional/components/recetas/HomeRecetas.vue')
 const HomeProfesionalExamenes = () => import('./components/profesional/components/examenes/HomeExamen.vue')
+const HomeProfesionalCartera = () => import('./components/profesional/components/home/cartera.vue')
 const Scr90 = () => import('./components/profesional/components/examenes/Scr.vue')
 const Burns = () => import('./components/profesional/components/examenes/Burns.vue')
 const DepZung = () =>import('./components/profesional/components/examenes/ZungDep.vue')
@@ -253,6 +254,11 @@ export const routes = [
         path: 'recetas/:patientId',
         name: 'recetas',
         component: HomeProfesionalRecetas
+      },
+      {
+        path: 'mi-cartera',
+        name: 'miCarteraProfesional',
+        component: HomeProfesionalCartera
       },
       {
         path:'kairosTable',

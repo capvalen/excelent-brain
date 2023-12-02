@@ -1,16 +1,10 @@
 <template>
 	<div>
-		<h1>Cartera de clientes con profesionales</h1>
+		<h1>Mi Cartera de clientes</h1>
+		<h3><small>Del Profesional: Dr. {{ dataUser.nombre }}</small></h3>
 		<div class="card">
 			<div class="card-body ">
 				<div class="row row-cols-auto g-3  align-items-center">
-				
-					<div class="col-3">
-						<label for="">Profesional</label>
-						<select class="form-select " v-model="filtro.idProfesional">
-							<option v-for="profesional in profesionales" :value="profesional.id">{{profesional.name}}</option>
-						</select>
-					</div>
 					<div class="col-3">
 						<label for="">Año</label>
 						<select class="form-select" v-model="filtro.año">
@@ -104,25 +98,23 @@
 			</div>
 		</div>
 	</div>
-	<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="idGlobal" @cambiar="cambiarItem" @borrarIDSeguimiento="idGlobal=-1" :idUsuario="$attrs.idUser"></ModalCambiarSeguimiento>
-	<ModalSeguimiento :profesionales="profesionales" :elegido="elegido" :idProfesional="filtro.idProfesional" :idUsuario="$attrs.idUser"></ModalSeguimiento>
-
+	
 	</div>
 </template>
 
 <script>
-import ModalCambiarSeguimiento from './ModalCambiarSeguimiento.vue'
-import ModalSeguimiento from './ModalSeguimiento.vue'
+
 import moment from 'moment'
 
 export default{
 	name: 'HomeCartera',
 	data(){ return {
 		profesionales:[], años:[], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-		filtro: {idProfesional: 10, año: moment().format('YYYY'), mes:-1}, citasResumidas:[], citasCompletas:[], previewCitas:[], titulo:'', idGlobal:-1, indexGlobal:-1,
+		filtro: {idProfesional: -1, año: moment().format('YYYY'), mes:-1}, citasResumidas:[], citasCompletas:[], previewCitas:[], titulo:'', idGlobal:-1, indexGlobal:-1,
 		seguimientos:[], elegido:[]
 	}},
-	components:{ModalCambiarSeguimiento, ModalSeguimiento},
+	props:['dataUser'],
+	
 	methods:{
 		async listarProfesional(){
 			await this.axios.get('/api/profesional')
@@ -213,6 +205,7 @@ export default{
 	},
 	mounted(){
 		//this.idUsuario = this.
+		this.filtro.idProfesional = this.dataUser.id
 		for(let i=moment().format('YYYY'); i>=2020 ; i--){
 			this.años.push(i)
 		}

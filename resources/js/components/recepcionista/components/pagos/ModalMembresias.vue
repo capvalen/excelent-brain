@@ -67,7 +67,7 @@
 								<div class="row">
 									<div class="col-6">
 										<label class="mb-0 mt-2 " for="">N° Cuotas</label>
-										<input type="number" class="form-control" v-model="membresia.cuotas" @change="calcularFechas()">
+										<input type="number" class="form-control" v-model="membresia.cuotas" @change="calcularFechas()" max="3">
 									</div>
 
 
@@ -237,13 +237,13 @@ export default {
 		calcularFechas() {
 			this.fechas = [];
 			const precioBase = this.mostrarPrecio;
-			const precioParcial = precioBase / this.membresia.cuotas
+			const precioParcial = Math.ceil((precioBase / this.membresia.cuotas)*10)/10
 			var hoy = moment()
 			this.membresia.precio = precioBase;
 			for (let i = 0; i < this.membresia.cuotas; i++) {
 				this.fechas.push({
 					dia: hoy.format('YYYY-MM-DD'),
-					monto: precioParcial,
+					monto: parseFloat(precioParcial).toFixed(2),
 					total: precioBase,
 					pago: false
 				})
