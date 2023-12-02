@@ -66,11 +66,7 @@
 
 
                 <!-- consultas iniciales Psiquiatria y Psicologia-->
-                <button
-                @click="evolucionModal" data-bs-toggle="modal" data-bs-target="#evolutionModal" class="btn btn-consult btn-action" title="Agregar historia inicial psiquiatria" v-if="dataConsult.patient.initial_psychiatric_history === null && dataConsult.professional.profession == 'Psiquiatra'"
-                >
-                <i class="fas fa-portrait"></i>
-                </button>
+                <button @click="evolucionModal" data-bs-toggle="modal" data-bs-target="#evolutionModal" class="btn btn-consult btn-action" title="Agregar historia inicial psiquiatria" v-if="dataConsult.patient.initial_psychiatric_history === null && dataConsult.professional.profession == 'Psiquiatra'"> <i class="fas fa-portrait"></i> </button>
                 <!-- 
                   |
                   |

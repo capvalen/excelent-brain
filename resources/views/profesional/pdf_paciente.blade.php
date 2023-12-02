@@ -129,13 +129,13 @@
 <body>
   <div class="pdf">
     <div class="pdf-content">
-      <img src="https://excelentemente.org/wp-content/uploads/2023/05/logo.jpeg" alt="Excelentemente" class="logotipo">
+      <img src="{{public_path('/img/logoem.png')}}" alt="Excelentemente" class="logotipo">
 
 
       {{-- contenido --}}
       <div class="header text-center">
         <img 
-        src="https://excelentemente.org/wp-content/uploads/2023/05/logo.jpeg" 
+        src="{{public_path('/img/logoem.png')}}" 
         alt="Logotipo Excelentemente"
         class="logotipo-header"
         >

@@ -1,31 +1,32 @@
 <template>
 	<div @click="clickOutside">
-		<div class="d-flex justify-content-between align-items-center">
-			<h4>Historia clínica del paciente</h4>
-
-			<div class="" style="background-color: white; border-radius: 5px;">
-				<button data-bs-toggle="modal" data-bs-target="#modalProximaCita" class="btn btn-outline-warning">
+		<div class="row">
+			<div class="col-12 col-lg-3">
+				<h4>Historia clínica del paciente</h4>
+			</div>
+			<div class="col-12 col-lg-auto" style="background-color: white; border-radius: 5px;">
+				<button data-bs-toggle="modal" data-bs-target="#modalProximaCita" class="btn btn-outline-warning my-1">
 					<i class="fa-solid fa-person-walking-arrow-right"></i> Próxima cita
 				</button>
 				<router-link v-if="dataUser.profession!='Psicólogo'" :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
 					title="Generar receta"><i class="fa-solid fa-vial"></i> Nueva receta
 				</router-link>
-				<button data-bs-toggle="modal" data-bs-target="#recetasModal" class="btn btn-outline-secondary">
+				<button data-bs-toggle="modal" data-bs-target="#recetasModal" class="btn btn-outline-secondary my-1">
 					<i class="fa-solid fa-vial"></i> Ver recetas
 				</button>
-				<button v-if="datosConsulta.discharge != 1" class="btn btn-outline-success" @click="toDischarge">
+				<button v-if="datosConsulta.discharge != 1" class="btn btn-outline-success my-1" @click="toDischarge">
 					<i class="fa-solid fa-circle-check"></i> Dar de alta
 				</button>
-				<button v-else class="btn btn-outline-success" disabled>
+				<button v-else class="btn btn-outline-success my-1" disabled>
 					<i class="fa-solid fa-circle-check"></i> Dado de alta
 				</button>
-				<button data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" class="btn btn-outline-info  ">
+				<button data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" class="btn btn-outline-info   my-1">
 					<i class="fa-solid fa-scale-unbalanced-flip"></i> Ver triajes ({{ datosConsulta.triajes.length }})
 				</button>
-				<button data-bs-toggle="modal" data-bs-target="#examenModal" class="btn btn-outline-info ">
+				<button data-bs-toggle="modal" data-bs-target="#examenModal" class="btn btn-outline-info  my-1">
 					<i class="fa-solid fa-note-sticky"></i> Ver exámenes ({{ contarExamenes()  }})
 				</button>
-				
+		
 			</div>
 		</div>
 
@@ -170,7 +171,11 @@
 							inicialPsiquiatria.created_at ? inicialPsiquiatria.created_at.substring(0, 10) : 'Anterior de 2022' }}</h6>
 					</div>
 					<!-- Card Body -->
-					<form class="card-body" @submit.prevent>
+					<div class="card-body" v-if="!tienePsiquiatria">
+						<button v-if="dataUser.profession == 'Psiquiatra'" class="btn btn-outline-secondary" @click="evolucionModal()" data-bs-toggle="modal" data-bs-target="#evolutionModal"><i class="fas fa-stethoscope"></i> Crear la primera historia Psiquiátrica</button>
+						<p v-else>No se aperturó historia aún</p>
+					</div>
+					<form v-else class="card-body" @submit.prevent>
 						<div class="historia-info">
 							<div class="row row-cols-md-2">
 								<!-- Inicio de Primera Columna -->
@@ -385,7 +390,11 @@
 						</h6>
 					</div>
 					<!-- Card Body -->
-					<form class="card-body" @submit.prevent>
+					<div class="card-body" v-if="!tienePsicologia ">
+						<button v-if="dataUser.profession == 'Psicólogo'" class="btn btn-outline-secondary" @click="evolucionModal()" data-bs-toggle="modal" data-bs-target="#evolutionModal"><i class="fas fa-stethoscope"></i> Crear la primera historia Psicológica</button>
+						<p v-else>No se aperturó historia aún</p>
+					</div>
+					<form v-else class="card-body" @submit.prevent>
 						<div class="historia-info">
 							<div class="row row-cols-md-2">
 								<div class="col">
@@ -621,6 +630,7 @@
 		<ModalProximaCita :profesional="dataUser" :paciente="datosPaciente"></ModalProximaCita>
 		<ModalArchivos :idPaciente="datosConsulta.id" :idProfesional="dataUser.id" ></ModalArchivos>
 		<ModalNuevoAcontecimiento :idPaciente="datosConsulta.id" :idProfesional="dataUser.id"></ModalNuevoAcontecimiento>
+		<evolution-modal :dataUser="dataUser.profession" :datosIdEvolucion="datosIdEvolucion" ></evolution-modal>
 	</div>
 </template>
 
@@ -643,11 +653,12 @@ import ModalArchivos from './ModalArchivos.vue'
 import BarChart  from './grafico/barras'
 import ModalNuevoAcontecimiento from './ModalNuevoAcontecimiento.vue'
 import lineaTiempo from './grafico/lineaTiempo.vue'
+import EvolutionModal from './EvolucionModal.vue'
 
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo, EvolutionModal },
 
 	data() {
 		return {
@@ -663,8 +674,8 @@ export default {
 			consultaHoy: false,
 			dataCies: null,
 			searchCie: '',
-			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, dato1:{}, comentarios:[],
-
+			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, comentarios:[], 
+			datosIdEvolucion:{patient:{id:-1}, professional:{id:-1}},
 			component: "ExamTable",
 			datosExamenes: [],
 			datosExamPaciente: {
@@ -757,7 +768,7 @@ export default {
 			evolution: {
 				content: '',
 				auth: 0
-			}
+			}, tienePsiquiatria: false, tienePsicologia: false
 		}
 	},
 
@@ -769,6 +780,12 @@ export default {
 	},
 
 	methods: {
+		evolucionModal () {
+			console.log('que');
+			this.datosIdEvolucion.professional.id = this.dataUser.id
+			this.datosIdEvolucion.patient.id = this.datosConsulta.id
+      this.$emit('datosEmitModal', this.dataConsulta)
+    },
 		refreshInfo(id) {
 			this.autoSaveInfo = localStorage.getItem(id)
 		},
@@ -833,6 +850,10 @@ export default {
 					this.datosConsulta.medical_evolutions = this.datosConsulta.medical_evolutions.reverse()
 
 					this.evolution.patient_id = this.datosConsulta.id;
+
+					this.tienePsiquiatria = res.data.initial_psychiatric_history != null
+					this.tienePsicologia = res.data.initial_psychological_history != null
+
 				})
 				.catch(err => {
 					console.error(err)

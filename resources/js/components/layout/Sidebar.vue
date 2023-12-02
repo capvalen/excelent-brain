@@ -6,7 +6,6 @@
 		'bg-success': rolUser === 'recepcionista',
 		'bg-danger': rolUser === 'interno'}"
 		id="accordionSidebar">
-
 				<!-- Rol del admin -->
 				<div v-if="rolUser === 'administrador'">
 						<!-- Sidebar - Brand -->
@@ -104,7 +103,7 @@
 						<!-- Nav Item - Dashboard -->
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/profesional/consultas" class="nav-link">
-										<i class="fas fa-home"></i>
+									<i class="fas fa-laptop-medical"></i>
 										<span>Mis Consultas</span>
 								</router-link>
 						</li>
@@ -112,15 +111,21 @@
 						<!-- Nav Item - Dashboard -->
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/profesional/historias" class="nav-link">
-										<i class="fas fa-home"></i>
+									<i class="fas fa-laptop-medical"></i>
 										<span>Historias Clínicas</span>
+								</router-link>
+						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
+								<router-link  to="/profesional/mi-cartera" class="nav-link">
+									<i class="fas fa-head-side-virus"></i>
+										<span>Mi cartera de clientes</span>
 								</router-link>
 						</li>
 
 						<!-- Nav Item - Dashboard -->
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/profesional/recursos" class="nav-link">
-										<i class="fas fa-home"></i>
+									<i class="fas fa-file-medical-alt"></i>
 										<span>Recursos</span>
 								</router-link>
 						</li>
@@ -128,7 +133,7 @@
 						<!-- Nav Item - Dashboard -->
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link :to="{name:'recetas',params:{patientId:0}}" class="nav-link">
-										<i class="fas fa-home"></i>
+									<i class="fas fa-file-medical"></i>
 										<span>Recetas</span>
 								</router-link>
 						</li>
@@ -266,7 +271,7 @@
 
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/recepcionista/recordatorios" class="nav-link">
-										<i class="fas fa-birthday-cake"></i>
+										<i class="fas fa-laptop-medical"></i>
 										<span>Gestor de datos</span>
 								</router-link>
 						</li>
@@ -324,3 +329,7 @@ export default {
 		}
 }
 </script>
+<style scoped>
+.sidebar .nav-item .nav-link i{ font-size: 1.2rem!important; }
+.sidebar .nav-item .nav-link span {font-size: 0.9rem!important; }
+</style>

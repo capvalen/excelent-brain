@@ -14,7 +14,7 @@
         <div class="pdf-content">
             <div class="header__content" style="margin-top:10px">
                 
-                <img src="{{public_path('img/logo-clinica-psicologica-y-psiquiatrica-excelentemente.png')}}" alt="Excelentemente" class="header-logo">
+                <img src="{{public_path('img/logo-reporte.png')}}" alt="Excelentemente" class="header-logo">
 
                 <div class="header " style="margin-top:50px" >
                     @if ($professional == null)

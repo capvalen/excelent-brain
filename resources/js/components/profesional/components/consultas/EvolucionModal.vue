@@ -180,7 +180,7 @@
 
 <script>
 export default {
-  name: 'evolucion',
+  name: 'evolucionModal',
   data () {
     return {
       dataCies: null,
@@ -245,6 +245,7 @@ export default {
       .then(res => {
         console.log(res.data)
         this.$emit('updateCalendar', true)
+        location.href="/profesional/evoluciones/"+this.datosIdEvolucion.patient.id
       })
       .catch(err => {
         console.error(err)

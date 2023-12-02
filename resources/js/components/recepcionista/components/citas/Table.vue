@@ -61,6 +61,7 @@
 						</thead>
 						<tbody>
 							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
+								<td class="d-none">{{qCita.id}}</td>
 								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal">
 									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
 									<!-- <i class="fas fa-brain"></i> -->
@@ -94,7 +95,7 @@
 											}"></i>
 										</span>
 
-										<span class="text labels" v-if="qCita.payment && qCita.payment.pay_status == 1">Sin cancelar</span>
+										<span class="text labels" v-if="qCita.payment && qCita.payment.pay_status == 1">Sin pagar</span>
 										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 2">Cancelado</span>
 										<span class="text labels" v-else-if="qCita.payment && [3, null].includes( qCita.payment.pay_status )">Anulado</span>
 										<span class="text labels" v-else-if="!qCita.payment">Error</span>
@@ -107,14 +108,14 @@
 									:class='{
 									"btn-secondary": qCita.status == 1,
 									"btn-info": qCita.status == 2,
-									"btn-danger": qCita.status == 3, "btn-danger": qCita.status == 4,
+									"btn-danger": qCita.status == 3 || qCita.status==4
+									
 									}'> <!-- @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#modalEstado" -->
 										<span class="icon text-white-50">
 											<i :class="{
 												'fas fa-exclamation-circle': qCita.status == 1,
 												'fas fa-check': qCita.status == 2,
-												'fas fa-times': qCita.status == 3,
-												'fas fa-times': qCita.status == 4
+												'fas fa-minus-circle': qCita.status == 3 || qCita.status==4
 											}"></i>
 										</span>
 										<span class="text labels" v-if="qCita.status == 1">Sin confirmar</span>
@@ -122,8 +123,8 @@
 										<span class="text labels" v-else-if="qCita.status == 3">Cancelado</span>
 										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
 									</button>
-									<span v-if="qCita.status == 3 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].observaciones}}</span>
-									<span v-if="qCita.status == 4 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].reason}} <span v-if="qCita.faltas[0].fechaProxima!=''">- Proxima cita: {{ fechaLatam(qCita.faltas[0].fechaProxima )}}</span></span>
+									<small v-if="qCita.status == 3 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].observaciones}}</small>
+									<small v-if="qCita.status == 4 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].reason}} <span v-if="qCita.faltas[0].fechaProxima!=''">- Proxima cita: {{ fechaLatam(qCita.faltas[0].fechaProxima )}}</span></small>
 								</td>
 								<td>
 									<div class="row d-flex align-items-center justify-content-around gap-1">

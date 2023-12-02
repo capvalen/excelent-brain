@@ -7,11 +7,11 @@
         v-for="(profesional, index) in profesionales"
         :key="index"
       >
-        <img :src="'/storage/'+profesional.photo" alt="Foto de Profesional">
+        <img :src="profesional.photo=='-' || profesional.photo=='' ? '/img/doc_default.jpg' : '/img/'+profesional.photo" alt="Foto de Profesional">
         <div class="px-3 card">
           <span class="d-block name-profesional">{{ profesional.name }}</span>
           <span class="d-block description-profesional mb-3">{{ profesional.profession }}</span>
-          <router-link :to="{name:'showAdminProf',params:{profId:profesional.user_id}}" class="btn btn-primary d-block"><i class="fas fa-eye"></i> Ver profesional</router-link>
+          <router-link :to="{name:'showAdminProf',params:{profId:profesional.user_id}}" class="btn btn-outline-primary mx-auto d-block"><i class="fas fa-eye"></i> Ver consultas</router-link>
         </div>
       </div>
     </div>

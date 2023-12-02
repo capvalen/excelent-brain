@@ -4,7 +4,8 @@
     <div class="row">
           <div class="col-md-4 mt-4">
               <div class="card shadow" style="width: 100%;">
-              <img class="card-img-top" :src="'/storage/'+profesional.photo" alt="Foto de Profesional" width="100%" height="250px">
+              <img class="card-img-top w-50 mx-auto" style="height: auto;object-fit: cover;" 
+              :src="profesional.photo=='-' || profesional.photo=='' ? '/img/doc_default.jpg' : '/img/'+profesional.photo" alt="Foto de Profesional" width="100%" >
               <div class="card-body">
                   <h4 class="d-block name-profesional">{{ profesional.name }}</h4>
                   <span class="d-block description-profesional mb-3">{{ profesional.profession }}</span>
@@ -54,7 +55,7 @@
                   </div>
                 </div>
 
-                <div class="row">
+                <div class="row mt-3">
                   <div class="col-sm">
                    <p><b>Pacientes atendidos: </b> {{this.per_month}}</p>
                   </div>
@@ -93,6 +94,7 @@
             <th scope="col">Fecha</th>
             <th scope="col">Tipo de Consulta</th>
             <th scope="col">Monto</th>
+            <th scope="col">Estado pago</th>
             <th scope="col">Evolución</th>
           </tr>
         </thead>
@@ -101,8 +103,8 @@
             <th>{{ index + 1 }}</th>
             <th>{{ appointment.id }}</th>
             <td>{{ appointment.patient.name}}</td>
-            <td>{{ appointment.date}}</td>
-                <td v-if=" appointment.type === 1">Terapia Inicial niño/adolescente</td>
+            <td>{{ fechaLatam(appointment.date)}}</td>
+                <!-- <td v-if=" appointment.type === 1">Terapia Inicial niño/adolescente</td>
                 <td v-else-if=" appointment.type === 2">Terapia Inicial adulto</td>
                 <td v-else-if=" appointment.type === 3">Terapia Inicial pareja</td>
                 <td v-else-if=" appointment.type === 4">Terapia Inicial familiar</td>
@@ -114,18 +116,27 @@
                 <td v-else-if=" appointment.type === 10">Sucamec inicial</td>
                 <td v-else-if=" appointment.type === 11">Sucamec renovación</td>
                 <td v-else-if=" appointment.type === 12">Kurame</td>
-                <td v-else>Sin tipo de consulta</td>
-            <td>{{appointment.payment ? `S/.${appointment.payment.price}` : 'Sin pago' }}</td>
+                <td v-else>Sin tipo de consulta</td> -->
+            <td>{{ appointment.precio.descripcion }} <br> {{ appointment.professional.nombre }}</td>
+            <td>{{appointment.payment ? `S/ ${appointment.payment.price}` : 'Sin pago' }}</td>
             <td>
-              <button v-if="appointment.patient.medical_evolutions[0] && appointment.patient.medical_evolutions[0].content === null" class="btn btn-warning btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])" data-contenido="noRellenado">No rellenado</button>
-              <button v-else-if="!appointment.patient.medical_evolutions[0]" class="btn btn-danger btnRellenado" data-contenido="noConfirmado">No confirmado</button>
-              <button v-else class="btn btn-success btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])"  data-contenido="siRellenado">Rellenado</button>
-              <button v-if="appointment.patient.medical_evolutions[0]" @click="deleteEvolution(appointment.patient.medical_evolutions[0])" class="btn btn-danger">Eliminar</button>
+              <span class="text-danger" v-if="appointment.status==3">Anulado</span>
+              <span class="text-muted" v-else-if="appointment.payment.pay_status==1">Pendiente</span>
+              <span class="text-success" v-else-if="appointment.payment.pay_status==2">Pagado</span>
+              <span class="text-danger" v-else-if="appointment.payment.pay_status==3">Anulado</span>
+            </td>
+            <td>
+              <button v-if="appointment.patient.medical_evolutions[0] && appointment.patient.medical_evolutions[0].content === null" class="btn btn-outline-secondary btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])" data-contenido="noRellenado">No rellenado</button>
+              <button v-else-if="!appointment.patient.medical_evolutions[0]" class="btn btn-outline-danger btnRellenado" data-contenido="noConfirmado">No confirmado</button>
+              <button v-else class="btn btn-outline-success btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])"  data-contenido="siRellenado">Rellenado</button>
+              <button v-if="appointment.patient.medical_evolutions[0]" @click="deleteEvolution(appointment.patient.medical_evolutions[0])" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
               <p v-if="!appointment.patient.medical_evolutions[0]" class="text-danger">Evolución no generada o eliminada</p>
             </td>
           </tr>
         </tbody>
       </table>
+      <p v-if="appointments.length==0">No hay registros</p>
+
     </div>
     <div class="row mt-4">
       <h2 class="admin-title">Pagos Extra</h2>
@@ -153,11 +164,12 @@
              <p v-else-if=" extra_payment.type === 4">Otros</p>
              <p v-else>Sin tipo de consulta</p>   
             </td>
-            <td>S./{{ extra_payment.price }}</td>
+            <td>S/ {{ extra_payment.price }}</td>
             <td>{{ extra_payment.observation }}</td>
           </tr>
         </tbody>
       </table>
+      <p v-if="extra_payments.length==0">No hay registros</p>
     </div>
 
     <evolucion-modal v-if="evolutions" :dataEvolution="evolutions"></evolucion-modal>
@@ -284,6 +296,9 @@ export default {
         this.extra_payments.forEach(pay =>{
           this.total_price += parseFloat(!pay.price ? 0 : pay.price)
         });
+        let num = Math.round(this.total_price * 10) / 10;
+        this.total_price = num.toFixed(2)
+
         this.$swal.close()
       }).catch((err) => {
         console.error(err)
@@ -310,6 +325,9 @@ export default {
         this.extra_payments.forEach(pay =>{
           this.total_price += parseFloat(!pay.price ? 0 : pay.price)
         });
+        let num = Math.round(this.total_price * 10) / 10;
+        this.total_price = num.toFixed(2)
+
         this.$swal.close()
       }).catch((err) => {
         console.error(err)
@@ -336,7 +354,15 @@ export default {
               });
           }
       })
-    }
+    },
+    fechaLatam(fecha) {
+			return moment(fecha).format('DD/MM/YYYY');
+		},
+    capitalizar(texto) {
+				const primeraLetra = texto.charAt(0);
+				const primeraLetraMayuscula = primeraLetra.toUpperCase();
+				return primeraLetraMayuscula + texto.slice(1);
+			}
 
   },
 
@@ -354,7 +380,10 @@ export default {
     },
     optionParseMonth: function(val){
       moment.locale('es');
-      return moment(val).format('MMMM-YYYY')
+      const texto = moment(val).format('MMMM YYYY')
+      const primeraLetra = texto.charAt(0);
+      const primeraLetraMayuscula = primeraLetra.toUpperCase();
+      return primeraLetraMayuscula + texto.slice(1);
     },
     timeParse: function(time){
       var datetime = new Date('1970-01-01T' + time + 'Z')

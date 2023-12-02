@@ -89,6 +89,7 @@ class Medical_evolutionController extends Controller
         }
 
         $pdf = PDF::loadView('profesional.pdf_paciente', compact('historia', 'age'));
+        
         $pdf->setPaper('a4', 'portrait');
         return $pdf->stream('mi-archivo.pdf');
     }

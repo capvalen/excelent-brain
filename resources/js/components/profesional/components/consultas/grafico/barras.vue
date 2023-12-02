@@ -26,7 +26,7 @@ export default{
 	mounted(){
 
 		this.medical_evolutions.forEach(cita=>{
-			console.log('quetipo', this.dondeEsta2(cita.type))
+			console.log('quetipoEs', this.dondeEsta2(cita.type))
 			this.datos[this.dondeEsta2(cita.type)]+=1;
 		})
 

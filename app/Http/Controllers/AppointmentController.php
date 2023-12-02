@@ -386,9 +386,7 @@ class AppointmentController extends Controller
 				$query->selectRaw('check_time')
 					->from('schedules')
 					->whereColumn('schedules.id', 'appointments.schedule_id');
-    	})
-			->get();
-
+    	})->get();
 
 		return response()->json([
 			'antes'=> $dateWeekBefore,
@@ -442,7 +440,11 @@ class AppointmentController extends Controller
 		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
 		->where('p.name', 'like', '%'.$nombre.'%')
 		->orWhere('p.dni', $dni)
-		->orderBy('professional_id')
+		->orderBy(function ($query) {
+			$query->selectRaw('check_time')
+				->from('schedules')
+				->whereColumn('schedules.id', 'appointments.schedule_id');
+		})
 		->get();
 		
 		return $appointments; die();
@@ -945,7 +947,7 @@ class AppointmentController extends Controller
 		$patientsPerMonth = Appointment::where('professional_id',$id)->where('date','like',$date.'%')->get()->count();
 		$appointments = Appointment::where('professional_id', $id)
 			->where('date','like',$date.'%')
-			->with('patient')
+			->with('patient', 'precio', 'professional')
 			->with(['patient.medical_evolutions'=> function($query) use($id, $date){
 				$query->where('professional_id','=', $id)
 					  ->where('date','like',$date.'%');
@@ -955,7 +957,9 @@ class AppointmentController extends Controller
 			}])
 			->orderBy('date')
 			->get();
-		$extra_payments = Extra_payment::where('date','like',$date.'%')->get();     
+		$extra_payments = Extra_payment::where('date','like',$date.'%')
+		->where('appointment_id', 0)
+		->get();     
 		return response()->json([
 			'patientsPerMonth' => $patientsPerMonth,
 			'appointments' => $appointments,
@@ -983,7 +987,7 @@ class AppointmentController extends Controller
 		$patientsPerMonth = Appointment::where('professional_id',$id)->where('date','like',$date.'%')->get()->count();
 		$appointments = Appointment::where('professional_id', $id)
 			->where('date','=',$date)
-			->with('patient')
+			->with('patient', 'precio', 'professional')
 			->with(['patient.medical_evolutions'=> function($query) use($id, $date){
 				$query->where('professional_id','like', $id)
 					  ->where('date','=',$date);
@@ -992,7 +996,9 @@ class AppointmentController extends Controller
 				$query->where('payments.price','!=', null);
 			}])
 			->get();
-		$extra_payments = Extra_payment::where('date','like',$date)->get();
+		$extra_payments = Extra_payment::where('date','like',$date)
+		->where('appointment_id', 0)
+		->get();
 		return response()->json([
 			'patientsPerMonth' => $patientsPerMonth,
 			'appointments' => $appointments,
@@ -1013,6 +1019,7 @@ class AppointmentController extends Controller
 
 		foreach ($appointments as $appointment) {
 			$appointment = $appointment->patient;
+			$appointment = $appointment->precios;
 		} 
 		
 		$dataAppointment = [];

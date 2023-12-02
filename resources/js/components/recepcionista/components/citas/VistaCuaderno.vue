@@ -30,7 +30,8 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(hora, indice) in doctor.horarios" :key="hora.id">
+								<tr v-for="(hora, indice) in doctor.horarios" :key="hora.id" >
+									<td class="d-none" v-if="hora.libre=='0'">{{horasMalas[hora.indexOcupado].id}}</td>
 									<td>{{ indice+1 }}</td>
 									<td  @click="modalInfo(horasMalas[hora.indexOcupado])" class="puntero" data-bs-toggle="modal" data-bs-target="#infoModal">{{ horaLatam1(hora.check_time) }} - {{ horaLatam2(hora.departure_date) }}</td>
 									<td v-if="hora.libre=='0'">
