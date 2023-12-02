@@ -11,7 +11,7 @@
 <body>
 @php
 	use Carbon\Carbon;
-	$monedas =['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin'];
+	$monedas =['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Izipay', 'Open Pay'];
 @endphp
     <div class="container">
         <div class="container-fluid p-0">
