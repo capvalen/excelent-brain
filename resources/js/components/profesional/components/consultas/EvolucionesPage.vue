@@ -623,7 +623,7 @@
 		<modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
 		<modal-ver-triajes-viejos :triajes = "datosConsulta.triajes"></modal-ver-triajes-viejos>
 		<ModalEditarPariente v-if="datosConsulta" :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
-		<ModalEditarPaciente v-if="dato1" :dataPatient="dato1" ></ModalEditarPaciente>
+		<ModalEditarPaciente :dataPatient="dato1" ></ModalEditarPaciente>
 		<ModalVerEstados :dataPatient="datosPaciente" :estados="estados"></ModalVerEstados>
 		<ModalVerHobbies :hobbies="hobbies" :id="datosConsulta.id" :misHobbies="misHobbies" ></ModalVerHobbies>
 		<ModalComentarios :comentarios="comentarios" :idProfesional="dataUser.id" @refrescarComentarios="updateComentarios" ></ModalComentarios>
@@ -674,7 +674,7 @@ export default {
 			consultaHoy: false,
 			dataCies: null,
 			searchCie: '',
-			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, comentarios:[], 
+			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, comentarios:[], dato1:[],
 			datosIdEvolucion:{patient:{id:-1}, professional:{id:-1}},
 			component: "ExamTable",
 			datosExamenes: [],

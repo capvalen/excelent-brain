@@ -24,3 +24,7 @@ UPDATE `payments` SET `payment_method`=4 where `payment_method`='Yape';
 UPDATE `payments` SET `payment_method`=1 where `payment_method`='null';
 UPDATE `payments` SET `payment_method`=12 where `payment_method`=3;
 ALTER TABLE `patients` ADD `vivo` INT NULL DEFAULT '1' AFTER `seguimiento`;
+UPDATE `patients` SET `phone`='' where `phone` is null;
+UPDATE `patients` SET `phone`='' where `phone` = 'null';
+UPDATE `patients` SET `email`='' where `email` is null;
+UPDATE `patients` SET `email`='' where `email` = 'null';
