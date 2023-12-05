@@ -95,6 +95,7 @@
             <th scope="col">Tipo de Consulta</th>
             <th scope="col">Monto</th>
             <th scope="col">Estado pago</th>
+            <th scope="col">Estado cita</th>
             <th scope="col">Evolución</th>
           </tr>
         </thead>
@@ -117,13 +118,18 @@
                 <td v-else-if=" appointment.type === 11">Sucamec renovación</td>
                 <td v-else-if=" appointment.type === 12">Kurame</td>
                 <td v-else>Sin tipo de consulta</td> -->
-            <td>{{ appointment.precio.descripcion }} <br> {{ appointment.professional.nombre }}</td>
+            <td>{{ appointment.precio.descripcion }} </td>
             <td>{{appointment.payment ? `S/ ${appointment.payment.price}` : 'Sin pago' }}</td>
             <td>
-              <span class="text-danger" v-if="appointment.status==3">Anulado</span>
-              <span class="text-muted" v-else-if="appointment.payment.pay_status==1">Pendiente</span>
+              <span class="text-muted" v-if="appointment.payment.pay_status==1">Pendiente</span>
               <span class="text-success" v-else-if="appointment.payment.pay_status==2">Pagado</span>
               <span class="text-danger" v-else-if="appointment.payment.pay_status==3">Anulado</span>
+            </td>
+            <td>
+              <span class="text-danger" v-if="appointment.status==1">Sin asistir</span>
+              <span class="text-sucess" v-if="appointment.status==2">Asistido</span>
+              <span class="text-danger" v-if="appointment.status==3">Anulado</span>
+              <span class="text-danger" v-if="appointment.status==4">Reprogramado</span>
             </td>
             <td>
               <button v-if="appointment.patient.medical_evolutions[0] && appointment.patient.medical_evolutions[0].content === null" class="btn btn-outline-secondary btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])" data-contenido="noRellenado">No rellenado</button>
@@ -138,7 +144,7 @@
       <p v-if="appointments.length==0">No hay registros</p>
 
     </div>
-    <div class="row mt-4">
+    <!-- <div class="row mt-4 d-none">
       <h2 class="admin-title">Pagos Extra</h2>
       <table class="table">
         <thead class="thead-dark">
@@ -170,7 +176,7 @@
         </tbody>
       </table>
       <p v-if="extra_payments.length==0">No hay registros</p>
-    </div>
+    </div> -->
 
     <evolucion-modal v-if="evolutions" :dataEvolution="evolutions"></evolucion-modal>
   </main>

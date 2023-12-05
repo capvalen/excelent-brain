@@ -4,7 +4,7 @@
 		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 			<div class="modal-content">
 				<div class="modal-header border-0">
-					<h5 class="modal-title" id="exampleModalLabel">Nuevo Pago Extra</h5>
+					<h5 class="modal-title" id="exampleModalLabel">Nuevo Ingreso Extra</h5>
 					<button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -36,7 +36,7 @@
 									<input type="number" name="price" required id="price" class="form-control" v-model="form.price">
 								</div>
 							</div>
-							<div class="col-sm-12">
+							<div class="col-sm-12 d-none">
 								<label for="type">Tipo de pago</label>
 								<select class="form-select" id="type" required name="type" v-model="form.type">
 								<!-- 	<option value="0">Certificado</option>
@@ -49,7 +49,7 @@
 							<div class="col-sm-12 mt-2">
 								<label for="type">Moneda</label>
 								<select class="form-select" id="type" required name="type" v-model="form.moneda">
-									<option v-for="(moneda, index) in monedas" :value="index+1">{{moneda}}</option>
+									<option v-for="moneda in monedas" :value="moneda.id">{{moneda.tipo}}</option>
 								</select>
 							</div>
 							<div class="col-sm-12" v-if="form.moneda!=1">
@@ -84,20 +84,25 @@ export default {
 
 	data() {
 		return {
-			monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay', 'IziPay'],
+			monedas:[],
 			form: {
 				customer: null,
 				price: 0,
 				type: 4,
 				moneda:1,
 				observation: null,
-				date: moment().format('YYYY-MM-DD'), continuo:-1
+				date: moment().format('YYYY-MM-DD'), continuo:-1, user_id:-1
 			}
 		}
 	},
-
+	props:['idUsuario'],
+	mounted() {
+		this.axios.get("/api/listarMonedas/")
+		.then(resp => this.monedas = resp.data)
+	},
 	methods: {
 		reniec(){
+			event.preventDefault();
 			this.$swal.fire({
 				title: 'Buscando paciente',
 				timer: 2500,
@@ -168,6 +173,7 @@ export default {
 				});
 			}else{
 				this.$swal("Guardando datos")
+				this.form.user_id = this.idUsuario
 	
 				this.axios.post('/api/paymentExtra', this.form)
 				.then(res => {

@@ -91,12 +91,12 @@ class ExtrasController extends Controller
 	}
 	public function nuevoInteresado(Request $request){
 		DB::insert("INSERT INTO `interesados`(`nombre`, `celular`, `motivo`, `referencia`, `correo`, 
-		`idProfesional`, `origen`, `idUsuario`, `idSeguimiento`) VALUES 
+		`idProfesional`, `origen`, `idUsuario`, `idSeguimiento`, `idPaciente`) VALUES 
 		(?,?,?,?,?,
-		?,?,?,?)",
+		?,?,?,?,?)",
 		[
 			$request->input('nombre'), $request->input('celular'), $request->input('motivo'), $request->input('referencia'), $request->input('correo'),
-			$request->input('idProfesional'), $request->input('origen'), $request->input('idUsuario'),  $request->input('idSeguimiento')
+			$request->input('idProfesional'), $request->input('origen'), $request->input('idUsuario'), $request->input('idSeguimiento'), $request->input('idPaciente')
 		]);
 		$ultimoID = DB::getPdo()->lastInsertId();
 		return response()->json([
@@ -111,8 +111,8 @@ class ExtrasController extends Controller
 			->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
 			->join('users as u', 'i.idUsuario', '=', 'u.id')
 			->join('seguimientos as s', 's.id', '=', 'i.idSeguimiento')
-			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre', 's.seguimiento as nomSeguimiento', 's.color')
-			->whereDate('fecha', '<=', $fecha)
+			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre', 's.seguimiento as nomSeguimiento', 's.color', 's.icono')
+			->whereDate('fecha', '=', $fecha)
 			->where('i.atendido', '!=', 0)
 			->where('i.activo', 1)
 			->orderBy('atendido', 'asc')
@@ -123,7 +123,7 @@ class ExtrasController extends Controller
 			->leftjoin('professionals as p', 'p.id', '=', 'i.idProfesional')
 			->join('users as u', 'i.idUsuario', '=', 'u.id')
 			->join('seguimientos as s', 's.id', '=', 'i.idSeguimiento')
-			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre', 's.seguimiento as nomSeguimiento', 's.color')
+			->select('i.*', 'p.nombre as nomProf', 'u.nombre as usuNombre', 's.seguimiento as nomSeguimiento', 's.color', 's.icono')
 			->whereDate('fecha', '<=', $fecha)
 			->where('i.atendido', 0)
 			->where('i.activo', 1)
@@ -152,8 +152,8 @@ class ExtrasController extends Controller
 			$resultados = DB::table('deudas as d')->where('d.activo', 1)
 			->join('patients as p', 'p.id', '=', 'd.patient_id' )
 			->whereDate('d.fecha', '<=', $fecha)
-			->where('estado', 1)
-			//->whereNotIn('estado', [2,3]) Ver la forma de disminuir la lista de hoy, porque se hará larga
+			//->where('estado', 1)
+			->whereNotIn('estado', [2,3]) //Ver la forma de disminuir la lista de hoy, porque se hará larga
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
 			->select( 'd.*', 'p.*', 'd.id as idDeuda')
@@ -161,7 +161,7 @@ class ExtrasController extends Controller
 			$cobrados = DB::table('deudas as d')->where('d.activo', 1)
 			->join('patients as p', 'p.id', '=', 'd.patient_id' )
 			->whereDate('d.fechaActualiza', '=', $fecha)
-			->where('estado',"<>", 1)
+			->whereIn('estado', [2,3])
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
 			->select( 'd.*', 'p.*', 'd.id as idDeuda')
@@ -170,7 +170,8 @@ class ExtrasController extends Controller
 			$resultados = DB::table('deudas as d')->where('d.activo', 1)
 			->join('patients as p', 'p.id', '=', 'd.patient_id' )
 			->whereDate('d.fecha', '<=', $fecha)
-			->where('estado', 1)
+			//->where('estado', 1)
+			->whereNotIn('estado', [2,3]) //Ver la forma de disminuir la lista de hoy, porque se hará larga
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
 			->select( 'd.*', 'p.*', 'd.id as idDeuda')
@@ -178,7 +179,7 @@ class ExtrasController extends Controller
 			$cobrados = DB::table('deudas as d')->where('d.activo', 1)
 			->join('patients as p', 'p.id', '=', 'd.patient_id' )
 			->whereDate('d.fechaActualiza', '=', $fecha)
-			->where('estado','<>', 1)
+			->whereIn('estado', [2,3])
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
 			->select( 'd.*', 'p.*', 'd.id as idDeuda')
@@ -429,7 +430,17 @@ class ExtrasController extends Controller
 				->orderBy('id', 'desc')
 				->get();
 				return $pacientes;
-			default:
+			case '18':
+				$interesados = DB::table('interesados as i')
+				->join('seguimientos as s', 's.id', 'i.idSeguimiento')
+				->whereYear('fecha', $request->get('año') )
+				->whereMonth('fecha', $request->get('mes') )
+				->where('origen', 2)
+				->select('i.*', 's.icono')
+				->get();
+				return $interesados;
+				break;
+				default:
 				# code...
 				break;
 		}
@@ -581,6 +592,15 @@ class ExtrasController extends Controller
 		->get();
 		return response()->json($seguimientos);
 	}
+	public function pedirHistorialDeudas($idPaciente){
+		$seguimientos = DB::table('deudas_pacientes as d')
+		->join('seguimientos as s', 's.id', '=', 'd.idSeguimiento')
+		->where('d.patient_id', $idPaciente)
+		->where('d.activo', 1)
+		->orderBy('registro', 'desc')
+		->get();
+		return response()->json($seguimientos);
+	}
 
 	public function buscarCartera(Request $request){
 		
@@ -641,17 +661,49 @@ class ExtrasController extends Controller
 	}
 	public function insertarSeguimiento(Request $request){
 		//var_dump($request->all()); die();
-			Patient::find($request->get('patient_id'))->update([
-				'seguimiento' =>  $request->get('idSeguimiento')
+		Patient::find($request->get('patient_id'))->update([
+			'seguimiento' =>  $request->get('idSeguimiento')
+		]);
+
+		$idSeguimiento = DB::table('pacient_seguimiento')->insertGetId([
+			'patient_id' => $request->get('patient_id'),
+			'user_id' => $request->get('idUsuario'),
+			'idSeguimiento' => $request->get('idSeguimiento'),
+			'observaciones' => $request->get('motivo')
+		]);
+		if($request->get('idRegistro')){
+			DB::table('interesados')->where('id', $request->get('idRegistro'))
+			->update([
+				'idSeguimiento' => $request->get('idSeguimiento')
 			]);
-	
-			$idSeguimiento = DB::table('pacient_seguimiento')->insertGetId([
-				'patient_id' => $request->get('patient_id'),
-				'user_id' => $request->get('idUsuario'),
-				'idSeguimiento' => $request->get('idSeguimiento'),
-				'observaciones' => $request->get('motivo')
+		}
+		return $idSeguimiento;
+	}
+	public function insertarDeudasSeguimiento(Request $request){
+		//var_dump($request->all()); die();
+		$idSeguimiento = DB::table('deudas_pacientes')->insertGetId([
+			'patient_id' => $request->get('patient_id'),
+			'user_id' => $request->get('idUsuario'),
+			'idSeguimiento' => $request->get('idSeguimiento'),
+			'observaciones' => $request->get('motivo'),
+			'idDeuda' =>$request->get('idRegistro')
+		]);
+		if($request->get('idRegistro')){
+			switch($request->get('idSeguimiento')){
+				case '9' : $seguir = 1; break;
+				case '10' : $seguir = 2; break;
+				case '11' : $seguir = 3; break;
+				case '12' : $seguir = 4; break;
+			}
+			DB::table('deudas')->where('id', $request->get('idRegistro'))
+			->update([
+				'idActualiza' => $request->get('idUsuario'),
+				'estado' => $seguir,
+				'fechaActualiza' => Carbon::now(),
+				'observaciones' => DB::raw("CONCAT(observaciones,'{$request->get('motivo')}' )")
 			]);
-			return $idSeguimiento;
+		}
+		return $idSeguimiento;
 	}
 	public function verAdjuntoPago($id){
 		$foto = DB::table('payments_files')->where('payment_id', $id)->get();

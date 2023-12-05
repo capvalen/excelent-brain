@@ -476,6 +476,29 @@
 						</tr>
 					</tbody>
 				</table>
+				<div v-if="idReporte==18">
+					<p>Pacientes que provienen de Cartera de clientes con algún caso para hacer seguimiento.</p>
+					<table class="table table-sm table-hover" >
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Paciente</th>
+								<th>Fecha</th>
+								<th>Estado</th>
+								<th>Motivo</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(paciente, index) in resultados">
+								<td>{{index+1}}</td>
+								<td>{{paciente.nombre}}</td>
+								<td>{{fechaLatam(paciente.fecha)}}</td>
+								<td>{{paciente.icono}}</td>
+								<td>{{paciente.motivo}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				
 				
 			</div>
@@ -516,6 +539,7 @@ import moment from 'moment';
 				{id: 15, nombrado: 'Citas anuladas con faltas'},
 				{id: 16, nombrado: 'Citas confirmadas'},
 				{id: 17, nombrado: 'Pacientes con datos incompletos'},
+				{id: 18, nombrado: 'Pacientes desde cartera de clientes'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
 			estados:[
@@ -561,7 +585,7 @@ import moment from 'moment';
 				this.ocultarFechas=true;
 				this.filtroAnual = this.idReporte==12 ? true : false;
 				switch(this.idReporte){
-					case 0: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16:
+					case 0: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 18:
 						this.ocultarFechas=false;
 				}
 			},

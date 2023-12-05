@@ -120,7 +120,7 @@
 										</span>
 										<span class="text labels" v-if="qCita.status == 1">Sin confirmar</span>
 										<span class="text labels" v-else-if="qCita.status == 2">Confirmado</span>
-										<span class="text labels" v-else-if="qCita.status == 3">Cancelado</span>
+										<span class="text labels" v-else-if="qCita.status == 3">Anulado</span>
 										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
 									</button>
 									<small v-if="qCita.status == 3 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].observaciones}}</small>

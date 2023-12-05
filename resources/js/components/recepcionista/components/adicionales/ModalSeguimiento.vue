@@ -41,6 +41,7 @@ export default{
 				if(this.seguimiento.motivo==''){alertify.notify('Debe ingresar un motivo para registrar', 'danger', 10);}
 				else{
 					let datos = new FormData();
+					datos.append('idPaciente', this.elegido.id?? 0)
 					datos.append('nombre', this.elegido.name)
 					datos.append('celular', this.elegido.phone)
 					datos.append('motivo', this.seguimiento.motivo)

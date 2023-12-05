@@ -94,7 +94,7 @@
 											</span>
 											<span class="text labels" v-if="horasMalas[hora.indexOcupado].status == 1">Sin confirmar</span>
 											<span class="text labels" v-else-if="horasMalas[hora.indexOcupado].status == 2">Confirmado</span>
-											<span class="text labels" v-else-if="horasMalas[hora.indexOcupado].status == 3">Cancelado</span>
+											<span class="text labels" v-else-if="horasMalas[hora.indexOcupado].status == 3">Anulado</span>
 											<span class="text labels" v-else-if="horasMalas[hora.indexOcupado].status == 4">Reprogramado</span>
 										</a>
 									</td>

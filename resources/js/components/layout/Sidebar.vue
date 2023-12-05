@@ -45,6 +45,12 @@
 								</router-link>
 						</li>
 						<li class="nav-item nav__list" @click="activeSidebar()">
+							<router-link  to="/administrador/editar/pacientes" class="nav-link">
+								<i class="fas fa-user-nurse"></i>
+									<span>Pacientes</span>
+							</router-link>
+						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
 							<router-link  to="/administrador/precios-servicios" class="nav-link">
 								<i class="fas fa-money-bill-wave-alt"></i>
 									<span>Precios de servicios</span>

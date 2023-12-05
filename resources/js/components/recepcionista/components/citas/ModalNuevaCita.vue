@@ -306,9 +306,12 @@
 						</div>
 					</div>
 
-					<div class="modal-footer border-0">
+					<div class="modal-footer border-0" v-if="cita.vivo==1" >
 						<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
 						<button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Registrar cita</button>
+					</div>
+					<div v-else>
+						<p class="text-dark text-end">Restringido porque el paciente esta reportado como fallecido ( <i class="fas fa-cross"></i> )</p>
 					</div>
 				</form>
 			</div>
@@ -364,7 +367,7 @@ export default {
 				status:'', new_status:1, prev_status:1,
 				type_amount:1,
 				type_dni:1,
-				contacto: '', contacto_celular: '', parentezco:'', adelanto:0
+				contacto: '', contacto_celular: '', parentezco:'', adelanto:0, vivo:1
 			},
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
 			provincias:[], distritos:[],
@@ -522,7 +525,7 @@ export default {
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 			this.etiqueta =''; this.descuentoAdelanto = 0; this.descuentoPorcentaje=0; this.descuentoPorcentual=0;
 			this.tieneAdelanto=false; this.tieneDescuento=false; this.tieneRebaja=false; this.razonAdelanto=''; this.razonRebaja=''
-			this.cita.contacto =''; this.cita.contacto_celular=''; this.cita.parentezco=''
+			this.cita.contacto =''; this.cita.contacto_celular=''; this.cita.parentezco=''; cita.vivo=1;
 		},
 		reniec(){ 
 			if (this.switchReciec === 0) return;
@@ -549,6 +552,7 @@ export default {
 						.then(response => {
 							console.log(response.data)
 							this.cita.name = response.data.message || `${response.data.data.apellido_paterno} ${response.data.data.apellido_materno} ${response.data.data.nombres}`;
+							this.cita.vivo=1
 							if (response.data.success) {
 								this.patientNew = false
 	
@@ -605,6 +609,7 @@ export default {
 					this.cita.department = res.data.patient.address.department;
 					this.cita.province = res.data.patient.address.province;
 					this.cita.district = res.data.patient.address.district;
+					this.cita.vivo = res.data.patient.vivo;
 					this.cita.contacto = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
 					this.cita.contacto_celular = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
 					this.cita.parentezco = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;

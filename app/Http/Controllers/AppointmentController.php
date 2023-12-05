@@ -15,6 +15,7 @@ use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\Relative;
 use App\Models\Medical_evolution;
+use App\Models\Payment_method;
 use App\Models\Reschedule;
 use App\Models\Schedule;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -616,7 +617,9 @@ class AppointmentController extends Controller
 			'voucher' => $request->input('caso.comprobante'),
 			'bank' => $request->input('dataCita.payment.bank'),
 			'observation' => $request->input('dataCita.payment.observation'),
-			'user_id'=>$request->input('caso.user_id')
+			'user_id'=>$request->input('caso.user_id'),
+			'rebaja' => $request->input('caso.rebaja'),
+			'motivoRebaja' => $request->input('caso.motivoRebaja'),
 		]);
 
 		
@@ -1109,7 +1112,7 @@ class AppointmentController extends Controller
 	}
 	public function cuponMismaSerie($id){ //Viene el appointment_id
 		$extra_payment = Extra_payment::where('appointment_id', $id)
-		->with('appointment')
+		->with('appointment', 'method_payment')
 		->with('appointment.schedule')
 		->first();
 		//return $extra_payment; die();
@@ -1119,7 +1122,9 @@ class AppointmentController extends Controller
 	}
 
 	public function pdfExtraCupon($id){
-		$extra_payment = Extra_payment::find($id);
+		$extra_payment = Extra_payment::
+		with('method_payment')
+		->find($id);
 		$pdf = PDF::loadView('recepcion.cupon_extra', compact('extra_payment'));
 		$pdf->setPaper('a7');
 		return $pdf->stream('cupon_extra.pdf');

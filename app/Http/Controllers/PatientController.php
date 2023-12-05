@@ -157,9 +157,51 @@ class PatientController extends Controller
 
 		return response()->json($patients);
 	}
+	public function getLast10PatientsAdmin (){
+		$patients = Patient::
+		with('relative', 'address', 'prescriptions')
+		->latest('created_at')->take(20)
+		->get();
+		foreach($patients as $patient){
+			$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
+			//$patient->triaje_count=$triaje->count();
+			$patient->triajes = $triaje ;
+			$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
+			$patient->semaforo = $semaforo;
+
+			$conteo= Appointment::where('patient_id', $patient->id)
+			->where('status', 4)
+			->get();
+			$patient->reprogramaciones = count($conteo);
+		}
+
+		return response()->json($patients);
+	}
 	public function searchPatientByNameDni ($nombre){
 		$patients = Patient::where('activo', 1)
 		->where('name', 'LIKE', "%".$nombre ."%")
+		->orWhere('dni', $nombre )
+		->with('relative', 'address', 'prescriptions')
+		->orderBy('name', 'asc')
+		->get();
+		foreach($patients as $patient){
+			$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
+			//$patient->triaje_count=$triaje->count();
+			$patient->triajes = $triaje ;
+			$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
+			$patient->semaforo = $semaforo;
+
+			$conteo= Appointment::where('patient_id', $patient->id)
+			->where('status', 4)
+			->get();
+			$patient->reprogramaciones = count($conteo);
+		}
+
+		return response()->json($patients);
+	}
+	public function searchPatientByNameDniAdmin ($nombre){
+		$patients = Patient::
+		where('name', 'LIKE', "%".$nombre ."%")
 		->orWhere('dni', $nombre )
 		->with('relative', 'address', 'prescriptions')
 		->orderBy('name', 'asc')

@@ -26,6 +26,7 @@ use App\Http\Controllers\ScrController;
 use App\Http\Controllers\Zung_anxietyController;
 use App\Http\Controllers\Zung_depressionController;
 use App\Http\Controllers\ExtrasController;
+use App\Http\Controllers\SimpleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Professional;
@@ -87,7 +88,9 @@ Route::get('patientMineText/{texto}', [PatientController::class, 'patientMineTex
 Route::post('patient/new', [PatientController::class, 'insertPatient']);
 Route::get('getPatient', [PatientController::class, 'getPatient']);
 Route::get('getLast10Patients', [PatientController::class, 'getLast10Patients']);
+Route::get('getLast10PatientsAdmin', [PatientController::class, 'getLast10PatientsAdmin']);
 Route::get('searchPatientByNameDni/{nombre}', [PatientController::class, 'searchPatientByNameDni']);
+Route::get('searchPatientByNameDniAdmin/{nombre}', [PatientController::class, 'searchPatientByNameDniAdmin']);
 Route::get('returnTotalPatients', [PatientController::class, 'returnTotalPatients']);
 Route::post('insertarSemaforo', [PatientController::class, 'insertarSemaforo']);
 Route::post('eliminarSemaforo/{id}', [PatientController::class, 'eliminarSemaforo']);
@@ -155,8 +158,10 @@ Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']
 Route::post('pedirReporteGerencial/{idReporte}', [ExtrasController::class,'pedirReporteGerencial']);
 Route::post('buscarCartera', [ExtrasController::class,'buscarCartera']);
 Route::post('insertarSeguimiento', [ExtrasController::class,'insertarSeguimiento']);
+Route::post('insertarDeudasSeguimiento', [ExtrasController::class,'insertarDeudasSeguimiento']);
 Route::post('actualizarPrecioAdmin', [ExtrasController::class,'actualizarPrecioAdmin']);
 Route::get('pedirHistorialSeguimientos/{id}', [ExtrasController::class,'pedirHistorialSeguimientos']);
+Route::get('pedirHistorialDeudas/{idPaciente}', [ExtrasController::class,'pedirHistorialDeudas']);
 Route::post('crearPrecioNuevo', [ExtrasController::class,'crearPrecioNuevo']);
 
 
@@ -243,3 +248,7 @@ Route::post('editarPagoExtra/', [PaymentController::class, 'editarPagoExtra']);
 
 Route::post('/subirArchivo', [PatientController::class, 'subirArchivo']);
 Route::post('/pedirArchivos', [PatientController::class, 'pedirArchivos']);
+
+Route::get('/listarMonedas', [SimpleController::class, 'listarMonedas']);
+Route::post('/cambiarMuerte', [SimpleController::class, 'cambiarMuerte']);
+Route::post('/cambiarPersonaActivo', [SimpleController::class, 'cambiarPersonaActivo']);

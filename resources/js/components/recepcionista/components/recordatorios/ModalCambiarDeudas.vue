@@ -1,15 +1,15 @@
 <template>
-	<div class="modal fade" id="modalCambiarSeguimiento" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="modalCambiarDeudas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog  modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-0">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar seguimiento</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar deudas</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-				<label for="">Tipo de seguimiento</label>
+				<label for="">Tipo de seguimiento para deudas</label>
         <select class="form-select" v-model="seguir.idSeguimiento">
-					<option v-for="seguimiento in seguimientos" v-if="seguimiento.id!=7 && seguimiento.id<=8" :value="seguimiento.id">{{ seguimiento.icono }} {{seguimiento.seguimiento}}</option>
+					<option v-for="seguimiento in seguimientos" v-if="seguimiento.id>=9 && seguimiento.id<=12 && seguimiento.id!=10" :value="seguimiento.id">{{ seguimiento.icono }} {{seguimiento.seguimiento}}</option>
 				</select>
 				<label for="">¿Algún dato para anotar?</label>
 				<input type="text" class="form-control" v-model="seguir.motivo">
@@ -40,10 +40,10 @@
 import alertify from 'alertifyjs'
 import moment from 'moment'
 export default {
-	name: 'modalCambiarSeguimiento',
+	name: 'modalCambiarDeudas',
 	props:['seguimientos', 'idPaciente'],
 	data(){ return {
-		seguir:{idSeguimiento:1, idUsuario:null, patient_id:null, motivo:''}, historiales:[], idRegistro:null
+		seguir:{idSeguimiento:9, idUsuario:null, patient_id:null, motivo:''}, historiales:[], idRegistro:null
 	}},
 	methods:{
 		buscarUsuario(){
@@ -55,7 +55,7 @@ export default {
 		asginarSeguimiento(){
 			this.seguir.patient_id=this.idPaciente
 			this.seguir.idRegistro=this.$attrs.idRegistro;
-			this.axios.post('/api/insertarSeguimiento', this.seguir)
+			this.axios.post('/api/insertarDeudasSeguimiento', this.seguir)
 			.then(response => { //console.log(response.data);
 				this.$emit('borrarIDSeguimiento')
 				if( parseInt(response.data) > 0)
@@ -65,7 +65,7 @@ export default {
 			})
 		},
 		limpiarCampos(){
-			this.seguir.idSeguimiento=1
+			this.seguir.idSeguimiento=9
 			this.seguir.patient_id=null
 			this.seguir.idPaciente=null
 			this.seguir.motivo=''
@@ -76,7 +76,7 @@ export default {
 	},
 	watch:{
 		idPaciente(){	
-			this.axios('/api/pedirHistorialSeguimientos/'+this.idPaciente)
+			this.axios('/api/pedirHistorialDeudas/'+this.idPaciente)
 			.then(res => this.historiales = res.data)
 		}
 	},

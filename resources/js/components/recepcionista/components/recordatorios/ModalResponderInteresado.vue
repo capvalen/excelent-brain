@@ -10,8 +10,8 @@
 				<div class="modal-body">
 					<label for="">Opciones</label>
 					<select class="form-select" id="sltTipo" v-model="respuesta.tipo">
-						<option value="1">Se atendió</option>
-						<option value="2">No se atendió</option>
+						<option value="1"><i class="fas fa-check"></i> Se atendió</option>
+						<option value="2"><i class="fas fa-times"></i> No se atendió</option>
 					</select>
 					<div>
 						<label for="">Respuesta del cliente:</label>
@@ -19,7 +19,7 @@
 					</div>
 				</div>
 				<div class="modal-footer border-0">
-					<button type="button" class="btn btn-primary" @click="guardar()">Actualizar</button>
+					<button type="button" class="btn btn-outline-primary" @click="guardar()"><i class="fas fa-sync-alt"></i> Actualizar</button>
 				</div>
 			</div>
 		</div>
@@ -27,8 +27,6 @@
 
 </template>
 <script>
-	import alertify from 'alertifyjs'
-
 	export default{
 		name: 'ModalResponderInteresado',
 		props:{ usuario: null, queInteresado:null},
@@ -47,7 +45,7 @@
 					this.$parent.cargarDatos('interesados');
 					this.cerrarModal()
 					if(texto.data.mensaje){
-						this.$swal(texto.data.mensaje);
+						this.$swal({icon:success, title: texto.data.mensaje});
 					}else{
 						this.$swal({icon:'error',title: 'Hubo un error interno'});
 					}

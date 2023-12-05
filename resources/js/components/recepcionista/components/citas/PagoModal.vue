@@ -16,10 +16,15 @@
 								<!-- <input type="text" class="form-control" name="price" id="price" v-model="dataCita.payment.price"> -->
 								<p class="mb-0"><small>Cuenta de la persona:</small></p>
 								<p class="lead text-capitalize mb-2 fw-bold"> <span>{{(dataCita.patient.name).toLowerCase()}}</span></p>
-							 	<p class="lead mb-0"><small>Precio: S/</small> {{ dataCita.payment.price }}</p>
-							 	<p v-if="dataCita.payment.rebaja>0" class="lead mb-0"><small>Rebaja: S/</small> {{ parseFloat(dataCita.payment.rebaja).toFixed(2) }}</p>
-							 	<p v-if="dataCita.payment.descuento>0" class="lead mb-0"><small>Descuento: </small> {{ dataCita.payment.descuento }}%</p>
+							 	<p class="lead mb-0"><small>Precio: S/</small> {{ parseFloat(dataCita.payment.price).toFixed(2) }}</p>
+							 	<p v-if="dataCita.payment.rebaja>0" class="lead mb-0"><small>rebaja: S/</small> {{ parseFloat(dataCita.payment.rebaja).toFixed(2) }}</p>
 							 	<p v-if="dataCita.payment.adelanto>0" class="lead mb-0"><small>Adelanto: </small> S/ {{ parseFloat(dataCita.payment.adelanto).toFixed(2) }}</p>
+							</div>
+							<div v-if="dataCita.byDoctor==1">
+								<label for="">Aplicar rebaja (S/)
+									<br><small>Máximo: S/ {{(maximo).toFixed(2)}}</small>
+								</label>
+								<input type="number" class="form-control" min="0" :max="maximo" id="txtrebajaDoctor" v-model="caso.rebaja" @keyup="agregarrebaja()">
 							</div>
 							
 							<div class="col-sm-12 mt-2">
@@ -31,17 +36,8 @@
 							</div>                                                      
 							<div class="col-sm-12">
 									<label class="mt-2 mb-0" for="">Método de pago</label>
-									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.moneda">
-										<option value="1">Efectivo</option>
-										<option value="4">Aplicativo Yape</option>
-										<option value="10">Aplicativo Plin</option>
-										<option value="2">Depósito bancario</option>
-										<option value="3">POS</option>
-										<option value="5">Banco: BCP</option>
-										<option value="6">Banco: BBVA</option>
-										<option value="7">Banco: Interbank</option>
-										<option value="8">Banco: Nación</option>
-										<option value="9">Banco: Scotiabank</option>
+									<select class="form-select" id="pay_type" required name="pay_type" v-model="caso.moneda">
+										<option v-for="moneda in monedas" :value="moneda.id">{{moneda.tipo}}</option>
 									</select>
 							</div>
 							<div class="col-sm-12" v-if="caso.moneda!=1">
@@ -52,6 +48,7 @@
 					<div class="form-group">
 								<label for="">Observación</label>
 								<textarea class="form-control" name="observation" id="observation" cols="10" rows="2" v-model="dataCita.payment.observation"></textarea>
+								<small>{{ pedirObservaciones }}</small>
 					</div>
 					</form>
 				</div>
@@ -73,14 +70,20 @@
 		data() {
 			return{
 				dataCita: null,
-				caso: {pago:1, moneda:1, comprobante:'', continuo: 1, user_id:-1},
+				caso: {pago:1, moneda:1, comprobante:'', continuo: 1, user_id:-1, rebaja:0, motivoRebaja:''}, maximo:15, monedas:[], neto:0
 			}
 		},
 		props:{
 			cita: Object, idUsuario:null
 		},
+		mounted() {
+			this.axios.get("/api/listarMonedas/")
+			.then(resp => this.monedas = resp.data)
+		},
 		methods:{
 			async update() {
+				this.dataCita.payment.rebaja = this.caso.rebaja
+				this.dataCita.payment.motivoRebaja = this.caso.motivoRebaja
 				await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso})
 				.then(res => {
 					console.log(res.data)
@@ -126,6 +129,27 @@
 			},
 			modalDePago(){
 				console.log('algo');
+			},
+			agregarrebaja(){
+				if(this.caso.rebaja<0){
+					this.caso.rebaja=0
+					this.dataCita.payment.price = this.neto
+					this.caso.motivoRebaja=''
+				}
+				else if(this.caso.rebaja !='' || this.caso.rebaja>0){
+					if(this.caso.rebaja>this.maximo) this.caso.rebaja = this.maximo
+					this.dataCita.payment.price = this.neto -this.caso.rebaja
+					this.caso.motivoRebaja= 'Se aplica rebaja porque proviene de programación de profesional'
+				}
+				else{
+					this.dataCita.payment.price = this.neto
+					this.caso.motivoRebaja=''
+				}
+			}
+		},
+		computed:{
+			pedirObservaciones(){
+				return  this.caso.motivoRebaja??''
 			}
 		},
 	
@@ -136,6 +160,7 @@
 				this.caso.moneda = this.dataCita.payment.payment_method == undefined ? 1:this.dataCita.payment.payment_method ;
 				this.caso.continuo = this.dataCita.payment.continuo;
 				this.caso.user_id = this.idUsuario
+				this.neto = parseFloat(this.dataCita.payment.price)
 			}
 		},
 		created () {

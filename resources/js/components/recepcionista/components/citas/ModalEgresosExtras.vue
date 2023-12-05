@@ -50,7 +50,7 @@
 
 						
 
-            <div class="form-group row mb-2">
+            <div class="form-group row mb-2 d-none">
 							<div class="col-sm-12">
 								<label for="type">Tipo de pago</label>
 								<select class="form-select" id="type" required name="type" v-model="form.type">
@@ -94,7 +94,7 @@ export default {
         price: 0, serie:'', boleta:'',
         type: 6,
         observation: null,
-        date: moment().format('YYYY-MM-DD')
+        date: moment().format('YYYY-MM-DD'),
       }
     }
   },
@@ -129,7 +129,8 @@ export default {
 						this.form[value] = ''
 					}
 					this.form['date'] = moment().format('YYYY-MM-DD');
-					this.$swal(res.data)
+					this.$swal({icon: "success", text: res.data})
+
 				})
 				.catch(err => {
 					this.$swal('Hubo un error')

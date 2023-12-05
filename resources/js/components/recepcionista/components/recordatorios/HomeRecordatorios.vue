@@ -227,14 +227,15 @@
 									</td>
 									<td>{{ fechaLatam(interesado.fecha) }} {{ horaLatam(interesado.fecha) }}</td>
 									<td>
-										<span v-if="interesado.idSeguimiento==1" :class="interesado.color" ><span :title="interesado.nomSeguimiento"><i class="fa-regular fa-circle"></i></span></span>
-										<span v-else :class="interesado.color" ><span :title="interesado.nomSeguimiento"><i class="fas fa-circle"></i></span></span>
+										<span class="puntero" :title="interesado.nomSeguimiento" data-bs-target="#modalCambiarSeguimiento" data-bs-toggle="modal" @click="queId= interesado.idPaciente; idRegistro = interesado.id"> {{ interesado.icono }} </span>
+										<!-- <span v-if="interesado.idSeguimiento==1" :class="interesado.color" ><span :title="interesado.nomSeguimiento"><i class="fa-regular fa-circle"></i></span></span>
+										<span v-else :class="interesado.color" ><span :title="interesado.nomSeguimiento"><i class="fas fa-circle"></i></span></span> -->
 										<!-- <span class="text-muted" v-if="interesado.atendido=='0'"><span title="Recién creado"><i class="far fa-circle"></i></span></span>
 										<span class="text-success" v-if="interesado.atendido=='1'"><span title="Cliente respondió"><i class="fas fa-check"></i></span></span>
 										<span class="text-danger" v-if="interesado.atendido=='2'"><span title="Cliente no respondió"><i class="far fa-times-circle"></i></span></span> -->
 									</td>
 									<td>
-										<button class="btn btn-outline-primary btn-sm " v-if="interesado.atendido=='0'" @click="responderInteresado(interesado, index)" data-bs-target="#modalResponderInteresado" data-bs-toggle="modal"><i class="far fa-comment-dots"></i></button>
+										<button class="btn btn-outline-primary btn-sm " v-if="interesado.atendido=='0'" @click="responderInteresado(interesado)" data-bs-target="#modalResponderInteresado" data-bs-toggle="modal"><i class="far fa-comment-dots"></i></button>
 										<!-- <button class="btn btn-outline-danger btn-sm border-0" @click="borrarInteresado(interesado.id, index)"><i class="fa-solid fa-xmark"></i></button> -->
 									</td>
 								</tr>
@@ -345,16 +346,22 @@
 							<tr v-for="(deuda, index) in deudas">
 								<td>{{ index+1 }}</td>
 								<td class="text-capitalize" @click="dataProps(deuda)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ deuda.name }}</td>
-								<td class="text-capitalize">{{ deuda.motivo }}</td>
+								<td class="text-capitalize">{{ deuda.motivo }}
+									<small v-if="deuda.observaciones || deuda.observaciones!=''"><br>{{deuda.observaciones}}</small>
+								</td>
 								<td>S/ {{ parseFloat(deuda.monto).toFixed(2) }}</td>
 								<td>{{ fechaLatam(deuda.fecha) }} <small>({{ fechaFrom(deuda.fecha) }})</small></td>
 								<td>
-									<span v-if="deuda.estado == 1"><span title="Deuda pendiente">⚪</span></span>
+									<span class="puntero" :title="getEstadoDeuda(deuda.estado)" data-bs-target="#modalCambiarDeudas" data-bs-toggle="modal" @click="queId= deuda.patient_id; idRegistro = deuda.idDeuda"> 
+									{{ colorDeuda(deuda.estado) }}
+									</span>
+									<!-- <span v-if="deuda.estado == 1"><span title="Deuda pendiente">⚪</span></span>
 									<span v-if="deuda.estado == 2"><span title="Deuda cobrada">🟢</span></span>
 									<span v-if="deuda.estado == 3"><span title="Deuda perdida">🔴</span></span>
+									<span v-if="deuda.estado == 4"><span title="Deuda con plazo extendido">🟡</span></span> -->
 								</td>
 								<td >
-									<button v-if="deuda.estado==1" class="btn btn-outline-primary btn-sm" title="Cambiar pago" @click="queDeuda = deuda" data-bs-target="#modalPagarDeuda" data-bs-toggle="modal"><i class="fas fa-hand-holding-usd"></i></button>
+									<button v-if="deuda.estado!=2 && deuda.estado!=3" class="btn btn-outline-primary btn-sm" title="Cambiar pago" @click="queDeuda = deuda" data-bs-target="#modalPagarDeuda" data-bs-toggle="modal"><i class="fas fa-hand-holding-usd"></i></button>
 								</td>
 							</tr>
 						</tbody>
@@ -409,6 +416,8 @@
 		<ModalEditPatients v-if="data" :dataPatient="data"></ModalEditPatients>
 		<ModalResponderInteresado :queInteresado="queInteresado"></ModalResponderInteresado>
 		<ModalPagarDeuda :deuda="queDeuda" :usuario="idUsuario"></ModalPagarDeuda>
+		<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="queId" :idUsuario="$attrs.idUser" :idRegistro="idRegistro" @cambiar="actualizar()"></ModalCambiarSeguimiento>
+		<ModalCambiarDeudas :seguimientos="seguimientos" :idPaciente="queId" :idUsuario="$attrs.idUser" :idRegistro="idRegistro" @cambiar="actualizar()"></ModalCambiarDeudas>
 		
 	</main>
 	
@@ -420,22 +429,27 @@ import ModalNuevoInteresado from './ModalNuevoInteresado.vue'
 import ModalEditPatients from '../pacientes/ModalEditPatients.vue'
 import ModalResponderInteresado from './ModalResponderInteresado.vue'
 import ModalPagarDeuda from './ModalPagarDeuda.vue'
+import ModalCambiarSeguimiento from '../adicionales/ModalCambiarSeguimiento.vue'
+import ModalCambiarDeudas from './ModalCambiarDeudas.vue'
 
 import moment from 'moment';
 
 export default {
-	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditPatients, ModalResponderInteresado, ModalPagarDeuda },
+	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditPatients, ModalResponderInteresado, ModalPagarDeuda, ModalCambiarSeguimiento, ModalCambiarDeudas },
 	name: 'HomeRecordatorios',
 	data() {
 		return {
-			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], cobrados:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos', filtroDoc:-1, fechaInteresados: moment().format('YYYY-MM-DD'), queDeuda:null, anteriores:[],
-			referencias:[{1:'Ninguno', 2:'Recomendación', 3:'Publicidad de internet', 4:'Publicidad Escrita',5:'Publicidad de TV/Radio',6:'Referido',7:'Sist. Recepción',}]
+			mes: moment().format('M'), tipo: null, clientes: [], avisos:[], deudas:[], cobrados:[], idUsuario:null, queAviso:null, interesados:[], fechaCumple:moment().format('YYYY-MM-DD'), activoCumple: false, activoAviso: false, activoInteresado: false, activoDeudas: false, nFecha:moment().format('YYYY-MM-DD'), data: null, fechaAviso: moment().format('YYYY-MM-DD'), avisosAnteriores:[], queInteresado:[], filtro:'todos', filtroDoc:-1, fechaInteresados: moment().format('YYYY-MM-DD'), queDeuda:null, anteriores:[], seguimientos:[], queId:null, idRegistro:null,
+			referencias:[{1:'Ninguno', 2:'Recomendación', 3:'Publicidad de internet', 4:'Publicidad Escrita',5:'Publicidad de TV/Radio',6:'Referido',7:'Sist. Recepción',}],
+			
 		}
 	},
 	mounted(){
 		this.axios.get('/api/user').
 		then(res=> this.idUsuario = res.data.user.id )
 		this.listarProfesionales();
+		this.axios.get('/api/pedirSeguimientos')
+		.then(response => this.seguimientos = response.data )
 	},
 	methods: {
 		async cargarDatos(tipo) {
@@ -509,14 +523,33 @@ export default {
 			moment.locale('es')
 			return moment(fecha, 'YYYY-MM-DD').fromNow(true);
 		},
-		responderInteresado(interesado, index){
+		responderInteresado(interesado){
 			this.queInteresado = interesado;
 		},
+		actualizar(){ this.queId=null, this.cargarDatos() },
 		async listarProfesionales() {
 			await this.axios.get('/api/profesional')
 				.then(response => {
 					this.doctores = response.data;
 				})
+		},
+		colorDeuda(id){
+			switch (id) {
+				case 1: case '1': return '⚪';
+				case 2: case '2': return '🟢';
+				case 3: case '3': return '🔴';
+				case 4: case '4': return '🟡';
+				default: break;
+			}	
+		},
+		getEstadoDeuda(estado){
+			switch (estado) {
+				case 1: case '1': return 'Deuda pendiente';
+				case 2: case '2': return 'Deuda cobrada';
+				case 3: case '3': return 'Deuda perdida';
+				case 4: case '4': return 'Deuda con plazo extendido';
+				default: break;
+			}	
 		}
 	}
 	

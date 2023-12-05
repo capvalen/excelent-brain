@@ -15,6 +15,7 @@ const MainSuperUser = () => import('./components/administrador/Main.vue');
 const HomeAdministrador = () => import('./components/administrador/views/HomeAdministrador.vue');
 const ShowProfessional = () => import('./components/administrador/views/ShowProfessional.vue');
 const HomePrecios = () => import('./components/administrador/views/HomePrecios.vue')
+const editarPacientesAdmin = () => import('./components/administrador/views/EditarPacientesAdmin.vue')
 const RecepcionistaReportesGerenciales = () => import('./components/administrador/views/reportes/ReportesGerenciales');
 
 const HomeAdministradorRouterReportes = () => import('./components/administrador/views/reportes/HomeRouterReportes.vue');
@@ -380,6 +381,11 @@ export const routes = [
 				path:'/administrador/usuarios-simples',
 				name: 'usuariosSimples',
 				component: HomeUsuarios
+			},
+			{
+				path:'/administrador/editar/pacientes',
+				name: 'editarPacientesAdmin',
+				component: editarPacientesAdmin
 			},
 			
 			{

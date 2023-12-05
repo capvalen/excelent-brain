@@ -11,8 +11,8 @@
 					</div>
 					<div class="modal-body">
 						<div class="text-center mb-2" >
-							<img v-if="miniRespuesta.foto!=''" :src="'/storage/'+miniRespuesta.foto" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="100px" height="100px" style="object-fit:cover;">
-							<img v-else src="/img/nadie.jpg" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="200px" height="200px" style="object-fit:cover;">
+							<img v-if="miniRespuesta.foto!=''" :src="'/img/'+miniRespuesta.foto" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="100px" height="100px" style="object-fit:cover;">
+							<img v-else src="/img/doc_default.jpg" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="200px" height="200px" style="object-fit:cover;">
 						</div>
 						<p><strong>Fecha:</strong> <span class="text-capitalize">{{fechaLectura(miniRespuesta.fecha)}}</span></p>
 						<p><strong>Profesional:</strong> <span>{{miniRespuesta.nombre}}</span></p>

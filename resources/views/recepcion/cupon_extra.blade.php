@@ -11,7 +11,7 @@
 <body>
 @php
 	use Carbon\Carbon;
-	$monedas =['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Izipay', 'Open Pay'];
+	
 @endphp
     <div class="container">
         <div class="container-fluid p-0">
@@ -64,7 +64,7 @@
 											<p>USUARIO: -</p>
 											{{-- <p>DNI: {{$patient[0]->dni}}</p> --}}
 											{{-- <p>DIRECCIÓN: {{$patient[0]->address->address}}</p> --}}
-											 <p>MEDIO DE PAGO: {{ $monedas[$extra_payment->moneda-1] }}</p>
+											 <p>MEDIO DE PAGO: {{ $extra_payment->method_payment->tipo }}</p>
                     </div>
                     <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
                         <thead>

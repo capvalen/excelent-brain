@@ -14,20 +14,9 @@
 						<div class="form-group row">                                                    
 							<div class="col-sm-12">
 									<label for="">Método de pago</label>
-									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.moneda">
-										<option value="1">Efectivo</option>
-										<option value="4">Aplicativo Yape</option>
-										<option value="10">Aplicativo Plin</option>
-										<option value="5">Banco: BCP</option>
-										<option value="6">Banco: BBVA</option>
-										<option value="7">Banco: Interbank</option>
-										<option value="8">Banco: Nación</option>
-										<option value="9">Banco: Scotiabank</option>
-										<option value="2">Depósito bancario</option>
-										<option value="12">IziPay</option>
-										<option value="11">Open Pay</option>
-										<option value="3">POS</option>
-									</select>
+									<select class="form-select" id="pay_status" name="pay_status" v-model="caso.moneda">
+									<option v-for="moneda in monedas" :value="moneda.id">{{moneda.tipo}}</option>
+								</select>
 							</div>
 							<div class="col-sm-12">
 								<label for="">Boleta / Factura</label>
@@ -61,7 +50,7 @@
 		data() {
 			return{
 				dataCita: null,
-				caso: {pago:1, moneda:1, comprobante:'', continuo: 1, user_id:-1},
+				caso: {pago:1, moneda:1, comprobante:'', continuo: 1, user_id:-1}, monedas:[]
 			}
 		},
 		props:{
@@ -116,7 +105,11 @@
 				console.log('algo');
 			}
 		},
-	
+
+		mounted() {
+			this.axios.get("/api/listarMonedas/")
+			.then(resp => this.monedas = resp.data)
+		},
 		watch:{
 			cita: function (){
 				this.dataCita = this.cita;

@@ -1,7 +1,7 @@
 <template>
     <div>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Pagos</h1>
+            <h1 class="h3 mb-0 text-gray-800">Pagos en caja</h1>
             <div class="d-flex align-items-center d-print-none">
                 <input type="date" class="form-control" @change="selectDate" v-model="fecha">
             </div>
@@ -10,36 +10,35 @@
 			<div class="m-4 d-print-none">
 				<button class="btn btn-outline-success d-none" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
 				<button class="btn btn-outline-primary" @click="membresias()" data-bs-target="#modalMembresias" data-bs-toggle="modal"><i class="fa-solid fa-arrow-up-right-dots"></i> Ingresar membresía</button>
-				<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary ms-auto"><i class="fas fa-plus"></i> Pagos extras</button>
+				<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary ms-auto"><i class="fas fa-plus"></i> Ingresos extras</button>
 				<button data-bs-toggle="modal" data-bs-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
-				<button class="btn btn-outline-secondary border-0" @click="actualizar()"> <i class="fas fa-sync"></i> Actualizar</button>
 				<button class="btn btn-outline-secondary " v-if="consultarFecha()" @click="verTicketCierre()"> <i class="fas fa-print"></i> Ticket de cierre</button>
+				<button class="btn btn-outline-secondary border-0" @click="actualizar()"> <i class="fas fa-sync"></i> Actualizar</button>
 				
 				
 			</div>
-			<p class="mt-2"><strong>Cuadre de caja</strong></p>
 
 			<table class="table table-hover mt-1 " id="table_export">
-        <thead class="table-primary">
+        <thead class="">
 					<tr class="">
 						<th class="text-primary" colspan="15"><i class="fas fa-angle-right"></i> Cuadro de entradas de dinero</th>
 					</tr>
-					<tr>
-						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
-						<td>N°</td>
-						<td><i class="far fa-user"></i> | Fecha</td>
-						<td>Fact. Bol.</td>
-						<td>Ticket</td>
-						<td>Cliente - Motivo</td>
-						<td>Tipo</td>
-						<td>Obs.</td>
-						<td>Monto</td>
-						<td>Motivo</td>
-						<td>Medio de pago</td>
-						<td>N° Op.</td>
-						<td>Prof.</td>
-						<td>Hora</td>
-						<td class="d-print-none">@</td>
+					<tr >
+						<td class="text-primaryd-print-none" v-if="tienePrivilegios=='1'">@</td>
+						<td class="text-primary">N°</td>
+						<td class="text-primary"><i class="far fa-user"></i> | Fecha</td>
+						<td class="text-primary">Fact. Bol.</td>
+						<td class="text-primary">Ticket</td>
+						<td class="text-primary">Cliente - Motivo</td>
+						<td class="text-primary">Tipo</td>
+						<td class="text-primary">Obs.</td>
+						<td class="text-primary">Monto</td>
+						<td class="text-primary">Motivo</td>
+						<td class="text-primary">Medio de pago</td>
+						<td class="text-primary">N° Op.</td>
+						<td class="text-primary">Prof.</td>
+						<td class="text-primary">Hora</td>
+						<td class="text-primary d-print-none" >@</td>
 					</tr>
         </thead>
         <tbody>
@@ -83,7 +82,7 @@
 								<span v-if="payment.type==1">Paquete Membresía</span>
 								<span v-if="payment.type==0">Certificado</span>
 							</td>
-							<td class="text-capitalize"> <span>{{monedas[payment.moneda-1]}}</span> </td>
+							<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
 							<td>{{ payment.voucher_issued }}</td>
 							<td>{{ payment.profesional_name }}</td>
 							<td>{{ payment.horario }}</td>
@@ -98,7 +97,7 @@
 				<tfoot>
 					<tr v-for="tipo in sumaTipos">
 						<th colspan="7"></th>
-						<th>{{ monedas[tipo.moneda-1] }}</th>
+						<th>{{ tipo.moneda }}</th>
 						<th>S/ {{ tipo.suma.toFixed(2) }}</th>
 						<th></th>
 					</tr>
@@ -111,25 +110,24 @@
 				</tfoot>
    	 </table>
 			<table class="table table-hover w-100 mt-1" id="table_export2">
-				<thead class="table-danger">
+				<thead class="">
 					<tr class="">
-						<th class="text-danger" colspan="15"><i class="fas fa-angle-right"></i> Cuadro de salidas de dinero</th>
+						<th class="text-warning" colspan="15"><i class="fas fa-angle-right"></i> Cuadro de salidas de dinero</th>
 					</tr>
 					<tr>
-						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
-						<td>N°</td>
-						<td><i class="far fa-user"></i> | Fecha</td>
-						<td>Fact. Bol.</td>
-						<td>Ticket</td>
-						<td>Cliente - Motivo</td>
-						
-						<td>Obs.</td>
-						<td>Monto</td>
-						<td>Motivo</td>
-						<td>Medio de pago</td>
-						<td>N° Op.</td>
-						<td>Hora</td>
-						<td class="d-print-none">@</td>
+						<td class="text-warning d-print-none" v-if="tienePrivilegios=='1'">@</td>
+						<td class="text-warning">N°</td>
+						<td class="text-warning"><i class="far fa-user"></i> | Fecha</td>
+						<td class="text-warning">Fact. Bol.</td>
+						<td class="text-warning">Ticket</td>
+						<td class="text-warning">Cliente - Motivo</td>
+						<td class="text-warning">Obs.</td>
+						<td class="text-warning">Monto</td>
+						<td class="text-warning">Motivo</td>
+						<td class="text-warning">Medio de pago</td>
+						<td class="text-warning">N° Op.</td>
+						<td class="text-warning">Hora</td>
+						<td class="text-warning d-print-none">@</td>
 					</tr>
         </thead>
         <tbody>
@@ -158,7 +156,7 @@
 								
 								<span v-if="payment.type==6">Salida de dinero</span>
 							</td>
-							<td class="text-capitalize"> <span>{{monedas[payment.moneda-1]}}</span> </td>
+							<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
 							<td>{{ payment.voucher_issued }}</td>
 							<td>{{ horaLatam(payment.created_at) }}</td>
 							<td class="d-print-none">
@@ -172,7 +170,7 @@
 				<tfoot>
 					<tr v-for="tipo in sumaSalidas">
 						<th colspan="7"></th>
-						<th>{{ monedas[tipo.moneda-1] }}</th>
+						<th>{{ tipo.moneda }}</th>
 						<th>S/ {{ tipo.suma.toFixed(2) }}</th>
 						<th></th>
 					</tr>
@@ -184,27 +182,27 @@
 					</tr>
 				</tfoot>
    	 </table>
-			<p class="mt-2" v-if="eliminados.length>0"><strong>Pagos eliminados</strong></p>
-			<table class="table table-striped w-100 mt-1" id="table_eliminados" v-if="eliminados.length>0">
-				<thead class="table-warning">
+			<p class="mt-2 text-danger" v-if="eliminados.length>0"><strong>Pagos eliminados</strong></p>
+			<table class="table table-hover w-100 mt-1" id="table_eliminados" v-if="eliminados.length>0">
+				<thead class="">
 					<tr class="">
-						<th class="text-warning" colspan="15"><i class="fas fa-angle-right"></i>  Cuadro anulados</th>
+						<th class="text-danger" colspan="15"><i class="fas fa-angle-right"></i>  Cuadro anulados</th>
 					</tr>
 					<tr>
-						<td class="d-print-none" v-if="tienePrivilegios=='1'">@</td>
-						<td>N°</td>
-						<td><i class="far fa-user"></i> | Fecha</td>
-						<td>Fact. Bol.</td>
-						<td>Ticket</td>
-						<td>Cliente - Motivo</td>
-						<td>Tipo</td>
-						<td>Obs.</td>
-						<td>Monto</td>
-						<td>Moneda</td>
-						<td>Medio de pago</td>
-						<td>N° Op.</td>
-						<td>Hora</td>
-						<td class="d-print-none">@</td>
+						<td class="text-danger d-print-none" v-if="tienePrivilegios=='1'">@</td>
+						<td class="text-danger">N°</td>
+						<td class="text-danger"><i class="far fa-user"></i> | Fecha</td>
+						<td class="text-danger">Fact. Bol.</td>
+						<td class="text-danger">Ticket</td>
+						<td class="text-danger">Cliente - Motivo</td>
+						<td class="text-danger">Tipo</td>
+						<td class="text-danger">Obs.</td>
+						<td class="text-danger">Monto</td>
+						<td class="text-danger">Moneda</td>
+						<td class="text-danger">Medio de pago</td>
+						<td class="text-danger">N° Op.</td>
+						<td class="text-danger">Hora</td>
+						<td class="text-danger d-print-none">@</td>
 					</tr>
         </thead>
 				<tbody>
@@ -239,7 +237,7 @@
 							<span v-if="payment.type==1">Paquete Membresía</span>
 							<span v-if="payment.type==0">Certificado</span>
 						</td>
-						<td class="text-capitalize"> <span>{{monedas[payment.moneda-1]}}</span> </td>
+						<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
 						<td>{{ payment.voucher_issued }}</td>
 						<td>{{ payment.profesional_name }}</td>
 						<td>{{ horaLatam(payment.created_at) }}</td>
@@ -288,19 +286,8 @@
 						<div class="form-group row">                                                    
 							<div class="col-sm-12">
 								<label for="">Método de pago</label>
-								<select class="form-select" name="pay_status" id="pay_status" v-model="caso.moneda">
-									<option value="1">Efectivo</option>
-									<option value="4">Aplicativo Yape</option>
-									<option value="10">Aplicativo Plin</option>
-									<option value="5">Banco: BCP</option>
-									<option value="6">Banco: BBVA</option>
-									<option value="7">Banco: Interbank</option>
-									<option value="8">Banco: Nación</option>
-									<option value="9">Banco: Scotiabank</option>
-									<option value="2">Depósito bancario</option>
-									<option value="12">IziPay</option>
-									<option value="11">Open Pay</option>
-									<option value="3">POS</option>
+								<select class="form-select" id="pay_status" name="pay_status" v-model="caso.moneda">
+									<option v-for="moneda in monedas" :value="moneda.id">{{moneda.tipo}}</option>
 								</select>
 							</div>
 							<div class="col-sm-12">
@@ -335,7 +322,7 @@
 			</div>
 		</div>
 		
-		<modal-pagos-extras />
+		<modal-pagos-extras :idUsuario="$attrs.idUser" />
     <modal-egresos-extras :idUsuario="$attrs.idUser" :nombreUser="$attrs.nombreUser" />
 		<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto" :habilitarEliminado="habilitarEliminado" ></OffcanvasAdjuntos>
 	</div>
@@ -352,9 +339,10 @@ import moment from 'moment'
 		data(){
 			return{
 				payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'], idSeleccionado:-1,
-				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD') 
+				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD'), monedas:[]
 			}
 		},
+		name: 'HomePagos',
 		props:{},
 		components:{ ModalMembresias, ModalPagosExtras, ModalEgresosExtras, OffcanvasAdjuntos },
 		methods:{
@@ -447,7 +435,10 @@ import moment from 'moment'
 				consultarFecha(){
 					return this.fecha == moment().format('YYYY-MM-DD')
 				},
-				verTicketCierre(){ window.open('/api/ticketCierreCaja/'+this.fecha+'/'+this.$attrs.nombreUser, '_blank'); }
+				verTicketCierre(){ window.open('/api/ticketCierreCaja/'+this.fecha+'/'+this.$attrs.nombreUser, '_blank'); },
+				queMoneda(idMoneda){
+					return this.monedas.find(x=> x.id == idMoneda)?.tipo
+				}
 		},
 		mounted(){
 			this.getAllExtraPayments()
@@ -456,6 +447,8 @@ import moment from 'moment'
 				this.idUsuario = res.data.user.id
 				this.tienePrivilegios = res.data.user.privilegios
 			})
+			this.axios.get("/api/listarMonedas/")
+			.then(resp => this.monedas = resp.data)
 		},
 		filters:{
 			formatedDate(date){
@@ -467,8 +460,8 @@ import moment from 'moment'
 				this.sumaTipos=[]
 				if(this.payments.length>0){
 					return this.payments.reduce((suma, item)=>{
-						let queIndex= this.sumaTipos.findIndex(x=> x.moneda== item.moneda );
-						//console.log(queIndex);
+						console.log(item);
+						let queIndex= this.sumaTipos.findIndex(x=> x.moneda== this.queMoneda(item.moneda) );
 						if( queIndex>-1 ){ //encuentra
 							if( item.type==6)
 								this.sumaTipos[queIndex].suma-= parseFloat(item.price ?? 0)
@@ -476,9 +469,9 @@ import moment from 'moment'
 								this.sumaTipos[queIndex].suma+= parseFloat(item.price ?? 0)
 						}else{
 							if( item.type==6 )
-								this.sumaTipos.push({suma: -parseFloat(item.price ?? 0), moneda: item.moneda})
+								this.sumaTipos.push({suma: -parseFloat(item.price ?? 0), moneda: this.queMoneda(item.moneda)})
 							else
-								this.sumaTipos.push({suma: parseFloat(item.price ?? 0), moneda: item.moneda})
+								this.sumaTipos.push({suma: parseFloat(item.price ?? 0), moneda: this.queMoneda(item.moneda)})
 						}
 						//console.log(item.type==6);
 						
@@ -497,7 +490,7 @@ import moment from 'moment'
 				this.sumaSalidas=[]
 				if(this.salidas.length>0){
 					return this.salidas.reduce((suma, item)=>{
-						let queIndex= this.sumaSalidas.findIndex(x=> x.moneda== item.moneda );
+						let queIndex= this.sumaSalidas.findIndex(x=> x.moneda== this.queMoneda(item.moneda ));
 						//console.log(queIndex);
 						if( queIndex>-1 ){ //encuentra
 							if( item.type==6)
@@ -506,9 +499,9 @@ import moment from 'moment'
 								this.sumaSalidas[queIndex].suma+= parseFloat(item.price ?? 0)
 						}else{
 							if( item.type==6 )
-								this.sumaSalidas.push({suma: -parseFloat(item.price ?? 0), moneda: item.moneda})
+								this.sumaSalidas.push({suma: -parseFloat(item.price ?? 0), moneda: this.queMoneda(item.moneda)})
 							else
-								this.sumaSalidas.push({suma: parseFloat(item.price ?? 0), moneda: item.moneda})
+								this.sumaSalidas.push({suma: parseFloat(item.price ?? 0), moneda: this.queMoneda(item.moneda)})
 						}
 						//console.log(item.type==6);
 						

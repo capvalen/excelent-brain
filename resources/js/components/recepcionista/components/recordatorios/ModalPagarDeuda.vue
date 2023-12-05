@@ -59,6 +59,7 @@
 					console.log(texto.data);
 					this.$parent.cargarDatos('deudas');
 					if(texto.data.mensaje){
+						this.respuesta.respuesta=''
 						this.cerrarModal()
 						this.$swal(texto.data.mensaje);
 					}else{
