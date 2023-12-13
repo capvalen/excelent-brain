@@ -527,7 +527,7 @@ export default {
 		contarMontosRegistrados(){
 			this.conteoR2=[];
 			this.conteoR2.push({idProfesional:this.resultados[0].professional_id, nombre: this.resultados[0].professional.name, profesion: this.resultados[0].professional.profession,
-				nuevo:0, continuo:0, revaluaciones:0,certificados:0, conteo:0, ganancia: parseFloat(this.resultados[0].payment.price)
+				nuevo:0, continuo:0, revaluaciones:0,certificados:0, conteo:0, ganancia: 0
 			})
 			this.resultados.forEach(cita=>{
 				if(cita.professional_id !== this.conteoR2[this.conteoR2.length-1].idProfesional ){

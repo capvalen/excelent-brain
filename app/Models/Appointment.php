@@ -37,8 +37,11 @@ class Appointment extends Model
     {
         return $this->hasOne("App\Models\Payment");
     }
-		public function precio(){
-			return $this->hasOne('App\Models\Precio', 'id', 'type');
-		}
+    public function precio(){
+        return $this->hasOne('App\Models\Precio', 'id', 'type');
+    }
+    public function pagosExtras(){
+        return $this->hasMany("App\Models\Extra_payment",'appointment_id', 'id');
+    }
    
 }

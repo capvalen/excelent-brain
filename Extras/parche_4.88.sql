@@ -7,3 +7,4 @@ ALTER TABLE `medical_comments` CHANGE `comment` `comment` TEXT NOT NULL;
 ALTER TABLE `appointments` ADD `recomendacion_comentario` TEXT NULL DEFAULT '' AFTER `idMembresia`;
 ALTER TABLE `scrs` ADD `resultados` TEXT NULL DEFAULT NULL AFTER `professional_id`;
 ALTER TABLE `burns` ADD `resultados` TEXT NULL DEFAULT NULL AFTER `professional_id`;
+INSERT INTO `tipo_pagos` (`id`, `descripcion`) VALUES ('15', 'Pago de membresía');

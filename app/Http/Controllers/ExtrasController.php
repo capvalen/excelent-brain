@@ -931,12 +931,12 @@ class ExtrasController extends Controller
 				$nuevos = Appointment::
 				/*whereYear('created_at', $request->get('año'))
 				 ->whereMonth('created_at', $request->get('mes'))*/
-				whereBetween('created_at', [$request->get('inicio'), $request->get('fin')] )
+				whereBetween('date', [$request->get('inicio'), $request->get('fin')] )
 				->where('patient_condition', 1) 
 				->with('precio')
 				->get();
 				$continuos = Appointment::whereYear('created_at', $request->get('año'))
-				->whereMonth('created_at', $request->get('mes'))
+				->whereMonth('date', $request->get('mes'))
 				->where('patient_condition', 2)
 				->with('precio')
 				->get();
@@ -946,8 +946,9 @@ class ExtrasController extends Controller
 				$cartera = Appointment::
 				/* whereYear('created_at', $request->get('año'))
 				->whereMonth('created_at', $request->get('mes')) */
-				whereBetween('created_at', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
-				->where('patient_condition', 1)
+				//whereBetween('created_at', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
+				whereBetween('date', [ $request->get('inicio'), $request->get('fin') ])
+				->where('status', 2)
 				->with('professional')
 				->with('precio')
 				->with('schedule')
@@ -970,17 +971,24 @@ class ExtrasController extends Controller
 				return response()->json($cartera); break;
 
 			case '4': 
-				$cartera = Appointment::
+				$cartera = [];
+				$carteras = Appointment::
 				/* whereYear('created_at', $request->get('año'))
 				->whereMonth('created_at', $request->get('mes')) */
-				whereBetween('created_at', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
-				->where('patient_condition', 1)
+				whereBetween('date', [$request->get('inicio') , $request->get('fin') ])
 				->with('professional')
-				->with('payment')
+				//->with('payment')
+				->with(['payment'=> function($query) {
+					$query->where('payments.pay_status','=', 2);
+				}])
 				->with('schedule')
 				->with('patient')
 				->orderBy('professional_id', 'asc')
 				->get();
+				foreach ($carteras as $cart) {
+					if($cart->payment)
+						$cartera[] = $cart;
+				}
 				return response()->json($cartera); break;
 			case '5':
 				$citas = Reschedule::
@@ -1072,13 +1080,14 @@ class ExtrasController extends Controller
 				return response()->json($agrupados); break;
 
 			case '11':
-				$medios = DB::select("SELECT sum(price) as suma, ti.descripcion
+				$medios1 = DB::select("SELECT sum(price) as suma, ti.descripcion
 				FROM `extra_payments` as ex
 				inner join tipo_pagos as ti on ti.id = ex.type
 				/* where year(date) = {$request->get('año')}
 				and month(date) = {$request->get('mes')} */
 				where date_format(`date`, '%Y-%m-%d') between '{$request->get('inicio')}' and '{$request->get('fin')}'
 				and ex.type<>6
+				and idMembresia<>0
 				group by ex.type, ti.descripcion;");
 				/* $medios = Extra_payment::whereYear('date', $request->get('año'))
 				->whereMonth('date', $request->get('mes'))
@@ -1088,6 +1097,16 @@ class ExtrasController extends Controller
 					$pago = $item->precio->descripcion;
 					return $pago;
 				}); */
+				$medios2 = DB::select("SELECT sum(price) as suma, p.descripcion
+				FROM `extra_payments` as ex
+				inner join precios as p on p.id = ex.type
+				where date_format(`date`, '%Y-%m-%d') between '{$request->get('inicio')}' and '{$request->get('fin')}'
+				and ex.type<>6
+				and idMembresia=0
+				group by ex.type, p.descripcion;");
+
+				$medios = array_merge($medios1, $medios2);
+
 				$contador = count($medios);
 				return response()->json(array('pagos'=> $medios, 'total'=>$contador)); break;
 			case '12':
