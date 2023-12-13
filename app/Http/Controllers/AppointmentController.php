@@ -196,7 +196,8 @@ class AppointmentController extends Controller
 				'link'=>$request->get('link'),
 				'status'=> 1,
 				'patient_id' => $patient->id,
-				'formato_nuevo' => $request->get('formato_nuevo')
+				'formato_nuevo' => $request->get('formato_nuevo'),
+				'recomendacion_comentario' => $request->get('recomendacion_comentario')
 			]);
 
 			$payment = Payment::create([
@@ -257,7 +258,8 @@ class AppointmentController extends Controller
 				'link'=>$request->get('link'),
 				'status'=> 1,
 				'patient_id' => $paciente_prueba->id,
-				'formato_nuevo' => $request->get('formato_nuevo')
+				'formato_nuevo' => $request->get('formato_nuevo'),
+				'recomendacion_comentario' => $request->get('recomendacion_comentario')
 			]);
 
 			$payment = Payment::create([
@@ -351,7 +353,7 @@ class AppointmentController extends Controller
 				'auth' => 0,
 				'patient_id'=> $paciente_prueba->id,
 				'professional_id'=> $request->input('professional_id'),
-				'schedule' => $request->get('schedule_id'),
+				'schedule' => $request->get('check_time'),
 			]);
 		}
 				//echo 'nombre: '. trim(str_replace('  ', ' ' , $request->get('name')));

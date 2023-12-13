@@ -1,10 +1,14 @@
 <template>
 	<div>
-		<h1>Mi Cartera de clientes</h1>
+		<h1>Resumen de visita por pacientes</h1>
 		<h3><small>Del Profesional: Dr. {{ dataUser.nombre }}</small></h3>
 		<div class="card">
 			<div class="card-body ">
 				<div class="row row-cols-auto g-3  align-items-center">
+					<div class="col-3">
+						<label for=""><i class="fas fa-filter"></i> Filtro</label>
+						<input type="text" class="form-control" v-model="filtro.texto" placeholder="DNI o Nombres">
+					</div>
 					<div class="col-3">
 						<label for="">Año</label>
 						<select class="form-select" v-model="filtro.año">
@@ -32,15 +36,15 @@
 							<th>N°</th>
 							<th>Nombre y Apellidos</th>
 							<th>Celular</th>
-							<th>Antigüedad</th>
+							<th class="d-none">Antigüedad</th>
 							<th>N° Citas</th>
 							<th>N° Conf.</th>
 							<!-- <th>N° Faltas</th> -->
 							<th>No asistieron</th>
 							<th>N° Anulados</th>
 							<th>N° Reprogramados</th>
-							<th>Actual</th>
-							<th>@</th>
+							<th class="d-none">Actual</th>
+							<th class="d-none">@</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -48,7 +52,7 @@
 							<td>{{ index+1 }}</td>	
 							<td class="text-capitalize">{{ cita.patient.name.toLowerCase() }}</td>
 							<td>{{ cita.patient.phone }}</td>
-							<td>{{queViejoEs(cita.patient.id)}}</td>
+							<td class="d-none">{{queViejoEs(cita.patient.id)}}</td>
 							<!-- <td>{{ ultimaFecha(cita.patient.id) }}</td> -->
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('visitas', cita.patient.id)">{{ cita.visitas }}</td>
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('confirmar', cita.patient.id)">{{ cita.confirmar }}</td>
@@ -56,8 +60,8 @@
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('sinconfirmar', cita.patient.id)">{{ cita.sinconfirmar }}</td>
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('anulados', cita.patient.id)">{{ cita.anulados }}</td>
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('reprogramados', cita.patient.id)">{{ cita.reprogramados }}</td>
-							<td>{{ cita.actual }}</td>
-							<td class="puntero" @click="idGlobal = cita.patient_id; indexGlobal = index" data-bs-toggle="modal" data-bs-target="#modalCambiarSeguimiento">
+							<td class="d-none">{{ cita.actual }}</td>
+							<td class="puntero d-none" @click="idGlobal = cita.patient_id; indexGlobal = index" data-bs-toggle="modal" data-bs-target="#modalCambiarSeguimiento">
 								<span v-if="cita.patient.seguimiento==1" title="Sin acción"><i class="fa-regular fa-circle"></i></span>
 								<span v-else :class=" queColor(cita.patient.seguimiento)" :title="queSeguimiento(cita.patient.seguimiento)"><i class="fas fa-circle"></i></span>
 								<button class="btn btn-sm btn-circle btn-outline-primary" title="Enviar a seguimiento" data-bs-target="#modalSeguimiento" data-bs-toggle="modal" @click="elegido = cita.patient"><i class="far fa-paper-plane"></i></button>
@@ -110,7 +114,7 @@ export default{
 	name: 'HomeCartera',
 	data(){ return {
 		profesionales:[], años:[], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-		filtro: {idProfesional: -1, año: moment().format('YYYY'), mes:-1}, citasResumidas:[], citasCompletas:[], previewCitas:[], titulo:'', idGlobal:-1, indexGlobal:-1,
+		filtro: {texto:'', idProfesional: -1, año: moment().format('YYYY'), mes:-1}, citasResumidas:[], citasCompletas:[], previewCitas:[], titulo:'', idGlobal:-1, indexGlobal:-1,
 		seguimientos:[], elegido:[]
 	}},
 	props:['dataUser'],

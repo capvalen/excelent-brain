@@ -83,10 +83,14 @@
 												<th class="pb-1">¿Paga?</th>
 											</tr>
 										</thead>
-										<tbody>
+										<tbody id="tbodyFechas">
 											<tr v-for="(fecha, index) in fechas">
 												<td> <input type="date" class="form-control" v-model="fecha.dia"> </td>
-												<td>{{ parseFloat(fecha.monto).toFixed(2) }}</td>
+												<td>
+													<span v-if="membresia.tipo!=71">{{ parseFloat(fecha.monto).toFixed(2) }}</span>
+													<span v-if="membresia.tipo==71 && membresia.cuotas==1">{{ parseFloat(fecha.monto).toFixed(2) }}</span>
+													<input type="number" class="form-control inputPartidos" v-if="membresia.tipo==71 && membresia.cuotas>1" @keyup="balancearMontos()" readonly="true" v-model="fecha.monto">
+												</td>
 												<td>
 													<div class="form-check">
 														<input class="form-check-input" type="checkbox" value="" :id="'flexPago' + index"
@@ -180,6 +184,7 @@
 <script>
 import moment from 'moment'
 import alertify from 'alertifyjs';
+import { TimeScale } from 'chart.js';
 export default {
 	name: 'ModalMembresias',
 	data() {
@@ -247,9 +252,30 @@ export default {
 					total: precioBase,
 					pago: false
 				})
+				if(this.membresia.tipo==71 && this.membresia.cuotas>1){
+					const firstTr = document.querySelector('#tbodyFechas tr:first-child');
+					const firstInput = firstTr.querySelector('.inputPartidos:first-child');
+					firstInput.readOnly = false;
+				}
 				hoy = moment(hoy).add(1, 'month')
 			}
 			this.membresia.fin = this.membresia.tipo==47 ?  moment().add(1,'year').format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
+		},
+		balancearMontos(){
+			console.log('bal');
+			if(this.membresia.tipo==71 && parseInt(this.membresia.cuotas)>1){
+				let cantidadFechas = this.fechas.length-1
+				let montoRestante = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto))/cantidadFechas;
+				/* for(let i = 1; i<=this.fechas.length; i++){
+					this.fechas[i].monto = montoRestante.toFixed(2)
+				} */
+				this.fechas.forEach((fecha,index)=>{
+					if(index!=0){
+						console.log('aplicar', fecha, montoRestante);
+						fecha.monto = montoRestante.toFixed(2)
+					}
+				})
+			}
 		},
 		borrarSesionAcumulada(index){
 			this.sesionesAcumuladas.splice(index,1)
@@ -273,13 +299,16 @@ export default {
 				const servidor = await fetch('/api/guardarMembresia', {
 					method: 'POST', body: datos
 				})
-				const respuesta2 = await servidor.text();
-				console.log(respuesta2);
-
+				
 				const respuesta = await servidor.json();
 				if (respuesta.mensaje) {
 					this.pacienteElegido = []
 					this.fechas = []
+					this.$swal({
+						title: 'Se guardó la membresía',
+						showConfirmButton: false,
+						icon:'success'
+					})
 					alertify.notify('<i class="fa-regular fa-calendar-check"></i> Membresía guardada', 'success', 10);
 				} else
 					alertify.notify('<i class="fa-regular fa-bomb"></i> Hubo un error guardando', 'danger', 10);

@@ -532,7 +532,7 @@
 										v-if="evolution.professional_id == dataUser.id" data-bs-toggle="modal" data-bs-target="#editModal">
 										<i class="fas fa-edit"></i>
 									</button>
-									<button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalNuevoSeguimiento" @click="idEvolucion = evolution.id" v-if="evolution.professional_id == dataUser.id"><i class="far fa-plus-square"></i> Agregar seguimiento</button>
+									<button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalNuevoSeguimiento" @click="idEvolucion = evolution.id" v-if="evolution.professional_id == dataUser.id"><i class="far fa-plus-square"></i> Agregar seguimiento</button>
 									<!-- <div v-if="evolution.professional_id == dataUser.id &&
 										evolution.date === getDateNow()" class="btn-group">
 										<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)"
@@ -573,7 +573,7 @@
 
 					<keep-alive>
 						<component v-if="this.datosExamPaciente.id" :is="component" @keepComponentExam="keepExamFunction"
-							:dataPatient="datosExamPaciente" :dataExam="this.datosExamenes" :dataExamBasic="datosConsulta.examenes_basicos" :dataExamPersonalized="datosConsulta.examenes_personalizados" :profesionales="profesionalesTodos" />
+							:dataPatient="datosExamPaciente" :dataExam="this.datosExamenes" :dataExamBasic="datosConsulta.examenes_basicos" :dataExamPersonalized="datosConsulta.examenes_personalizados" :profesionales="profesionalesTodos"/>
 					</keep-alive>
 
 				</div>
@@ -632,7 +632,7 @@
 		<ModalArchivos :idPaciente="datosConsulta.id" :idProfesional="dataUser.id" ></ModalArchivos>
 		<ModalNuevoAcontecimiento :idPaciente="datosConsulta.id" :idProfesional="dataUser.id"></ModalNuevoAcontecimiento>
 		<evolution-modal :dataUser="dataUser.profession" :datosIdEvolucion="datosIdEvolucion" ></evolution-modal>
-		<modalNuevoSeguimiento :idEvolucion="idEvolucion"></modalNuevoSeguimiento>
+		<modalNuevoSeguimiento :idProfesional="dataUser.id"  :idEvolucion="idEvolucion"></modalNuevoSeguimiento>
 	</div>
 </template>
 
@@ -677,7 +677,7 @@ export default {
 			consultaHoy: false,
 			dataCies: null,
 			searchCie: '',
-			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, comentarios:[], dato1:[], idEvolucion:-1,
+			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '', comentarios:[] }, comentarios:[], dato1:[], idEvolucion:-1,
 			datosIdEvolucion:{patient:{id:-1}, professional:{id:-1}},
 			component: "ExamTable",
 			datosExamenes: [],
@@ -1143,10 +1143,12 @@ export default {
 		},
 		mostrarCard(index) {
 			this.indexGlobal = index;
+			this.miniRespuesta.comentarios=[]
 			if (this.datosConsulta.medical_evolutions[index].professional) {
 				this.miniRespuesta.nombre = this.datosConsulta.medical_evolutions[index].professional.name;
 				this.miniRespuesta.firma = this.datosConsulta.medical_evolutions[index].professional.signing;
 				this.miniRespuesta.foto = this.datosConsulta.medical_evolutions[index].professional.photo;
+				this.miniRespuesta.comentarios = this.datosConsulta.medical_evolutions[index].comentarios;
 				if (this.miniRespuesta.firma == '-') {
 					this.miniRespuesta.firma = '';
 				}

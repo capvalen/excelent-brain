@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Extra_payment;
 use App\Models\Faltas;
+use App\Models\Membresia;
 use App\Models\Patient;
 use App\Models\Patient_seguimiento;
 use App\Models\Payment;
@@ -605,43 +606,72 @@ class ExtrasController extends Controller
 	public function buscarCartera(Request $request){
 		
 		
-		if($request->get('mes')==-1):
-			$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
-				->whereYear('date', $request->get('año'))
-				->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
-				->groupBy('patient_id')
-				->with('patient')
-				->orderBy('date', 'desc')
-				->get();
-			$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
-				->whereYear('date', $request->get('año'))
-				->orderBy('date', 'desc')
-				->with('patient')
-				->get();
-		else:
-			$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
-				->whereYear('date', $request->get('año'))
-				->whereMonth('date', $request->get('mes'))
-				->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
-				->groupBy('patient_id')
-				->with('patient')
-				->orderBy('date', 'desc')
-				->get();
-			$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
-				->whereYear('date', $request->get('año'))
-				->whereMonth('date', $request->get('mes'))
-				->orderBy('date', 'desc')
-				->with('patient')
-				->get();
-		endif;
-
-		foreach($citasCompletas as $cita){
-			$pago = Payment::where('appointment_id', $cita->id)->get();
-			$cita->payment = $pago[0] ?? [];
-		}
-
-		return response()->json([ "resumidas"=>$citasResumidas, 'completas'=>$citasCompletas ]);
 		
+
+		if(!$request->get('texto')){
+			if($request->get('mes')==-1):
+				$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
+					->whereYear('date', $request->get('año'))
+					->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
+					->groupBy('patient_id')
+					->with('patient')
+					->orderBy('date', 'desc')
+					->get();
+				$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
+					->whereYear('date', $request->get('año'))
+					->orderBy('date', 'desc')
+					->with('patient')
+					->get();
+			else:
+				$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes'))
+					->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
+					->groupBy('patient_id')
+					->with('patient')
+					->orderBy('date', 'desc')
+					->get();
+				$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
+					->whereYear('date', $request->get('año'))
+					->whereMonth('date', $request->get('mes'))
+					->orderBy('date', 'desc')
+					->with('patient')
+					->get();
+			endif;
+				foreach($citasCompletas as $cita){
+					$pago = Payment::where('appointment_id', $cita->id)->get();
+					$cita->payment = $pago[0] ?? [];
+				}
+
+		}
+		if($request->get('texto')<>''){
+			$pacientes = Patient::where('name', 'like', '%'. $request->get('texto').'%')->get();
+			$citasResumidas=[]; $citasCompletas=[];
+			foreach ($pacientes as $paciente) {
+				$cResumen = Appointment::where('patient_id', $paciente->id)
+					->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
+					->where('professional_id', $request->get('idProfesional'))
+					->with('patient')
+					->groupBy('patient_id')
+					->orderBy('date', 'desc')
+					->get();
+				$cCompletas[] = Appointment::where('patient_id', $paciente->id)
+					->where('professional_id', $request->get('idProfesional'))
+					->with('patient')
+					->orderBy('date', 'desc')
+					->get();
+				if(is_null($cResumen) || count($cResumen)==0) continue;
+				else $citasResumidas[] = $cResumen[0];
+				if(is_null($cCompletas) || count($cCompletas)==0) continue;
+				else
+					foreach ($cCompletas as $citaGrupo) {
+						foreach ($citaGrupo as $cita) {
+							$citasCompletas[] = $cita; 
+						}
+					}
+			}
+		}
+		return response()->json([ "resumidas"=>$citasResumidas, 'completas'=>$citasCompletas ]);
 	}
 
 	public function listarPrecios(){
@@ -762,6 +792,10 @@ class ExtrasController extends Controller
 				$pagoExtra->idMembresia = $request->input('idMembresia');
 				$pagoExtra->user_id = $request->input('user_id');
 				$pagoExtra->save();
+			Membresia::where('id', $request->input('idMembresia'))
+			->update([
+				'estado' => 2
+			]);
 		}
 		return response()->json(['mensaje' => 'Actualizado con éxito']);		
 	}
@@ -883,6 +917,7 @@ class ExtrasController extends Controller
 		$precio->update([
 			'nuevos' => $request->get('nuevos'),
 			'continuos' => $request->get('continuos'),
+			'especialMembresias' => $request->get('especialMembresias'),
 			'descripcion' => $request->get('descripcion'),
 			'sesiones' => $request->get('sesiones'),
 			'servicio' => $request->get('servicio')

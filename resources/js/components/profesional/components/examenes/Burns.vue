@@ -1,18 +1,20 @@
 <template>
     <main>
-        <h1>Cuestionario de Ansiedad de Burns</h1>
+        <h1>Cuestionario de Ansiedad de Burns <span v-if="verResultados">- RESULTADOS</span></h1>
 
-        <div class="scrollable">
+        <div class="scrollable" v-if="!verResultados">
             <p>Resultado Global: {{this.suma}}</p>
             <p>{{this.resultado}}</p>
             <button class="btn btn-primary" @click="sumatoria">Calcular y guardar</button>
         </div>
 
-        <label for="">Nombre del Paciente</label>
-         <input type="text" name="" v-model="buscar" id="" class="form-control input-name">
-            <div v-show="showResults" class="border border-secondary shadow w-100">
-                <div @click="selectPatient(patient)" class="border border-secondary"  v-for="patient in filtro" :key="patient.id">{{patient.name}}</div>
-            </div>
+        <div v-if="!verResultados">
+            <label for="">Nombre del Paciente</label>
+             <input type="text" name="" v-model="buscar" id="" class="form-control input-name">
+                <div v-show="showResults" class="border border-secondary shadow w-100">
+                    <div @click="selectPatient(patient)" class="border border-secondary"  v-for="patient in filtro" :key="patient.id">{{patient.name}}</div>
+                </div>
+        </div>
 
         <p class="mt-2">
            ¿En qué medida le ha preocupado el sentimiento correspondiente durante los últimos días?
@@ -25,21 +27,26 @@
             <li v-for="item in items" :key="item.id">
                {{item.id}}. {{item.content}}
                <br>
-               <div class="form-check form-check-inline" @click="inputValue(item.id)">
-                   <input class="form-check-input" type="radio" :name="`inlineRadioOptions${item.id}`" :id="`inlineRadio${item.id}-a`" value="0">
-                   <label class="form-check-label" :for="`inlineRadio${item.id}-a`">0</label>
+               <div v-if="!verResultados">
+                   <div class="form-check form-check-inline" @click="inputValue(item.id)">
+                       <input class="form-check-input" type="radio" :name="`inlineRadioOptions${item.id}`" :id="`inlineRadio${item.id}-a`" value="0">
+                       <label class="form-check-label" :for="`inlineRadio${item.id}-a`">0</label>
+                   </div>
+                   <div class="form-check form-check-inline" @click="inputValue(item.id)">
+                       <input class="form-check-input" type="radio" :name="`inlineRadioOptions${item.id}`" :id="`inlineRadio${item.id}-b`" value="1">
+                       <label class="form-check-label" :for="`inlineRadio${item.id}-b`">1</label>
+                   </div>
+                   <div class="form-check form-check-inline" @click="inputValue(item.id)">
+                       <input class="form-check-input" type="radio" :name="`inlineRadioOptions${item.id}`" :id="`inlineRadio${item.id}-c`" value="2">
+                       <label class="form-check-label" :for="`inlineRadio${item.id}-c`">2</label>
+                   </div>
+                   <div class="form-check form-check-inline" @click="inputValue(item.id)">
+                       <input class="form-check-input" type="radio" :name="`inlineRadioOptions${item.id}`" :id="`inlineRadio${item.id}-d`" value="3">
+                       <label class="form-check-label" :for="`inlineRadio${item.id}-d`">3</label>
+                   </div>
                </div>
-               <div class="form-check form-check-inline" @click="inputValue(item.id)">
-                   <input class="form-check-input" type="radio" :name="`inlineRadioOptions${item.id}`" :id="`inlineRadio${item.id}-b`" value="1">
-                   <label class="form-check-label" :for="`inlineRadio${item.id}-b`">1</label>
-               </div>
-               <div class="form-check form-check-inline" @click="inputValue(item.id)">
-                   <input class="form-check-input" type="radio" :name="`inlineRadioOptions${item.id}`" :id="`inlineRadio${item.id}-c`" value="2">
-                   <label class="form-check-label" :for="`inlineRadio${item.id}-c`">2</label>
-               </div>
-               <div class="form-check form-check-inline" @click="inputValue(item.id)">
-                   <input class="form-check-input" type="radio" :name="`inlineRadioOptions${item.id}`" :id="`inlineRadio${item.id}-d`" value="3">
-                   <label class="form-check-label" :for="`inlineRadio${item.id}-d`">3</label>
+               <div v-else>
+					<small class="text-dark">Marcado = {{queRespuesta(item.id)}}</small>
                </div>
             </li>
         </ul>
@@ -93,7 +100,7 @@
                 buscar:'',
                 showResults:false,
                 patients:[],
-                patient_id :''
+                patient_id :'', verResultados: false
             }
         },
 
@@ -171,7 +178,8 @@
                 let formData = new FormData()
                 formData.append('result', this.suma)
                 formData.append('patient_id', this.patient_id)
-                formData.append('professional_id', this.$attrs.professional.id)
+                formData.append('professional_id', this.$attrs.dataUser.id)
+				formData.append('resultados', JSON.stringify(this.objs))
 
                 this.axios.post('/api/saveBurns', formData, config)
                 .then((result) => {
@@ -201,7 +209,21 @@
                 this.patient_id = patient.id
                 this.buscar = patient.name
                 this.showResults = false
-            }
+            },
+            queRespuesta(id){
+				//buscamos la si tiene respuesta a la pregunta
+				const resp = this.objs.filter(x=> x.nro==id)
+				console.log('resp' , resp);
+				if( resp.length>0 )
+					switch (resp[0].rpta) {
+						case '0': return '0'; break;
+						case '1': return '1'; break;
+						case '2': return '2'; break;
+						case '3': return '3'; break;
+						default: return 'Sin respuesta registrada'; break;
+					}
+				else return 'Sin respuesta registrada';
+			}
             },
             computed:{
             filtro(){
@@ -215,6 +237,13 @@
             }
             },
             mounted(){
+                if(this.$route.params.id){
+                    this.axios.post('/api/pedirResultadosExamen/',{examen:'burns', id:this.$route.params.id})
+                    .then(resp=> {
+                        this.objs = JSON.parse(resp.data.resultados)
+                    })
+                    this.verResultados=true;
+                }else this.verResultados=false
                 this.getNames()
             }
 

@@ -28,8 +28,11 @@
         v-for="(data, key, index) in dataExam" 
         :key="index"
         >
-          <td v-if="key != 'created_at' && key != 'updated_at' && key != 'id' && key != 'patient_id'">{{ key }}</td>
-          <td v-if="key != 'created_at' && key != 'updated_at' && key != 'id' && key != 'patient_id'">{{ data }}</td>
+          <td class="text-capitalize" v-if="key != 'created_at' && key != 'updated_at' && key != 'id' && key != 'patient_id'">{{ key }}</td>
+          <td v-if="key != 'created_at' && key != 'updated_at' && key != 'id' && key != 'patient_id' && key!='resultados'">{{ data }}</td>
+          <td v-if="key=='resultados'">
+            <a target="_blank" :href="queUrl(dataPatient.tipoExam, dataExam.id)">Ver plantilla de resultados </a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -47,6 +50,16 @@
     },
 
     methods: {
+      queUrl(tipoExam, id){
+        const base = tipoExam.trim().replace(/\n/g, '')
+        let irA = ''
+        switch (base) {
+          case 'SCL90R': irA = 'scr'; break;
+          case 'ANSIEDAD DE BURNS': irA = 'burns'; break;
+          default: break;
+        }
+        return `/profesional/ver/${irA}/${id}`;
+      },
       emitExamResult () {
         this.$emit('keepComponentExam', 'ExamTable')
       },

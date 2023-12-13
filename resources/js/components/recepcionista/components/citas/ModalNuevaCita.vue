@@ -170,7 +170,7 @@
 								<span title="Última atención" v-if="cita.etiqueta" class="badge rounded-pill text-bg-primary"><i class="fa-solid fa-genderless"></i> {{cita.etiqueta}}</span>
 							</p>
 							<p class="mb-0" v-if="cita.membresia"><strong>Membresía activa:</strong> 
-								<span title="Última atención" class="badge rounded-pill text-bg-success"><i class="fa-solid fa-asterisk"></i> {{cita.membresia.descripcion}}</span>
+								<span title="Última atención" class="badge rounded-pill text-bg-warning"><i class="far fa-star"></i> {{cita.membresia.descripcion}}</span>
 							</p>
 						
 						</div>
@@ -253,17 +253,22 @@
 						</div>
 						<div class="col-sm-4 my-2">
 							<div class=" form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="nosrecomienda" >
+								<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="nosrecomienda" @change="cita.recomendacion_comentario=''	">
 								<label class="form-check-label" for="flexSwitchCheckDefault">¿Nos recomendaron?</label>
 							</div>
 						</div>
 					
-						<div class="col-sm-12 my-1" v-if="nosrecomienda">
-							<select class="form-select text-capitalize" name="" id="" v-model="cita.recomendation" >
-								<option value="" selected>Ninguno</option>
-								<option class=" text-capitalize" v-for="reco in recomendaciones" :value="reco">{{ reco }}</option>
-							</select>
-						</div>   
+						<div class="row" v-if="nosrecomienda">
+							<div class="col-sm-4 my-1" >
+								<select class="form-select text-capitalize" name="" id="" v-model="cita.recomendation" >
+									<option value="" selected>Ninguno</option>
+									<option class=" text-capitalize" v-for="reco in recomendaciones" :value="reco">{{ reco }}</option>
+								</select>
+							</div>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" v-model="cita.recomendacion_comentario" placeholder="¿Comentario extra sobre la recomendación?">
+							</div>
+						</div>
 
 						<div class="col-sm-12 my-1" v-if="!esPresencial">
 							<input type="text" class="form-control" name="link" id="link" v-model="cita.link" placeholder="Ingrese el link de la reunión virtual" autocomplete="off">
@@ -333,7 +338,7 @@ export default {
 			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
 			switchReciec: 1, tieneAdelanto:false, descuentoAdelanto:0, razonAdelanto:'',
 			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
-			patientNew: false, alertaDeudas:false, mensajeDeudas:'', recomendaciones:['Facebook', 'instagram', 'TikTok', 'Linkedin', 'Youtube', 'spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio'],
+			patientNew: false, alertaDeudas:false, mensajeDeudas:'', recomendaciones:['Facebook', 'Instagram', 'TikTok', 'Linkedin', 'Youtube', 'Spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio', 'Otros'],
 			cita:{
 				phone:'',
 				dni:'',
@@ -356,9 +361,9 @@ export default {
 				clasification:'',
 				gender:2,
 				price:0,
-				type:'',
+				type:'', tipo:-1,
 				patient_condition:'',
-				recomendation:'',
+				recomendation:'', recomendacion_comentario:'',
 				mode: '1',
 				voucher:'',
 				link:'',
@@ -386,12 +391,19 @@ export default {
 			this.cita.price = 0;
 			if(this.cita.type =='') this.cita.price = 0;
 			else{
-				let precio = this.precios.find(p=> p.id == this.cita.type)
+				let precioPadre = this.precios.find(p=> p.id == this.cita.type)
+				let precio = 0;
 				let descuentoPorcentual;
 
-				if( this.precioNuevo ) precio = precio.nuevos
-				else precio = precio.continuos
+				if( this.precioNuevo ) precio = precioPadre.nuevos
+				else precio = precioPadre.continuos
 
+				/* console.log('membresia', this.cita.membresia);
+				console.log('tipo', this.cita.membresia['tipo']); */
+				if( this.cita.membresia )
+					if( this.cita.membresia.tipo==15 ) //Pertenece a la membresía kurame, único en hacer descuento especial
+						precio = precioPadre.especialMembresias
+				
 				if( this.tieneAdelanto )
 					if( parseInt(this.descuentoAdelanto) <= 0 || this.descuentoAdelanto=='' ) this.descuentoAdelanto=0
 					else precio = precio - parseFloat(this.descuentoAdelanto);
@@ -438,12 +450,14 @@ export default {
 				formData.append('instruction_degree', this.cita.instruction_degree);
 				formData.append('professional_id', this.cita.professional_id);
 				formData.append('schedule_id', this.horaElegida.id);
+				formData.append('check_time', this.horaElegida.check_time);
 				formData.append('date', this.fechaElegida);
 				formData.append('clasification', this.cita.clasification);
 				formData.append('price', this.cita.price);
 				formData.append('type', this.cita.type); //nueva lista de servicios
 				//formData.append('patient_condition', this.cita.patient_condition); //El sistema evalúa la condición: nuevo o continuo, no es necesario pasar
 				formData.append('recomendation', this.cita.recomendation);
+				formData.append('recomendacion_comentario', this.cita.recomendacion_comentario);
 				formData.append('mode', (this.esPresencial) ? 1: 2 );
 				formData.append('link', this.cita.link);
 				formData.append('type_dni', this.cita.type_dni);
@@ -514,7 +528,7 @@ export default {
 			this.cita.price=0;
 			this.cita.type= '';
 			this.cita.patient_condition= '';
-			this.cita.recomendation= '';
+			this.cita.recomendation= ''; this.cita.recomendacion_comentario='';
 			this.cita.mode= '';
 			this.cita.voucher= '';
 			this.cita.link= '';
@@ -543,9 +557,9 @@ export default {
 				},
 			})
 
-			this.axios.get("/api/buscar/"+this.cita.dni)
+			this.axios.get("/api/buscarPacienteDB/"+this.cita.dni)
 			.then(res => {
-				if (res.data.patient == null) { //Buscar en reniec
+				if (res.data.patient == null) { //Buscar en reniec, nuevo
 					if(this.cita.type_dni==1){
 						window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
 						this.axios.get(`https://apiperu.dev/api/dni/${this.cita.dni}`) 

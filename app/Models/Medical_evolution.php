@@ -19,4 +19,7 @@ class Medical_evolution extends Model
     {
         return $this->belongsTo("App\Models\Professional");
     }
+    public function comentarios(){
+        return $this->hasMany("App\Models\Medical_comment", 'idMedical', 'id');
+    }
 }

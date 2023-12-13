@@ -124,7 +124,7 @@
 						<li class="nav-item nav__list" @click="activeSidebar()">
 								<router-link  to="/profesional/mi-cartera" class="nav-link">
 									<i class="fas fa-head-side-virus"></i>
-										<span>Mi cartera de clientes</span>
+										<span>Resumen de visita por pacientes</span>
 								</router-link>
 						</li>
 

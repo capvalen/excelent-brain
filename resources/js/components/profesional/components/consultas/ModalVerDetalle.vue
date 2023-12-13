@@ -17,6 +17,12 @@
 						<p><strong>Fecha:</strong> <span class="text-capitalize">{{fechaLectura(miniRespuesta.fecha)}}</span></p>
 						<p><strong>Profesional:</strong> <span>{{miniRespuesta.nombre}}</span></p>
 						<p><strong>Diagnóstico:</strong> <span>{{miniRespuesta.contenido}}</span></p>
+						<div v-if="miniRespuesta.comentarios.length>0">
+							<p>Comentarios extras:</p>
+							<ul class="list-group mb-2">
+								<li v-for="comentario in miniRespuesta.comentarios" class="list-group-item list-group-item-action text-capitalize"><i class="far fa-comment"></i> {{comentario.comment}}</li>
+							</ul>
+						</div>
 						<div class="text-center" v-if="miniRespuesta.firma!=''">
 							<img :src="`/storage/${miniRespuesta.firma}`" class="w-75">
 						</div>

@@ -8,10 +8,10 @@
 				</div>
 				<div class="modal-body">
 					<p>Rellene para agregar un nuevo seguimiento</p>
-					<input type="text" v-model="seguimiento" class="form-control">
+					<textarea class="form-control" id="" cols="30" rows="5" v-model="seguimiento"></textarea>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar seguimiento</button>
+					<button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" @click="guardar()"><i class="fas fa-plus"></i> Guardar seguimiento</button>
 				</div>
 			</div>
 		</div>
@@ -19,10 +19,18 @@
 </template>
 <script>
 export default {
-	props:['idEvolucion'],
+	props:['idEvolucion', 'idProfesional'],
 	data() {
 		return {
 			seguimiento:''
+		}
+	},
+	methods: {
+		guardar(){
+			this.axios.post('/api/guardarSeguimiento', {seguimiento: this.seguimiento, idEvolucion:this.idEvolucion, idProfesional: this.idProfesional})
+			.then(resp=> {
+				this.seguimiento = ''
+			} )
 		}
 	},
 }

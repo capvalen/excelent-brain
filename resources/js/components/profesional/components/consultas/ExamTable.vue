@@ -19,7 +19,7 @@
 					<th style="vertical-align:middle;"> {{ index + 1 }} </th>
 					<td style="vertical-align:middle;"> {{ new Date(examen.created_at).toLocaleString() || '...' }} </td>
 					<th>
-						<button class="btn btn-outline-warning" @click="keepExamFunction(examen)">Ver respuesta</button>
+						<button class="btn btn-outline-warning" @click="keepExamFunction(examen, exam)">Ver respuesta</button>
 					</th>
 				</tbody>
 			</table>
@@ -163,6 +163,7 @@ export default {
 		},
 
 		examActive(value, type) {
+			this.nombreExamen = type;
 			if (this.valid && value) {
 				this.examenes = value;
 

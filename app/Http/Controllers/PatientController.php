@@ -304,7 +304,7 @@ class PatientController extends Controller
 	{
 		//
 	}
-	public function buscar($dni)
+	public function buscarPaciente($dni)
 	{
 	  $paciente = Patient::where('dni',$dni)->with('address')->first();
 	 
@@ -323,6 +323,7 @@ class PatientController extends Controller
 			->select('m.*', 'p.descripcion')
 			->where('patient_id', $paciente->id)
 			->where('m.activo', 1)
+			->where('m.estado', 2)
 			->whereDate( 'm.inicio', '<=', Carbon::now() )
 			->whereDate( 'm.fin', '>=', Carbon::now() )
 			->first();
@@ -341,7 +342,7 @@ class PatientController extends Controller
 	public function showEvolution ($idPaciente) {
 		$evoluciones = Patient::where('id',$idPaciente)
 		->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'medical_evolutions', 'appointments', 'prescriptions')
-		->with('medical_evolutions.professional')
+		->with('medical_evolutions.professional','medical_evolutions.comentarios')
 		->with(['medical_evolutions'=> function($query) {
 			$query->where('activo','=', 1);
 		}])

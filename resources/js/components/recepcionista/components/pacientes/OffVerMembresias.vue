@@ -19,12 +19,17 @@
 					</h2>
 					<div :id="'collapse'+membresia.id" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
 						<div class="accordion-body">
-							<p class="mb-0"><strong>Tipo</strong> <span>{{ membresia.descripcion }}</span></p>
-							<p class="mb-0"><strong>Fecha de inicio</strong> <span>{{ fechaLatam(membresia.inicio) }}</span></p>
-							<p class="mb-0"><strong>Fecha límite final</strong> <span>{{ fechaLatam(membresia.fin) }}</span></p>
-							<p class="mb-0"><strong>N° cuotas</strong> <span>{{ membresia.cuotas }}</span></p>
-							<p class="mb-0"><strong>Monto Total</strong> <span>S/ {{ parseFloat(membresia.monto).toFixed(2) }}</span></p>
-							<p class="mt-2 mb-0">Cuotas pagadas: <span class="badge bg-primary rounded-pull p-2 m-1" style="cursor: pointer;" title="Voucher de pagos acumulados" @click="voucherAcumulados(index)"><i class="far fa-sticky-note"></i></span></p>
+							<p class="mb-1"><strong>Tipo</strong> <span>{{ membresia.descripcion }}</span></p>
+							<p class="mb-1"><strong>Estado</strong>
+								<span v-if="membresia.estado==1" class="text-warning" >En espera</span>
+								<span v-if="membresia.estado==2" class="text-success" >Activo</span>
+								<span v-if="membresia.estado==3" class="text-danger" >Suspendido</span>
+							</p>
+							<p class="mb-1"><strong>Fecha de inicio</strong> <span>{{ fechaLatam(membresia.inicio) }}</span></p>
+							<p class="mb-1"><strong>Fecha límite final</strong> <span>{{ fechaLatam(membresia.fin) }}</span></p>
+							<p class="mb-1"><strong>N° cuotas</strong> <span>{{ membresia.cuotas }}</span></p>
+							<p class="mb-1"><strong>Monto Total</strong> <span>S/ {{ parseFloat(membresia.monto).toFixed(2) }}</span></p>
+							<p class="mt-2 mb-0">Cuotas pagadas: (<span>{{ membresia.pagados.length }} cuotas</span>) <span v-if="membresia.pagados.length>0" class="badge bg-primary rounded-pull p-2 m-1" style="cursor: pointer;" title="Voucher de pagos acumulados" @click="voucherAcumulados(index)"><i class="far fa-sticky-note"></i></span></p>
 							<ol class="list-group">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="pagado in membresia.pagados">
 									<div class="ms-2 me-auto">
@@ -33,7 +38,7 @@
 									</div>
 								</li>
 							</ol>
-							<p v-if="membresia.pagados.length==0">No hay pagos registrados aún</p>
+							<p class="text-muted" v-if="membresia.pagados.length==0"><small>No hay pagos registrados aún</small></p>
 							<p class="mt-2 mb-0">Cuotas pendientes de pago:</p>
 							<ol class="list-group">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="(deuda, indice) in membresia.deudas">
@@ -131,7 +136,7 @@ export default{
 			})
 
 			swalWithBootstrapButtons.fire({
-				title: '¿Deseas cancelar la deuda?',
+				title: `¿Deseas realizar un pago de la deuda de S/ ${this.membresias[index].deudas[indice].monto}?`,
 				text: "Se pondrá en caja automáticamente",
 				icon: 'warning',
 				showCancelButton: true,

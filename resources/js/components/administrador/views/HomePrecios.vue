@@ -11,14 +11,16 @@
 							<th>Servicio</th>
 							<th>Precio nuevos</th>
 							<th>Precio continuos</th>
+							<th>Precio Especial de Membresía</th>
 							<th>@</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="(precio, index) in precios" v-if="precio.idClasificacion==1 && precio.servicio==1">
 							<td>{{ precio.descripcion }}</td>
-							<td>{{ parseFloat(precio.nuevos).toFixed(2) }}</td>
-							<td>{{ parseFloat(precio.continuos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.nuevos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.continuos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.especialMembresias).toFixed(2) }}</td>
 							<td>
 								<button class="btn btn-sm btn-outline-primary" @click="editarPrecio(index, precio.idClasificacion)"><i class="far fa-edit"></i></button>
 							</td>
@@ -37,14 +39,16 @@
 							<th>Servicio</th>
 							<th>Precio nuevos</th>
 							<th>Precio continuos</th>
+							<th>Precio Especial de Membresía</th>
 							<th>@</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="(precio, index) in precios" v-if="precio.idClasificacion==2 && precio.servicio==1">
 							<td>{{ precio.descripcion }}</td>
-							<td>{{ parseFloat(precio.nuevos).toFixed(2) }}</td>
-							<td>{{ parseFloat(precio.continuos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.nuevos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.continuos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.especialMembresias).toFixed(2) }}</td>
 							<td>
 								<button class="btn btn-sm btn-outline-primary" @click="editarPrecio(index, precio.idClasificacion)"><i class="far fa-edit"></i></button>
 							</td>
@@ -63,14 +67,16 @@
 							<th>Servicio</th>
 							<th>Precio nuevos</th>
 							<th>Precio continuos</th>
+							<th>Precio Especial de Membresía</th>
 							<th>@</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="(precio, index) in precios" v-if="precio.idClasificacion==3 && precio.servicio==1">
 							<td>{{ precio.descripcion }}</td>
-							<td>{{ parseFloat(precio.nuevos).toFixed(2) }}</td>
-							<td>{{ parseFloat(precio.continuos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.nuevos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.continuos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.especialMembresias).toFixed(2) }}</td>
 							<td>
 								<button class="btn btn-sm btn-outline-primary" @click="editarPrecio(index, precio.idClasificacion)"><i class="far fa-edit"></i></button>
 							</td>
@@ -89,6 +95,7 @@
 							<th>Servicio</th>
 							<th>Precio nuevos</th>
 							<th>Precio continuos</th>
+							<th>Precio Especial de Membresía</th>
 							<th>N° Sesiones</th>
 							<th>@</th>
 						</tr>
@@ -96,8 +103,9 @@
 					<tbody>
 						<tr v-for="(precio, index) in precios" v-if="precio.servicio==0">
 							<td>{{ precio.descripcion }}</td>
-							<td>{{ parseFloat(precio.nuevos).toFixed(2) }}</td>
-							<td>{{ parseFloat(precio.continuos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.nuevos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.continuos).toFixed(2) }}</td>
+							<td>S/ {{ parseFloat(precio.especialMembresias).toFixed(2) }}</td>
 							<td>{{ precio.sesiones }}</td>
 							<td>
 								<button class="btn btn-sm btn-outline-primary" @click="editarPrecio(index)"><i class="far fa-edit"></i></button>

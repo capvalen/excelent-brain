@@ -276,11 +276,13 @@ export const routes = [
         name: 'scr',
         component: Scr90
       },
+      { path: 'ver/scr/:id', name: 'ver_scr', component: Scr90 },
       {
         path: 'burns',
         name: 'burns',
         component: Burns
       },
+      { path: 'ver/burns/:id', name: 'ver_burns', component: Burns },
       {
         path: 'depzung',
         name: 'depzung',

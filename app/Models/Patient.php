@@ -48,6 +48,9 @@ class Patient extends Model
     public function prescriptions() {
         return $this->hasMany("App\Models\Prescription");
     }
+    public function membresias() {
+        return $this->hasMany("App\Models\Membresia");
+    }
     //Relación de uno a muchos Patient-Scr
     public function scrs() {
         return $this->hasMany("App\Models\Scr");

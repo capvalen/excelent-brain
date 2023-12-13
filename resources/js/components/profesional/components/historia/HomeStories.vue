@@ -148,6 +148,8 @@ export default {
 				: this.busqueda = this.historias.filter((el, index) => el.name.match(new RegExp(`${$valueInput.value}`, 'ig')) ? el : null)
 
 			this.busqueda = this.busqueda.slice(0, 6) */
+			if(this.dataUser.id==5)
+				console.log('super');
 			if(document.getElementById('searchHistoriaProfesional').value!=''){
 				this.axios.get('/api/patientMineText/'+ document.getElementById('searchHistoriaProfesional').value)
 				.then(res => { console.log(res.data)

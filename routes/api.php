@@ -103,7 +103,8 @@ Route::get('patientEvolution/{idPaciente}', [PatientController::class, 'showEvol
 Route::get('appoitmentEvolutions/{id}', [AppointmentController::class, 'getEvolutions']);
 Route::delete('deleteEvolution/{id}',[AppointmentController::class, 'deleteEvolution']);
 
-Route::get('buscar/{dni}', [PatientController::class,'buscar']);
+Route::get('buscar/{dni}', [PatientController::class,'buscarPaciente']);
+Route::get('buscarPacienteDB/{dni}', [PatientController::class,'buscarPaciente']);
 Route::get('updateFaults/{id}/{faults}', [PatientController::class, 'updateFaults']);
 Route::get('profesional',[AppointmentController::class,'getprof']);
 Route::get('horario/{id}',[ScheduleController::class,'getschedules']);
@@ -252,3 +253,5 @@ Route::post('/pedirArchivos', [PatientController::class, 'pedirArchivos']);
 Route::get('/listarMonedas', [SimpleController::class, 'listarMonedas']);
 Route::post('/cambiarMuerte', [SimpleController::class, 'cambiarMuerte']);
 Route::post('/cambiarPersonaActivo', [SimpleController::class, 'cambiarPersonaActivo']);
+Route::post('/guardarSeguimiento', [SimpleController::class, 'guardarSeguimiento']);
+Route::post('/pedirResultadosExamen', [SimpleController::class, 'pedirResultadosExamen']);
