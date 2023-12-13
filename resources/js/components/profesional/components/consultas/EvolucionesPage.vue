@@ -515,7 +515,7 @@
 									<div class="historia-info">
 										<p><b>Clase:</b> {{ dondeEsta2(evolution.type) }}</p>
 										<p><b>Profesional:</b> {{ evolution.professional ? evolution.professional.name : 'Sin asignar' }} </p>
-										<p><b>Comentario: </b> {{ evolution ? maxStringCharacter(evolution.content, 50) : '...' }} </p>
+										<p><b>Diagnóstico: </b> {{ evolution ? maxStringCharacter(evolution.content, 50) : '...' }} </p>
 									</div>
 									<div class="card-evolution__image d-none">
 										<img :src="`/storage/${evolution.professional ? evolution.professional.signing : null}`"
@@ -532,6 +532,7 @@
 										v-if="evolution.professional_id == dataUser.id" data-bs-toggle="modal" data-bs-target="#editModal">
 										<i class="fas fa-edit"></i>
 									</button>
+									<button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalNuevoSeguimiento" @click="idEvolucion = evolution.id" v-if="evolution.professional_id == dataUser.id"><i class="far fa-plus-square"></i> Agregar seguimiento</button>
 									<!-- <div v-if="evolution.professional_id == dataUser.id &&
 										evolution.date === getDateNow()" class="btn-group">
 										<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)"
@@ -631,6 +632,7 @@
 		<ModalArchivos :idPaciente="datosConsulta.id" :idProfesional="dataUser.id" ></ModalArchivos>
 		<ModalNuevoAcontecimiento :idPaciente="datosConsulta.id" :idProfesional="dataUser.id"></ModalNuevoAcontecimiento>
 		<evolution-modal :dataUser="dataUser.profession" :datosIdEvolucion="datosIdEvolucion" ></evolution-modal>
+		<modalNuevoSeguimiento :idEvolucion="idEvolucion"></modalNuevoSeguimiento>
 	</div>
 </template>
 
@@ -654,11 +656,12 @@ import BarChart  from './grafico/barras'
 import ModalNuevoAcontecimiento from './ModalNuevoAcontecimiento.vue'
 import lineaTiempo from './grafico/lineaTiempo.vue'
 import EvolutionModal from './EvolucionModal.vue'
+import modalNuevoSeguimiento from './ModalNuevoSeguimiento.vue'
 
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo, EvolutionModal },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo, EvolutionModal, modalNuevoSeguimiento },
 
 	data() {
 		return {
@@ -674,7 +677,7 @@ export default {
 			consultaHoy: false,
 			dataCies: null,
 			searchCie: '',
-			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, comentarios:[], dato1:[],
+			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '' }, comentarios:[], dato1:[], idEvolucion:-1,
 			datosIdEvolucion:{patient:{id:-1}, professional:{id:-1}},
 			component: "ExamTable",
 			datosExamenes: [],

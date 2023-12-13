@@ -16,7 +16,7 @@
 						</div>
 						<p><strong>Fecha:</strong> <span class="text-capitalize">{{fechaLectura(miniRespuesta.fecha)}}</span></p>
 						<p><strong>Profesional:</strong> <span>{{miniRespuesta.nombre}}</span></p>
-						<p><strong>Comentario:</strong> <span>{{miniRespuesta.contenido}}</span></p>
+						<p><strong>Diagnóstico:</strong> <span>{{miniRespuesta.contenido}}</span></p>
 						<div class="text-center" v-if="miniRespuesta.firma!=''">
 							<img :src="`/storage/${miniRespuesta.firma}`" class="w-75">
 						</div>
@@ -42,7 +42,7 @@ export default{
 		},
 		fechaLectura(fecha){
 			moment.locale('es')
-			return moment(fecha).format('dddd, DD [de] MMMM YYYY');
+			return moment(fecha).format('dddd, DD [de] MMMM YYYY [a las] hh:mm a');
 		},
   }
 }
