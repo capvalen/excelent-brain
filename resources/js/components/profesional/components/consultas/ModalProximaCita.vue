@@ -64,7 +64,7 @@ export default{
 			else if(!this.cita.idHora)
 				alertify.notify('Se debe seleccionar un horario', 'danger', 10)
 			else{
-				const quePrecio = this.precios.find(x=> x.id == this.cita.idServicio).continuos
+				const quePrecio = this.precios.find(x=> x.id == this.cita.idServicio).nuevos
 				
 				this.axios.post('/api/reservarCitaDoctor',{
 					date: this.fecha,

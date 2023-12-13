@@ -37,7 +37,7 @@
 											<p> 
 												<span>@php
                                                 if( $extra_payment->appointment):
-                                                    $fecha = Carbon::parse( $extra_payment->date. " " . $extra_payment->appointment->schedule->check_time);
+                                                    $fecha = Carbon::parse( $extra_payment->appointment->date. " " . $extra_payment->appointment->schedule->check_time);
                                                     echo "FECHA: ";
                                                 else:
                                                     $fecha = Carbon::parse( $extra_payment->created_at );

@@ -1,0 +1,1 @@
+INSERT INTO `precios` (`id`, `descripcion`, `nuevos`, `continuos`, `idClasificacion`, `sesiones`, `servicio`, `activo`) VALUES (NULL, 'Taller divertimente', '500', '500', '5', '0', '0', '1');
