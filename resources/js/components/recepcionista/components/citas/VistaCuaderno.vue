@@ -106,7 +106,7 @@
 										<a v-else @click="modalInfo(horasMalas[hora.indexOcupado])" title="Reprogramar cita" data-bs-target="#reprogModal" data-bs-toggle="modal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
 										
 										<!-- <a @click="modalInfo(cita)" title="Información de la cita" data-toggle="modal" data-target="#infoModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-info"></i></a> -->
-										<a @click="eliminar(horasMalas[hora.indexOcupado].id)" title="Eliminar" class="btn btn-info btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+										<a @click="eliminar(horasMalas[hora.indexOcupado].id)" title="Eliminar" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
 
 										<!-- Sin numero -->
 										<a v-if="horasMalas[hora.indexOcupado].patient.phone ? false : true"
@@ -289,7 +289,7 @@
 				this.$emit('limpiarDescuentos')
 			},
 			async listarPrecios(){
-				await this.axios.get('/api/listarPrecios')
+				await this.axios.get('/api/listarPreciosTodos')
 				.then( response => this.precios = response.data)
 			},
 			actualizarListadoCitas(){

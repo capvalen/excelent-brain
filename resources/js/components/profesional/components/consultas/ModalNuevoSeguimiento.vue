@@ -29,6 +29,10 @@ export default {
 		guardar(){
 			this.axios.post('/api/guardarSeguimiento', {seguimiento: this.seguimiento, idEvolucion:this.idEvolucion, idProfesional: this.idProfesional})
 			.then(resp=> {
+				this.$emit('agregarComentario', {
+					id: resp.data.id,
+					comment: this.seguimiento
+				})
 				this.seguimiento = ''
 			} )
 		}

@@ -59,7 +59,7 @@
                 :href="`/api/pdfEvolution/${dataConsult.patient_id}`"
                 target="_blank"
                 class="btn btn-consult btn-action"
-                title="Generar pdf de historia"
+                title="Generar PDF de historia"
                 >
                   <i class="fas fa-file-pdf"></i>
                 </a>

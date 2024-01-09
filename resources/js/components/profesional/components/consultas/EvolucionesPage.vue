@@ -489,6 +489,10 @@
 			<div class="tab-pane fade show active p-3 bg-light-subtle border border-top-0" id="evoluciones-tab-pane" role="tabpanel" aria-labelledby="evoluciones-tab" tabindex="0">
 				<!-- Titulo -->
 				<div class="d-flex justify-content-between">
+					<p :class="{'text-success': datosConsulta.maximo==0, 'text-danger' : datosConsulta.maximo>0}"><i class="far fa-bell"></i>
+						<span v-if="datosConsulta.maximo==0">Está apreciando <strong>todos</strong> los registros de evoluciones.</span>
+						<span v-if="datosConsulta.maximo>0">Los registros están limitados a 3 meses, están <strong>pendientes {{ datosConsulta.maximo }}</strong> evoluciones más.</span>
+					</p>
 					<!-- <h4>Evoluciones del paciente</h4> -->
 					<!-- <button
 					data-toggle="modal"
@@ -532,7 +536,7 @@
 										v-if="evolution.professional_id == dataUser.id" data-bs-toggle="modal" data-bs-target="#editModal">
 										<i class="fas fa-edit"></i>
 									</button>
-									<button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalNuevoSeguimiento" @click="idEvolucion = evolution.id" v-if="evolution.professional_id == dataUser.id"><i class="far fa-plus-square"></i> Agregar seguimiento</button>
+									<button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalNuevoSeguimiento" @click="idEvolucion = evolution.id; indexGlobal = index" v-if="evolution.professional_id == dataUser.id"><i class="far fa-plus-square"></i> Agregar seguimiento</button>
 									<!-- <div v-if="evolution.professional_id == dataUser.id &&
 										evolution.date === getDateNow()" class="btn-group">
 										<button v-if="autoSaveInfo != null" @click="refreshInfo(evolution.id)"
@@ -632,7 +636,7 @@
 		<ModalArchivos :idPaciente="datosConsulta.id" :idProfesional="dataUser.id" ></ModalArchivos>
 		<ModalNuevoAcontecimiento :idPaciente="datosConsulta.id" :idProfesional="dataUser.id"></ModalNuevoAcontecimiento>
 		<evolution-modal :dataUser="dataUser.profession" :datosIdEvolucion="datosIdEvolucion" ></evolution-modal>
-		<modalNuevoSeguimiento :idProfesional="dataUser.id"  :idEvolucion="idEvolucion"></modalNuevoSeguimiento>
+		<modalNuevoSeguimiento :idProfesional="dataUser.id"  :idEvolucion="idEvolucion" @agregarComentario="agregarComentario"></modalNuevoSeguimiento>
 	</div>
 </template>
 
@@ -816,7 +820,7 @@ export default {
 			this.datosConsulta.relative.kinship = pariente.parentesco
 		},
 		async getHistories() {
-			await this.axios.get(`/api/patientEvolution/${this.$route.params.idPaciente}`)
+			await this.axios.get(`/api/patientEvolution/${this.$route.params.idPaciente}/${this.$attrs.idUser}`)
 				.then(res => {
 					this.datosConsulta = res.data;
 					this.misHobbies = JSON.parse(this.datosConsulta.hobbies)
@@ -1193,6 +1197,10 @@ export default {
 			this.axios('/api/cargarLineas/'+this.datosPaciente.id)
 			.then(res=> { this.lineas=res.data; this.$emit('ordenarLineas')})
 		} */
+		agregarComentario(datos){
+			//this.miniRespuesta.comentarios.push(datos)
+			this.datosConsulta.medical_evolutions[this.indexGlobal].comentarios.push(datos)
+		}
 	},
 
 	computed: {

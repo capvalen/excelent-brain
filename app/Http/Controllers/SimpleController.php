@@ -41,7 +41,7 @@ class SimpleController extends Controller
 		$comentario->professional_id = $request->get('idProfesional');
 		$comentario->comment = $request->get('seguimiento');
 		$comentario->save();
-		return json_encode(array('mensaje' => 'Registrado'));
+		return json_encode(array('mensaje' => 'Registrado', 'id' => $comentario->id));
 	}
 
 	public function pedirResultadosExamen(Request $request){

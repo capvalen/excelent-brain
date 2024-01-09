@@ -11,7 +11,7 @@
 							<th>Servicio</th>
 							<th>Precio nuevos</th>
 							<th>Precio continuos</th>
-							<th>Precio Especial de Membresía</th>
+							<th>Precio Club Exc.</th>
 							<th>@</th>
 						</tr>
 					</thead>
@@ -39,7 +39,7 @@
 							<th>Servicio</th>
 							<th>Precio nuevos</th>
 							<th>Precio continuos</th>
-							<th>Precio Especial de Membresía</th>
+							<th>Precio Club Exc.</th>
 							<th>@</th>
 						</tr>
 					</thead>
@@ -67,7 +67,7 @@
 							<th>Servicio</th>
 							<th>Precio nuevos</th>
 							<th>Precio continuos</th>
-							<th>Precio Especial de Membresía</th>
+							<th>Precio Club Exc.</th>
 							<th>@</th>
 						</tr>
 					</thead>
@@ -95,7 +95,7 @@
 							<th>Servicio</th>
 							<th>Precio nuevos</th>
 							<th>Precio continuos</th>
-							<th>Precio Especial de Membresía</th>
+							<th>Precio Club Exc.</th>
 							<th>N° Sesiones</th>
 							<th>@</th>
 						</tr>

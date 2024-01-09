@@ -99,7 +99,8 @@ Route::get('pedirSeguimientos', [PatientController::class, 'pedirSeguimientos'])
 
 Route::resource('kairos', KairoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 
-Route::get('patientEvolution/{idPaciente}', [PatientController::class, 'showEvolution'] );
+//Route::get('patientEvolution/{idPaciente}', [PatientController::class, 'showEvolution'] );
+Route::get('patientEvolution/{idPaciente}/{idUsuario}', [PatientController::class, 'showEvolution'] );
 Route::get('appoitmentEvolutions/{id}', [AppointmentController::class, 'getEvolutions']);
 Route::delete('deleteEvolution/{id}',[AppointmentController::class, 'deleteEvolution']);
 
@@ -118,7 +119,8 @@ Route::post('newExam', [Medical_examController::class, 'newExam']);
 Route::get('departamentos',[AppointmentController::class,'getDepartamentos']);
 
 Route::resource('evolution', Medical_evolutionController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
-Route::get('pdfEvolution/{id}', [Medical_evolutionController::class, 'pdfEvolution']);
+Route::get('pdfEvolution/thorough/{id}', [Medical_evolutionController::class, 'pdfEvolutionCompleto']);
+Route::get('pdfEvolution/restricted/{id}', [Medical_evolutionController::class, 'pdfEvolutionRestringido']);
 
 Route::get('getNamePatient/{id}', [PatientController::class, 'getNamePatient']);
 Route::get('datosPacienteSemaforo/{id}', [PatientController::class, 'datosPacienteSemaforo']);
@@ -136,6 +138,7 @@ Route::get('borrarInteresados/{id}', [ExtrasController::class, 'borrarInteresado
 Route::get('cambiarLike/{id}/{like}', [ExtrasController::class, 'cambiarLike']);
 Route::get('listRecomendation/{id}', [ExtrasController::class, 'listRecomendation']);
 Route::get('listarPrecios/', [ExtrasController::class,'listarPrecios']);
+Route::get('listarPreciosTodos/', [ExtrasController::class,'listarPreciosTodos']);
 Route::get('preciosMembresias/', [ExtrasController::class,'preciosMembresias']);
 Route::get('cargarUsuarios/', [ExtrasController::class,'cargarUsuarios']);
 Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);

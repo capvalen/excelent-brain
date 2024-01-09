@@ -79,8 +79,8 @@
 									<button disabled v-else class="btn btn-primary btn-sm"><i class="fas fa-desktop"></i></button> <!-- @click="changeMode(qCita.id)" -->
 								</td>
 								<td>
-									<button disabled
-									class="btn btn-icon-split btn-sm"
+									<button 
+									class="btn btn-sm"
 									:class='{
 									"btn-secondary":  qCita.payment ? qCita.payment.pay_status == 1 : false,
 									"btn-success": qCita.payment ? qCita.payment.pay_status == 2 : false,
@@ -103,8 +103,8 @@
 									</button>
 								</td>
 								<td>
-									<button disabled
-									class="btn btn-icon-split btn-sm"
+									<button 
+									class="btn btn-sm"
 									:class='{
 									"btn-secondary": qCita.status == 1,
 									"btn-info": qCita.status == 2,

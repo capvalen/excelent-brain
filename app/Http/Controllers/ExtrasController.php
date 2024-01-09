@@ -681,6 +681,14 @@ class ExtrasController extends Controller
 		->orderBy('descripcion', 'asc')
 		->get();
 	}
+	public function listarPreciosTodos(){
+		return DB::table('precios')
+		/*->where('activo', 1)
+		 ->whereNotIn('id', [28] ) //15
+		->where('servicio', 1) */
+		->orderBy('descripcion', 'asc')
+		->get();
+	}
 	public function preciosMembresias(){
 		return DB::table('precios')->where('activo', 1)
 		//->whereIn('id', [15, 28] )

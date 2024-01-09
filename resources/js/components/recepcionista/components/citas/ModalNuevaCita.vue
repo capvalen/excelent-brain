@@ -217,7 +217,7 @@
 						<div class="col-sm-4">
 							<label for="">Tipo de servicio</label>
 							<select  class="form-select" name="type" id="sltServicio" v-model="cita.type" @change="precioDinamico()">
-								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification && precio.servicio=='1' && precio.id!=48 && precio.id!=49 ">{{ precio.descripcion }}</option>
+								<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion==cita.clasification && precio.servicio=='1' && precio.id!=48 && precio.id!=49 && precio.activo=='1' ">{{ precio.descripcion}}</option>
 								<option v-if="cita.club=='1' && cita.clasification=='1'" value="48">Terapia Club Excelentemente</option>
 								<option v-if="cita.club=='1' && cita.clasification=='2'" value="48">Terapia Club Excelentemente</option>
 							</select>
@@ -720,7 +720,7 @@ export default {
 			}
 		},
 		async listarPrecios(){
-			await this.axios.get('/api/listarPrecios')
+			await this.axios.get('/api/listarPreciosTodos')
 			.then( response => this.precios = response.data)
 		},
 		async listarDepartamentos(){

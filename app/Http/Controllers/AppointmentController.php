@@ -331,7 +331,7 @@ class AppointmentController extends Controller
 				$pagoExtra->voucher = '';
 				$pagoExtra->appointment_id = $appointment->id;
 				$pagoExtra->type = 8;
-				$pagoExtra->observation = trim($request->get('motivoRebaja') . ' ' . $request->get('motivoDescuento'). '' .$request->get('razonAdelanto'));
+				$pagoExtra->observation = trim($request->get('motivoRebaja') . ' ' . $request->get('motivoDescuento'). ' ' .$request->get('razonAdelanto'));
 				$pagoExtra->continuo = $patient_condition;
 				$pagoExtra->user_id = $request->get('user_id');
 				$pagoExtra->save();
@@ -962,9 +962,11 @@ class AppointmentController extends Controller
 			}])
 			->orderBy('date')
 			->get();
-		$extra_payments = Extra_payment::where('date','like',$date.'%')
-		->where('appointment_id', 0)
-		->get();     
+		$extra_payments = Extra_payment::where('date','=',$date.'%')
+		->with(['appointment' => function($query) use($id) {
+			$query -> where('professional_id', '=', $id);
+		}])
+		->get();
 		return response()->json([
 			'patientsPerMonth' => $patientsPerMonth,
 			'appointments' => $appointments,
@@ -1001,9 +1003,20 @@ class AppointmentController extends Controller
 				$query->where('payments.price','!=', null);
 			}])
 			->get();
-		$extra_payments = Extra_payment::where('date','like',$date)
-		->where('appointment_id', 0)
-		->get();
+		//->where('appointment_id', '!=', 0)
+
+		$extra_payments = [] ;
+		foreach ($appointments as $cita) {
+			$temp = Extra_payment::where('appointment_id', $cita->id)
+			->with(['appointment' => function($query) use($id) {
+				$query -> where('professional_id', '=', $id);
+			}])
+			->get();
+			if ($temp->isNotEmpty()) {
+				$extra_payments[] = $temp;
+			}
+		}
+
 		return response()->json([
 			'patientsPerMonth' => $patientsPerMonth,
 			'appointments' => $appointments,
@@ -1116,6 +1129,7 @@ class AppointmentController extends Controller
 		$extra_payment = Extra_payment::where('appointment_id', $id)
 		->with('appointment', 'method_payment')
 		->with('appointment.schedule')
+		->orderBy('created_at', 'desc')
 		->first();
 		//return $extra_payment; die();
 		$pdf = PDF::loadView('recepcion.cupon_extra', compact('extra_payment'));

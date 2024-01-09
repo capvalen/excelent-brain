@@ -20,16 +20,16 @@
 						<p class="small m-2 mt-1">Usuario: {{$usuario}}</p>
 				</div>
 				<hr style="width: 90%; margin:3px 5px; padding-left: 5px; ">
-				<p class="small m-2 mt-1">Cuadre del día <strong>14/05/2023</strong></p>
-				<p class="small m-2 mt-1">==== ENTRADAS ======</p>
+				<p class="small m-2 mt-1">Cuadre del día <strong>{{ \Carbon\Carbon::now()->format('d/m/Y') }}</strong></p>
+				<p class="small m-2 mt-1">===== <strong>ENTRADAS</strong> ======</p>
 				@foreach($sumas as $key=> $valor)
 					<p class="small m-2 mt-1">{{$key}}: S/ <strong>{{number_format($valor,2)}}</strong></p>
 				@endforeach
-				<p class="small m-2 mt-1">==== Salidas ======</p>
+				<p class="small m-2 mt-1">===== <strong>SALIDAS</strong> ======</p>
 				@foreach($sumasSalidas as $key=> $valor)
 					<p class="small m-2 mt-1">{{$key}}: S/ <strong>{{number_format($valor,2)}}</strong></p>
 				@endforeach
-				<p class="small m-2 mt-1">==== Anulados ======</p>
+				<p class="small m-2 mt-1">===== <strong>ANULADOS</strong> ======</p>
 				@foreach($sumasAnulados as $key=> $valor)
 					<p class="small m-2 mt-1">{{$key}}: S/ <strong>{{number_format($valor,2)}}</strong></p>
 				@endforeach
@@ -38,6 +38,8 @@
 				<p class="small m-2 mt-1">Total entradas: S/ <strong>{{number_format($total, 2)}}</strong></p>
 				<p class="small m-2 mt-1">Total salidas: S/ <strong>{{number_format($totalSalidas, 2)}}</strong></p>
 				<p class="small m-2 mt-1">Total anulados: S/ <strong>{{number_format($totalAnulados, 2)}}</strong></p>
+				<p class="small m-2 mt-1">==========</p>
+				<p class="small m-2 mt-1">Sólo efectivo: S/ <strong>{{number_format($sumas['Efectivo'] - $totalSalidas, 2)}}</strong></p>
 		</div>
 		</div>
 		<div class="mt-2"></div>
