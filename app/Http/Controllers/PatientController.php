@@ -340,7 +340,7 @@ class PatientController extends Controller
 		}
 	}
 
-	public function showEvolution ($idPaciente, $idUsuario) {
+	public function showEvolution ($idPaciente, $idUsuario=-1) {
 		if($idUsuario==10){
 			$evoluciones = Patient::where('id',$idPaciente)
 			->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'appointments', 'prescriptions')
