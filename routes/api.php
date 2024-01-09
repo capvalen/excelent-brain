@@ -99,7 +99,7 @@ Route::get('pedirSeguimientos', [PatientController::class, 'pedirSeguimientos'])
 
 Route::resource('kairos', KairoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 
-//Route::get('patientEvolution/{idPaciente}', [PatientController::class, 'showEvolution'] );
+Route::get('patientEvolution/{idPaciente}', [PatientController::class, 'showEvolution'] );
 Route::get('patientEvolution/{idPaciente}/{idUsuario}', [PatientController::class, 'showEvolution'] );
 Route::get('appoitmentEvolutions/{id}', [AppointmentController::class, 'getEvolutions']);
 Route::delete('deleteEvolution/{id}',[AppointmentController::class, 'deleteEvolution']);
