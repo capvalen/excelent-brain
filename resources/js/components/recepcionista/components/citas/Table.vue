@@ -103,11 +103,11 @@
 									</button>
 									<p v-if="qCita.payment.rebaja>0 || qCita.payment.descuento>0 || qCita.payment.adelanto>0"><i class="fas fa-wallet"></i> 
 										<small v-if="qCita.payment.rebaja>0">Rebaja S/ {{ qCita.payment.rebaja }} </small>
-										<small v-if="qCita.payment.rebaja>0"><i class="fas fa-angle-double-right"></i>  class="text-capitalize"{{ qCita.payment.motivoRebaja }} </small>
+										<small class="text-capitalize" v-if="qCita.payment.rebaja>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoRebaja }} </small>
 										<small v-if="qCita.payment.descuento>0">Descuento S/ {{ qCita.payment.descuento }} </small>
-										<small v-if="qCita.payment.descuento>0"><i class="fas fa-angle-double-right"></i>  class="text-capitalize"{{ qCita.payment.motivoDescuento }} </small>
+										<small class="text-capitalize" v-if="qCita.payment.descuento>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoDescuento }} </small>
 										<small v-if="qCita.payment.adelanto>0">Adelanto S/ {{ qCita.payment.adelanto }} </small>
-										<small v-if="qCita.payment.adelanto>0"><i class="fas fa-angle-double-right"></i>  class="text-capitalize"{{ qCita.payment.razonAdelanto }} </small>
+										<small class="text-capitalize" v-if="qCita.payment.adelanto>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.razonAdelanto }} </small>
 									</p>
 								</td>
 								<td>
