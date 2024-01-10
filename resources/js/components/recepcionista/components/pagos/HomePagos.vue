@@ -29,7 +29,7 @@
 						<td class="text-primary"><i class="far fa-user"></i> | Fecha</td>
 						<td class="text-primary">Fact. Bol.</td>
 						<td class="text-primary">Ticket</td>
-						<td class="text-primary">Cliente - Motivo</td>
+						<td class="text-primary">Cliente</td>
 						<td class="text-primary">Tipo</td>
 						<td class="text-primary">Obs.</td>
 						<td class="text-primary">Monto</td>
@@ -72,7 +72,6 @@
 							</td>
 							<td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{ retornarFloat(payment.price)}}</td>
 							<td>
-								
 								<span v-if="payment.type==8">Adelanto de cita</span>
 								<span v-if="payment.type==7">Pago de membresía</span>
 								<span v-if="payment.type==5">Pago de cita</span>
@@ -81,9 +80,10 @@
 								<span v-if="payment.type==2">Paquete Kurame</span>
 								<span v-if="payment.type==1">Paquete Membresía</span>
 								<span v-if="payment.type==0">Certificado</span>
+								<small><br>{{ payment.servicio }}</small>
 							</td>
 							<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
-							<td>{{ payment.voucher_issued }}</td>
+							<td>{{ payment.voucher_issued }} </td>
 							<td>{{ payment.profesional_name }}</td>
 							<td>{{ payment.horario }}</td>
 							<td class="d-print-none">

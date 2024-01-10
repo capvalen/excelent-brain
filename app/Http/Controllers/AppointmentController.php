@@ -443,14 +443,18 @@ class AppointmentController extends Controller
 		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
 		->where('p.name', 'like', '%'.$nombre.'%')
 		->orWhere('p.dni', $dni)
-		->orderBy(function ($query) {
+		->orderBy('appointments.date', 'desc')
+		->orderBy('appointments.professional_id')
+		
+		->get();
+		/*->orderBy(function ($query) {
 			$query->selectRaw('check_time')
 				->from('schedules')
 				->whereColumn('schedules.id', 'appointments.schedule_id');
-		})
-		->get();
+		})*/
 		
-		return $appointments; die();
+		
+		return $appointments; die(); //Codigo de abajo inservible para lo que solicita la busqueda por nombres
 
 		foreach($appointments as $appointment) {
 			/* if (preg_match("/$nombre/i", $appointment->patient->name)) {
