@@ -154,13 +154,13 @@ class AppointmentController extends Controller
 			if($request->get('name') != null){
 				$patient = Patient::create([
 					'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
-					'email'=>$request->get('email'),
+					'email'=>$request->get('email'), //?? ''
 					'dni' => $request->get('dni'),
-					'phone' => $request->get('phone') =='null' ? '' : $request->get('phone'),
+					'phone' => $request->get('phone'), // ?? ''
 					'birth_date'=>$request->get('birth_date'),
 					'occupation'=>$request->get('occupation'),
 					'instruction_degree'=>$request->get('instruction_degree'),
-					'marital_status'=> $request->get('marital_status')  == 'null' ? 0 : $request->get('marital_status'),
+					'marital_status'=> $request->get('marital_status')  ?? 0,
 					'type_dni'=>$request->get('type_dni'),
 					'etiqueta'=>$request->get('etiqueta'),
 					'new_status'=>$request->get('new_status'),
@@ -170,9 +170,9 @@ class AppointmentController extends Controller
 		  
 			
 			$relative = Relative::create([
-				'name'=> $request->input('name') =='null' ? null: $request->input('contacto'),
-				'phone'=> $request->input('phone') =='null' ? null: $request->input('contacto_celular'),
-				'kinship'=> $request->input('kinship') =='null' ? null: $request->input('parentezco'),
+				'name'=> $request->input('contacto'),
+				'phone'=> $request->input('contacto_celular'),
+				'kinship'=> $request->input('parentezco'),
 			  'patient_id' => $patient->id
 			]);
 
@@ -620,8 +620,10 @@ class AppointmentController extends Controller
 			'bank' => $request->input('dataCita.payment.bank'),
 			'observation' => $request->input('dataCita.payment.observation'),
 			'user_id'=>$request->input('caso.user_id'),
-			'rebaja' => $request->input('caso.rebaja'),
-			'motivoRebaja' => $request->input('caso.motivoRebaja'),
+			/* 'rebaja' => $request->input('caso.rebaja'),
+			'motivoRebaja' => $request->input('caso.motivoRebaja'), */
+			'descuento' => $request->input('caso.rebaja'),
+			'motivoDescuento' => $request->input('caso.motivoDescuento'),
 		]);
 
 		
@@ -642,6 +644,11 @@ class AppointmentController extends Controller
 				$pagoExtra->descuento = $request->input('dataCita.descuento');
 				$pagoExtra->motivoDescuento = $request->input('dataCita.motivoDescuento');
 				$pagoExtra->save();
+				if($request->input('caso.rebaja')>0){
+					$pagoExtra -> rebaja = $request->input('caso.rebaja');
+					$pagoExtra -> motivoRebaja = $request->input('caso.motivoRebaja');
+					$pagoExtra->save();
+				}
 			
 				//print_r($appointment->status );
 
@@ -886,7 +893,7 @@ class AppointmentController extends Controller
 	 * 
 	 */
 
-	public function getProfApo($id){
+	public function getProfessionalSummaryAppointment($id, $date){
 		/* $patients = Patient::with('medical_evolutions')->get();
 		$evolutions = [];
 
@@ -921,22 +928,25 @@ class AppointmentController extends Controller
 		} */
 
 		$no_confirmed = Appointment::where('status',1)
-		->where('date', 'like', '%'.date('m').'%')
+		->where('date', 'like', $date .'%')
 		->where('professional_id', $id)->get()->count();
 		$confirmed = Appointment::where('status',2)
-		->where('date', 'like', '%'.date('m').'%')
+		->where('date', 'like', $date .'%')
 		->where('professional_id', $id)->get()->count();
 		$cancelled = Appointment::where('status',3)
-		->where('date', 'like', '%'.date('m').'%')
+		->where('date', 'like', $date .'%')
 		->where('professional_id', $id)->get()->count();
-		
+		$reprogramed = Appointment::where('status',4)
+		->where('date', 'like', $date .'%')
+		->where('professional_id', $id)->get()->count();
 		
 
 		return response()->json([
 			'patients' => [],
 			'no_confirmed' => $no_confirmed,
 			'confirmed' => $confirmed,
-			'cancelled' => $cancelled
+			'cancelled' => $cancelled,
+			'reprogramed' => $reprogramed
 		]);
 
 

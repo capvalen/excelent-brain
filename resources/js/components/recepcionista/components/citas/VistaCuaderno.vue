@@ -2,8 +2,10 @@
 	<div class="container-fluid p-2">
 		<div class="row mb-3 gx-3 align-items-center">
 			<div class="col-auto"><input type="date" class="form-control shadow-sm" v-model="fecha" @change="obtenerHorarios()"></div>
+			<div class="col-auto"><button class="btn btn-outline-primary mx-2 border-0" @click="verHorariosAyer()"><i class="fas fa-history"></i> Ayer</button></div>
 			<div class="col-auto"><button class="btn btn-outline-primary mx-2 border-0" @click="verHorariosHoy()"><i class="fa-regular fa-clock"></i> Hoy</button></div>
-			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="verHorariosMañana()"><i class="fa-regular fa-clock"></i> Mañana</button></div>
+			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="verHorariosMañana()"><i class="far fa-hourglass"></i> Mañana</button></div>
+			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="verHorariosMañana()"><i class="far fa-hourglass"></i> Pasado Mañana</button></div>
 			<div class="col-auto"><button class="btn btn-outline-secondary mx-2 border-0" @click="refrescarHorarios()"><i class="fas fa-sync"></i> Actualizar</button></div>
 			<div class="col-auto d-none"><button class="btn btn-outline-secondary border-0 mx-2" data-bs-target="#modalBuscarPacienteExterno" data-bs-toggle="modal"><i class="fa-solid fa-magnifying-glass"></i> Buscar paciente</button></div>
 		</div>
@@ -110,9 +112,8 @@
 
 										<!-- Sin numero -->
 										<a v-if="horasMalas[hora.indexOcupado].patient.phone ? false : true"
-										class="btn btn-danger btn-circle btn-sm"
-										title="Sin número"
-										>
+										class="btn btn-secondary btn-circle btn-sm"
+										title="Sin número">
 										<i class="fab fa-whatsapp"></i>
 										</a>
 
@@ -299,8 +300,10 @@
 			if( data.status!=4 )
       	this.cita = data;
     	},
+			verHorariosAyer(){ this.fecha = moment().subtract(1, 'day').format('YYYY-MM-DD'); this.obtenerHorarios(); },
 			verHorariosHoy(){ this.fecha = moment().format('YYYY-MM-DD'); this.obtenerHorarios(); },
 			verHorariosMañana(){ this.fecha = moment().add(1, 'day').format('YYYY-MM-DD'); this.obtenerHorarios(); },
+			verHorariosPasado(){ this.fecha = moment().add(2, 'day').format('YYYY-MM-DD'); this.obtenerHorarios(); },
 			refrescarHorarios(){ this.obtenerHorarios(); },
 			queServicio(idTipo){ //console.log('queTipo', idTipo);
 				return this.precios.find(x=> x.id == idTipo).descripcion

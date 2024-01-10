@@ -24,11 +24,11 @@
 <script>
 export default{
 	name: 'ModalEditarPariente',
-	props:{relative:Object},
+	props: ['relative'],
 	emits:['updatePariente'],
 	data(){
 		return {
-			seleccionado:0, pariente:{nombre:'', celular:'', parentesco:''}
+			pariente:{nombre:'', celular:'', parentesco:''}, seleccionado:0
 		}
 	},
 	mounted(){

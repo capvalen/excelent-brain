@@ -627,7 +627,7 @@
 		<edit-modal :datosModal="dataModal"></edit-modal>
 		<modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
 		<modal-ver-triajes-viejos :triajes = "datosConsulta.triajes"></modal-ver-triajes-viejos>
-		<ModalEditarPariente v-if="datosConsulta" :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
+		<ModalEditarPariente v-if="datosConsulta.relative" :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
 		<ModalEditarPaciente :dataPatient="dato1" ></ModalEditarPaciente>
 		<ModalVerEstados :dataPatient="datosPaciente" :estados="estados"></ModalVerEstados>
 		<ModalVerHobbies :hobbies="hobbies" :id="datosConsulta.id" :misHobbies="misHobbies" ></ModalVerHobbies>
@@ -1107,7 +1107,7 @@ export default {
 		},
 
 		calculateAge(age) {
-			return moment().diff(age, 'years');
+			return age ? moment().diff(age, 'years') : '0';
 			//return age ? new Date().getFullYear() - parseInt(age.substring(0,4)) : '...';
 		},
 
@@ -1127,7 +1127,7 @@ export default {
 			}
 		},
 		fechaLatam(fecha) {
-			return moment(fecha).format('DD/MM/YYYY');
+			return fecha ? moment(fecha).format('DD/MM/YYYY') : 'Sin registro';
 		},
 		fechaLectura(fecha) {
 			moment.locale('es')

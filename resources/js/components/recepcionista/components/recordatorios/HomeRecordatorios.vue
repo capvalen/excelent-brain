@@ -412,7 +412,7 @@
 
 		<ModalNuevoAviso :usuario="idUsuario"></ModalNuevoAviso>
 		<ModalEditarAviso :queAviso="queAviso" :usuario="idUsuario"></ModalEditarAviso>
-		<ModalNuevoInteresado :usuario="idUsuario"></ModalNuevoInteresado>
+		<ModalNuevoInteresado :usuario="idUsuario" @actualizarInteresados="cargarDatos('interesados')"></ModalNuevoInteresado>
 		<ModalEditPatients v-if="data" :dataPatient="data"></ModalEditPatients>
 		<ModalResponderInteresado :queInteresado="queInteresado"></ModalResponderInteresado>
 		<ModalPagarDeuda :deuda="queDeuda" :usuario="idUsuario"></ModalPagarDeuda>

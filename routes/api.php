@@ -197,7 +197,7 @@ Route::get('xlsx_admin/{date}', [PatientController::class, 'monthXlsx']);
 
 Route::get('cies/{code}', [CieController::class, 'show']);
 
-Route::get('getProfApo/{id}',[AppointmentController::class, 'getProfApo']);
+Route::get('getProfessionalSummaryAppointment/{id}/{date}',[AppointmentController::class, 'getProfessionalSummaryAppointment']);
 Route::get('getAllPatients', [AppointmentController::class, 'getAllPatients']);
 Route::get('getPatientsPerMonth/{date}/{id}',[AppointmentController::class, 'getPatientsPerMonth']);
 Route::get('getPatientsPerDay/{date}/{id}',[AppointmentController::class, 'getPatientsPerDay']);

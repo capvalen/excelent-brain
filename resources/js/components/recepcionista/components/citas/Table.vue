@@ -101,6 +101,14 @@
 										<span class="text labels" v-else-if="!qCita.payment">Error</span>
 										
 									</button>
+									<p v-if="qCita.payment.rebaja>0 || qCita.payment.descuento>0 || qCita.payment.adelanto>0"><i class="fas fa-wallet"></i> 
+										<small v-if="qCita.payment.rebaja>0">Rebaja S/ {{ qCita.payment.rebaja }} </small>
+										<small v-if="qCita.payment.rebaja>0"><i class="fas fa-angle-double-right"></i>  class="text-capitalize"{{ qCita.payment.motivoRebaja }} </small>
+										<small v-if="qCita.payment.descuento>0">Descuento S/ {{ qCita.payment.descuento }} </small>
+										<small v-if="qCita.payment.descuento>0"><i class="fas fa-angle-double-right"></i>  class="text-capitalize"{{ qCita.payment.motivoDescuento }} </small>
+										<small v-if="qCita.payment.adelanto>0">Adelanto S/ {{ qCita.payment.adelanto }} </small>
+										<small v-if="qCita.payment.adelanto>0"><i class="fas fa-angle-double-right"></i>  class="text-capitalize"{{ qCita.payment.razonAdelanto }} </small>
+									</p>
 								</td>
 								<td>
 									<button 
@@ -123,8 +131,8 @@
 										<span class="text labels" v-else-if="qCita.status == 3">Anulado</span>
 										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
 									</button>
-									<small v-if="qCita.status == 3 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].observaciones}}</small>
-									<small v-if="qCita.status == 4 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].reason}} <span v-if="qCita.faltas[0].fechaProxima!=''">- Proxima cita: {{ fechaLatam(qCita.faltas[0].fechaProxima )}}</span></small>
+									<small class="text-capitalize" v-if="qCita.status == 3 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].observaciones}}</small>
+									<small class="text-capitalize" v-if="qCita.status == 4 && qCita.faltas"><br><i class="far fa-comment"></i> {{qCita.faltas[0].reason}} <span v-if="qCita.faltas[0].fechaProxima!=''">- Proxima cita: {{ fechaLatam(qCita.faltas[0].fechaProxima )}}</span></small>
 								</td>
 								<td>
 									<div class="row d-flex align-items-center justify-content-around gap-1">
@@ -138,7 +146,7 @@
 
 											<!-- Sin numero -->
 											<a v-if="qCita.patient.phone ? false : true"
-											class="btn btn-danger btn-circle btn-sm"
+											class="btn btn-secondary btn-circle btn-sm"
 											title="Sin número"
 											>
 											<i class="fab fa-whatsapp"></i>

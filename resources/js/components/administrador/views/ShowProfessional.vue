@@ -13,59 +13,64 @@
               </div>
           </div>
       <div class="col-md-8 mt-4">
-          <div class="card shadow mb-4">
+        <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div
                 class="card-header bg-dark py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-white">Detalle de las consultas del mes</h6>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                <span>Consultas confirmadas: {{this.confirmed}}</span>
-                <br>
-                <span>Consultas sin confirmar: {{this.no_confirmed}}</span>
-                <br>
-                <span>Consultas canceladas: {{this.cancelled}}</span>
-            </div>
-          </div>
-          <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div
-                class="card-header bg-dark py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-white">Pacientes atendidos</h6>
+                <h6 class="m-0 font-weight-bold text-white">Filtro de consultas</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
                 <div class="row">
-                  <div class="col-sm">
+                  <div class="col-sm col-md-6">
                     <select @change="showSelect" class="form-select" id="optionTime">
                       <option disabled selected value>Seleccione una opción de tiempo</option>  
                       <option value="1">Mes</option>
                       <option value="2">Día</option>    
                     </select>
                   </div>
-                  <div class="col-sm">
-                    <select v-if="show !=0 && show==1" @change="getPatientsPerMonth" class="form-select" id="selectMonth">
+                  <div v-if="show !=0 && show==1" class="col-sm">
+                    <select @change="getPatientsPerMonth" class="form-select" id="selectMonth">
                         <option disabled selected value>Seleccione un mes</option>
                         <option v-for="(month, index) in months" :key="index" :value="month">{{month | optionParseMonth}}</option>
                     </select>
                   </div>
-                  <div class="col-sm">
-                    <input v-if="show !=0 && show==2" @change="getPatientsPerDay" type="date" class="form-control" id="datePicker">
+                  <div v-if="show !=0 && show==2" class="col-sm">
+                    <input @change="getPatientsPerDay" type="date" class="form-control" id="datePicker">
                   </div>
                 </div>
 
-                <div class="row mt-3">
+                <div class="row mt-3 d-none">
                   <div class="col-sm">
                    <p><b>Pacientes atendidos: </b> {{this.per_month}}</p>
                   </div>
                   <div class="col-sm">
-                    <p><b>Total recaudado: S./ </b> {{this.total_price}}</p>
                   </div>
                 </div>              
                 
             </div>
           </div>
+          
+          <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div
+                class="card-header bg-dark py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-white">Resumen de la consulta</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+              <p class="mb-0"><b>Total recaudado: S/ </b> {{this.total_price}}</p>
+              <p class="mb-0"><b>Total de citas: </b> {{this.totalCitas}}</p>
+                <span>Consultas confirmadas: {{this.confirmed}}</span>
+                <br>
+                <span>Consultas sin confirmar: {{this.no_confirmed}}</span>
+                <br>
+                <span>Consultas reprogramadas: {{this.reprogramed}}</span>
+                <br>
+                <span>Consultas canceladas: {{this.cancelled}}</span>
+            </div>
+          </div>
+          
       </div>
     </div>
     <div class="row mt-4">
@@ -185,7 +190,7 @@
 <script>
 
 import EvolucionModal from './EvolucionesModal.vue';
-import moment from 'moment'
+import moment, { relativeTimeThreshold } from 'moment'
 export default {
   name: 'HomeProfesionales',
 
@@ -193,9 +198,10 @@ export default {
 
   data () {
     return {
-      cancelled:'',
-      no_confirmed:'',
-      confirmed:'',
+      fecha:'',
+      cancelled:0,
+      no_confirmed:0,
+      confirmed:0,
       per_month:'',
       total_price:0,
       today: new Date(),
@@ -211,7 +217,7 @@ export default {
         date: null,
         check_time: null
       },
-      show: 0
+      show: 0, totalCitas:0
     }
   },
 
@@ -232,9 +238,7 @@ export default {
 					fila.classList.remove('d-none')
 				else
 					fila.classList.add('d-none')
-
 			})
-
 		},
     showSelect(e){
       if(e.target.value == 1){
@@ -256,20 +260,20 @@ export default {
       .then((result) => {
         this.profesional = result.data
         this.evolution.profesional_id = this.profesional.id
-        this.getAppointments()
+        //this.getAppointments()
         
       }).catch((err) => {
         console.error(err)
       });
     },
 
-    async getAppointments(){
+    async getSummaryAppointments(){
       this.$swal({
         title: 'Cargando...',
         showConfirmButton: false,
         icon:'info'
       })
-      await this.axios.get(`/api/getProfApo/${this.profesional.id}`)
+      await this.axios.get(`/api/getProfessionalSummaryAppointment/${this.profesional.id}/${this.fecha}`)
       .then((res) => {
         console.log(res.data)
         this.patients = res.data.patients,
@@ -277,6 +281,7 @@ export default {
         this.confirmed = res.data.confirmed,
         this.per_month = res.data.per_month,
         this.no_confirmed = res.data.no_confirmed
+        this.reprogramed = res.data.reprogramed
         this.$swal.close()
       }).catch((err) => {
         console.error(err)
@@ -290,14 +295,17 @@ export default {
         isDismissed: false
       })
       this.total_price = 0
-      this.axios.get(`/api/getPatientsPerMonth/${e.target.value}/${this.profesional.id}`)
+      this.fecha = e.target.value;
+      this.axios.get(`/api/getPatientsPerMonth/${this.fecha}/${this.profesional.id}`)
       .then((res)=>{
         console.log(res.data)
         this.per_month = res.data.patientsPerMonth,
         this.appointments = res.data.appointments,
-        this.appointments.forEach(appo => {
-          this.total_price += parseFloat(appo.payment ? appo.payment.price : 0 )
+        this.appointments.forEach(cita => {
+          //if(cita.status == 3 || cita.status == 4) this.cancelled++
+          this.total_price += parseFloat(cita.payment ? cita.payment.price : 0 )
         });
+        this.totalCitas = this.appointments.length
         this.extra_payments = res.data.extra_payments
         this.extra_payments.forEach(pay =>{
           this.total_price += parseFloat(!pay.price ? 0 : pay.price)
@@ -309,6 +317,8 @@ export default {
       }).catch((err) => {
         console.error(err)
       })
+      this.getSummaryAppointments()
+
     },
     async getPatientsPerDay(e){
       this.$swal({
@@ -319,7 +329,8 @@ export default {
       })
       console.log(e.target.value)
       this.total_price = 0
-      this.axios.get(`/api/getPatientsPerDay/${e.target.value}/${this.profesional.id}`)
+      this.fecha = e.target.value
+      this.axios.get(`/api/getPatientsPerDay/${this.fecha}/${this.profesional.id}`)
       .then((res)=>{
         console.log(res.data)
         this.per_month = res.data.patientsPerMonth,
@@ -327,6 +338,7 @@ export default {
         this.appointments.forEach(appo => {
           this.total_price += parseFloat(appo.payment ? appo.payment.price : 0 )
         });
+        this.totalCitas = this.appointments.length
         this.extra_payments = res.data.extra_payments
         this.extra_payments.forEach(pay =>{
           this.total_price += parseFloat(!pay.price ? 0 : pay.price)
@@ -338,6 +350,7 @@ export default {
       }).catch((err) => {
         console.error(err)
       })
+      this.getSummaryAppointments()
     },
 
     getEvolutions (evolution) {

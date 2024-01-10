@@ -2,7 +2,7 @@
   <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header border-0">
           <h5 class="modal-title" id="exampleModalLabel"> Datos del Paciente para actualizar</h5>
           <button type="button" id="cerrModalPatient" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -27,16 +27,18 @@
               <input type="text" class="form-control"  name="name" id="name" v-model="dataCit.patient.name" placeholder="Nombre del paciente">
             </div>
 
-            <div class="form-group row">                   
+            <div class="form-group row">     
+              <div class="col-sm-6 ">
+                <label for="name">Correo electrónico</label>
+                <input type="email" class="form-control" name="email" id="email" v-model="dataCit.patient.email"  placeholder="Correo electrónico"> 
+              </div>
+
               <div class="col-sm-12">
                 <label for="name">Dirección</label>
                 <input type="text" class="form-control" name="address" id="address" v-model="dataCit.patient.address.address" placeholder="Direccion del paciente">
               </div>
 
-              <div class="col-sm-6 ">
-                <label for="name">Correo electrónico</label>
-                <input type="email" class="form-control" name="email" id="email" v-model="dataCit.patient.email"  placeholder="Correo electrónico"> 
-              </div>
+              
             </div>
 
             <div class="form-group row">
@@ -65,7 +67,7 @@
             <div class="form-group row">
 							<div class="col-sm-4">
                 <label for="name">Ocupación</label>
-                <input type="text" class="form-control" name="occupation" id="occupation" v-model="dataCit.patient.occupation"  placeholder="Ocuación del paciente"> 
+                <input type="text" class="form-control" name="occupation" id="occupation" v-model="dataCit.patient.occupation"  placeholder="Ocuación del paciente" autocomplete="off"> 
               </div>
               <div class="col-sm-4">
                 <div class="form-group">
@@ -146,9 +148,8 @@
             </div>                -->
           </form>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-          <button  @click="updateDataPatient()" type="button" class="btn btn-primary">Editar</button>
+        <div class="modal-footer border-0">
+          <button  @click="updateDataPatient()" type="button" class="btn btn-outline-primary">Editar</button>
         </div>
       </div>
     </div>

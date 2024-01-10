@@ -1,12 +1,12 @@
 <template>
-  <div class="consulta d-flex align-items-center w-100 justify-content-around mb-2" v-if="dataConsult.status!=3">
+  <div class="consulta d-flex align-items-center w-100 justify-content-around mb-2" > <!-- v-if="dataConsult.status!=3" -->
       <div class="h5 mb-0 mx-1">{{ dataConsult.schedule ? horaHumana(dataConsult.schedule.check_time) : '00-00'}}</div>
-      <div class="consulta-card card h-100 w-75 py-2 border-0"
+      <div class="consulta-card card h-100 w-75 py-2 border-0" 
       :class='{
+        "border-left-warning": dataConsult.status === 1 || dataConsult.status==4,
         "border-left-danger": dataConsult.status === 3,
         "consultAnulada": dataConsult.status === 3,
-        "border-left-success": dataConsult.status,
-        "consultPendiente": dataConsult.status,
+        "border-left-success": dataConsult.status === 2,
       }'
       >
           <div class="card-body">
@@ -15,8 +15,9 @@
                       <div class="text-xs font-weight-bold text-uppercase mb-1">
 												<span class="text-primary" v-if="dataConsult.status ==2 && dataConsult.payment.pay_status==2">Pagado & Confirmado</span>
 												<span class="text-primary" v-else-if="dataConsult.status ==2">Confirmado sin pagar</span>
-                        <span class="text-warning" v-else-if="dataConsult.status ==1" :class='{ "text-success": estadoConsulta.status}'> Pendiente</span>
-                        <span v-else :class='{ "text-danger": dataConsult.status == 3 }'>Cancelado</span>
+                        <span class="text-warning" v-else-if="dataConsult.status ==1"> Pendiente</span>
+                        <span class="text-danger" v-else-if="dataConsult.status ==3">Anulado</span>
+                        <span class="text-warning" v-else-if="dataConsult.status ==4">Reprogramado</span>
                       </div>
                       <router-link class="mb-0 text-capitalize text-secondary" :to="`/profesional/evoluciones/${dataConsult.patient ? dataConsult.patient.id : null}`">
 												{{dataConsult.patient.name.toLowerCase()}}
@@ -184,9 +185,7 @@ export default {
     background: #fafff9;
   }
 
-  .consultAnulada {
-    background: #FFF5F5;
-  }
+  .consultAnulada { background: #FFF5F5; }
 
   .btn-content {
     gap: 10px;

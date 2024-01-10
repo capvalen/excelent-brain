@@ -124,6 +124,8 @@
 					datos.append('correo', this.interesado.correo)
 					datos.append('referencia', this.interesado.referencia)
 					datos.append('origen', 1)
+					datos.append('idUsuario', this.usuario)
+					datos.append('idSeguimiento', 1)
 					datos.append('idProfesional', 1)
 					fetch('/api/nuevoInteresado',{
 						method:'POST', body:datos
@@ -136,6 +138,7 @@
 						else
 							this.$swal({icon:'error',title: 'Hubo un error interno'});
 					})
+					this.$emit('actualizarInteresados')
 				}
 			},
 			cerrarModal(){

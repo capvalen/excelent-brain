@@ -285,8 +285,8 @@
 								<div v-if="tieneAdelanto">
 									<label class="mb-0 mt-2" for="">Adelanto en S/:</label>
 									<input type="number" min="0" step="1" class="form-control" v-model="descuentoAdelanto" @keyup="precioDinamico()">
-									<label for="">Descripción adicional</label>
-									<input type="text" class="form-control my-2" placeholder="Ingresa la fecha del adelanto" v-model="razonAdelanto">
+									<label class="mt-2" for="">Descripción adicional</label>
+									<input type="text" class="form-control mb-2" placeholder="Ingrese la fecha del adelanto" v-model="razonAdelanto">
 								</div>
 							</div>
 						</div>
@@ -433,6 +433,7 @@ export default {
 				alertify.notify('Debe seleccionar un tipo de servicio', 'danger', 10);
 			else if( this.tieneDescuento && this.razonPorcentaje=='' ) alertify.notify('Tiene que rellenarse un motivo de descuento', 'danger', 10)
 			else if( this.tieneRebaja && this.razonRebaja=='' ) alertify.notify('Tiene que rellenarse un motivo de rebaja', 'danger', 10)
+			else if( this.descuentoAdelanto && this.razonAdelanto=='' ) alertify.notify('Tiene que rellenarse una fecha o razón del adelanto', 'danger', 10)
 			else{
 				let formData = new FormData();
 				formData.append('dni', this.cita.dni);

@@ -38,6 +38,7 @@
 							<th>N°</th>
 							<th>Nombre y Apellidos</th>
 							<th>Celular</th>
+							<th>Ult. Cita</th>
 							<th>Antigüedad</th>
 							<th>N° Citas</th>
 							<th>N° Conf.</th>
@@ -54,7 +55,8 @@
 							<td>{{ index+1 }}</td>	
 							<td class="text-capitalize"><span v-if="cita.patient.vivo==0"><i class="fas fa-cross"></i></span> {{ cita.patient.name.toLowerCase() }}</td>
 							<td>{{ cita.patient.phone }}</td>
-							<td>{{queViejoEs(cita.patient.id)}}</td>
+							<td>{{ultimaCita(cita.patient.id)}}</td>
+							<td>{{queViejoEs(index)}}</td>
 							<!-- <td>{{ ultimaFecha(cita.patient.id) }}</td> -->
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('visitas', cita.patient.id)">{{ cita.visitas }}</td>
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('confirmar', cita.patient.id)">{{ cita.confirmar }}</td>
@@ -192,18 +194,27 @@ export default{
 		queSeguimiento(item){ if(item) return this.seguimientos.find(x=> x.id == item).seguimiento },
 		queColor(item){ if(item)  return this.seguimientos.find(x=> x.id == item).color },
 		cambiarItem(item){ this.citasResumidas[this.indexGlobal].patient.seguimiento = item },
-		queViejoEs(id){
+		ultimaCita(id){
 			moment.locale('es')
-			let fechaMasAntigua = new Date();
+			let fechaMasNueva = new Date();
 
 			let citas = this.citasCompletas.filter(item=> item.patient_id == id );
+			fechaMasNueva = citas[0].date
+			return moment(fechaMasNueva).fromNow().replace('hace ', '');
+		},
+		queViejoEs(index){
+			moment.locale('es')
+			let fechaMasAntigua = new Date();
+			fechaMasAntigua = this.citasResumidas[index].patient.created_at ?? '2022-01-01';
+
+			/* let citas = this.citasCompletas.filter(item=> item.patient_id == id );
 			citas.forEach(cita=>{
-				const fechaItem = new Date(cita.created_at);
+				const fechaItem = new Date(cita.date);
 				if (fechaItem < fechaMasAntigua) {
 					fechaMasAntigua = fechaItem;
 				}
-			})
-			return moment(fechaMasAntigua).fromNow();
+			}) */
+			return moment(fechaMasAntigua).fromNow().replace('hace ', '');
 		},
 		capitalizar(texto) {
 			const primeraLetra = texto.charAt(0);

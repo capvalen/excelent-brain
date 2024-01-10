@@ -1,0 +1,10 @@
+UPDATE `interesados` SET `atendido`=1 where 1;
+UPDATE `relatives` SET `name`=null where `name` = 'null';
+UPDATE `relatives` SET `phone`=null where `phone` = 'null';
+UPDATE `relatives` SET `kinship`=null where `kinship` = 'null';
+UPDATE `patients` SET `email` = null where `email` = 'null';
+UPDATE `patients` SET `phone` = null where `phone` = 'null';
+UPDATE `addresses` SET `address` = null where `address`='null';
+UPDATE `addresses` SET `district` = null where `district`='null';
+UPDATE `addresses` SET `province` = null where `province`='null';
+UPDATE `addresses` SET `department` = null where `department`='null';

@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" id="evolutionModal" tabindex="-1" aria-labelledby="modalEvolution" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header py-1 bg-secondary text-white">
             <h5 class="modal-title" id="infoModalLabel">Ver evolución</h5>
@@ -12,21 +12,8 @@
           <p v-if="dataEvolution.content"><b>Contenido: </b>{{dataEvolution.content}}</p>
           <p v-else="dataEvolution.content === null"><b>Contenido: </b>-</p>
           <div v-if="!dataEvolution.content" class="custom-control custom-switch" :data-id="`updateEvolution${dataEvolution.id}`">
-                    <input 
-                    type="checkbox" 
-                    class="custom-control-input" 
-                    @click="updateAuth(dataEvolution.id)" 
-                    :id="`authEvolution${dataEvolution.id}`"
-                    checked
-                    v-if="dataEvolution.auth"
-                    >
-                    <input 
-                    type="checkbox" 
-                    class="custom-control-input" 
-                    @click="updateAuth(dataEvolution.id)" 
-                    :id="`authEvolution${dataEvolution.id}`"
-                    v-else
-                    >
+                    <input  type="checkbox" class="custom-control-input" @click="updateAuth(dataEvolution.id)" 
+                    :id="`authEvolution${dataEvolution.id}`" :checked="{'true': dataEvolution.auth == 1}" v-model="dataEvolution.auth" >
                     <label class="custom-control-label" :for="`authEvolution${dataEvolution.id}`">Autorizar</label>
             </div>
          
@@ -102,6 +89,7 @@
             console.error(err)
           });
         }
+        this.dataEvolution = null
       },
 
       horaHumanaMin (hora) {
