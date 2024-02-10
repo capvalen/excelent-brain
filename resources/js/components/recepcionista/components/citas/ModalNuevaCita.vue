@@ -562,13 +562,14 @@ export default {
 			.then(res => {
 				if (res.data.patient == null) { //Buscar en reniec, nuevo
 					if(this.cita.type_dni==1){
-						window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-						this.axios.get(`https://apiperu.dev/api/dni/${this.cita.dni}`) 
+						//window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+						this.axios.get("/api/buscarDni/"+this.cita.dni)
 						.then(response => {
 							console.log(response.data)
-							this.cita.name = response.data.message || `${response.data.data.apellido_paterno} ${response.data.data.apellido_materno} ${response.data.data.nombres}`;
+							this.cita.name = (`${response.data.apellido_paterno} ${response.data.apellido_materno} ${response.data.nombres}`).trim();
 							this.cita.vivo=1
-							if (response.data.success) {
+							
+							if (response.data.apellido_paterno) {
 								this.patientNew = false
 	
 								this.$swal.fire({

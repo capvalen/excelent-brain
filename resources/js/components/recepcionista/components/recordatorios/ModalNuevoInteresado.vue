@@ -69,29 +69,33 @@
 			this.axios.get("/api/buscar/"+this.interesado.dni)
 			.then(res => {
 				if (res.data.patient == null) { //Buscar en reniec
-					window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-					this.axios.get(`https://apiperu.dev/api/dni/${this.interesado.dni}`) //?api_token=${this.token}
-					.then(response => {
-						console.log(response.data)
-						this.interesado.nombre_completo =`${response.data.data.apellido_paterno} ${response.data.data.apellido_materno} ${response.data.data.nombres}`;
-						if (response.data.success) {
-							this.$swal.fire({
-								icon: 'success',
-								title: 'Okey',
-								text: 'interesado nuevo',
-							})
-						} else {
-							this.$swal.fire({
-								icon: 'error',
-								title: 'Oops...',
-								text: 'DNI no encontrado!',
-								footer: 'Vuelve a intentarlo'
-							})
-						}
-					})
-					.catch(err => {
-						console.error(err)
-					})
+					if(this.cita.type_dni==1){
+						//window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+						this.axios.get("/api/buscarDni/"+this.cita.dni)
+						.then(response => {
+							console.log(response.data)
+							this.cita.name = (`${response.data.apellido_paterno} ${response.data.apellido_materno} ${response.data.nombres}`).trim();
+							if (response.data.apellido_paterno) {
+								this.patientNew = false
+	
+								this.$swal.fire({
+									icon: 'success',
+									title: 'Okey',
+									text: 'Paciente nuevo',
+								})
+							} else {
+								this.$swal.fire({
+									icon: 'error',
+									title: 'Oops...',
+									text: 'DNI no encontrado!',
+									footer: 'Vuelve a intentarlo'
+								})
+							}
+						})
+						.catch(err => {
+							console.error(err)
+						})
+					}
 				}else{ //encontro en la DB
 					this.$swal.fire({
 						title: 'Buscando interesado',

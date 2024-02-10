@@ -105,8 +105,13 @@ class PaymentController extends Controller
 						$profesional = Professional::find($appointment->professional_id);
 						$payment->professional_id= $profesional->professional_id ?? 0;
 						$payment->profesional_name= $profesional->nombre ?? '';
-						$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
-						$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
+						if( $appointment->schedule_id ):
+							$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
+							$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
+						else:
+							$payment->horario = '';
+							$payment->horar = '';
+						endif;
 					}
 				}else{
 					$payment->professional_id= 0;
@@ -162,8 +167,14 @@ class PaymentController extends Controller
 								$profesional = Professional::find($appointment->professional_id);
 								$payment->professional_id= $profesional->professional_id ?? 0;
 								$payment->profesional_name= $profesional->nombre ?? '';
-								$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
-								$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
+								
+								if( $appointment->schedule_id ):
+									$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
+									$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
+								else:
+									$payment->horario = '';
+									$payment->horar = '';
+								endif;
 							}else{
 									$profesional= [];
 							}

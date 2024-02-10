@@ -99,11 +99,21 @@ Ejecutar en la terminal:
 Ejecutar para el socket:
 	npm install socket.io socket.io-client
 
+Instalar
+composer require guzzlehttp/guzzle
+
 
 
 php artisan cache:clear
 php artisan route:cache
 php artisan config:cache
 php artisan view:clear
+
+
+php artisan config:clear
+php artisan route:clear
+composer dump-autoload
+//Limpiar el .env
+
 
 */

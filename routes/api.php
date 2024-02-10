@@ -258,3 +258,4 @@ Route::post('/cambiarMuerte', [SimpleController::class, 'cambiarMuerte']);
 Route::post('/cambiarPersonaActivo', [SimpleController::class, 'cambiarPersonaActivo']);
 Route::post('/guardarSeguimiento', [SimpleController::class, 'guardarSeguimiento']);
 Route::post('/pedirResultadosExamen', [SimpleController::class, 'pedirResultadosExamen']);
+Route::get('/buscarDni/{dni}', [SimpleController::class, 'buscarDni']);
