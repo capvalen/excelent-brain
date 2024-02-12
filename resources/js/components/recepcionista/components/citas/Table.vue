@@ -390,6 +390,9 @@ export default {
       .then(res => {
 				console.log('otros',res.data);
         this.citas = res.data;
+				this.citas.forEach(cita=>{
+					console.log((cita.id , cita.payment.rebaja))
+				})
       })
       .catch(err => {
         console.error(err)
