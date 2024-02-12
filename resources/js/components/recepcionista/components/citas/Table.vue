@@ -101,7 +101,7 @@
 										<span class="text labels" v-else-if="!qCita.payment">Error</span>
 										
 									</button>
-									<p v-if="qCita.payment.rebaja>0 || qCita.payment.descuento>0 || qCita.payment.adelanto>0"><i class="fas fa-wallet"></i> 
+									<p v-if="qCita.payment.rebaja || qCita.payment.descuento || qCita.payment.adelanto"><i class="fas fa-wallet"></i> 
 										<small v-if="qCita.payment.rebaja>0">Rebaja S/ {{ qCita.payment.rebaja }} </small>
 										<small class="text-capitalize" v-if="qCita.payment.rebaja>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoRebaja }} </small>
 										<small v-if="qCita.payment.descuento>0">Descuento S/ {{ qCita.payment.descuento }} </small>
