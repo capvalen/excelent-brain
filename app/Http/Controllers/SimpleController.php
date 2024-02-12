@@ -7,7 +7,6 @@ use App\Models\Patient;
 use Illuminate\Support\Facades\DB;
 use App\Models\Payment_method;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
 
 class SimpleController extends Controller
 {
@@ -56,8 +55,8 @@ class SimpleController extends Controller
 
 	public function buscarDni($dni){
 
-		$token = env('RENIEC_TOKEN');
-		
+		$token = "apis-token-7375.-NocVzIovJyr371-cz9a5bYHVsPxRMNt";
+				
 		$curl = curl_init();
 
 		// Buscar dni

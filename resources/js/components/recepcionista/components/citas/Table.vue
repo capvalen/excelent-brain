@@ -23,7 +23,7 @@
 									<div class="input-group-prepend">
 										<button class="btn btn-success" type="submit" @click="searchHistoria()"> <i class="fas fa-search fa-sm"></i> </button>
 									</div>
-									<input type="text" class="form-control bg-white shadow-sm border-0 small" placeholder="Nombre, D.N.I." aria-label="Search" aria-describedby="basic-addon2" id="searchInputAppointment" @keyup.enter="searchHistoria()" >
+									<input type="text" class="form-control bg-white shadow-sm border-0 small" placeholder="Nombre, D.N.I." aria-label="Search" aria-describedby="basic-addon2" id="searchInputAppointment" @keyup.enter="searchHistoria()" autocomplete="off">
 								</div>
 							</div>
 
@@ -390,9 +390,6 @@ export default {
       .then(res => {
 				console.log('otros',res.data);
         this.citas = res.data;
-				this.citas.forEach(cita=>{
-					console.log((cita.id , cita.payment.rebaja))
-				})
       })
       .catch(err => {
         console.error(err)

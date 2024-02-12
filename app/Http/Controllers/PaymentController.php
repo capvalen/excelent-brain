@@ -95,6 +95,7 @@ class PaymentController extends Controller
 				->whereDay('date', '=', date('d'))
 				->where('activo', 1)
 				->where('type', '!=', 6)
+				->with('precio')
 				->get();
 			foreach ($payments as $payment) {
 				if($payment->appointment_id!=0){

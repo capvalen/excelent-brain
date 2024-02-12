@@ -74,13 +74,13 @@
 							<td>
 								<span v-if="payment.type==8">Adelanto de cita</span>
 								<span v-if="payment.type==7">Pago de membresía</span>
-								<span v-if="payment.type==5">Pago de cita</span>
+								<span v-if="payment.type==5">Pago de cita-</span>
 								<span v-if="payment.type==4">Otros</span>
 								<span v-if="payment.type==3">Informe</span>
 								<span v-if="payment.type==2">Paquete Kurame</span>
 								<span v-if="payment.type==1">Paquete Membresía</span>
 								<span v-if="payment.type==0">Certificado</span>
-								<small><br>{{ payment.servicio }}</small>
+								<small v-if="payment.precio"><br>{{ payment.precio.descripcion }}</small>
 							</td>
 							<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
 							<td>{{ payment.voucher_issued }} </td>
