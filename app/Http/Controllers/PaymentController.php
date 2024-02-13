@@ -95,11 +95,10 @@ class PaymentController extends Controller
 				->whereDay('date', '=', date('d'))
 				->where('activo', 1)
 				->where('type', '!=', 6)
-				->with('precio')
 				->get();
 			foreach ($payments as $payment) {
 				if($payment->appointment_id!=0){
-					$appointment = Appointment::find($payment->appointment_id);
+					$appointment = Appointment::with('precio')->find($payment->appointment_id);
 					if( isset($appointment->professional_id) ){
 						$servicio = Precio::find($appointment->type)->first();
 						$payment->servicio = $servicio->descripcion;
@@ -109,9 +108,11 @@ class PaymentController extends Controller
 						if( $appointment->schedule_id ):
 							$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
 							$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
+							$payment->detalle= $appointment->precio->descripcion;
 						else:
 							$payment->horario = '';
 							$payment->horar = '';
+							$payment->detalle= '';
 						endif;
 					}
 				}else{
@@ -161,7 +162,7 @@ class PaymentController extends Controller
 				->get();
 				foreach ($payments as $payment) {
 					if($payment->appointment_id!=0){
-						$appointment = Appointment::find($payment->appointment_id);
+						$appointment = Appointment::with('precio')->find($payment->appointment_id);
 						if(isset($appointment->professional_id)){
 								$servicio = Precio::find($appointment->type)->first();
 								$payment->servicio = $servicio->descripcion;
@@ -172,9 +173,11 @@ class PaymentController extends Controller
 								if( $appointment->schedule_id ):
 									$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
 									$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
+									$payment->detalle= $appointment->precio->descripcion;
 								else:
 									$payment->horario = '';
 									$payment->horar = '';
+									$payment->detalle= '';
 								endif;
 							}else{
 									$profesional= [];
