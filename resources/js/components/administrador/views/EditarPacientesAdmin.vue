@@ -21,6 +21,7 @@
 							<th>N°</th>
 							<th>ID</th>
 							<th>Apellidos y nombres</th>
+							<th>Historia</th>
 							<th>Edad</th>
 							<th>¿Con vida?</th>
 							<th>¿Deshabilitado?</th>
@@ -31,6 +32,7 @@
 							<td>{{index+1}}</td>
 							<td>{{persona.id}} </td>
 							<td>{{persona.name}} </td>
+							<td> <a :href="'/api/pdfEvolution/thorough/'+persona.id" target="_blank"><i class="fas fa-file"></i> Ver</a> </td>
 							<td>{{calcularEdad(persona.birth_date)}}</td>
 							<td class="puntero" @click="cambiarMuerte(persona)">
 								<span v-if="persona.vivo==1" class="badge text-bg-primary"><i class="far fa-heart"></i> Vivo </span>
