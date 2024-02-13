@@ -37,13 +37,13 @@
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" ><span v-if="patients.vivo==0"><i class="fas fa-cross"></i></span> {{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
 					<td>
-						<button v-if="paciente.vivo==1"  class="btn btn-outline-primary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" @click="misHobbies=JSON.parse(patients.hobbies); queId = patients.id">
+						<button v-if="patients.vivo==1"  class="btn btn-outline-primary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" @click="misHobbies=JSON.parse(patients.hobbies); queId = patients.id">
 							<i class="fa-solid fa-baseball-bat-ball"></i>
 						</button>
 					</td>
 					<td>
 						<button class="btn btn-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
-						<button v-if="paciente.vivo==1"  class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(patients)" data-bs-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
+						<button v-if="patients.vivo==1"  class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(patients)" data-bs-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
 					</td>
         </tr>
       </tbody>
@@ -97,7 +97,7 @@ export default {
     async getPatients () {
       this.busqueda = []
       await this.axios.get(`/api/getLast10Patients`)
-      .then(res => {
+      .then(res => { 
         this.dataPatients = res.data;
         this.busqueda = this.dataPatients;
 

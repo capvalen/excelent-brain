@@ -151,7 +151,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-          <button  @click="createDataPatient()" type="button" class="btn btn-primary">Editar</button>
+          <button  @click="createDataPatient()" type="button" class="btn btn-primary">Crear</button>
         </div>
       </div>
     </div>
@@ -193,12 +193,12 @@ import alertify from 'alertifyjs'
 				this.axios.get("/api/buscar/"+this.paciente.dni)
 				.then(res => {
 					if (res.data.patient == null) { //Buscar en reniec
-					if(this.cita.type_dni==1){
 						//window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-						this.axios.get("/api/buscarDni/"+this.cita.dni)
+						console.log('bus')
+						this.axios.get("/api/buscarDni/"+this.paciente.dni)
 						.then(response => {
 							console.log(response.data)
-							this.cita.name = (`${response.data.apellido_paterno} ${response.data.apellido_materno} ${response.data.nombres}`).trim();
+							this.paciente.name = (`${response.data.apellido_paterno} ${response.data.apellido_materno} ${response.data.nombres}`).trim();
 							if (response.data.apellido_paterno) {
 								this.patientNew = false
 	
@@ -219,7 +219,6 @@ import alertify from 'alertifyjs'
 						.catch(err => {
 							console.error(err)
 						})
-					}
 					}else{ //encontro en la DB
 						this.$swal.fire({
 							title: 'Buscando paciente',
