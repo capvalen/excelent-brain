@@ -11,7 +11,7 @@
 <body>
 @php
 	use Carbon\Carbon;
-	
+//    var_dump(); die();	
 @endphp
     <div class="container">
         <div class="container-fluid p-0">
@@ -85,11 +85,14 @@
                                     @elseif($extra_payment->type == 3)
                                     Informe
                                     @elseif($extra_payment->type == 4)
-                                    Otros
+                                    
                                     @elseif($extra_payment->type == 5)
                                     Pago de cita
                                     @elseif($extra_payment->type == 6)
                                     Salida de dinero
+                                    @endif
+                                    @if( $cita['precio'] )
+                                        - {{$cita['precio']['descripcion']}}
                                     @endif
                                 </td>
                                 <td style="text-align: right;">

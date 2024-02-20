@@ -170,6 +170,11 @@ class ExtrapaymentController extends Controller
 			return $items->sum('price'); // Suma los montos de cada moneda
 		});
 		$totalAnulados = $sumasAnulados->sum();
+	/* 	//var_dump(count($sumas)); die();
+		if(count($sumas)==0){
+			$sumas['Efectivo'] == 0;
+		} */
+
 
 		//return $sumas;
 		$pdf = PDF::loadView('recepcion.cupon_cierre', compact('sumas','total', 'hoy', 'usuario', 'totalSalidas','sumasSalidas', 'totalAnulados', 'sumasAnulados'));

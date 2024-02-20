@@ -515,9 +515,7 @@ class ExtrasController extends Controller
 				'descuento' => 0,
 				'motivoDescuento' => ''
 			]);
-
 		}
-
 
 		foreach($fechas as $fecha){
 			if( $fecha->pago ){ //cuando es true
@@ -533,6 +531,11 @@ class ExtrasController extends Controller
 				$pagoExtra->idMembresia = $idMembresia;
 				$pagoExtra->user_id = $request->input('user_id');
 				$pagoExtra->save();
+
+				Membresia::where('id', $idMembresia)
+				->update([
+					'estado' => 2
+				]);
 			}else{
 				DB::table('deudas')->insert([
 					'patient_id' => $request->input('idPaciente'),
@@ -604,12 +607,19 @@ class ExtrasController extends Controller
 	}
 
 	public function buscarCartera(Request $request){
-		
-		
-		
-
 		if(!$request->get('texto')){
-			if($request->get('mes')==-1):
+			if($request->get('año')==-1 ):
+				$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
+					->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
+					->groupBy('patient_id')
+					->with('patient')
+					->orderBy('date', 'desc')
+					->get();
+				$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
+					->orderBy('date', 'desc')
+					->with('patient')
+					->get();
+			elseif($request->get('mes')==-1):
 				$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
 					->whereYear('date', $request->get('año'))
 					->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))

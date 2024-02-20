@@ -87,9 +87,9 @@
 											<tr v-for="(fecha, index) in fechas">
 												<td> <input type="date" class="form-control" v-model="fecha.dia"> </td>
 												<td>
-													<span v-if="membresia.tipo!=71">{{ parseFloat(fecha.monto).toFixed(2) }}</span>
-													<span v-if="membresia.tipo==71 && membresia.cuotas==1">{{ parseFloat(fecha.monto).toFixed(2) }}</span>
-													<input type="number" class="form-control inputPartidos" v-if="membresia.tipo==71 && membresia.cuotas>1" @keyup="balancearMontos()" readonly="true" v-model="fecha.monto">
+													<!-- <span v-if="membresia.tipo!=71">{{ parseFloat(fecha.monto).toFixed(2) }}</span> -->
+													<span v-if="membresia.cuotas==1">{{ parseFloat(fecha.monto).toFixed(2) }}</span> <!--membresia.tipo==71 && -->
+													<input type="number" class="form-control inputPartidos" v-if="membresia.cuotas>1" @keyup="balancearMontos()" readonly="true" v-model="fecha.monto"> <!-- membresia.tipo==71 &&  -->
 												</td>
 												<td>
 													<div class="form-check">
@@ -252,7 +252,7 @@ export default {
 					total: precioBase,
 					pago: false
 				})
-				if(this.membresia.tipo==71 && this.membresia.cuotas>1){
+				if(this.membresia.cuotas>1){ //this.membresia.tipo==71 &&
 					const firstTr = document.querySelector('#tbodyFechas tr:first-child');
 					const firstInput = firstTr.querySelector('.inputPartidos:first-child');
 					firstInput.readOnly = false;
@@ -263,7 +263,7 @@ export default {
 		},
 		balancearMontos(){
 			console.log('bal');
-			if(this.membresia.tipo==71 && parseInt(this.membresia.cuotas)>1){
+			if(parseInt(this.membresia.cuotas)>1){ //this.membresia.tipo==71 &&
 				let cantidadFechas = this.fechas.length-1
 				let montoRestante = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto))/cantidadFechas;
 				/* for(let i = 1; i<=this.fechas.length; i++){

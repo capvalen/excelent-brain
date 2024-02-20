@@ -39,7 +39,7 @@
 				<p class="small m-2 mt-1">Total salidas: S/ <strong>{{number_format($totalSalidas, 2)}}</strong></p>
 				<p class="small m-2 mt-1">Total anulados: S/ <strong>{{number_format($totalAnulados, 2)}}</strong></p>
 				<p class="small m-2 mt-1">==========</p>
-				<p class="small m-2 mt-1">Sólo efectivo: S/ <strong>{{number_format($sumas['Efectivo'] - $totalSalidas, 2)}}</strong></p>
+				<p class="small m-2 mt-1">Sólo efectivo: S/ <strong>{{number_format($sumas['Efectivo'] ?? 0 - $totalSalidas, 2)}}</strong></p>
 		</div>
 		</div>
 		<div class="mt-2"></div>

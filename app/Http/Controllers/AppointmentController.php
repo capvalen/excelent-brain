@@ -1153,9 +1153,13 @@ class AppointmentController extends Controller
 
 	public function pdfExtraCupon($id){
 		$extra_payment = Extra_payment::
-		with('method_payment')
+		with('method_payment', 'tipo_pagos')
 		->find($id);
-		$pdf = PDF::loadView('recepcion.cupon_extra', compact('extra_payment'));
+		if( $extra_payment->appointment_id !=0){
+			$cita = Appointment::where('id', $extra_payment->appointment_id)->with('precio')->first();
+		}
+		//return $cita; die();
+		$pdf = PDF::loadView('recepcion.cupon_extra', compact('extra_payment', 'cita'));
 		$pdf->setPaper('a7');
 		return $pdf->stream('cupon_extra.pdf');
 	}

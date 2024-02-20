@@ -112,7 +112,7 @@ class PrescriptionController extends Controller
     }
 
 		public function verRecetaPorId($idPaciente){
-			$recetas = Prescription::where('patient_id',$idPaciente)
+			$recetas = Prescription::where('patient_id',$idPaciente)->orderBy('attention_date', 'desc')
 			->get();
 			return response()->json( $recetas );
 		}

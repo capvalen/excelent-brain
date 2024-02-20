@@ -14,9 +14,9 @@ class Extra_payment extends Model
         return $this->belongsTo("App\Models\Appointment");
     }
 
-    public function precio(){
+ /*    public function precio(){
         return $this->hasOne("App\Models\Precio", 'id', 'type');
-    }
+    } */
 
     public function comprobante(){
         return $this->hasOne("App\Models\TipoComprobante", 'id', 'tipo');
@@ -28,5 +28,9 @@ class Extra_payment extends Model
 
     public function usuario(){
         return $this->hasOne("App\Models\User", 'id', 'user_id');
+    }
+
+    public function tipo_pagos(){
+        return $this->hasOne("App\Models\TipoPago", 'id', 'type');
     }
 }
