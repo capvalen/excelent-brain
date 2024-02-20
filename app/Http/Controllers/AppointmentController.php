@@ -1155,6 +1155,7 @@ class AppointmentController extends Controller
 		$extra_payment = Extra_payment::
 		with('method_payment', 'tipo_pagos')
 		->find($id);
+		$cita = array();
 		if( $extra_payment->appointment_id !=0){
 			$cita = Appointment::where('id', $extra_payment->appointment_id)->with('precio')->first();
 		}

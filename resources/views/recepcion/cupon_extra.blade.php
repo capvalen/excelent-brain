@@ -91,7 +91,7 @@
                                     @elseif($extra_payment->type == 6)
                                     Salida de dinero
                                     @endif
-                                    @if( $cita['precio'] )
+                                    @if( isset($cita['precio']) )
                                         - {{$cita['precio']['descripcion']}}
                                     @endif
                                 </td>
