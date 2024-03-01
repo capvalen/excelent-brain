@@ -43,5 +43,8 @@ class Appointment extends Model
     public function pagosExtras(){
         return $this->hasMany("App\Models\Extra_payment",'appointment_id', 'id');
     }
+    public function faltas(){
+        return $this->hasMany("App\Models\Faltas",'idCita', 'id');
+    }
    
 }

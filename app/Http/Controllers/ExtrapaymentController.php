@@ -147,6 +147,7 @@ class ExtrapaymentController extends Controller
 			return $items->sum('price'); // Suma los montos de cada moneda
 		});
 		$total = $sumas->sum();
+		$totalEfectivo = $sumas['Efectivo'] ?? 0;
 		$salidas =  Extra_payment::whereDate('created_at',$fecha)
 		->where('activo', 1)
 		->where('type', '=', 6)
@@ -175,9 +176,10 @@ class ExtrapaymentController extends Controller
 			$sumas['Efectivo'] == 0;
 		} */
 
+		//var_dump($totalEfectivo); die();
 
 		//return $sumas;
-		$pdf = PDF::loadView('recepcion.cupon_cierre', compact('sumas','total', 'hoy', 'usuario', 'totalSalidas','sumasSalidas', 'totalAnulados', 'sumasAnulados'));
+		$pdf = PDF::loadView('recepcion.cupon_cierre', compact('sumas','total', 'hoy', 'usuario', 'totalEfectivo', 'totalSalidas','sumasSalidas', 'totalAnulados', 'sumasAnulados'));
 		$pdf->setPaper('a7');
 		return $pdf->stream('cupon_cierre.pdf');
 	}

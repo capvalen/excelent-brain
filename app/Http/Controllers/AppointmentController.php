@@ -434,25 +434,40 @@ class AppointmentController extends Controller
 	public function searchAppointment ($nombre, $profesional, $fecha, $dni)
 	{
 		$queryAppointments = [];
-		$citas  = Appointment::
-		with('professional','patient', 'payment', 'schedule','patient.address','patient.relative');
-		
 
+		/* $citas  = Appointment::with('professional',)
+		->with([ 'patient'  => function($query) use($nombre, $dni) {
+			$query->where('name', 'like', $nombre.'%')
+			->orWhere('dni', '=', $dni);
+		}])
+		->orderBy('date', 'desc')
+		->orderBy('professional_id')
+		->get(); */
+		
 		$appointments =Appointment::
 		join('patients as p', 'p.id', '=', 'appointments.patient_id')
+		->select('appointments.*', 'appointments.id as idCita') // Agregar la columna raw aquí
 		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
-		->where('p.name', 'like', '%'.$nombre.'%')
+		->where('p.name', 'like', $nombre.'%')
 		->orWhere('p.dni', $dni)
 		->orderBy('appointments.date', 'desc')
 		->orderBy('appointments.professional_id')
-		
 		->get();
+
+		foreach($appointments as $cita){
+			//Ver si tiene falta
+			if($cita->status == '3'){
+				$cita->faltas = DB::table('faltas')->where('idCita', $cita->idCita)->get();
+			}
+			if($cita->status == '4'){
+				$cita->faltas = Reschedule::where('appointment_id', $cita->idCita)->get();
+			}
+		}
 		/*->orderBy(function ($query) {
 			$query->selectRaw('check_time')
 				->from('schedules')
 				->whereColumn('schedules.id', 'appointments.schedule_id');
 		})*/
-		
 		
 		return $appointments; die(); //Codigo de abajo inservible para lo que solicita la busqueda por nombres
 
