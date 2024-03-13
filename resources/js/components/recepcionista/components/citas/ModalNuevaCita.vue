@@ -14,7 +14,7 @@
 
 					<div class="form-group row">
 					 <div class="col-sm-6">
-							<label for="name">Tipo de documento</label>
+							<label for="name">Tipo de documento <span class="text-danger">*</span></label>
 							<select class="form-select" id="type_dni" v-model="cita.type_dni">
 								<option value="1">D.N.I.</option>
 								<option value="2">Carnet de extranjería</option>
@@ -24,8 +24,8 @@
 					</div>
 					<div class="form-group row">
 						<div class="col-sm-6">
-							<label v-if="cita.type_dni==1" for="name">D.N.I.</label>
-							<label v-else for="name">Doc. Extranjero</label>
+							<label v-if="cita.type_dni==1" for="name">D.N.I. <span class="text-danger">*</span></label>
+							<label v-else for="name">Doc. Extranjero <span class="text-danger">*</span></label>
 							<div class="form-inline">
 								<input v-if="cita.type_dni==1" type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="DNI del paciente" autocomplete="off">
 								<input v-else type="text" class="form-control w-75 mr-1" name="dni" id="dni" v-model="cita.dni" placeholder="Código de extranjería" autocomplete="off">
@@ -34,19 +34,19 @@
 						</div>
 
 						<div class="col-sm-6">
-							<label for="name">Celular</label>
+							<label for="name">Celular <span class="text-danger">*</span></label>
 							<input type="text" class="form-control" id="phone" v-model="cita.phone" placeholder="Celular del paciente" @keypress="limitarCel($event)" autocomplete="off">
 						</div>           
 					</div>
 
 					<div class="form-group">
-							<label for="name">Apellidos y nombres</label>
+							<label for="name">Apellidos y nombres <span class="text-danger">*</span></label>
 							<input  type="text" class="form-control" id="name" v-model="cita.name" placeholder="Nombre del paciente" autocomplete="off">
 							<!-- <input v-else type="text" class="form-control"  name="name" id="name" v-model="cita.name" placeholder="Nombre del paciente"> -->
 					</div>
 					
 					
-					<div class="row">
+					<div class="row d-none">
 						<div class="col-sm-6 my-2">
 							<div class=" form-switch">
 								<input class="form-check-input" type="checkbox" role="switch" id="fleMasBasicos" v-model="masBasicos" >
@@ -59,80 +59,86 @@
 					</div>
 
 					<div class="form-group row" v-show="masBasicos">
+						
 						<div class="form-group row">
 							<div class="col-sm-12">
+								<label for="name">Dirección <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" name="address" id="address" v-model="cita.address" placeholder="Dirección del paciente" autocomplete="off">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-4">
+									<label for="name">Departamento <span class="text-danger">*</span></label>
+									<select v-model="cita.department" class="form-select" id="department" @change="moverProvincias(true)">
+										<option v-for="departamento in ubigeo.departamentos" :value="departamento.idDepa">{{ departamento.departamento }}</option>
+									</select>
+							</div>
+							<div class="col-sm-4">
+									<label for="name">Provincia <span class="text-danger">*</span></label>
+									<select v-model="cita.province" class="form-select" id="provincia" @change="moverDistritos()">
+										<option v-for="provincia in provincias" :value="provincia.idProv">{{ provincia.provincia }}</option>
+									</select>
+							</div>
+							<div class="col-sm-4">
+									<label for="name">Distrito <span class="text-danger">*</span></label>
+									<select v-model="cita.district" class="form-select" id="distrito">
+										<option v-for="distrito in distritos" :value="distrito.idDist">{{ distrito.distrito }}</option>
+									</select>
+							</div>
+						</div>
+						
+						<div class="form-group row">
+							<div class="col-sm-4">
+									<label for="name">Fecha de nacimiento <span class="text-danger">*</span></label>
+									<input type="date" class="form-control" name="birth_date" id="birth_date" v-model="cita.birth_date">
+							</div>
+							<div class="col-sm-4">
+									<label for="marital_status">Estado Civil <span class="text-danger">*</span></label>
+									<select class="form-select" name="marital_status" id="marital_status" v-model="cita.marital_status">
+										<option value="2">Casado</option>
+										<option value="5">Conviviente</option>
+										<option value="4">Divorciado</option>
+										<option value="1">Soltero</option>
+										<option value="3">Viudo</option>
+									</select>
+							</div>
+							 <div class="col-sm-4">
+									<label for="">Grado de instrucción <span class="text-danger">*</span></label>
+									<select class="form-select" name="instruction_degree" id="instruction_degree" v-model="cita.instruction_degree">
+										<option value="1">Inicial</option>
+										<option value="2">Primaria</option>
+										<option value="3">Secundaria</option>
+										<option value="4">Superior</option>
+										<option value="5">Técnico</option>
+										<option value="6">Sin instrucción</option>
+									</select>
+							</div>
+						</div>
+						
+						<div class="form-group row">
+							<div class="col-sm-6">
+									<label for="name">Ocupación <span class="text-danger">*</span></label>
+									<input type="text" class="form-control" name="occupation" id="occupation" v-model="cita.occupation"  placeholder="Ocupación del paciente" autocomplete="off">
+							</div>
+							<div class="col-sm-6">
+								<label for="name">Género <span class="text-danger">*</span></label>
+								<select class="form-select" id="sexo" v-model="cita.gender">
+									<option value="2">Sin definir</option>
+									<option value="0">Femenino</option>
+									<option value="1">Masculino</option>
+									<option value="3">LGTB+</option>
+								</select>
+							</div>
+						</div>
+
+						
+						<div class="form-group row">
+							<div class="col-sm-6">
 								<label for="name">Correo electrónico</label>
 								<input type="text" class="form-control" name="address" id="address" v-model="cita.email" placeholder="Correo electrónico" autocomplete="off">
 							</div>
 						</div>
-						<div class="form-group row">
-							<div class="col-sm-12">
-								<label for="name">Dirección</label>
-								<input type="text" class="form-control" name="address" id="address" v-model="cita.address" placeholder="Dirección del paciente" autocomplete="off">
-							</div>
-						</div>
-						<div class="col-sm-4">
-								<label for="name">Departamento</label>
-								<select v-model="cita.department" class="form-select" id="department" @change="moverProvincias(true)">
-									<option v-for="departamento in ubigeo.departamentos" :value="departamento.idDepa">{{ departamento.departamento }}</option>
-								</select>
-						</div>
-						<div class="col-sm-4">
-								<label for="name">Provincia</label>
-								<select v-model="cita.province" class="form-select" id="provincia" @change="moverDistritos()">
-									<option v-for="provincia in provincias" :value="provincia.idProv">{{ provincia.provincia }}</option>
-								</select>
-						</div>
-						<div class="col-sm-4">
-								<label for="name">Distrito</label>
-								<select v-model="cita.district" class="form-select" id="distrito">
-									<option v-for="distrito in distritos" :value="distrito.idDist">{{ distrito.distrito }}</option>
-								</select>
-						</div>
-					</div>
-					
-					<div class="form-group row" v-show="masBasicos">
-						<div class="col-sm-4">
-								<label for="name">Fecha de nacimiento</label>
-								<input type="date" class="form-control" name="birth_date" id="birth_date" v-model="cita.birth_date">
-						</div>
-						<div class="col-sm-4">
-								<label for="marital_status">Estado Civil</label>
-								<select class="form-select" name="marital_status" id="marital_status" v-model="cita.marital_status">
-									<option value="2">Casado</option>
-									<option value="5">Conviviente</option>
-									<option value="4">Divorciado</option>
-									<option value="1">Soltero</option>
-									<option value="3">Viudo</option>
-								</select>
-						</div>
-						 <div class="col-sm-4">
-								<label for="">Grado de instrucción</label>
-						 		<select class="form-select" name="instruction_degree" id="instruction_degree" v-model="cita.instruction_degree">
-									<option value="1">Inicial</option>
-									<option value="2">Primaria</option>
-									<option value="3">Secundaria</option>
-									<option value="4">Superior</option>
-									<option value="5">Técnico</option>
-									<option value="6">Sin instrucción</option>
-								</select>
-						</div>
-					</div>
-
-					<div class="form-group row" v-show="masBasicos">
-						<div class="col-sm-6">
-								<label for="name">Ocupación</label>
-								<input type="text" class="form-control" name="occupation" id="occupation" v-model="cita.occupation"  placeholder="Ocupación del paciente" autocomplete="off"> 
-						</div>
-						<div class="col-sm-6">
-							<label for="name">Género</label>
-							<select class="form-select" id="sexo" v-model="cita.gender">
-								<option value="2">Sin definir</option>
-								<option value="0">Femenino</option>
-								<option value="1">Masculino</option>
-								<option value="3">LGTB+</option>
-							</select>
-						</div>
+						
 					</div>
 					<div class="row">
 						<div class="col-sm-6 my-2">
@@ -303,6 +309,12 @@
 									<label class="mb-0 mt-2" for="">Motivo de la rebaja</label>
 									<input type="text" class="form-control my-2" placeholder="Ingresa una razón para la rebaja" v-model="razonRebaja">
 								</div>
+								<div v-if="tieneAdelanto">
+									<label class="mb-0 mt-2" for="">Método de pago</label>
+									<select class="form-select" id="sltMonedas3" v-model="monedaAdelanto">
+										<option v-for="moneda in monedas" :value="moneda.id">{{ moneda.tipo }}</option>
+									</select>
+								</div>
 							</div>
 						</div>
 						<div class="col-sm-12 text-center ">
@@ -335,7 +347,7 @@ export default {
 	props:{ profesionalElegido: null, horaElegida: null , idUsuario:null, fechaElegida:null },
 	data(){
 		return{
-			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:false, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
+			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:true, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
 			switchReciec: 1, tieneAdelanto:false, descuentoAdelanto:0, razonAdelanto:'',
 			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
 			patientNew: false, alertaDeudas:false, mensajeDeudas:'', recomendaciones:['Facebook', 'Instagram', 'TikTok', 'Linkedin', 'Youtube', 'Spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio', 'Otros'],
@@ -377,11 +389,12 @@ export default {
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
 			provincias:[], distritos:[],
 			token:'087d16c0688f5150268342d085a55d54b5064c7649596011f03b35b935899a50',
-			horario:[], descuentoPorcentaje:0
+			horario:[], descuentoPorcentaje:0, monedas:[], monedaAdelanto:1
 		}
 	},
 	mounted(){
 		this.$parent.$on('limpiarDescuentos', this.limpiarInputs(false) );
+		this.pedirMonedas()
 	},
 	 
 	methods: {
@@ -420,20 +433,25 @@ export default {
 				this.cita.price = precio;
 			}
 		},
+		pedirMonedas(){
+			this.axios('/api/listarMonedas')
+			.then(resp => this.monedas = resp.data )
+		},
 		async insertar(e){ 
 			e.preventDefault()
 			const config = {
 				headers: { 'content-type': 'multipart/form-data' }
 			}
 			if( this.cita.type_dni==1 && (this.cita.dni =='' || this.cita.dni.length<8) )
-				alertify.notify('Todo paciente debe tener un DNI válido', 'danger', 10);
+				alertify.error('Todo paciente debe tener un DNI válido', 10);
 			else if( this.cita.type_dni!=1 && (this.cita.dni =='' || this.cita.dni.length<8) )
-				alertify.notify('Todo extranjero debe tener un documento de identidad válido', 'danger', 10);
-			else if( !this.cita.type)
-				alertify.notify('Debe seleccionar un tipo de servicio', 'danger', 10);
-			else if( this.tieneDescuento && this.razonPorcentaje=='' ) alertify.notify('Tiene que rellenarse un motivo de descuento', 'danger', 10)
-			else if( this.tieneRebaja && this.razonRebaja=='' ) alertify.notify('Tiene que rellenarse un motivo de rebaja', 'danger', 10)
-			else if( this.descuentoAdelanto && this.razonAdelanto=='' ) alertify.notify('Tiene que rellenarse una fecha o razón del adelanto', 'danger', 10)
+				alertify.error('Todo extranjero debe tener un documento de identidad válido', 10);
+			else if(this.cita.name == '') alertify.error('Debe rellenar un nombre', 10);
+			else if(this.cita.phone == '') alertify.error('Debe rellenar un celular', 10);
+			else if( !this.cita.type) alertify.error('Debe seleccionar un tipo de servicio', 10);
+			else if( this.tieneDescuento && this.razonPorcentaje=='' ) alertify.error('Tiene que rellenarse un motivo de descuento', 10)
+			else if( this.tieneRebaja && this.razonRebaja=='' ) alertify.error('Tiene que rellenarse un motivo de rebaja', 10)
+			else if( this.descuentoAdelanto && this.razonAdelanto=='' ) alertify.error('Tiene que rellenarse una fecha o razón del adelanto', 10)
 			else{
 				let formData = new FormData();
 				formData.append('dni', this.cita.dni);
@@ -476,6 +494,7 @@ export default {
 				formData.append('new_status', this.cita.new_status);
 				formData.append('adelanto', this.descuentoAdelanto);
 				formData.append('razonAdelanto', this.razonAdelanto);
+				formData.append('monedaAdelanto', this.monedaAdelanto);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => { //Trabaja en api -> modelo>store()
 					console.log(response.data)
@@ -540,7 +559,7 @@ export default {
 			this.contacto= ''; this.contacto_celular= ''; this.parentezco='';
 			this.etiqueta =''; this.descuentoAdelanto = 0; this.descuentoPorcentaje=0; this.descuentoPorcentual=0;
 			this.tieneAdelanto=false; this.tieneDescuento=false; this.tieneRebaja=false; this.razonAdelanto=''; this.razonRebaja=''
-			this.cita.contacto =''; this.cita.contacto_celular=''; this.cita.parentezco=''; cita.vivo=1;
+			this.cita.contacto =''; this.cita.contacto_celular=''; this.cita.parentezco=''; cita.vivo=1; this.monedaAdelanto=1
 		},
 		reniec(){ 
 			if (this.switchReciec === 0) return;
@@ -677,7 +696,7 @@ export default {
 			this.cita.district = 1006;
 			this.cita.birth_date = '';
 			this.cita.occupation = '';
-			this.cita.marital_status = '';
+			this.cita.marital_status = 1;
 			this.cita.instruction_degree = 6;
 			this.cita.gender = 2;
 			this.cita.relative_name = '';
@@ -791,7 +810,7 @@ export default {
 <style>
 .ajs-message{border-radius: 5px!important;}
 .ajs-success { background-color: rgb(33, 201, 89)!important; }
-.ajs-danger { background-color: rgb(232, 27, 0)!important; color:white!important; }
+.ajs-danger, .alertify-notifier .ajs-message.ajs-error { background-color: rgb(232, 27, 0)!important; color:white!important; }
 .form-switch label{cursor: pointer;}
 .alert-danger {
     color: #ffffff;

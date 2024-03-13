@@ -557,8 +557,7 @@
 			<div class="tab-pane fade py-5 px-3 bg-light-subtle border border-top-0" id="linea-tab-pane" role="tabpanel" aria-labelledby="linea-tab" tabindex="0">
 				
 				<button class="btn btn-outline-success" data-bs-target="#nuevoAcontecimiento" data-bs-toggle="modal"><i class="far fa-comment-alt"></i> Agregar nuevo acontecimiento</button>
-				<lineaTiempo :id="$route.params.idPaciente" ></lineaTiempo>
-				
+				<lineaTiempo :id="$route.params.idPaciente" @ordenarLineas="ordenarLineas" ></lineaTiempo>				
 			</div>
 			
 		</div>
@@ -1194,10 +1193,11 @@ export default {
 			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'Psicología'
 			else return 'Otro sin especificar'
 		},
-		/* cargarLineas(){
+		cargarLineas(){
+			this.$emit('ordenarLineas')
 			this.axios('/api/cargarLineas/'+this.datosPaciente.id)
-			.then(res=> { this.lineas=res.data; this.$emit('ordenarLineas')})
-		} */
+			.then(res=> { this.lineas=res.data; })
+		},
 		agregarComentario(datos){
 			//this.miniRespuesta.comentarios.push(datos)
 			this.datosConsulta.medical_evolutions[this.indexGlobal].comentarios.push(datos)

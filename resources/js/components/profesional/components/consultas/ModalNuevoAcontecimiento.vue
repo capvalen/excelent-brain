@@ -22,6 +22,7 @@
 </div>
 </template>
 <script>
+import alertify from 'alertifyjs'
 export default{
 	name: 'nuevoAcontecimiento',
 	props:['idPaciente', 'idProfesional'],

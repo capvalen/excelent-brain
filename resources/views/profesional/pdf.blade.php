@@ -9,6 +9,7 @@
 <body>
 	@php
 	use Carbon\Carbon;
+    echo $professional; die();
 	@endphp
     <div class="pdf">
         <div class="pdf-content">
@@ -27,14 +28,15 @@
                     @if ($professional == null)
                     <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
                     @elseif ($professional->name == 'Wilbert Barzola Huaman')
-										<p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
+                    <p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
                     <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
+                        @elseif ($professional->id ==  19) ''
+                    <p class="header__sub">CMP N° 068076 - RNE N° 047621</p>
                     @else
                     <p class="header__sub">CMP N° 74376 - RNE N° 43202</p>
                     @endif
                     <p class="header__sub">Consultas previa cita, llamar al celular: 996644350</p>
                 </div>
-    
                 <br>
                 <div class="separate"></div>
                 <div class="separate"></div>

@@ -221,7 +221,7 @@ class AppointmentController extends Controller
 				$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $patient->name;
 				$pagoExtra->price = $request->get('adelanto');
-				$pagoExtra->moneda = 1;
+				$pagoExtra->moneda = $request->get('monedaAdelanto');
 				$pagoExtra->voucher = '';
 				$pagoExtra->appointment_id = $appointment->id;
 				$pagoExtra->type = 8;
@@ -327,7 +327,7 @@ class AppointmentController extends Controller
 				$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $paciente_prueba->name;
 				$pagoExtra->price = $request->get('adelanto');
-				$pagoExtra->moneda = 1;
+				$pagoExtra->moneda = $request->get('monedaAdelanto');
 				$pagoExtra->voucher = '';
 				$pagoExtra->appointment_id = $appointment->id;
 				$pagoExtra->type = 8;
