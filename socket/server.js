@@ -4,10 +4,11 @@ import http from 'http';
 import { Server } from 'socket.io';
 import moment from 'moment'
 
+const servidor = process.env.HOME =='/home/karl' ? 'http://127.0.0.1' : 'http://192.168.0.134'; //Servidor: Linux, Windows
 const options = {
 	cors: true,
-	origin: ['http://localhost:3001']
-	//origin: ['http://192.168.0.134:3001']
+	//origin: ['http://localhost:3001']
+	origin: [ servidor+':3001' ]
 	
 }
 
@@ -26,14 +27,16 @@ const io = new Server(server, options);
 
 
 async function busquedaApi (){
-	//const response = await fetch('http://192.168.0.134:8000/api/listarAvisosAhora/'+hoy);
-	const response = await fetch('http://127.0.0.1:8000/api/listarAvisosAhora/'+hoy);
-	const result = await response.json();
-	if(result.avisos.length>=0) {
-		console.log('Mensajes para enviar hay', result.avisos.length, 'a las', moment().format('HH:mm:ss a') );
-		io.emit('update', result.avisos);
-	}
+	try {
+		const response = await fetch(`${servidor}:8000/api/listarAvisosAhora/`+hoy);
+		const result = await response.json();
+		if(result.avisos.length>=0) {
+			console.log('Mensajes para enviar hay', result.avisos.length, 'a las', moment().format('HH:mm:ss a') );
+			io.emit('update', result.avisos);
+		}
 	else console.log('No hay eventos en el bloque de 5 minutos a las', moment().format('HH:mm:ss a'));
+		
+	} catch (error) {}
 }
 
 io.on('connection', (socket) => {
@@ -54,4 +57,3 @@ busquedaApi()
 server.listen(3001, () => {
 	console.log('Servidor escuchando en el puerto 3001 start at:', moment().format('HH:mm a'));
 });
-
