@@ -16,6 +16,7 @@
                 }"
                 >
                 </nav-bar>
+                <!-- Viene profesional-->
                 <div class="container-fluid">
                     <router-view
                     v-if="currentUser.id"
@@ -23,6 +24,7 @@
                     :rolUser="currentUser.rol"
                     :dataUser="datosUsuario" :nombreUser = "currentUser.nombre" >
                     </router-view>
+                    <bWhats></bWhats>
                 </div>
             </div>
         </div>
@@ -36,6 +38,7 @@ import alertify from 'alertifyjs';
 
 import SideBar from './layout/Sidebar.vue'
 import NavBar from './layout/Nav.vue'
+import bWhats from './profesional/components/consultas/grafico/botonWhatsapp.vue'
 
 export default {
     name:'homepage',
@@ -58,7 +61,7 @@ export default {
         professional: Object
     },
     
-    components: { NavBar, SideBar },
+    components: { NavBar, SideBar, bWhats },
 
     methods: {
 			routePathValidation () {

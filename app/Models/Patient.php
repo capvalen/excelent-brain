@@ -12,7 +12,7 @@ class Patient extends Model
     //Relacion uno a uno Patient-Relaive
     public function relative()
     {
-        return $this->hasOne("App\Models\Relative");
+        return $this->hasMany("App\Models\Relative");
     }
     //Relacion uno a uno Patient-Address
     public function address()

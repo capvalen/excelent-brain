@@ -169,9 +169,9 @@ class AppointmentController extends Controller
 			}
 			
 			$relative = Relative::create([
-				'name'=> $request->input('contacto'),
-				'phone'=> $request->input('contacto_celular'),
-				'kinship'=> $request->input('parentezco'),
+				'name'=> $request->input('contacto') ?? '',
+				'phone'=> $request->input('contacto_celular') ?? '',
+				'kinship'=> $request->input('parentezco') ?? '',
 			  'patient_id' => $patient->id
 			]);
 
@@ -209,7 +209,7 @@ class AppointmentController extends Controller
 			]);
 
 			$payment = Payment::create([
-				'observation' => ' ',
+				'observation' => '',
 				'bank' => '',
 				'voucher' => $request->get('comprobante'),
 				'pay_status' => 1,
