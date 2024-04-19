@@ -154,6 +154,7 @@ class AppointmentController extends Controller
 			if($request->get('name') != null){
 				$patient = Patient::create([
 					'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
+					'nombres' => trim(str_replace('  ', ' ' , $request->get('nombres'))),
 					'email'=>$request->get('email'), //?? ''
 					'dni' => $request->get('dni'),
 					'phone' => $request->get('phone'), // ?? ''
@@ -166,8 +167,6 @@ class AppointmentController extends Controller
 					'new_status'=>$request->get('new_status'),
 				]);
 			}
-				
-		  
 			
 			$relative = Relative::create([
 				'name'=> $request->input('contacto'),
@@ -175,6 +174,15 @@ class AppointmentController extends Controller
 				'kinship'=> $request->input('parentezco'),
 			  'patient_id' => $patient->id
 			]);
+
+			if($request->input('contacto2') !=''){
+				Relative::create([
+					'name'=> $request->input('contacto2'),
+					'phone'=> $request->input('contacto_celular2'),
+					'kinship'=> $request->input('parentezco2'),
+					'patient_id' => $patient->id
+				]);
+			}
 
 			$address= Address::create([
 				'address'=> $request->get('address'),
@@ -286,6 +294,7 @@ class AppointmentController extends Controller
 				'phone' => $request->get('phone') =='null' ? '' : $request->get('phone'),
 				'email'=>$request->get('email'),
 				'name'=> trim(str_replace('  ', ' ' , $request->get('name'))),
+				'nombres'=> trim(str_replace('  ', ' ' , $request->get('nombres'))),
 				'instruction_degree'=> $request->get('instruction_degree') ?? 6,
 				'gender'=> $request->get('gender') ?? 2,
 				'birth_date'=> $request->input('birth_date') =='null' ? null: $request->input('birth_date'),
@@ -310,6 +319,17 @@ class AppointmentController extends Controller
 				'phone'=> $request->input('phone') =='null' ? null: $request->input('contacto_celular'),
 				'kinship'=> $request->input('kinship') =='null' ? null: $request->input('parentezco')
 			]);
+
+			if($request->input('contacto2') !=''){
+
+				Relative::where('patient_id',$paciente_prueba->id)
+				->update([
+					'name'=>  $request->input('contacto2'),
+					'phone'=> $request->input('contacto_celular2'),
+					'kinship'=> $request->input('parentezco2')
+				]);
+
+			}
 			/* $parentezco->name = $request->get('contacto') !=='' ? $request->get('contacto') : null;
 			$parentezco->phone = $request->get('contacto_celular') !=='' ? $request->get('contacto_celular') : null;
 			$parentezco->kinship = $request->get('parentezco') !=='' ? $request->get('parentezco') : null;

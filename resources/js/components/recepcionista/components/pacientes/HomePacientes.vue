@@ -34,7 +34,7 @@
         <tr
         v-for="(paciente, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
-          <td class="text-capitalize" @click="dataProps(paciente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer"><span v-if="paciente.vivo==0"><i class="fas fa-cross"></i></span>  {{ paciente.name ? lowerCase(paciente.name) : 'Sin nombre' }}</td>
+          <td class="text-capitalize" @click="dataProps(paciente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer"><span v-if="paciente.vivo==0"><i class="fas fa-cross"></i></span>  {{ paciente.name ? lowerCase(paciente.name) : 'Sin nombre' }} {{ lowerCase(paciente.nombres) }}</td>
 					<td>
 						<button v-if="paciente.vivo==1"  class="btn btn-outline-primary btn-circle btn-md" title="Panel de Hobbies" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" @click="misHobbies=JSON.parse(paciente.hobbies); queId = paciente.id; this.$emit('cargarHobbies')">
 							<i class="fa-solid fa-baseball-bat-ball"></i>

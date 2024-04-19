@@ -51,7 +51,7 @@
 									<td v-else></td>
 									<td class="puntero" v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#patientModal" @click="asignar(horasMalas[hora.indexOcupado]); modalInfo(horasMalas[hora.indexOcupado]);">
 										<span class="badge rounded-5 p-2 bg-danger" v-if="faltanDatos(horasMalas[hora.indexOcupado].patient)" title="Faltan datos"><i class="fas fa-brain"></i></span>
-										<span class="text-capitalize" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} </span>
+										<span class="text-capitalize" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} {{ (horasMalas[hora.indexOcupado].patient.nombres).toLowerCase() }}</span>
 									</td>
 									<td v-else>
 										<button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalNuevaCita" @click="prepararAutomaticos(index, indice)" v-if="hora.libre=='1'"><i class="fa-regular fa-circle-check"></i> Libre para citar</button>

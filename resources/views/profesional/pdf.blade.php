@@ -48,7 +48,7 @@
 				<div class="body__paciente">
 					<div class="paciente__name">
 						<span class="paciente__title">Paciente:</span>
-						<small class="font-size-small text-capitalize">{{$receta[0]->patient->name}} </small>
+						<small class="font-size-small text-capitalize">{{$receta[0]->patient->name}} {{$receta[0]->patient->nombres}} </small>
 						<span class="paciente__title">DNI:</span>
 						<small class="font-size-small">{{$receta[0]->patient->dni}} </small>
 						<span class="paciente__title">Edad:</span>

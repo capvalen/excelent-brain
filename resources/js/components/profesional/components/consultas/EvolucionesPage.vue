@@ -42,7 +42,7 @@
 					<!-- Card Body -->
 					<div class="card-body">
 						<div class="historia-info">
-							<p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta ? lowerCase(datosConsulta.name) : '...' }}</p>
+							<p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta ? lowerCase(datosConsulta.name) +' '+lowerCase(datosConsulta.nombres) : '...' }}</p>
 							<p><b>DNI:</b> {{ datosConsulta ? datosConsulta.dni : '...' }}</p>
 							<p><b>Número de celular:</b> {{ datosConsulta.phone ? datosConsulta.phone : '...' }}</p>
 							<p><b>Correo electrónico:</b> {{ datosConsulta.email ? datosConsulta.email : '...' }}</p>

@@ -1,0 +1,1 @@
+ALTER TABLE `patients` ADD `nombres` VARCHAR(250) NULL DEFAULT '' AFTER `name`;

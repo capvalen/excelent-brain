@@ -20,7 +20,7 @@
                         <span class="text-warning" v-else-if="dataConsult.status ==4">Reprogramado</span>
                       </div>
                       <router-link class="mb-0 text-capitalize text-secondary" :to="`/profesional/evoluciones/${dataConsult.patient ? dataConsult.patient.id : null}`">
-												{{dataConsult.patient.name.toLowerCase()}}
+												{{dataConsult.patient.name.toLowerCase()}} {{dataConsult.patient.nombres.toLowerCase()}}
 											</router-link>
                       
                       <p class="mb-0" :class="{ 'text-decoration-through': dataConsult.status == 3 }">{{ dataConsult.schedule ? horaHumanaMin(dataConsult.schedule.check_time) : '- : ' }} - {{ dataConsult.schedule ? horaHumanaMin(dataConsult.schedule.departure_date) : '' }} </p>

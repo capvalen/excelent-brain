@@ -31,7 +31,7 @@
 						<tr v-for="(persona, index) in busqueda">
 							<td>{{index+1}}</td>
 							<td>{{persona.id}} </td>
-							<td>{{persona.name}} </td>
+							<td>{{persona.name}} {{persona.nombres}} </td>
 							<td> <a :href="'/api/pdfEvolution/thorough/'+persona.id" target="_blank"><i class="fas fa-file"></i> Ver</a> </td>
 							<td>{{calcularEdad(persona.birth_date)}}</td>
 							<td class="puntero" @click="cambiarMuerte(persona)">

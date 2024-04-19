@@ -35,7 +35,7 @@
         :key = "index"
         >
           <th>{{ index+1 }}</th>
-          <td class="text-capitalize" ><span v-if="patients.vivo==0"><i class="fas fa-cross"></i></span> {{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }}</td>
+          <td class="text-capitalize" ><span v-if="patients.vivo==0"><i class="fas fa-cross"></i></span> {{ patients.name ? lowerCase(patients.name) : 'Sin nombre' }} {{ lowerCase(patients.nombres) }}</td>
 					<td>
 						<button v-if="patients.vivo==1"  class="btn btn-outline-primary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerHobbies" @click="misHobbies=JSON.parse(patients.hobbies); queId = patients.id">
 							<i class="fa-solid fa-baseball-bat-ball"></i>
