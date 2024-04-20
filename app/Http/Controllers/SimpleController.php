@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Medical_comment;
 use App\Models\Patient;
+use App\Models\Nutricion;
 use Illuminate\Support\Facades\DB;
 use App\Models\Payment_method;
 use Illuminate\Http\Request;
@@ -86,5 +87,27 @@ class SimpleController extends Controller
 			return json_encode( array('apellido_paterno' => $persona['apellidoPaterno'], 'apellido_materno' => $persona['apellidoMaterno'], 'nombres' => $persona['nombres']) );
 		else
 			return array();
+	}
+
+	public function crearNutricionPrimera(Request $request){
+		$nutricion = new Nutricion;
+		$nutricion -> idPaciente = $request->get('idPaciente');
+		$nutricion -> peso = $request->get('peso');
+		$nutricion -> talla = $request->get('talla');
+		$nutricion -> imc = $request->get('imc');
+		$nutricion -> perimetro = $request->get('perimetro');
+		$nutricion -> grasa = $request->get('grasa');
+		$nutricion -> comidas = $request->get('comidas');
+		$nutricion -> intolerancia = $request->get('intolerancia');
+		$nutricion -> alergias = $request->get('alergias');
+		$nutricion -> fuma = $request->get('fuma');
+		$nutricion -> bebe = $request->get('bebe');
+		$nutricion -> signos = $request->get('signos');
+		$nutricion -> diagnostico = $request->get('diagnostico');
+		$nutricion -> dieta = $request->get('dieta');
+		$nutricion -> suplemento = $request->get('suplemento');
+		$nutricion->save();
+
+		return json_encode(array('mensaje' => 'Registrado', 'id' => $nutricion->id));
 	}
 }

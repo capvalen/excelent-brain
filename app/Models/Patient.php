@@ -87,4 +87,7 @@ class Patient extends Model
     {
         return $this->hasMany("App\Models\Semaforo");
     }
+    public function nutricion(){
+        return $this->hasOne('App\Models\Nutricion');
+    }
 }

@@ -483,6 +483,9 @@
 			<li class="nav-item" role="presentation">
 				<button class="nav-link" id="linea-tab" data-bs-toggle="tab" data-bs-target="#linea-tab-pane" type="button" role="tab" aria-controls="linea-tab-pane" aria-selected="false"><i class="fas fa-sort-amount-up-alt"></i> Línea de vida</button>
 			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="nutricion-tab" data-bs-toggle="tab" data-bs-target="#nutricion-tab-pane" type="button" role="tab" aria-controls="nutricion-tab-pane" aria-selected="false"><i class="fas fa-apple-alt"></i> Nutrición</button>
+			</li>
 		</ul>
 
 		<div class="tab-content mb-5" id="myTabContent">
@@ -554,10 +557,12 @@
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane fade py-5 px-3 bg-light-subtle border border-top-0" id="linea-tab-pane" role="tabpanel" aria-labelledby="linea-tab" tabindex="0">
-				
+			<div class="tab-pane fade py-5 px-3 bg-light-subtle border border-top-0" id="linea-tab-pane" role="tabpanel" aria-labelledby="linea-tab" tabindex="0">				
 				<button class="btn btn-outline-success" data-bs-target="#nuevoAcontecimiento" data-bs-toggle="modal"><i class="far fa-comment-alt"></i> Agregar nuevo acontecimiento</button>
-				<lineaTiempo :id="$route.params.idPaciente" @ordenarLineas="ordenarLineas" ></lineaTiempo>				
+				<lineaTiempo :id="$route.params.idPaciente" @ordenarLineas="ordenarLineas" ></lineaTiempo>
+			</div>
+			<div class="tab-pane fade py-5 px-3 bg-light-subtle border border-top-0" id="nutricion-tab-pane" role="tabpanel" aria-labelledby="nutricion-tab" tabindex="0">
+				<nutricionHome :dataCies="dataCies" :id="$route.params.idPaciente" ></nutricionHome>
 			</div>
 			
 		</div>
@@ -660,11 +665,12 @@ import ModalNuevoAcontecimiento from './ModalNuevoAcontecimiento.vue'
 import lineaTiempo from './grafico/lineaTiempo.vue'
 import EvolutionModal from './EvolucionModal.vue'
 import modalNuevoSeguimiento from './ModalNuevoSeguimiento.vue'
+import nutricionHome from '../nutricion/HomeNutricion.vue'
 
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo, EvolutionModal, modalNuevoSeguimiento },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo, EvolutionModal, modalNuevoSeguimiento, nutricionHome },
 
 	data() {
 		return {
