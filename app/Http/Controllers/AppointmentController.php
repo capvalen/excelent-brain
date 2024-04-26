@@ -669,7 +669,7 @@ class AppointmentController extends Controller
 		if($request->input('caso.pago') == '2'){ // Modo pagado
 			
 				$pagoExtra = new Extra_payment;
-				$pagoExtra->customer = $request->input('dataCita.patient.name');
+				$pagoExtra->customer = $request->input('dataCita.patient.name') .' ' . $request->input('dataCita.patient.nombres');
 				$pagoExtra->price = $request->input('dataCita.payment.price');
 				$pagoExtra->moneda = $request->input('caso.moneda');
 				$pagoExtra->voucher = $request->input('caso.comprobante');

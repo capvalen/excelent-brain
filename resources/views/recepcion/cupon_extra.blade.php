@@ -11,7 +11,7 @@
 <body>
 @php
 	use Carbon\Carbon;
-//    var_dump(); die();	
+//    var_dump($extra_payment); die();	
 @endphp
 	<div class="container">
 		<div class="container-fluid p-0">
