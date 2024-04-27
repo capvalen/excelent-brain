@@ -456,7 +456,7 @@ export default {
 				formData.append('dni', this.cita.dni);
 				formData.append('phone', this.cita.phone);
 				formData.append('name', this.cita.name || 'Sin apellidos' );
-				formData.append('nombres', this.cita.nombres || 'Sin nombres' );
+				formData.append('nombres', this.cita.nombres || '' );
 				formData.append('email',this.cita.email);
 				formData.append('address', this.cita.address);
 				formData.append('department', this.cita.department);
