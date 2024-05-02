@@ -310,7 +310,7 @@ class PatientController extends Controller
 	  $paciente = Patient::where('dni',$dni)->with('address')->first();
 	 
 		if( $paciente ){
-			$relaciones = Relative::where('patient_id', $paciente->id)->first();
+			$relaciones = Relative::where('patient_id', $paciente->id)->get();
 			$deudas = DB::table('deudas')->where('patient_id', $paciente->id )
 			->where('activo', 1)
 			->where('estado', 1)

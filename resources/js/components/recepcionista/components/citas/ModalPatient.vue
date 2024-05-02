@@ -9,7 +9,7 @@
           </button>
         </div>
         <div class="modal-body">
-					<p class="mb-0"><strong>Datos Personales</strong></p>
+					<p class="mb-0"><strong>Datos Personales del paciente</strong></p>
           <form action="">
             <div class="form-group row">
               <div class="col-sm-6">
@@ -20,12 +20,21 @@
                 <label for="name">Celular</label>
                 <input type="text" class="form-control" name="phone" id="phone" v-model="dataCit.patient.phone" placeholder="Celular del paciente">
               </div>          
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="name"> Apellidos</label>
+                  <input type="text" class="form-control"  name="name" id="name" v-model="dataCit.patient.name" placeholder="Nombre del paciente">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="name">Nombres </label>
+                  <input type="text" class="form-control"  name="name" id="name" v-model="dataCit.patient.nombres" placeholder="Nombre del paciente">
+                </div>
+                
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="name">Nombres y Apellidos del paciente</label>
-              <input type="text" class="form-control"  name="name" id="name" v-model="dataCit.patient.name" placeholder="Nombre del paciente">
-            </div>
 
             <div class="form-group row">     
               <div class="col-sm-6 ">
@@ -174,6 +183,7 @@
 
     methods:{
       async updateDataPatient(){
+        this.dataPatient.email = this.dataPatient.email =='null' ?? ''
         await this.axios.put(`/api/patient/${this.dataPatient.patient.id}`, this.dataPatient.patient)
         .then(res => { //console.log(res.data);
           this.closeModal()

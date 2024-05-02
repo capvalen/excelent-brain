@@ -651,12 +651,12 @@ export default {
 					this.cita.province = res.data.patient.address.province;
 					this.cita.district = res.data.patient.address.district;
 					this.cita.vivo = res.data.patient.vivo;
-					this.cita.contacto = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
-					this.cita.contacto_celular = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
-					this.cita.parentezco = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
-					this.cita.contacto2 = res.data.relacion.name2 =='null' ? '' : res.data.relacion.name2;
-					this.cita.contacto_celular2 = res.data.relacion.phone2 =='null' ? '' : res.data.relacion.phone2;
-					this.cita.parentezco2 = res.data.relacion.kinship2 =='null' ? '' : res.data.relacion.kinship2;
+					this.cita.contacto = res.data.relacion[0].name ?? '' ;
+					this.cita.contacto_celular = res.data.relacion[0].phone ?? '' 
+					this.cita.parentezco = res.data.relacion[0].kinship ?? ''
+					this.cita.contacto2 = res.data.relacion[1].name ?? ''
+					this.cita.contacto_celular2 = res.data.relacion[1].phone ?? '' 
+					this.cita.parentezco2 = res.data.relacion[1].kinship ?? '' 
 					this.cita.etiqueta = res.data.patient.etiqueta;
 					this.cita.deudas = res.data.patient.deudas;
 					this.cita.prev_status = res.data.patient.new_status;

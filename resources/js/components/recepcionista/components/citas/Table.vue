@@ -65,7 +65,7 @@
 								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal">
 									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
 									<!-- <i class="fas fa-brain"></i> -->
-									<span> {{index+1}}.</span> <span>{{ qCita.patient ? lowerCase(qCita.patient.name) : '..' }}</span>
+									<span> {{index+1}}.</span> <span>{{ qCita.patient.name }} {{ qCita.patient.nombres }}</span>
 								</td>
 								<td class="text-capitalize" :title="qCita.professional ? qCita.professional.name : '...'">{{ qCita.professional ? maxStringCharacter(lowerCase(qCita.professional.name), 15) : '...' }}</td>
 								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-bs-toggle="modal" data-bs-target="#infoModal">{{ qCita.date ? fechaLatam(qCita.date) : '...' }}</td>

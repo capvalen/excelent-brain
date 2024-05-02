@@ -153,11 +153,11 @@ class AppointmentController extends Controller
 
 			if($request->get('name') != null){
 				$patient = Patient::create([
-					'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
-					'nombres' => trim(str_replace('  ', ' ' , $request->get('nombres'))),
-					'email'=>$request->get('email'), //?? ''
+					'name' => strtolower(trim(str_replace('  ', ' ' , $request->get('name')))),
+					'nombres' => strtolower(trim(str_replace('  ', ' ' , $request->get('nombres')))),
+					'email'=>$request->get('email') ?? '',
 					'dni' => $request->get('dni'),
-					'phone' => $request->get('phone'), // ?? ''
+					'phone' => $request->get('phone')?? '',
 					'birth_date'=>$request->get('birth_date'),
 					'occupation'=>$request->get('occupation'),
 					'instruction_degree'=>$request->get('instruction_degree'),
@@ -175,7 +175,7 @@ class AppointmentController extends Controller
 			  'patient_id' => $patient->id
 			]);
 
-			if($request->input('contacto2') !=''){
+			if($request->input('contacto2') ){
 				Relative::create([
 					'name'=> $request->input('contacto2'),
 					'phone'=> $request->input('contacto_celular2'),
@@ -291,10 +291,10 @@ class AppointmentController extends Controller
 			//$paciente_actualizar = Patient::where('id', $paciente_prueba->id)
 			$paciente_actualizar = Patient::find($paciente_prueba->id)
 			->update([
-				'phone' => $request->get('phone') =='null' ? '' : $request->get('phone'),
-				'email'=>$request->get('email'),
-				'name'=> trim(str_replace('  ', ' ' , $request->get('name'))),
-				'nombres'=> trim(str_replace('  ', ' ' , $request->get('nombres'))),
+				'phone' => $request->get('phone') ?? '',
+				'email'=>$request->get('email') ?? '',
+				'name'=> strtolower(trim(str_replace('  ', ' ' , $request->get('name')))),
+				'nombres'=> strtolower(trim(str_replace('  ', ' ' , $request->get('nombres')))),
 				'instruction_degree'=> $request->get('instruction_degree') ?? 6,
 				'gender'=> $request->get('gender') ?? 2,
 				'birth_date'=> $request->input('birth_date') =='null' ? null: $request->input('birth_date'),
@@ -320,15 +320,20 @@ class AppointmentController extends Controller
 				'kinship'=> $request->input('kinship') =='null' ? null: $request->input('parentezco')
 			]);
 
-			if($request->input('contacto2') !=''){
-
+			if($request->input('contacto2') ){
 				Relative::where('patient_id',$paciente_prueba->id)
 				->update([
 					'name'=>  $request->input('contacto2'),
 					'phone'=> $request->input('contacto_celular2'),
 					'kinship'=> $request->input('parentezco2')
 				]);
-
+			}else{
+				Relative::create([
+					'name'=> $request->input('contacto2'),
+					'phone'=> $request->input('contacto_celular2'),
+					'kinship'=> $request->input('parentezco2'),
+					'patient_id' => $patient->id
+				]);
 			}
 			/* $parentezco->name = $request->get('contacto') !=='' ? $request->get('contacto') : null;
 			$parentezco->phone = $request->get('contacto_celular') !=='' ? $request->get('contacto_celular') : null;
@@ -468,7 +473,8 @@ class AppointmentController extends Controller
 		join('patients as p', 'p.id', '=', 'appointments.patient_id')
 		->select('appointments.*', 'appointments.id as idCita') // Agregar la columna raw aquí
 		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
-		->where('p.name', 'like', $nombre.'%')
+		->where(\DB::raw("CONCAT(p.name, ' ', p.nombres)"), 'like', $nombre . '%')
+		->orWhere(\DB::raw("CONCAT(p.nombres, ' ', p.name)"), 'like', $nombre . '%')
 		->orWhere('p.dni', $dni)
 		->orderBy('appointments.date', 'desc')
 		->orderBy('appointments.professional_id')
