@@ -30,7 +30,7 @@
 								<input type="number" class="form-control" v-model="nutricion.imc">
 							</div>
 							<div class="col">
-								<label for="">Perímetro pabdominal</label>
+								<label for="">Perímetro </label>
 								<input type="number" class="form-control" v-model="nutricion.perimetro">
 							</div>
 						</div>
