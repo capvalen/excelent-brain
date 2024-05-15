@@ -153,8 +153,8 @@ class AppointmentController extends Controller
 
 			if($request->get('name') != null){
 				$patient = Patient::create([
-					'name' => strtolower(trim(str_replace('  ', ' ' , $request->get('name')))),
-					'nombres' => strtolower(trim(str_replace('  ', ' ' , $request->get('nombres')))),
+					'name' => trim(str_replace('  ', ' ' , $request->get('name'))),
+					'nombres' => trim(str_replace('  ', ' ' , $request->get('nombres'))),
 					'email'=>$request->get('email') ?? '',
 					'dni' => $request->get('dni'),
 					'phone' => $request->get('phone')?? '',
@@ -227,7 +227,7 @@ class AppointmentController extends Controller
 
 			if( $request->get('adelanto') > 0 ){
 				$pagoExtra = new Extra_payment;
-				$pagoExtra->customer = $patient->name;
+				$pagoExtra->customer = $patient->name .' '.$patient->nombres;
 				$pagoExtra->price = $request->get('adelanto');
 				$pagoExtra->moneda = $request->get('monedaAdelanto');
 				$pagoExtra->voucher = '';
@@ -293,8 +293,8 @@ class AppointmentController extends Controller
 			->update([
 				'phone' => $request->get('phone') ?? '',
 				'email'=>$request->get('email') ?? '',
-				'name'=> strtolower(trim(str_replace('  ', ' ' , $request->get('name')))),
-				'nombres'=> strtolower(trim(str_replace('  ', ' ' , $request->get('nombres')))),
+				'name'=> trim(str_replace('  ', ' ' , $request->get('name'))),
+				'nombres'=> trim(str_replace('  ', ' ' , $request->get('nombres'))),
 				'instruction_degree'=> $request->get('instruction_degree') ?? 6,
 				'gender'=> $request->get('gender') ?? 2,
 				'birth_date'=> $request->input('birth_date') =='null' ? null: $request->input('birth_date'),
@@ -332,7 +332,7 @@ class AppointmentController extends Controller
 					'name'=> $request->input('contacto2'),
 					'phone'=> $request->input('contacto_celular2'),
 					'kinship'=> $request->input('parentezco2'),
-					'patient_id' => $patient->id
+					'patient_id' => $paciente_prueba->id
 				]);
 			}
 			/* $parentezco->name = $request->get('contacto') !=='' ? $request->get('contacto') : null;
@@ -350,7 +350,7 @@ class AppointmentController extends Controller
 
 			if( $request->get('adelanto') > 0 ){
 				$pagoExtra = new Extra_payment;
-				$pagoExtra->customer = $paciente_prueba->name;
+				$pagoExtra->customer = trim($paciente_prueba->name . ' '. $paciente_prueba->nombres);
 				$pagoExtra->price = $request->get('adelanto');
 				$pagoExtra->moneda = $request->get('monedaAdelanto');
 				$pagoExtra->voucher = '';
@@ -473,8 +473,8 @@ class AppointmentController extends Controller
 		join('patients as p', 'p.id', '=', 'appointments.patient_id')
 		->select('appointments.*', 'appointments.id as idCita') // Agregar la columna raw aquí
 		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
-		->where(\DB::raw("CONCAT(p.name, ' ', p.nombres)"), 'like', $nombre . '%')
-		->orWhere(\DB::raw("CONCAT(p.nombres, ' ', p.name)"), 'like', $nombre . '%')
+		->where(DB::raw("CONCAT(p.name, ' ', p.nombres)"), 'like', '%'. $nombre . '%')
+		->orWhere(DB::raw("CONCAT(p.nombres, ' ', p.name)"), 'like', $nombre . '%')
 		->orWhere('p.dni', $dni)
 		->orderBy('appointments.date', 'desc')
 		->orderBy('appointments.professional_id')

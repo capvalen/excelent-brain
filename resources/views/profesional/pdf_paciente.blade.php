@@ -147,7 +147,7 @@
           <p class="title-h2 text-center">Paciente</p>
           <p>
             <span class="title-h5">Nombre: </span>
-            <span>{{ $historia->name }}</span>
+            <span>{{ strtoupper($historia->name) }}</span>
           </p>
 
           <p>

@@ -62,7 +62,7 @@
 						<tbody>
 							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
 								<td class="d-none">{{qCita.id}}</td>
-								<td class="text-capitalize puntero" :title="qCita.patient ? qCita.patient.name : '...'" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal">
+								<td class="text-uppercase puntero" :title="qCita.patient ? qCita.patient.name +' ' + qCita.patient.nombres : '...'" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal">
 									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
 									<!-- <i class="fas fa-brain"></i> -->
 									<span> {{index+1}}.</span> <span>{{ qCita.patient.name }} {{ qCita.patient.nombres }}</span>
@@ -154,7 +154,7 @@
 
 											<!-- Cita virtual - con link -->
 											<a 
-											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name : ''}, 
+											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name + '' + qCita.patient.nombres : ''}, 
 											le recordamos que tiene reservada una cita online el día de hoy a las 
 											${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, 
 											le dejo el enlace de la cita ${qCita.link}`"
@@ -168,7 +168,7 @@
 
 											<!-- Cita presencial -->
 											<a 
-											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
+											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name +' '+qCita.patient.nombres : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
 											target="_blank" 
 											title="Enviar mensaje" 
 											class="btn btn-info btn-circle btn-sm"
@@ -177,7 +177,7 @@
 											<i class="fab fa-whatsapp"></i>
 											</a>
 											<a 
-											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
+											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name +' '+qCita.patient.nombres : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
 											target="_blank" 
 											title="Enviar mensaje" 
 											class="btn btn-primary btn-circle btn-sm"

@@ -40,11 +40,11 @@
 								</div>
 								<div class="col-4">
 									<label for="name">Apellidos <span class="text-danger">*</span></label>
-									<input  type="text" class="form-control" id="name" v-model="cita.name" placeholder="" autocomplete="off">
+									<input  type="text" class="form-control text-uppercase" id="name" v-model="cita.name" placeholder="" autocomplete="off">
 								</div>
 								<div class="col-4">
 									<label for="name">Nombres <span class="text-danger">*</span></label>
-									<input  type="text" class="form-control" id="name" v-model="cita.nombres" placeholder="" autocomplete="off">
+									<input  type="text" class="form-control text-uppercase" id="name" v-model="cita.nombres" placeholder="" autocomplete="off">
 								</div>
 							</div>
 		
@@ -455,8 +455,8 @@ export default {
 				let formData = new FormData();
 				formData.append('dni', this.cita.dni);
 				formData.append('phone', this.cita.phone);
-				formData.append('name', this.cita.name || 'Sin apellidos' );
-				formData.append('nombres', this.cita.nombres || '' );
+				formData.append('name', this.cita.name.toUpperCase() || 'Sin apellidos' );
+				formData.append('nombres', this.cita.nombres.toUpperCase() || '' );
 				formData.append('email',this.cita.email);
 				formData.append('address', this.cita.address);
 				formData.append('department', this.cita.department);

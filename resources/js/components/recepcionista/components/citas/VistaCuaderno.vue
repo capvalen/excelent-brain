@@ -51,7 +51,7 @@
 									<td v-else></td>
 									<td class="puntero" v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#patientModal" @click="asignar(horasMalas[hora.indexOcupado]); modalInfo(horasMalas[hora.indexOcupado]);">
 										<span class="badge rounded-5 p-2 bg-danger" v-if="faltanDatos(horasMalas[hora.indexOcupado].patient)" title="Faltan datos"><i class="fas fa-brain"></i></span>
-										<span class="text-capitalize" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} {{ horasMalas[hora.indexOcupado].patient.nombres }}</span>
+										<span class="text-uppercase" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} {{ horasMalas[hora.indexOcupado].patient.nombres }}</span>
 									</td>
 									<td v-else>
 										<button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalNuevaCita" @click="prepararAutomaticos(index, indice)" v-if="hora.libre=='1'"><i class="fa-regular fa-circle-check"></i> Libre para citar</button>
@@ -119,7 +119,7 @@
 
 										<!-- Cita virtual - con link -->
 										<a 
-										:href="`whatsapp://send?phone=51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone : ''}&text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name : ''}, 
+										:href="`whatsapp://send?phone=51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone : ''}&text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, 
 										le recordamos que tiene reservada una cita online el día de hoy a las 
 										${horasMalas[hora.indexOcupado].schedule ? horaLatam2(horasMalas[hora.indexOcupado].schedule.check_time) : ''}, 
 										le dejo el enlace de la cita ${horasMalas[hora.indexOcupado].link}`"
@@ -133,7 +133,7 @@
 
 										<!-- Cita presencial -->
 										<a 
-										:href="`whatsapp://send?phone=51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone : ''}&text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${horasMalas[hora.indexOcupado].schedule ? horaLatam2(horasMalas[hora.indexOcupado].schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
+										:href="`whatsapp://send?phone=51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone : ''}&text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${horasMalas[hora.indexOcupado].schedule ? horaLatam2(horasMalas[hora.indexOcupado].schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
 										target="_blank" 
 										title="Enviar mensaje" 
 										class="btn btn-info btn-circle btn-sm"
@@ -142,7 +142,7 @@
 										<i class="fab fa-whatsapp"></i>
 										</a>
 										<a 
-										:href="`whatsapp://send?phone=51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone : ''}&text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
+										:href="`whatsapp://send?phone=51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone : ''}&text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, esperamos se encuentre bien, le enviamos la encuesta de satisfacción de su cita en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE, con ello nos ayudara a seguir mejorando en nuestra atención, gracias por su tiempo. 😊 https://forms.gle/VbnwkK85sXyoiVN5A`"
 										target="_blank" 
 										title="Enviar mensaje" 
 										class="btn btn-primary btn-circle btn-sm"

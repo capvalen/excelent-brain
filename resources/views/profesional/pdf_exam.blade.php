@@ -302,7 +302,7 @@
                     <div class="body__paciente">
                         <div class="paciente__name">
                             <span class="paciente__title">Paciente:</span>
-                            <small class="font-size-small">{{ $data->patient->name }} </small>
+                            <small class="font-size-small">{{ $data->patient->name }} {{ $data->patient->nombres }} </small>
                             
                             <span class="paciente__title">Diagnóstico:</span>
                             @foreach ($data->patient->cies as $cie)
