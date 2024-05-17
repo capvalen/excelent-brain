@@ -261,3 +261,4 @@ Route::post('/pedirResultadosExamen', [SimpleController::class, 'pedirResultados
 Route::get('/buscarDni/{dni}', [SimpleController::class, 'buscarDni']);
 
 Route::post('/crearNutricionPrimera', [SimpleController::class, 'crearNutricionPrimera']);
+Route::post('/listarNutriciones', [SimpleController::class, 'listarNutriciones']);

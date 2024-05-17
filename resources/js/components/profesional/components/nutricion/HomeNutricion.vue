@@ -1,7 +1,18 @@
 <template>
 	<div>
 		<h3>Nutrición</h3>
-		<button class="btn btn-outline-primary" data-bs-target="#nuevoHistorialNutricion" data-bs-toggle="modal"><i class="far fa-comment-alt"></i> Iniciar Historial Nutricional</button>
+		<button class="btn btn-outline-primary" data-bs-target="#nuevoHistorialNutricion" data-bs-toggle="modal"><i class="far fa-comment-alt"></i> Agregar historia nutricional</button>
+
+		<div class="row row-cols-4 my-2">
+			<div class="col" v-for="(nutrition, index) in nutriciones">
+				<div class="card" >
+					<div class="card-body">
+						Sesión tomada el {{ fechaLatam(nutrition.creado) }}
+						<button class="btn btn-sm btn-outline-secondary" @click="verDetalleNutricion(index)">Ver detalles</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 		<!-- Modal de examenes -->
@@ -91,8 +102,6 @@
 						<textarea rows="3" class="form-control" v-model="nutricion.suplemento"></textarea>
 
 						<button class="btn btn-outline-primary mt-2" @click="guardar()" data-bs-dismiss="modal"><i class="far fa-save"></i> Crear plan inicial</button>
-
-
 					</div>
 				</div>
 			</div>
@@ -102,20 +111,34 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default{
 	name: 'Nutricion',
 	props:['dataCies'],
 	data(){ return {
 		nutricion:{
 			idPaciente:null, peso:0, talla:0, imc:0, perimetro:0, grasa:0, comidas:1, intolerancia:0, alergias:0, fuma:0, bebe:0, signos:'', diagnostico:'', dieta:'', suplemento:''
-		}
+		}, nutriciones:[]
 	}},
+	mounted(){
+		this.nutricion.idPaciente = this.$route.params.idPaciente
+		this.cargarDatos()
+	},
 	methods: {
 		guardar(){
-			this.nutricion.idPaciente = this.$route.params.idPaciente
 			this.axios.post(`/api/crearNutricionPrimera`, this.nutricion)
 			.then(resp => console.log(resp.data) )
-		}
+		},
+		cargarDatos(){
+			this.axios.post('/api/listarNutriciones', {idPaciente: this.nutricion.idPaciente })
+			.then(resp => {
+				this.nutriciones = resp.data
+				console.log('datas', resp.data);
+			})
+		},
+		fechaLatam(fecha) {
+			return fecha ? moment(fecha).format('DD/MM/YYYY [a las] h:mm a') : 'Sin registro';
+		},
 	},
 }
 </script>

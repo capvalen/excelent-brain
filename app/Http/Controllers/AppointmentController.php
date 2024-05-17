@@ -669,6 +669,7 @@ class AppointmentController extends Controller
 			'motivoRebaja' => $request->input('caso.motivoRebaja'), */
 			'descuento' => $request->input('caso.rebaja'),
 			'motivoDescuento' => $request->input('caso.motivoDescuento'),
+			'payment_method'=> $request->input('caso.moneda')
 		]);
 
 		
@@ -732,11 +733,7 @@ class AppointmentController extends Controller
 			->update([
 				'activo' => 0
 			]);
-			
 		}
-
-
-		
 
 		if ($request->reschedule) {
 			$reschedule = Reschedule::create([
@@ -745,11 +742,9 @@ class AppointmentController extends Controller
 			]);
 		}
 		if($request->get('status') == 2){
-			
 		}
 
 		return response()->json(['mensaje' => 'se actualizó la cita']);
-	
 	}
 
 	public function reprogramado(Request $request, Appointment $appointment)

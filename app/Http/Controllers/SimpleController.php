@@ -110,4 +110,11 @@ class SimpleController extends Controller
 
 		return json_encode(array('mensaje' => 'Registrado', 'id' => $nutricion->id));
 	}
+
+	public function listarNutriciones(Request $request){
+		$nutriciones = Nutricion::where('idPaciente', $request->get('idPaciente'))
+		->where('activo', 1)
+		->get();
+		return $nutriciones;
+	}
 }

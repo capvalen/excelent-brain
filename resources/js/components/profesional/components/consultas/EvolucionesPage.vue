@@ -559,7 +559,7 @@
 			</div>
 			<div class="tab-pane fade py-5 px-3 bg-light-subtle border border-top-0" id="linea-tab-pane" role="tabpanel" aria-labelledby="linea-tab" tabindex="0">				
 				<button class="btn btn-outline-success" data-bs-target="#nuevoAcontecimiento" data-bs-toggle="modal"><i class="far fa-comment-alt"></i> Agregar nuevo acontecimiento</button>
-				<lineaTiempo :id="$route.params.idPaciente" @ordenarLineas="ordenarLineas" ></lineaTiempo>
+				<lineaTiempo :id="$route.params.idPaciente"  ></lineaTiempo> <!-- @ordenarLineas="ordenarLineas" -->
 			</div>
 			<div class="tab-pane fade py-5 px-3 bg-light-subtle border border-top-0" id="nutricion-tab-pane" role="tabpanel" aria-labelledby="nutricion-tab" tabindex="0">
 				<nutricionHome :dataCies="dataCies" :id="$route.params.idPaciente" ></nutricionHome>
