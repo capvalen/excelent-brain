@@ -280,7 +280,7 @@
         <div class="pdf">
             <div class="pdf-content">
                 <div class="header__content">
-                    <img src="https://excelentemente.org/consultorio-online/libs/logo.png" alt="Excelentemente" class="header-logo">
+                    <img src="{{public_path('img/logo-reporte.png')}}" alt="Excelentemente" class="header-logo">
     
                     <div class="header" style="margin-top: 3rem;">
                         <p class="header__name">WILBERT BARZOLA HUAMAN</p>
@@ -296,7 +296,7 @@
                     <br>
                 </div>
 
-                <img src="https://excelentemente.org/consultorio-online/libs/logo.png" alt="Excelentemente" class="logotipo">
+                <img src="{{public_path('img/logo-reporte.png')}}" alt="Excelentemente" class="logotipo">
 
                 <div class="pdf__body">
                     <div class="body__paciente">
@@ -393,7 +393,7 @@
                         </div>
 
                         <div class="footer__firma">
-                            <img src="https://excelentemente.org/consultorio-online/libs/firmadoc3.jpeg" alt="Facebook" class="img-firma">
+                            <img src="{{public_path('img/firmadoc3.png')}}" alt="Facebook" class="img-firma">
                             {{-- <img src="https://icones.pro/wp-content/uploads/2021/02/facebook-icones.png" alt="Facebook" class="img-firma"> --}}
                         </div>
                     </div>
