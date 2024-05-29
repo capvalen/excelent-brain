@@ -1253,6 +1253,7 @@ class AppointmentController extends Controller
 		$membresia = DB::table('membresias as m')
 		->join('patients as p', 'p.id', '=', 'm.patient_id')
 		->where('m.id', $id)
+		->select('m.id as idMembresia', 'm.*', 'p.*')
 		->first();
 		//return  compact('membresia', 'monto' ); die();
 		$pdf = PDF::loadView('recepcion.cupon_membresia', compact('membresia', 'monto' )); //, 'monto'

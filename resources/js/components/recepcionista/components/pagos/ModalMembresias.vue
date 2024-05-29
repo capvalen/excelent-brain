@@ -19,7 +19,7 @@
 									@click="cambiarVista('membresia', index)">
 									<div class="d-flex w-100 justify-content-between ">
 										<div class="fw-bold text-capitalize">
-											<span>{{ paciente.name.toLowerCase() }} <span
+											<span>{{ paciente.name }} {{ paciente.nombres }} <span
 													class="badge text-bg-secondary">{{ paciente.etiqueta }}</span></span>
 										</div>
 										<button class="btn btn-sm" title="Agregar Membresía"><i class="fa-solid fa-angles-right"></i></button>

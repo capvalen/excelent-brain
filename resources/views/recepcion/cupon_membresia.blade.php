@@ -27,6 +27,7 @@
             </div>
             <div class="body">
 						<h2>TICKET INTERNO</h2>
+						<h2>M-00{{$membresia->idMembresia}}</h2>
 							
 							
                     <div class="main-data">
@@ -35,7 +36,7 @@
 												$fecha = Carbon::now(); echo $fecha->format('d/m/Y');
 												@endphp</span>
 											</p>
-											<p class="name">CLIENTE: {{$membresia->name}}</p>
+											<p class="name">CLIENTE: {{$membresia->name}} {{$membresia->nombres}}</p>
 											<p>USUARIO: -</p>
                     </div>
                     <table style="padding: 0px 15px 0px 15px; margin-top:10px;">
