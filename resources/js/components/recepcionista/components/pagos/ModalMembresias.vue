@@ -35,7 +35,7 @@
 					</section>
 					<section v-show="vista == 'membresia'">
 						<p><a href="#!" @click="cambiarVista('buscar', -1)"><i class="fa-solid fa-angles-left"></i> Volver</a></p>
-						<p class="mb-0 text-capitalize"><strong>Paciente</strong> {{ pacienteElegido.name }}</p>
+						<p class="mb-0 text-capitalize"><strong>Paciente</strong> {{ pacienteElegido.name }} {{ pacienteElegido.nombres }}</p>
 						<p class="mb-0"><strong>D.N.I</strong> {{ pacienteElegido.dni }}</p>
 						<p class="mb-0"><strong>Celular</strong> {{ pacienteElegido.phone }}</p>
 						<p class="mb-0"><strong>Última atención</strong> {{ pacienteElegido.etiqueta == '' ? 'Sin registro' :
@@ -288,7 +288,7 @@ export default {
 
 				let datos = new FormData();
 				datos.append('idPaciente', this.pacienteElegido.id)
-				datos.append('customer', this.pacienteElegido.name)
+				datos.append('customer', this.pacienteElegido.name, ' ', this.pacienteElegido.nombres)
 				datos.append('motivo', this.pacienteElegido.id)
 				datos.append('membresia', JSON.stringify(this.membresia))
 				datos.append('user_id', this.idUsuario)

@@ -27,9 +27,7 @@
             </div>
             <div class="body">
 						<h2>TICKET INTERNO</h2>
-						<h2>M-00{{$membresia->idMembresia}}</h2>
-							
-							
+						<h2>E002-{{$pago->id}}</h2>
                     <div class="main-data">
 											<p>FECHA:  
 												<span>@php

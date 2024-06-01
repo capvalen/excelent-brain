@@ -46,7 +46,7 @@
 					</td>
 					<td v-else></td>
 					<td>
-						<button v-if="paciente.vivo==1" class="btn btn-outline-primary btn-circle"  data-bs-toggle="offcanvas" data-bs-target="#offVerMembresias" @click="queId = paciente.id; nombrePaciente= paciente.name"><i class="far fa-star"></i></button>
+						<button v-if="paciente.vivo==1" class="btn btn-outline-primary btn-circle"  data-bs-toggle="offcanvas" data-bs-target="#offVerMembresias" @click="queId = paciente.id; nombrePaciente= paciente.name+ ', ' + paciente.nombres"><i class="far fa-star"></i></button>
 					</td>
 					<td v-if="paciente.vivo==1" >
 						<div v-if="paciente.semaforo[0]">

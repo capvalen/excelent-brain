@@ -1255,8 +1255,11 @@ class AppointmentController extends Controller
 		->where('m.id', $id)
 		->select('m.id as idMembresia', 'm.*', 'p.*')
 		->first();
+
+		$pago = Extra_payment::where('idMembresia', $id)
+		->where('price', $monto)->first();
 		//return  compact('membresia', 'monto' ); die();
-		$pdf = PDF::loadView('recepcion.cupon_membresia', compact('membresia', 'monto' )); //, 'monto'
+		$pdf = PDF::loadView('recepcion.cupon_membresia', compact('membresia', 'monto', 'pago' )); //, 'monto'
 		
 
 		$pdf->setPaper('a7');
