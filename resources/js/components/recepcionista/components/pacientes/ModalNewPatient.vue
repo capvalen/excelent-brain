@@ -23,12 +23,16 @@
                 <label for="name">Celular</label>
                 <input type="text" class="form-control" name="phone" id="phone" v-model="paciente.phone" placeholder="Celular del paciente">
               </div>          
+							<div class="col-sm-6">
+								<label for="name">Apellidos</label>
+								<input type="text" class="form-control"  name="name" id="name" v-model="paciente.name" placeholder="Apellidos">
+							</div>
+							<div class="col-sm-6">
+								<label for="name">Nombres</label>
+								<input type="text" class="form-control"  name="nombres" id="nombres" v-model="paciente.nombres" placeholder="Nombres">
+							</div>
             </div>
 
-            <div class="form-group">
-              <label for="name">Paciente</label>
-              <input type="text" class="form-control"  name="name" id="name" v-model="paciente.name" placeholder="Nombre del paciente">
-            </div>
 
             <div class="form-group row">                   
               <div class="col-sm-12">
@@ -162,9 +166,7 @@
 import alertify from 'alertifyjs'
   export default {
     name: "modal_new_patient",
-
     props:{
-      
     }, 
 
     data () {
@@ -194,11 +196,11 @@ import alertify from 'alertifyjs'
 				.then(res => {
 					if (res.data.patient == null) { //Buscar en reniec
 						//window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-						console.log('bus')
 						this.axios.get("/api/buscarDni/"+this.paciente.dni)
 						.then(response => {
 							console.log(response.data)
-							this.paciente.name = (`${response.data.apellido_paterno} ${response.data.apellido_materno} ${response.data.nombres}`).trim();
+							this.paciente.name = (`${response.data.apellido_paterno} ${response.data.apellido_materno}`).trim();
+							this.paciente.nombres = (`${response.data.nombres}`).trim()
 							if (response.data.apellido_paterno) {
 								this.patientNew = false
 	
@@ -227,6 +229,7 @@ import alertify from 'alertifyjs'
 						console.log('datos del paciente',res.data);
 
 						this.paciente.name = res.data.patient.name;
+						this.paciente.nombres = res.data.patient.nombres;
 						this.paciente.phone = res.data.patient.phone;
 						this.paciente.email = res.data.patient.email;
 						this.paciente.address.address = res.data.address.address;
@@ -256,7 +259,7 @@ import alertify from 'alertifyjs'
 				if(this.paciente.dni.length<8){
 					alertify.notify('El DNI debe ser de 8 dígitos.', 'danger', 10);
 				}
-				else if( this.paciente.name=='' || this.paciente.dni =='' || this.paciente.phone=='' ){
+				else if( this.paciente.name=='' || this.paciente.nombres == '' || this.paciente.dni =='' || this.paciente.phone=='' ){
 					alertify.notify('Datos mínimos DNI, nombre y celular del paciente', 'danger', 10);
 				}
 				else{
@@ -272,6 +275,7 @@ import alertify from 'alertifyjs'
 					.catch(error => {
 							console.log('error'+error)
 					})
+					this.$emit('cargarPacienteSimpleNuevo')
 				}
       },
 

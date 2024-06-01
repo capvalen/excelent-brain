@@ -111,8 +111,9 @@ class PatientController extends Controller
 			//echo $request->input('paciente.name');die();
 			$paciente = Patient::create([
 					'dni'=>$request->input('paciente.dni'),
-					'phone'=>$request->input('paciente.phone'),
 					'name'=> trim(str_replace('  ', ' ' , $request->input('paciente.name'))),
+					'nombres'=> trim(str_replace('  ', ' ' , $request->input('paciente.nombres'))),
+					'phone'=>$request->input('paciente.phone'),
 					'instruction_degree'=> $request->input('paciente.instruction_degree') ?? 6,
 					'gender'=> $request->input('paciente.gender') ?? 2,
 					'birth_date'=> $request->input('birth_date') =='null' ? null: $request->input('paciente.birth_date'),
@@ -269,7 +270,8 @@ class PatientController extends Controller
 	 */
 	public function update(Request $request,  Patient $patient)
 	{
-		$patient->update($request->all());
+		
+		$patient->update($request->all());	
 
 		// $patient->relative->update([
 		//     'name' => $request->input('relative.name'),
@@ -284,12 +286,14 @@ class PatientController extends Controller
 			'department' => $request->input('address.department'),
 		]);
 
-		Relative::find($request->input('relative.id'))
-		->update([
-			'name' => $request->input('relative.name'),
-			'phone' => $request->input('relative.phone'),
-			'kinship' => $request->input('relative.kinship')
-		]);
+		if( $request->get('relative')[0]['id']<>-1 ){
+			Relative::find($request->input('relative')[0]['id'])
+			->update([
+				'name' => $request->get('relative')[0]['name'] ?? '',
+				'phone' => $request->get('relative')[0]['phone'] ?? '',
+				'kinship' => $request->get('relative')[0]['kinship'] ?? ''
+			]);
+		}
 
 		return response()->json(['mensaje' => 'success']);
 		

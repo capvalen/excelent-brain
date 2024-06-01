@@ -57,7 +57,7 @@
 					<!-- Card Body -->
 					<div class="card-body">
 						<div class="historia-info">
-							<p class="text-capitalize">Paciente: <span class="fst-italic">{{ historia.name ? lowerCase(historia.name) : '...' }}</span></p>
+							<p class="text-capitalize">Paciente: <span class="fst-italic">{{ historia.name ? lowerCase(historia.name) +' '+ lowerCase(historia.nombres) : '...' }}</span></p>
 							<p v-if="historia.discharge == 1" class="text-success">Paciente dado de alta</p>
 							<p v-if="!historia.initial_psychological_history
 								&& dataUser.profession === 'Psicólogo'" class="text-danger">

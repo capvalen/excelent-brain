@@ -19,12 +19,16 @@
                 <label for="name">Teléfono</label>
                 <input type="text" class="form-control" name="phone" id="phone" v-model="dataPatient.phone" placeholder="Telefono del paciente">
               </div>          
+              <div class="col-sm-6">
+                <label for="name">Paciente</label>
+                <input type="text" class="form-control"  name="name" id="name" v-model="dataPatient.name" placeholder="Apellidos del paciente">
+              </div>
+              <div class="col-sm-6">
+                <label for="name">Paciente</label>
+                <input type="text" class="form-control"  name="nombres" id="nombres" v-model="dataPatient.nombres" placeholder="Nombres del paciente">
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="name">Paciente</label>
-              <input type="text" class="form-control"  name="name" id="name" v-model="dataPatient.name" placeholder="Nombre del paciente">
-            </div>
 
             <div class="form-group row">                   
               <div class="col-sm-6">
@@ -99,27 +103,26 @@
               </div>       
             </div> 
 
+            <hr>
+          <h5 class="modal-title" id="exampleModalLabel"> Datos del familiar</h5>
 
-            <!--  
-            <div class="form-group row"> 
-
+            <div class="form-group row">
               <div class="col-sm-12">
-                <label for="name">Nombre de pariente</label>
-                <input type="text" class="form-control" name="relative_name" v-model="dataPatient.relative.name" id="relativename" placeholder="Nombre de pariente">
+                <label for="name">Nombre</label>
+                <input type="text" class="form-control" name="relative_name" v-model="dataPatient.relative[0].name" id="relativename" placeholder="Nombre de pariente">
               </div>                               
-            </div>   -->
+            </div>  
 
-            <!-- <div class="form-group row">
+            <div class="form-group row">
               <div class="col-sm-6">
                 <label for="name">Telefono</label>
-                <input type="text" class="form-control" name="relative_phone" v-model="dataPatient.relative.phone" id="relativephone" placeholder="Telefono de pariente"> 
+                <input type="text" class="form-control" name="relative_phone" v-model="dataPatient.relative[0].phone" id="relativephone" placeholder="Telefono de pariente"> 
               </div>
               <div class="col-sm-6">
                 <label for="name">Parentesco</label>
-                <input type="text" class="form-control" name="kinship" id="kinship" v-model="dataPatient.relative.kinship" placeholder="Parentesco"> 
+                <input type="text" class="form-control" name="kinship" id="kinship" v-model="dataPatient.relative[0].kinship" placeholder="Parentesco"> 
               </div>
-
-            </div>                -->
+            </div>
 
           </form>
         </div>
@@ -144,7 +147,7 @@ export default {
     return {
       datos: '',
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
-			provincias:[], distritos:[],
+			provincias:[], distritos:[],relacion:[]
     }
   },
 
@@ -174,7 +177,6 @@ export default {
 
 				this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == 12)
 				this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == 103)
-
 	
 				this.moverProvincias(false)
 				this.moverDistritos()
@@ -190,6 +192,10 @@ export default {
 			this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == idProv)
 		},
 		capturaSeñal() {
+      console.log('apli');
+      if(this.dataPatient.relative.length==0){
+        this.dataPatient.relative.push({ id:-1, name: '', nombres: '', phone:'' })
+      }
 			this.listarDepartamentos(false);
     },
   },
@@ -199,11 +205,13 @@ export default {
 
   computed: {
     updateValues () {
+      
       return this.datos = this.dataPatient
     }
   },
 
   updated() {
+    
     this.updateValues;
   },
 

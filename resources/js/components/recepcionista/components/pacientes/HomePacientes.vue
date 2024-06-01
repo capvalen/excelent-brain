@@ -31,8 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-        v-for="(paciente, index) in busqueda" :key = "index">
+        <tr v-for="(paciente, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
           <td class="text-capitalize" @click="dataProps(paciente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer"><span v-if="paciente.vivo==0"><i class="fas fa-cross"></i></span>  {{ paciente.name ? lowerCase(paciente.name) : 'Sin nombre' }} {{ lowerCase(paciente.nombres) }}</td>
 					<td>
@@ -116,7 +115,7 @@
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales"></modal-triaje>
 		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
 		<modal-ver-reprogramaciones-viejos :reprogramaciones="reprogramaciones"></modal-ver-reprogramaciones-viejos>
-    <modal-new-patient ></modal-new-patient>
+    <modal-new-patient @cargarPacienteSimpleNuevo="getPatients"></modal-new-patient>
 		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
 		<ModalVerFaltas :queId="queId" :cantFaltas="cantFaltas"></ModalVerFaltas>
@@ -241,8 +240,8 @@ export default {
     },
 
     dataProps (data) {
+			this.data = data;
 			this.$emit('cambioDato');
-      this.data = data;
     },
 		datosLike(like, id){
 			this.like = like;
@@ -277,6 +276,7 @@ export default {
     this.getPatients();
 		this.listarprofesional();
 		this.hobbies.sort();
+
   }
 }
 </script>

@@ -150,7 +150,7 @@ export default {
 					})
 					console.log('datos del paciente',res.data);
 
-					this.form.customer = res.data.patient.name;
+					this.form.customer = `${res.data.patient.name} ${res.data.patient.nombres}`;
 				}
 			})
 			.catch(err => {
