@@ -288,7 +288,7 @@ export default {
 
 				let datos = new FormData();
 				datos.append('idPaciente', this.pacienteElegido.id)
-				datos.append('customer', this.pacienteElegido.name, ' ', this.pacienteElegido.nombres)
+				datos.append('customer', this.pacienteElegido.name+ ' '+ this.pacienteElegido.nombres)
 				datos.append('motivo', this.pacienteElegido.id)
 				datos.append('membresia', JSON.stringify(this.membresia))
 				datos.append('user_id', this.idUsuario)
