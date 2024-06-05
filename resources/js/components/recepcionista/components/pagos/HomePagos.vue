@@ -50,7 +50,7 @@
 								<span>{{index+1}}</span>
 							</td>
 							<td v-if="payment.usuario" style="white-space: nowrap;" :title="payment.usuario.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.usuario.nombre" ><i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
-							<td v-else style="white-space: nowrap;" :title="payment.user.nombre" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="payment.user.nombre">{{payment.created_at | formatedDate}}</td>
+							<td v-else style="white-space: nowrap;" :title="payment.user.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.user.nombre">{{payment.created_at | formatedDate}}</td>
 							<td>{{payment.voucher}}</td>
 							<td>{{ payment.id}}</td>
 							<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''"></span></td>
