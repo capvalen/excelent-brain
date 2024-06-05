@@ -345,7 +345,7 @@
 						<tbody>
 							<tr v-for="(deuda, index) in deudas">
 								<td>{{ index+1 }}</td>
-								<td class="text-capitalize" @click="dataProps(deuda)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ deuda.name }}</td>
+								<td class="text-capitalize" @click="dataProps(deuda)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ deuda.name }} {{ deuda.nombres }}</td>
 								<td class="text-capitalize">{{ deuda.motivo }}
 									<small v-if="deuda.observaciones || deuda.observaciones!=''"><br>{{deuda.observaciones}}</small>
 								</td>

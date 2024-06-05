@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\Precio;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -122,6 +123,7 @@ class PaymentController extends Controller
 					$payment->horario = '';
 					$payment->servicio='';
 				}
+				$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->get();
 			}
 			$salidas = Extra_payment::whereMonth('date', '=', date('m'))
 				->whereYear('date', '=', date('Y'))
