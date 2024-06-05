@@ -191,6 +191,7 @@ class PaymentController extends Controller
 						$payment->horario = '';
 						$payment->servicio='';
 					}
+					$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->first();
 				}
 				$noactivo = Extra_payment::where('created_at', 'like', $date.'%')
 				->where('activo', 0)
