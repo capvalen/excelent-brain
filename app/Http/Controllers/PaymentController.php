@@ -123,7 +123,7 @@ class PaymentController extends Controller
 					$payment->horario = '';
 					$payment->servicio='';
 				}
-				$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->get();
+				$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->first();
 			}
 			$salidas = Extra_payment::whereMonth('date', '=', date('m'))
 				->whereYear('date', '=', date('Y'))
