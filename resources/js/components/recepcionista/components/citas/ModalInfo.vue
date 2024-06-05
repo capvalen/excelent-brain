@@ -14,7 +14,7 @@
             <tbody>
               <tr>
                 <th scope="row">Nombre del paciente</th>
-                <td class="text-capitalize"> {{ lowerCase(dataCit.patient.name) }}</td>
+                <td class="text-capitalize"> {{ dataCit.patient.name }} {{ dataCit.patient.nombres }}</td>
               </tr>
 
               <tr>
