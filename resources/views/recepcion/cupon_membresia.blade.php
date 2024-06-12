@@ -29,7 +29,7 @@
 						<h2>TICKET INTERNO</h2>
 						<h2>E002-{{$pago->id}}</h2>
                     <div class="main-data">
-											<p>FECHA:  
+											<p>FECHA DE CITA:  
 												<span>@php
 												$fecha = Carbon::now(); echo $fecha->format('d/m/Y');
 												@endphp</span>
