@@ -120,13 +120,24 @@
 					<!-- Card Body -->
 					<div class="card-body">
 						<div class="historia-info">
-							<div v-if="datosConsulta.relative">
-								<p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta.relative.name && datosConsulta.relative.name!='null' ?
-									lowerCase(datosConsulta.relative.name) : '...' }}</p>
-								<p><b>Número de celular:</b> {{ datosConsulta.relative.phone && datosConsulta.relative.phone!='null' ? datosConsulta.relative.phone : '...' }}</p>
-								<p><b>Parentesco:</b> {{ datosConsulta.relative.kinship && datosConsulta.relative.kinship!='null' ? datosConsulta.relative.kinship : '...' }}</p>
+							<p>Datos del pariente N° 1</p>
+							<div v-if="datosConsulta.relative[0]">
+								<p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta.relative[0].name && datosConsulta.relative[0].name!='null' ?
+									lowerCase(datosConsulta.relative[0].name) : '...' }}</p>
+								<p><b>Número de celular:</b> {{ datosConsulta.relative[0].phone && datosConsulta.relative[0].phone!='null' ? datosConsulta.relative[0].phone : '...' }}</p>
+								<p><b>Parentesco:</b> {{ datosConsulta.relative[0].kinship && datosConsulta.relative[0].kinship!='null' ? datosConsulta.relative[0].kinship : '...' }}</p>
 							</div>
-
+							<div v-else>
+								<p>No existe registro de pariente</p>
+							</div>
+							<hr>
+							<p>Datos del pariente N° 2</p>
+							<div v-if="datosConsulta.relative[1]">
+								<p class="text-capitalize"><b>Nombre:</b> {{ datosConsulta.relative[1].name && datosConsulta.relative[1].name!='null' ?
+									lowerCase(datosConsulta.relative[1].name) : '...' }}</p>
+								<p><b>Número de celular:</b> {{ datosConsulta.relative[1].phone && datosConsulta.relative[1].phone!='null' ? datosConsulta.relative[1].phone : '...' }}</p>
+								<p><b>Parentesco:</b> {{ datosConsulta.relative[1].kinship && datosConsulta.relative[1].kinship!='null' ? datosConsulta.relative[1].kinship : '...' }}</p>
+							</div>
 							<div v-else>
 								<p>No existe registro de pariente</p>
 							</div>

@@ -30,10 +30,14 @@
 							
 							<div class="col-sm-12 mt-2">
 									<label class="mt-2 mb-0" for="">Estado de pago</label>
-									<select class="form-select" name="pay_status" id="pay_status" v-model="caso.pago">
+									<select v-if="pagoHoy()" class="form-select" name="pay_status" id="pay_status" v-model="caso.pago">
 										<option value="1">Sin pagar</option>
 										<option value="2">Pagado</option>
 									</select>
+									<p v-else>
+										<span v-if="caso.pago==1">Sin pagar</span>
+										<span v-else>Pagado</span>
+									</p>
 							</div>                                                      
 							<div class="col-sm-12">
 									<label class="mt-2 mb-0" for="">Método de pago</label>
@@ -65,6 +69,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 	export default {
 		name: "modal_pago",
 		
@@ -144,6 +149,13 @@
 					this.dataCita.payment.price = this.neto
 					this.caso.motivoRebaja=''
 				}
+			},
+			pagoHoy(){
+				if(this.cita.date >= moment().format('YYYY-MM-DD')){
+					return true;
+				}else{
+					return false;
+				}			
 			}
 		},
 		computed:{

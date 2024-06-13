@@ -32,13 +32,13 @@ export default{
 		}
 	},
 	mounted(){
-		this.pariente.nombre = this.relative.name
-		this.pariente.celular = this.relative.phone
-		this.pariente.parentesco = this.relative.kinship
+		this.pariente.nombre = this.relative[0].name
+		this.pariente.celular = this.relative[0].phone
+		this.pariente.parentesco = this.relative[0].kinship
 	},
 	methods:{
 		async asignarCambio(){
-			await this.axios.post(`/api/editarPariente/${this.relative.id}`, this.pariente)
+			await this.axios.post(`/api/editarPariente/${this.relative[0].id}`, this.pariente)
 			.then(response=>{
 				document.querySelector("#modalEditarPariente #closeModal").click()
 				if(response.data.msg){

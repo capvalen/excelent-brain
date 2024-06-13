@@ -38,10 +38,10 @@
 							<span>@php
 							if( $extra_payment->appointment):
 								$fecha = Carbon::parse( $extra_payment->appointment->date. " " . $extra_payment->appointment->schedule->check_time);
-								echo "FECHA: ";
+								echo "FECHA DE CITA: ";
 							else:
 								$fecha = Carbon::parse( $extra_payment->created_at );
-								echo "REGISTRO: ";
+								echo "FECHA DE PAGO: ";
 							endif;
 							echo $fecha->format('d/m/Y H:i a');
 							@endphp</span>
@@ -49,7 +49,7 @@
 						@php
 						if( $extra_payment->appointment ):
 							@endphp
-							<p>REGISTRADO:
+							<p>FECHA DE PAGO:
 								<span>
 								@php
 									$fecha = Carbon::parse( $extra_payment->created_at );

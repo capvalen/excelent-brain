@@ -584,13 +584,18 @@ class PatientController extends Controller
 		}
 
 		public function editarPariente($id, Request $request){
-			$respuesta = Relative::find($id)
+			try {
+				$respuesta = Relative::find($id)
 			->update([
 				'name' => $request->input('nombre'),
 				'phone' => $request->input('celular'),
 				'kinship' => $request->input('parentesco')
 			]);
 			if($respuesta){ return response()->json([ 'msg' => 'Actualizado con éxito' ]); }
+			} catch (\Throwable $th) {
+				echo $th;
+			}
+			
 			
 		}
 
