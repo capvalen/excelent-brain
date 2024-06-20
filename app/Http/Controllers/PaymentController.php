@@ -158,51 +158,66 @@ class PaymentController extends Controller
     }
 
     public function getExtraPaymentsByDay($date){
-        $payments = Extra_payment::where('created_at', 'like', $date.'%')
-				->where('activo', 1)
-				->where('type', '!=', 6)
-				->get();
-				foreach ($payments as $payment) {
-					if($payment->appointment_id!=0){
-						$appointment = Appointment::with('precio')->find($payment->appointment_id);
-						if(isset($appointment->professional_id)){
-								$servicio = Precio::find($appointment->type)->first();
-								$payment->servicio = $servicio->descripcion;
-								$profesional = Professional::find($appointment->professional_id);
-								$payment->professional_id= $profesional->professional_id ?? 0;
-								$payment->profesional_name= $profesional->nombre ?? '';
-								
-								if( $appointment->schedule_id ):
-									$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
-									$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
-									$payment->detalle= $appointment->precio->descripcion;
-								else:
-									$payment->horario = '';
-									$payment->horar = '';
-									$payment->detalle= '';
-								endif;
-							}else{
-									$profesional= [];
-							}
-					}else{
-						$payment->professional_id= 0;
-						$payment->profesional_name= '';
-						$payment->horar = 0;
-						$payment->horario = '';
-						$payment->servicio='';
-					}
-					$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->first();
+			$payments = Extra_payment::where('date', 'like', $date)
+			->where('activo', 1)
+			->where('type', '!=', 6)
+			->get();
+			foreach ($payments as $payment) {
+				if($payment->appointment_id!=0){
+					$appointment = Appointment::with('precio')->find($payment->appointment_id);
+					if(isset($appointment->professional_id)){
+							$servicio = Precio::find($appointment->type)->first();
+							$payment->servicio = $servicio->descripcion;
+							$profesional = Professional::find($appointment->professional_id);
+							$payment->professional_id= $profesional->professional_id ?? 0;
+							$payment->profesional_name= $profesional->nombre ?? '';
+							
+							if( $appointment->schedule_id ):
+								$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
+								$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
+								$payment->detalle= $appointment->precio->descripcion;
+							else:
+								$payment->horario = '';
+								$payment->horar = '';
+								$payment->detalle= '';
+							endif;
+						}else{
+								$profesional= [];
+						}
+				}else{
+					$payment->professional_id= 0;
+					$payment->profesional_name= '';
+					$payment->horar = 0;
+					$payment->horario = '';
+					$payment->servicio='';
 				}
-				$noactivo = Extra_payment::where('created_at', 'like', $date.'%')
-				->where('activo', 0)
+				$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->first();
+			}
+			$salidas = Extra_payment::where('date', 'like',  $date)
+				->where('activo', 1)
 				->where('type', '=', 6)
+				->with('usuario')
 				->get();
-				$ordenados =  $payments->sortBy([
-					fn ($a, $b) => $a['profesional_name'] <=> $b['profesional_name'],
-					fn ($a, $b) => $a['horar'] <=> $b['horar'],
-				]);
-				//$ordenados2 = $ordenados->sortBy('horar');
-        return response()->json(['activos'=>$ordenados->values()->all(), 'eliminados'=>$noactivo]);
+			foreach ($salidas as $salida) {
+				if($salida->appointment_id!=0){
+					$appointment = Appointment::find($salida->appointment_id);
+					if( isset($appointment->professional_id) ){
+						$profesional = Professional::find($appointment->professional_id);
+						$salida->profesional_name= $profesional->nombre ?? '';
+					}
+				}else{
+					$salida->profesional_name= '';
+				}
+			}
+			$noactivo = Extra_payment::where('date', 'like', $date)
+			->where('activo', 0)
+			->with('usuario')
+			->get();
+			$ordenados =  $payments->sortBy([
+				fn ($a, $b) => $a['profesional_name'] <=> $b['profesional_name'],
+				fn ($a, $b) => $a['horar'] <=> $b['horar'],
+			]);
+			return response()->json(['activos'=>$ordenados->values()->all(), 'eliminados'=>$noactivo, 'salidas'=> $salidas]);
     }
 
 		public function editarPagoExtra(Request $request){

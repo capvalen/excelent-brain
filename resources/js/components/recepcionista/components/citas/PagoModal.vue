@@ -30,13 +30,13 @@
 							
 							<div class="col-sm-12 mt-2">
 									<label class="mt-2 mb-0" for="">Estado de pago</label>
-									<select v-if="pagoHoy()" class="form-select" name="pay_status" id="pay_status" v-model="caso.pago">
+									<select v-if="caso.pago==1" class="form-select" name="pay_status" id="pay_status" v-model="caso.pago">
 										<option value="1">Sin pagar</option>
 										<option value="2">Pagado</option>
 									</select>
 									<p v-else>
-										<span v-if="caso.pago==1">Sin pagar</span>
-										<span v-else>Pagado</span>
+										<!-- <span v-if="caso.pago==1">Sin pagar</span> -->
+										<span>Pagado</span>
 									</p>
 							</div>                                                      
 							<div class="col-sm-12">
@@ -60,7 +60,7 @@
 
 				<div class="modal-footer border-0">
 					<!-- <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button> -->
-					<button @click="update()" type="button" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar pago</button>
+					<button v-if="caso.pago==1" @click="update()" type="button" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar pago</button>
 					<a target="_blank" :href="`/api/pdfCupon/${dataCita.id}`" v-if="dataCita.payment.pay_status != 1" class="btn btn-outline-success">Cupón</a>
 				</div>
 			</div>
@@ -149,13 +149,6 @@ import moment from 'moment'
 					this.dataCita.payment.price = this.neto
 					this.caso.motivoRebaja=''
 				}
-			},
-			pagoHoy(){
-				if(this.cita.date >= moment().format('YYYY-MM-DD')){
-					return true;
-				}else{
-					return false;
-				}			
 			}
 		},
 		computed:{

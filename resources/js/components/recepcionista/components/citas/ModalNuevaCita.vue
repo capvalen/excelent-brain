@@ -252,7 +252,7 @@
 								<div class="col-sm-4 my-2">
 									<div class=" form-switch">
 										<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="nosrecomienda" @change="cita.recomendacion_comentario=''	">
-										<label class="form-check-label" for="flexSwitchCheckDefault">Referencia</label>
+										<label class="form-check-label" for="flexSwitchCheckDefault">Referencia <span class="text-danger">*</span></label>
 									</div>
 								</div>
 							
@@ -343,7 +343,7 @@ export default {
 	props:{ profesionalElegido: null, horaElegida: null , idUsuario:null, fechaElegida:null },
 	data(){
 		return{
-			precios: [], nosrecomienda:false, precioNuevo:true, esPresencial: true, masBasicos:true, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
+			precios: [], nosrecomienda:true, precioNuevo:true, esPresencial: true, masBasicos:true, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
 			switchReciec: 1, tieneAdelanto:false, descuentoAdelanto:0, razonAdelanto:'',
 			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
 			patientNew: false, alertaDeudas:false, mensajeDeudas:'', recomendaciones:['Facebook', 'Instagram', 'TikTok', 'Linkedin', 'Youtube', 'Spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio', 'Otros'],
@@ -451,6 +451,7 @@ export default {
 			else if( this.tieneRebaja && this.razonRebaja=='' ) alertify.error('Tiene que rellenarse un motivo de rebaja', 10)
 			else if( this.descuentoAdelanto && this.razonAdelanto=='' ) alertify.error('Tiene que rellenarse una fecha o razón del adelanto', 10)
 			else if( this.cita.contacto == '' || this.cita.contacto_celular == '' || this.cita.parentezco=='') alertify.error('Debe rellenar el contacto de emergencia', 10)
+			else if( this.cita.recomendation == '') alertify.error('Debe rellenar  la referencia', 10)
 			else{
 				let formData = new FormData();
 				formData.append('dni', this.cita.dni);

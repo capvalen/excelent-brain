@@ -371,6 +371,7 @@ import moment from 'moment'
 					this.axios.get(`/api/getExtraPaymentsByDay/${e.target.value}`)
 					.then(res =>{ console.log(res.data)
 						this.payments = res.data.activos
+						this.salidas = res.data.salidas
 						this.eliminados = res.data.eliminados
 					})
 				},
