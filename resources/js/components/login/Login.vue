@@ -51,7 +51,7 @@ export default {
 				device_name: 'browser'
 			},
 			errors: {},
-			version: '4.99 Build 24.0514'
+			version: '4.106 Build 24.0703'
 		}
 	},
 	methods: {

@@ -54,7 +54,7 @@
 					<tbody>
 						<tr v-for="(cita, index) in citasResumidas">
 							<td>{{ index+1 }}</td>	
-							<td class="text-capitalize"><span v-if="cita.patient.vivo==0"><i class="fas fa-cross"></i></span> {{ cita.patient.name.toLowerCase() }}</td>
+							<td class="text-capitalize"><span v-if="cita.patient.vivo==0"><i class="fas fa-cross"></i></span> {{ cita.patient.name }} {{ cita.patient.nombres }}</td>
 							<td>{{ cita.patient.phone }}</td>
 							<td>{{ultimaCita(cita.patient.id)}}</td>
 							<td>{{queViejoEs(index)}}</td>
@@ -201,7 +201,8 @@ export default{
 
 			let citas = this.citasCompletas.filter(item=> item.patient_id == id );
 			fechaMasNueva = citas[0].date
-			return moment(fechaMasNueva).fromNow().replace('hace ', '');
+			console.log(citas[0].patient.name, citas)
+			return moment(fechaMasNueva).fromNow(true)
 		},
 		queViejoEs(index){
 			moment.locale('es')

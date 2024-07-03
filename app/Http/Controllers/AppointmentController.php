@@ -165,6 +165,8 @@ class AppointmentController extends Controller
 					'type_dni'=>$request->get('type_dni'),
 					'etiqueta'=>$request->get('etiqueta'),
 					'new_status'=>$request->get('new_status'),
+					'recomendation'=>$request->get('recomendation'),
+					'recomendacion_comentario'=>$request->get('recomendacion_comentario'),
 				]);
 			}
 			
@@ -303,6 +305,8 @@ class AppointmentController extends Controller
 				'phone'=>$request->get('phone'),
 				'etiqueta'=>$request->get('etiqueta'),
 				'new_status'=>$request->get('new_status'),
+				'recomendation'=>$request->get('recomendation'),
+				'recomendacion_comentario'=>$request->get('recomendacion_comentario'),
 			]);
 			/* $paciente_actualizar->name = ;
 			$paciente_actualizar->instruction_degree= $request->get('instruction_degree') ?? 6;

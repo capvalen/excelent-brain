@@ -346,7 +346,7 @@ export default {
 			precios: [], nosrecomienda:true, precioNuevo:true, esPresencial: true, masBasicos:true, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
 			switchReciec: 1, tieneAdelanto:false, descuentoAdelanto:0, razonAdelanto:'',
 			status:[{id:4, stat:'Ambulatorio'},{id:3, stat:'Clínica de día'},{id:2, stat:'Kurame'},{id:1, stat:'Ninguno'},], //sacado de la DB:tbl status
-			patientNew: false, alertaDeudas:false, mensajeDeudas:'', recomendaciones:['Facebook', 'Instagram', 'TikTok', 'Linkedin', 'Youtube', 'Spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio', 'Otros'],
+			patientNew: false, alertaDeudas:false, mensajeDeudas:'', recomendaciones:['Facebook', 'Instagram', 'TikTok', 'Linkedin', 'Youtube', 'Spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio', 'Paciente Antiguo', 'Otros Centros de Salud', 'Google Maps', 'Referencia del Establecimiento'],
 			cita:{
 				phone:'',
 				dni:'',
@@ -500,7 +500,7 @@ export default {
 				formData.append('razonAdelanto', this.razonAdelanto);
 				formData.append('monedaAdelanto', this.monedaAdelanto);
 				await this.axios.post('/api/appointment', formData, config)
-				.then(response => { //Trabaja en api -> modelo>store()
+				.then(response => { //Trabaja en api -> modelo (appointment)>store()
 					console.log(response.data)
 					this.closeModal();
 					this.cita.membresia=''
@@ -663,6 +663,8 @@ export default {
 					this.cita.prev_status = res.data.patient.new_status;
 					this.cita.club = res.data.patient.club;
 					this.cita.membresia = res.data.membresia;
+					this.cita.recomendation = res.data.patient.recomendation;
+					this.cita.recomendacion_comentario = res.data.patient.recomendacion_comentario;
 					this.patientNew = true;
 					this.moverProvincias(false)
 					this.moverDistritos()

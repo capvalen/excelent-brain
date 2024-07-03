@@ -63,12 +63,17 @@
 		<div class="modal fade" id="modalVerCitas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog ">
 				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="exampleModalLabel">Citas</h1>
+					<div class="modal-header border-0">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Citas de Membresía</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<p>Citas asociadas a esa membresía</p>
+						<div class="row mb-2">
+							<div class="col d-flex d-grid justify-content-between">
+								<button class="btn btn-outline-primary" @click="addCita=true">Agregar cita</button>
+								<span>0 de 6 Citas</span>
+							</div>
+						</div>
 						<table class="table">
 							<thead>
 								<tr>
@@ -111,7 +116,7 @@ export default{
 	props:['queId', 'nombrePaciente', 'idUser'],
 	components:{ ModalAmpliarFechaMembresia },
 	data(){return {
-		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null
+		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, addCita:false
 	}},
 	mounted(){
 		//this.buscarMembresias()

@@ -616,22 +616,39 @@ class ExtrasController extends Controller
 					->orderBy('date', 'desc')
 					->get();
 				$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
-					->orderBy('date', 'desc')
 					->with('patient')
+					->orderBy('date', 'desc')
 					->get();
 			elseif($request->get('mes')==-1):
-				$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
+			/* 	$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
 					->whereYear('date', $request->get('año'))
 					->select('patient_id', DB::raw('0 as visitas'),  DB::raw('0 as sinconfirmar'), DB::raw('0 as confirmar'), DB::raw('0 as anulados'), DB::raw('0 as reprogramados'), DB::raw('0 as faltas'), DB::raw('"" as actual'))
-					->groupBy('patient_id')
 					->with('patient')
+					->groupBy('patient_id')
 					->orderBy('date', 'desc')
-					->get();
+					->get(); */
 				$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
 					->whereYear('date', $request->get('año'))
-					->orderBy('date', 'desc')
 					->with('patient')
+					->orderBy('date', 'desc')
 					->get();
+
+				$citasResumidas = [];
+
+				foreach ($citasCompletas as $cita) {
+					$existe = false;					
+					foreach ($citasResumidas as $item) {
+						if ($item['patient_id'] == $cita['patient_id']) {
+							$existe = true;
+							break;
+						}
+					}					
+					if (!$existe) $citasResumidas[] = $cita;					
+				}
+				/* usort($citasResumidas, function($a, $b) {
+					return strtotime($b['date']) - strtotime($a['date']);
+				}); */
+
 			else:
 				$citasResumidas = Appointment::where('professional_id', $request->get('idProfesional'))
 					->whereYear('date', $request->get('año'))
@@ -644,8 +661,8 @@ class ExtrasController extends Controller
 				$citasCompletas = Appointment::where('professional_id', $request->get('idProfesional'))
 					->whereYear('date', $request->get('año'))
 					->whereMonth('date', $request->get('mes'))
-					->orderBy('date', 'desc')
 					->with('patient')
+					->orderBy('date', 'desc')
 					->get();
 			endif;
 				foreach($citasCompletas as $cita){
@@ -886,7 +903,7 @@ class ExtrasController extends Controller
 	public function buscarMembresias($id){
 		$membresias = DB::table('membresias as m')
 		->join('precios as p', 'p.id', '=', 'm.tipo')
-		->select('m.*', 'p.descripcion')
+		->select('m.*', 'p.descripcion', 'p.sesiones')
 		->where('patient_id', $id)->orderBy('inicio', 'desc')->get();
 		foreach ($membresias as $membresia) {
 			if($membresia->cuotas>0){
