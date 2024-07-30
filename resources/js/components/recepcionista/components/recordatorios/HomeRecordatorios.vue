@@ -46,7 +46,7 @@
 						<tbody>
 							<tr v-for="(cliente, index) in clientes">
 								<td>{{ index + 1 }}</td>
-								<td @click="dataProps(cliente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ cliente.name }}</td>
+								<td @click="dataProps(cliente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ cliente.name }} {{ cliente.nombres }}</td> 
 								<td>{{ fechaLatam(cliente.birth_date) }}</td>
 								<td>{{ edad(cliente.birth_date) }} años</td>
 								<td><a v-if="cliente.phone!=''" :href="`https://wa.me/51${cliente.phone}?text=Feliz cumpleaños 🎂 ${cliente.name}, recuerda que el que piensa positivo, ve lo invisible, siente lo intangible y logra lo imposible. Te desea la clínica Excelentemente 🤗`" target="_blank"><i class="fab fa-whatsapp"></i></a></td>

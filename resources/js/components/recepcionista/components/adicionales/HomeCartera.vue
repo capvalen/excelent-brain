@@ -39,6 +39,7 @@
 							<th>N°</th>
 							<th>Nombre y Apellidos</th>
 							<th>Celular</th>
+							<th>DNI</th>
 							<th>Ult. Cita</th>
 							<th>Antigüedad</th>
 							<th>N° Citas</th>
@@ -56,6 +57,7 @@
 							<td>{{ index+1 }}</td>	
 							<td class="text-capitalize"><span v-if="cita.patient.vivo==0"><i class="fas fa-cross"></i></span> {{ cita.patient.name }} {{ cita.patient.nombres }}</td>
 							<td>{{ cita.patient.phone }}</td>
+							<td>{{ cita.patient.dni }}</td>
 							<td>{{ultimaCita(cita.patient.id)}}</td>
 							<td>{{queViejoEs(index)}}</td>
 							<!-- <td>{{ ultimaFecha(cita.patient.id) }}</td> -->

@@ -108,7 +108,7 @@
           <tr v-for="(appointment, index) in appointments" :key="index">
             <th>{{ index + 1 }}</th>
             <th>{{ appointment.id }}</th>
-            <td>{{ appointment.patient.name}}</td>
+            <td>{{ appointment.patient.name}}  {{ appointment.patient.nombres }}</td>
             <td>{{ fechaLatam(appointment.date)}}</td>
                 <!-- <td v-if=" appointment.type === 1">Terapia Inicial niño/adolescente</td>
                 <td v-else-if=" appointment.type === 2">Terapia Inicial adulto</td>
