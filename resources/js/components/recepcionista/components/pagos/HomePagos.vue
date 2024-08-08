@@ -38,7 +38,7 @@
 						<td class="text-primary">N° Op.</td>
 						<td class="text-primary">Prof.</td>
 						<td class="text-primary">Fecha y Hora</td>
-						<td class="text-primary d-print-none" >@</td>
+						<td class="text-primary d-print-none" style="white-space: nowrap">@</td>
 					</tr>
         </thead>
         <tbody>
@@ -88,7 +88,7 @@
 							<td>{{ payment.voucher_issued }} </td>
 							<td>{{ payment.profesional_name }}</td>
 							<td>{{ fechaLatam(payment.fechaCita) }} {{ payment.horario }}</td>
-							<td class="d-print-none">
+							<td class="d-print-none" style="white-space: nowrap">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
 								<!-- <a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a> -->
@@ -161,7 +161,7 @@
 							<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
 							<td>{{ payment.voucher_issued }}</td>
 							<td>{{ horaLatam(payment.created_at) }}</td>
-							<td class="d-print-none">
+							<td class="d-print-none" style="white-space: nowrap">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
 								<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
@@ -243,7 +243,7 @@
 						<td>{{ payment.voucher_issued }}</td>
 						<td>{{ payment.profesional_name }}</td>
 						<td>{{ horaLatam(payment.created_at) }}</td>
-						<td class="d-print-none">
+						<td class="d-print-none" style="white-space: nowrap">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 							<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 							<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
