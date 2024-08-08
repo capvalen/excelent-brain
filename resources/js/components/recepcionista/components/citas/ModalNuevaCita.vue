@@ -209,9 +209,11 @@
 									@change="precioDinamico(); cita.type=''"
 									>
 										<option value="3">Certificado</option>
+										<option value="4">Kurame</option>
+										<option value="6">Nutrición</option>
 										<option value="1" v-if="profesionalElegido.idProfesion=='1'" selected >Psiquiatrica</option>
 										<option value="2" v-if="profesionalElegido.idProfesion=='2'" selected >Psicológica</option>
-										<option value="4">Kurame</option>
+										
 									</select>
 								</div>
 								<div class="col-sm-4">
@@ -336,7 +338,7 @@
 <script>
 import { dateNow } from '../../../../helpers/Time.js'
 import alertify from 'alertifyjs'
-import moment, { relativeTimeThreshold } from 'moment'
+import moment from 'moment'
 
 export default {
 	name: "ModalNuevaCita",

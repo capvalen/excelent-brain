@@ -19,6 +19,7 @@ class ProfessionalController extends Controller
         $profesionales = Professional::select('professionals.*','users.email')
 				->where('profession','Psicólogo')
 				->orWhere('profession','Psiquiatra')
+				->orWhere('profession','Nutricionista')
 				->join('users','users.id','=','professionals.user_id')
 				->get();
 

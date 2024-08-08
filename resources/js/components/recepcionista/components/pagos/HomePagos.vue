@@ -80,6 +80,8 @@
 								<span v-if="payment.type==2">Paquete Kurame</span>
 								<span v-if="payment.type==1">Paquete Membresía</span>
 								<span v-if="payment.type==0">Certificado</span>
+								<span v-if="payment.type==15">Pago de membresía</span>
+								<span v-if="payment.type==16">Revaluación gratuita</span>
 								<small v-if="payment.type!=4"><br>{{ payment.detalle }}</small>
 							</td>
 							<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>

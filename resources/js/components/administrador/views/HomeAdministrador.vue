@@ -1,6 +1,6 @@
 <template>
   <div class="w-100">
-    <h2 class="admin-title">Profesionales</h2>
+    <h2 class="admin-title">Panel de Profesionales</h2>
     <div class="display-grid mt-4">
       <div
         class="grid-item shadow-sm bg-white rounded"

@@ -120,12 +120,12 @@
 									:class='{
 									"btn-secondary": qCita.status == 1,
 									"btn-info": qCita.status == 2,
-									"btn-danger": qCita.status == 3 || qCita.status==4
+									"btn-danger": qCita.status == 3 || qCita.status==4 || qCita.status==5
 									
 									}'> <!-- @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#modalEstado" -->
 										<span class="icon text-white-50">
 											<i :class="{
-												'fas fa-exclamation-circle': qCita.status == 1,
+												'fas fa-exclamation-circle': qCita.status == 1 || qCita.status==5,
 												'fas fa-check': qCita.status == 2,
 												'fas fa-minus-circle': qCita.status == 3 || qCita.status==4
 											}"></i>
@@ -134,6 +134,7 @@
 										<span class="text labels" v-else-if="qCita.status == 2">Confirmado</span>
 										<span class="text labels" v-else-if="qCita.status == 3">Anulado</span>
 										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
+										<span class="text labels" v-else-if="qCita.status == 5">Eliminado</span>
 									</button>
 									<small class="text-capitalize" v-if="qCita.status == 3 && qCita.faltas"><br><i class="far fa-comment"></i> {{queObservacion(qCita.faltas[0])}}</small>
 									<small class="text-capitalize" v-if="qCita.status == 4 && qCita.faltas"><br><i class="far fa-comment"></i> {{queRazon(qCita.faltas[0])}} <span v-if="qCita.faltas[0].fechaProxima!=''">- Proxima cita: {{ fechaLatam(qCita.faltas[0].fechaProxima )}}</span></small>
@@ -280,15 +281,17 @@ export default {
         document.getElementById("professional_id").value = ""
       }, 0)
 
-      await axios.get('/api/appoitmentsReception')
+      //await axios.get('/api/appoitmentsReception')
+      await axios.get('/api/searchByDateAppointment/'+ moment().format('YYYY-MM-DD'))
       .then(res => {
 
-        const nani = res.data.sort(function(a,b){
+       /*  const nani = res.data.sort(function(a,b){
           if(a.schedule != null || b.schedule != null){
             return a.professional.id - b.professional.id || new Date(a.date+':'+a.schedule.check_time).getTime() - new Date(b.date+':'+b.schedule.check_time).getTime() 
           }
-        })
-        this.citas = nani;
+        }) */
+			 //this.citas = nani;
+        this.citas = res.data;
       })
       .catch(err => {
         console.error(err)

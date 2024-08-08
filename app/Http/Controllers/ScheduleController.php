@@ -67,6 +67,7 @@ class ScheduleController extends Controller
     public function horarioCuadernoOcupado($fecha, $dia){
 			       
         $appointment = Appointment::whereDate('appointments.date', '=', $fecha)
+        ->where('appointments.status', '<>', 5) //eliminados
         ->where('appointments.status', '<>', 4)
         ->where('appointments.status', '<>', 3)
         ->with('schedule')

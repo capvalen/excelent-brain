@@ -54,8 +54,12 @@ class AppointmentController extends Controller
 				$query->orderBy('registro', 'desc');
 				}
 			])
-			->orderBy('professional_id')
-			->get();
+			->get()
+			->sortBy(
+				['date', 'desc'],
+				['schedule.check_time', 'desc']
+			)
+			->values()->all();
 
 			foreach($citas as $cita){
 				//Ver si tiene falta
@@ -247,8 +251,7 @@ class AppointmentController extends Controller
 			->join('medical_evolutions as m', 'm.patient_id', '=', 'a.patient_id')
 			->where('a.patient_id' , '=', $paciente_prueba->id)
 			->where('m.activo', '=', 1)
-			->where('a.clasification' , '=', $request->get('clasification'))->get()
-			;
+			->where('a.clasification' , '=', $request->get('clasification'))->get();
 
 				/* $citas = Appointment::where('patient_id', '=', $paciente_prueba->id)
 				->where('clasification', '=', $request->get('clasification'))
@@ -384,6 +387,18 @@ class AppointmentController extends Controller
 				'professional_id'=> $request->input('professional_id'),
 				'schedule' => $request->get('check_time'),
 			]);
+			//Agregar por defecto a extra payments
+			$pagoExtra = new Extra_payment;
+			$pagoExtra->customer =  $request->get('name') .' '. $request->get('nombres');
+			$pagoExtra->price =0;
+			$pagoExtra->moneda = 1;
+			$pagoExtra->voucher = null;
+			$pagoExtra->appointment_id = $appointment->id;
+			$pagoExtra->type = 16;
+			$pagoExtra->observation = '';
+			$pagoExtra->continuo = $patient_condition;
+			$pagoExtra->user_id = $request->get('user_id');
+			$pagoExtra->save();
 		}
 				//echo 'nombre: '. trim(str_replace('  ', ' ' , $request->get('name')));
 		return response()->json([ 'cita'=>$appointment, 'estado' => $request->get('price') ]);
@@ -480,9 +495,15 @@ class AppointmentController extends Controller
 		->where(DB::raw("CONCAT(p.name, ' ', p.nombres)"), 'like', '%'. $nombre . '%')
 		->orWhere(DB::raw("CONCAT(p.nombres, ' ', p.name)"), 'like', $nombre . '%')
 		->orWhere('p.dni', $dni)
-		->orderBy('appointments.date', 'desc')
-		->orderBy('appointments.professional_id')
-		->get();
+		/* ->orderBy('appointments.date', 'desc')
+		->orderBy('appointments.professional_id') */
+		->get()
+		->sortBy([
+			['date', 'desc'],
+			['schedule.check_time', 'desc']
+		])
+		->values()->all();
+		
 
 		foreach($appointments as $cita){
 			//Ver si tiene falta
@@ -541,9 +562,16 @@ class AppointmentController extends Controller
 
 	public function searchByDateAppointment($date){
 		$appointments = Appointment::where('date', $date)
-						->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
-						->orderBy('professional_id')
-						->get();
+			->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
+			/* ->orderBy('professional_id')
+			->orderBy('check_time', 'desc') */
+			->get()
+			->sortBy([
+				['date', 'desc'],
+				['schedule.check_time', 'desc']
+			])
+			->values()->all();
+
 		foreach($appointments as $appointment){
 			//Ver si tiene falta
 			if($appointment->status == '3'){
@@ -615,17 +643,17 @@ class AppointmentController extends Controller
 		]);
 
 		if($request->input('caso.pago') == '2'){
-				$pagoExtra = new Extra_payment;
-				$pagoExtra->customer = $request->input('dataCita.patient.name');
-				$pagoExtra->price = $request->input('dataCita.payment.price');
-				$pagoExtra->moneda = $request->input('caso.moneda');
-				$pagoExtra->voucher = $request->input('caso.comprobante');
-				$pagoExtra->appointment_id = $request->input('dataCita.id');
-				$pagoExtra->type =5;
-				$pagoExtra->observation = $request->input('dataCita.payment.observation');
-				$pagoExtra->continuo = $request->input('caso.continuo');
-				$pagoExtra->user_id = $request->input('caso.user_id');
-				$pagoExtra->save();
+			$pagoExtra = new Extra_payment;
+			$pagoExtra->customer = $request->input('dataCita.patient.name');
+			$pagoExtra->price = $request->input('dataCita.payment.price');
+			$pagoExtra->moneda = $request->input('caso.moneda');
+			$pagoExtra->voucher = $request->input('caso.comprobante');
+			$pagoExtra->appointment_id = $request->input('dataCita.id');
+			$pagoExtra->type =5;
+			$pagoExtra->observation = $request->input('dataCita.payment.observation');
+			$pagoExtra->continuo = $request->input('caso.continuo');
+			$pagoExtra->user_id = $request->input('caso.user_id');
+			$pagoExtra->save();
 		}else{
 			$pagoExtra = Extra_payment::where('appointment_id', $request->input('dataCita.id') );
 			$pagoExtra->update([
@@ -665,7 +693,7 @@ class AppointmentController extends Controller
 			'voucher_issued' => $request->input('dataCita.payment.voucher_issued'), */
 			'pay_status' => $request->input('caso.pago'),
 			//'payment_method' => $request->input('caso.moneda'),
-			'voucher' => $request->input('caso.comprobante'),
+			'voucher_issued' => $request->input('caso.comprobante'),
 			'bank' => $request->input('dataCita.payment.bank'),
 			'observation' => $request->input('dataCita.payment.observation'),
 			'user_id'=>$request->input('caso.user_id'),
@@ -675,7 +703,6 @@ class AppointmentController extends Controller
 			'motivoDescuento' => $request->input('caso.motivoDescuento'),
 			'payment_method'=> $request->input('caso.moneda')
 		]);
-
 		
 		if($request->input('caso.pago') == '2'){ // Modo pagado
 			
@@ -683,7 +710,7 @@ class AppointmentController extends Controller
 				$pagoExtra->customer = $request->input('dataCita.patient.name') .' ' . $request->input('dataCita.patient.nombres');
 				$pagoExtra->price = $request->input('dataCita.payment.price');
 				$pagoExtra->moneda = $request->input('caso.moneda');
-				$pagoExtra->voucher = $request->input('caso.comprobante');
+				$pagoExtra->voucher_issued = $request->input('caso.comprobante');
 				$pagoExtra->appointment_id = $request->input('dataCita.id');
 				$pagoExtra->type =5;
 				$pagoExtra->observation = $request->input('dataCita.payment.observation');
@@ -725,7 +752,7 @@ class AppointmentController extends Controller
 			$pagoExtra = Extra_payment::where('appointment_id', $request->input('dataCita.id') );
 			$pagoExtra->update([
 				'moneda' => $request->input('caso.moneda'),
-				'voucher' => $request->input('caso.comprobante'),
+				'voucher_issued' => $request->input('caso.comprobante'),
 				'observation' => $request->input('dataCita.payment.observation'),
 				'user_id'=> $request->input('caso.user_id'),
 				'activo' => 0
@@ -925,7 +952,10 @@ class AppointmentController extends Controller
 			'esFalta' => 2
 		]); //2 para indicar que viene de eliminado
 
-		$cita->delete();
+		//$cita->delete();
+		$cita->update([
+			'status' => 5 //indicando que se elimina
+		]);
 		} catch (\Throwable $th) {
 			echo $th;
 		}

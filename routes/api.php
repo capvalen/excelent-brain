@@ -71,7 +71,7 @@ Route::post('eliminarCita/{id}', [AppointmentController::class, 'eliminarCita'])
 Route::put('pagarCita/{id}', [AppointmentController::class, 'pagarCita']);
 Route::get('appointmentKurame/{id}', [AppointmentController::class, 'showKurame']);
 Route::get('appoitmentShow/{idUser}/{idDate}', [AppointmentController::class, 'showConsult']);
-Route::get('appoitmentsReception', [AppointmentController::class, 'indexAppointments']);
+/* Route::get('appoitmentsReception', [AppointmentController::class, 'indexAppointments']); */
 Route::get('searchAppointment/{nombre}/{profesional?}/{fecha?}/{dni}', [AppointmentController::class, 'searchAppointment']);
 Route::get('searchByDateAppointment/{date}',[AppointmentController::class, 'searchByDateAppointment']);
 Route::get('reportsAppointments/{date}', [AppointmentController::class, 'reportsAppointments']);
