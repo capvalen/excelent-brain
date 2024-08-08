@@ -26,7 +26,7 @@
 					<tr >
 						<td class="text-primaryd-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td class="text-primary">N°</td>
-						<td class="text-primary"><i class="far fa-user"></i> | Fecha</td>
+						<td class="text-primary"><i class="far fa-user"></i> | Registro</td>
 						<td class="text-primary">Fact. Bol.</td>
 						<td class="text-primary">Ticket</td>
 						<td class="text-primary">Cliente</td>
@@ -37,7 +37,7 @@
 						<td class="text-primary">Medio de pago</td>
 						<td class="text-primary">N° Op.</td>
 						<td class="text-primary">Prof.</td>
-						<td class="text-primary">Hora</td>
+						<td class="text-primary">Fecha y Hora</td>
 						<td class="text-primary d-print-none" >@</td>
 					</tr>
         </thead>
@@ -87,7 +87,7 @@
 							<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
 							<td>{{ payment.voucher_issued }} </td>
 							<td>{{ payment.profesional_name }}</td>
-							<td>{{ payment.horario }}</td>
+							<td>{{ fechaLatam(payment.fechaCita) }} {{ payment.horario }}</td>
 							<td class="d-print-none">
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -119,7 +119,7 @@
 					<tr>
 						<td class="text-warning d-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td class="text-warning">N°</td>
-						<td class="text-warning"><i class="far fa-user"></i> | Fecha</td>
+						<td class="text-warning"><i class="far fa-user"></i> | Registro</td>
 						<td class="text-warning">Fact. Bol.</td>
 						<td class="text-warning">Ticket</td>
 						<td class="text-warning">Cliente - Motivo</td>
@@ -193,7 +193,7 @@
 					<tr>
 						<td class="text-danger d-print-none" v-if="tienePrivilegios=='1'">@</td>
 						<td class="text-danger">N°</td>
-						<td class="text-danger"><i class="far fa-user"></i> | Fecha</td>
+						<td class="text-danger"><i class="far fa-user"></i> | Registro</td>
 						<td class="text-danger">Fact. Bol.</td>
 						<td class="text-danger">Ticket</td>
 						<td class="text-danger">Cliente - Motivo</td>
@@ -410,6 +410,9 @@ import moment from 'moment'
 
 						}
 					}
+				},
+				fechaLatam(fecha) {
+					if(fecha) return moment(fecha).format('DD/MM/YYYY');
 				},
 				editar(index){
 					this.caso.index =index
