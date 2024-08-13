@@ -10,9 +10,11 @@ use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Patient_seguimiento;
 use App\Models\Prescription;
+use App\Models\Professional;
 use App\Models\Reschedule;
 use App\Models\Triaje;
 use App\Models\Relative;
+use Faker\Provider\ar_EG\Person;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -69,19 +71,7 @@ class PatientController extends Controller
 	public function patientMineText($texto)
 	{
 		
-		DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
-
-		/* $patients = Patient::join('appointments as a', 'a.patient_id', '=', 'patients.id')
-		->with('initial_psychiatric_history', 'initial_psychological_history')
-
-		->where('a.status', '<>', 3)
-		->where('patients.name', 'like', '%'. $texto.'%' )
-		->orWhere('patients.dni', $texto)
-		->where('activo', 1)
-		->groupBy('patients.id')
-		->havingRaw('COUNT(patients.id) > 1')
-		->latest('a.created_at')
-		->select('patients.*' )->get(); */
+		DB::statement("SET SQL_MODE=''");
 
 		$pacientes = Patient::
 		with('appointments')
@@ -667,6 +657,48 @@ class PatientController extends Controller
 			//var_dump($request->all()); die();
 			$archivos = DB::table('archivos')->where('patient_id', $request->get('idPaciente'))->get();
 			return $archivos;
+		}
+
+		public function crearSOS(Request $request){
+			$persona = Patient::where('id', $request->get('id'));
+			$persona->update([
+				'sos'=>'1'
+			]);
+
+			DB::table('sos')->insert([
+				'idPaciente' => $request->get('id'),
+				'idProfesional' => $request->get('idProfesional'),
+				'comentarios' => $request->get('comentarios')
+			]);
+
+			return response()->json(['mensaje' => 'Paciente activado']); 
+		}
+		public function quitarSOS(Request $request){
+			$persona = Patient::where('id', $request->get('id'));
+			$persona->update([
+				'sos'=>'0'
+			]);
+
+			DB::table('sos')->where('idPaciente',$request->get('id') )->update([
+				'activo'=>0
+			]);
+
+			return response()->json(['mensaje' => 'Paciente activado']); 
+		}
+
+		public function pedirSOS(){
+			$pacientes = DB::table('sos')
+			->join('professionals', 'sos.idProfesional', '=', 'professionals.id')
+			->join('patients', 'sos.idPaciente', '=', 'patients.id')
+			->select('sos.*', 'professionals.name as nombreProfesional', 'patients.*')
+			->where('sos.activo','=', 1)->get();
+
+			foreach ($pacientes as $paciente) {
+				$relaciones = Relative::where('patient_id', $paciente->idPaciente)->get();
+				$paciente->relaciones = $relaciones;
+				$paciente->profesional = Professional::where('id', $paciente->idProfesional)->get();
+			}
+			return response()->json(['pacientes' => $pacientes ]);
 		}
 
 		public function pedirSeguimientos(){

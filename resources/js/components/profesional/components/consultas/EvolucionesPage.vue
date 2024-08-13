@@ -1,32 +1,44 @@
 <template>
 	<div @click="clickOutside">
 		<div class="row">
-			<div class="col-12 col-lg-3">
+			<div class="col-12 col-lg-auto">
 				<h4>Historia clínica del paciente</h4>
 			</div>
 			<div class="col-12 col-lg-auto" style="background-color: white; border-radius: 5px;">
-				<button data-bs-toggle="modal" data-bs-target="#modalProximaCita" class="btn btn-outline-warning my-1">
-					<i class="fa-solid fa-person-walking-arrow-right"></i> Próxima cita
-				</button>
-				<router-link v-if="dataUser.profession!='Psicólogo'" :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
-					title="Generar receta"><i class="fa-solid fa-vial"></i> Nueva receta
-				</router-link>
-				<button data-bs-toggle="modal" data-bs-target="#recetasModal" class="btn btn-outline-secondary my-1">
-					<i class="fa-solid fa-vial"></i> Ver recetas
-				</button>
-				<button v-if="datosConsulta.discharge != 1" class="btn btn-outline-success my-1" @click="toDischarge">
-					<i class="fa-solid fa-circle-check"></i> Dar de alta
-				</button>
-				<button v-else class="btn btn-outline-success my-1" disabled>
-					<i class="fa-solid fa-circle-check"></i> Dado de alta
-				</button>
-				<button data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" class="btn btn-outline-info   my-1">
-					<i class="fa-solid fa-scale-unbalanced-flip"></i> Ver triajes ({{ datosConsulta.triajes.length }})
-				</button>
-				<button data-bs-toggle="modal" data-bs-target="#examenModal" class="btn btn-outline-info  my-1">
-					<i class="fa-solid fa-note-sticky"></i> Ver exámenes ({{ contarExamenes()  }})
-				</button>
+				<div class="card">
+					<div class="card-body">
+						<button data-bs-toggle="modal" data-bs-target="#modalProximaCita" class="btn btn-outline-warning my-1">
+							<i class="fa-solid fa-person-walking-arrow-right"></i> Próxima cita
+						</button>
+						<router-link v-if="dataUser.profession!='Psicólogo'" :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
+							title="Generar receta"><i class="fa-solid fa-vial"></i> Nueva receta
+						</router-link>
+						<button data-bs-toggle="modal" data-bs-target="#recetasModal" class="btn btn-outline-secondary my-1">
+							<i class="fa-solid fa-vial"></i> Ver recetas
+						</button>
+						<button v-if="datosConsulta.discharge != 1" class="btn btn-outline-success my-1" @click="toDischarge">
+							<i class="fa-solid fa-circle-check"></i> Dar de alta
+						</button>
+						<button v-else class="btn btn-outline-success my-1" disabled>
+							<i class="fa-solid fa-circle-check"></i> Dado de alta
+						</button>
+						<button data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" class="btn btn-outline-info   my-1">
+							<i class="fa-solid fa-scale-unbalanced-flip"></i> Ver triajes ({{ datosConsulta.triajes.length }})
+						</button>
+						<button data-bs-toggle="modal" data-bs-target="#examenModal" class="btn btn-outline-info  my-1">
+							<i class="fa-solid fa-note-sticky"></i> Ver exámenes ({{ contarExamenes()  }})
+						</button>
+						<button v-if="datosConsulta.sos=='0'" class="btn btn-outline-danger" @click="crearSOS()"><i class="fa-solid fa-bomb"></i> SOS</button>
+						<button v-else class="btn btn-outline-secondary" @click="quitarSOS()"><i class="fa-solid fa-bomb"></i> Eliminar SOS</button>
+					</div>
+				</div>
 		
+			</div>
+		</div>
+
+		<div class=" my-3" v-if="datosConsulta.sos=='1'">
+			<div class="alert alert-danger" role="alert">
+				<i class="fa-solid fa-skull-crossbones"></i> <i class="fa-solid fa-skull-crossbones"></i> <i class="fa-solid fa-skull-crossbones"></i> <strong>Alerta!</strong> Paciente con riesgo de suicidio <i class="fa-solid fa-skull-crossbones"></i> <i class="fa-solid fa-skull-crossbones"></i> <i class="fa-solid fa-skull-crossbones"></i>
 			</div>
 		</div>
 
@@ -1116,6 +1128,44 @@ export default {
 		deleteCie() {
 			this.datosConsulta.cies.splice(parseInt(event.target.closest('.cie-item').dataset.cie), 1)
 			this.inicialPsiquiatria.diagnostic.splice(parseInt(event.target.closest('.cie-item').dataset.cie), 1)
+		},
+
+		async crearSOS(){
+			if(confirm(`¿Desea activar el modo S.O.S en el paciente?`)){
+
+				var textoIngresado = prompt("Por favor, ingresa tu nombre:");
+
+				if (textoIngresado !== null){
+					await this.axios.post(`/api/crearSOS/`,{
+						id: this.datosPaciente.id,
+						idProfesional: this.dataUser.id,
+						comentarios: textoIngresado
+					})
+					.then(res => {
+						if(res.data.mensaje){
+							this.datosConsulta.sos = 1;
+						}
+					})
+					.catch(err => {
+						console.error(err)
+					})
+				}
+			}
+		},
+		async quitarSOS(){
+			if(confirm(`¿Desea desactivar el modo S.O.S en el paciente?`)){
+				await this.axios.post(`/api/quitarSOS/`,{
+					id: this.datosPaciente.id
+				})
+				.then(res => {
+					if(res.data.mensaje){
+						this.datosConsulta.sos = 0;
+					}
+				})
+				.catch(err => {
+					console.error(err)
+				})
+			}
 		},
 
 		getTiempo() {

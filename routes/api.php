@@ -86,6 +86,9 @@ Route::resource('patient', PatientController::class)->only(['index', 'store', 'u
 Route::get('patientMine/{idProfesional}', [PatientController::class, 'patientMine']);
 Route::get('patientMineText/{texto}', [PatientController::class, 'patientMineText']);
 Route::post('patient/new', [PatientController::class, 'insertPatient']);
+Route::post('crearSOS', [PatientController::class, 'crearSOS']);
+Route::post('quitarSOS', [PatientController::class, 'quitarSOS']);
+Route::get('pedirSOS', [PatientController::class, 'pedirSOS']);
 Route::get('getPatient', [PatientController::class, 'getPatient']);
 Route::get('getLast10Patients', [PatientController::class, 'getLast10Patients']);
 Route::get('getLast10PatientsAdmin', [PatientController::class, 'getLast10PatientsAdmin']);

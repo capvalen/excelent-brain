@@ -83,8 +83,13 @@
 									v-else>
 									<i class="fa-solid fa-user-doctor"></i>
 								</router-link>
+								
+								<router-link class="btn btn-success btn-circle" :to="`evoluciones/${historia.id}`" title="Ver evoluciones"
+									v-if="dataUser.id==5">
+									<i class="fa-solid fa-user-doctor"></i>
+								</router-link>
 
-								<a v-if="dataUser.id==10" :href="`/api/pdfEvolution/thorough/${historia.id}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
+								<a v-if="dataUser.id==5" :href="`/api/pdfEvolution/thorough/${historia.id}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
 								<a v-else :href="`/api/pdfEvolution/restricted/${historia.id}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
 								<a v-if="dataUser.profession!='Psicólogo'" :href="`/profesional/recetas/${historia.id}`" class="btn btn-primary btn-circle" title="Generar receta"><i class="fa-solid fa-vial"></i></a>
 							</div>
