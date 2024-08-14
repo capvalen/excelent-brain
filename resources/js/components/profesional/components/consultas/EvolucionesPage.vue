@@ -7,8 +7,11 @@
 			<div class="col-12 col-lg-auto" style="background-color: white; border-radius: 5px;">
 				<div class="card">
 					<div class="card-body">
-						<button data-bs-toggle="modal" data-bs-target="#modalProximaCita" class="btn btn-outline-warning my-1">
+						<button data-bs-toggle="modal" data-bs-target="#modalProximaCita" class="btn btn-outline-warning my-1 d-none">
 							<i class="fa-solid fa-person-walking-arrow-right"></i> Próxima cita
+						</button>
+						<button data-bs-toggle="modal" class="btn btn-outline-secondary my-1" >
+							<i class="fa-solid fa-person-walking-arrow-right"></i> Agendar cita
 						</button>
 						<router-link v-if="dataUser.profession!='Psicólogo'" :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
 							title="Generar receta"><i class="fa-solid fa-vial"></i> Nueva receta

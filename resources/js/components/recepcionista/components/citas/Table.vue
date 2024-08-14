@@ -136,7 +136,7 @@
 										<span class="text labels" v-else-if="qCita.status == 4">Reprogramado</span>
 										<span class="text labels" v-else-if="qCita.status == 5">Eliminado</span>
 									</button>
-									<small class="text-capitalize" v-if="qCita.status == 3 && qCita.faltas"><br><i class="far fa-comment"></i> {{queObservacion(qCita.faltas[0])}}</small>
+									<small class="text-capitalize" v-if="(qCita.status == 3 || qCita.status==5) && qCita.faltas"><br><i class="far fa-comment"></i> {{queObservacion(qCita.faltas[0])}}</small>
 									<small class="text-capitalize" v-if="qCita.status == 4 && qCita.faltas"><br><i class="far fa-comment"></i> {{queRazon(qCita.faltas[0])}} <span v-if="qCita.faltas[0].fechaProxima!=''">- Proxima cita: {{ fechaLatam(qCita.faltas[0].fechaProxima )}}</span></small>
 								</td>
 								<td>
@@ -515,6 +515,7 @@ export default {
 			})
 		},
 		queObservacion(faltas){
+			
 			if(faltas) return faltas.observaciones
 			else return ''
 		},
