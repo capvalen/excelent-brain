@@ -546,9 +546,13 @@ class PatientController extends Controller
 			->orderByRaw("DAY(birth_date) ASC")
 			->get();
 
-			foreach ($pacientes as $resultado) {
-				$direccion = DB::table('addresses')->where('patient_id', $resultado->id)->get();
-				$resultado->address = $direccion[0];
+			foreach ($pacientes as $paciente) {
+				$direccion = DB::table('addresses')->where('patient_id', $paciente->id)->get();
+				$paciente->address = $direccion[0];
+				$confirmadas = Appointment::where('patient_id', $paciente->id)
+				->where('status', 2)
+				->get();
+				$paciente->confirmados = count($confirmadas);
 			}
 
 			return $pacientes;
@@ -690,7 +694,7 @@ class PatientController extends Controller
 			$pacientes = DB::table('sos')
 			->join('professionals', 'sos.idProfesional', '=', 'professionals.id')
 			->join('patients', 'sos.idPaciente', '=', 'patients.id')
-			->select('sos.*', 'professionals.name as nombreProfesional', 'patients.*')
+			->select('sos.*', 'professionals.name as nombreProfesional', 'patients.*', 'sos.id as idSos')
 			->where('sos.activo','=', 1)->get();
 
 			foreach ($pacientes as $paciente) {
@@ -699,6 +703,32 @@ class PatientController extends Controller
 				$paciente->profesional = Professional::where('id', $paciente->idProfesional)->get();
 			}
 			return response()->json(['pacientes' => $pacientes ]);
+		}
+
+		public function crearComentarioSOS(Request $request){
+			DB::table('sos_seguimientos')->insert([
+				'idSos'=> $request->get('idSos'),
+				'idUsuario'=> $request->get('idUsuario'),
+				'comentario'=> $request->get('comentario')
+			]);
+			return 'ok';
+		}
+		public function listarComentariosSOS($idSos){
+			$comentarios = DB::table('sos_seguimientos')->where('idSos', $idSos)->get();
+			foreach($comentarios as $comentario){
+				$profesional = DB::table('users')->where('id', $comentario->idUsuario)->first();
+				$comentario->nombreUsuario = $profesional->nombre;
+			}
+			return $comentarios;
+		}
+
+		public function agendarNuevaCita(Request $request){
+			DB::table('proximos')->insert([
+				'patient_id' =>$request->get('idPaciente'),
+				'professional_id' =>$request->get('idProfesional'),
+				'fecha' =>$request->get('fecha')
+			]);
+			return 'ok';
 		}
 
 		public function pedirSeguimientos(){

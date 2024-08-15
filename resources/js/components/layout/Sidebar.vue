@@ -308,6 +308,13 @@
 									<span>Reportes</span>
 							</router-link>
 						</li>
+						<!-- Nav Item - Dashboard -->
+						<li class="nav-item nav__list" @click="activeSidebar()">
+								<router-link to="/recepcionista/pacientes-sos" class="nav-link">
+									<i class="fa-solid fa-skull-crossbones"></i>
+										<span>Pacientes S.O.S.</span>
+								</router-link>
+						</li>
 						
 				</div>
 

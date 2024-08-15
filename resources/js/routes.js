@@ -491,7 +491,12 @@ export const routes = [
           path:'recordatorios',
           name: 'recordatorios',
           component: HomeRecordatorios
-        }
+        },
+				{
+					path: 'pacientes-sos',
+					name: 'pacientes-sos',
+					component: PacientesSos
+				},
       ]
   },
   {

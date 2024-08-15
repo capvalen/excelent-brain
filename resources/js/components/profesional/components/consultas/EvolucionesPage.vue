@@ -10,7 +10,7 @@
 						<button data-bs-toggle="modal" data-bs-target="#modalProximaCita" class="btn btn-outline-warning my-1 d-none">
 							<i class="fa-solid fa-person-walking-arrow-right"></i> Próxima cita
 						</button>
-						<button data-bs-toggle="modal" class="btn btn-outline-secondary my-1" >
+						<button data-bs-toggle="modal" data-bs-target="#modalAgendarCita" class="btn btn-outline-secondary my-1" >
 							<i class="fa-solid fa-person-walking-arrow-right"></i> Agendar cita
 						</button>
 						<router-link v-if="dataUser.profession!='Psicólogo'" :to="{ path: `/profesional/recetas/${datosConsulta.id}` }" class="btn btn-outline-secondary"
@@ -667,6 +667,8 @@
 		<ModalNuevoAcontecimiento :idPaciente="datosConsulta.id" :idProfesional="dataUser.id"></ModalNuevoAcontecimiento>
 		<evolution-modal :dataUser="dataUser.profession" :datosIdEvolucion="datosIdEvolucion" ></evolution-modal>
 		<modalNuevoSeguimiento :idProfesional="dataUser.id"  :idEvolucion="idEvolucion" @agregarComentario="agregarComentario"></modalNuevoSeguimiento>
+		<ModalAgendarCita :profesional="dataUser" :paciente="datosPaciente"></ModalAgendarCita>
+
 	</div>
 </template>
 
@@ -685,6 +687,7 @@ import ModalEditarPariente from './ModalEditarPariente.vue'
 import ModalVerEstados from './../../../recepcionista/components/pacientes/ModalVerEstados.vue'
 import ModalVerHobbies from './../../../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
 import ModalProximaCita from './ModalProximaCita.vue'
+import ModalAgendarCita from './ModalAgendarCita.vue'
 import ModalArchivos from './ModalArchivos.vue'
 import BarChart  from './grafico/barras'
 import ModalNuevoAcontecimiento from './ModalNuevoAcontecimiento.vue'
@@ -696,7 +699,7 @@ import nutricionHome from '../nutricion/HomeNutricion.vue'
 export default {
 	name: 'evolucionPaciente',
 
-	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo, EvolutionModal, modalNuevoSeguimiento, nutricionHome },
+	components: { updatedModal, ExamResult, ExamTable, editModal, modalVerDetalle, ModalVerTriajesViejos, ModalEditarPariente, ModalVerEstados, ModalEditarPaciente, ModalVerHobbies, BarChart, ModalComentarios, ModalProximaCita, ModalArchivos, ModalNuevoAcontecimiento, lineaTiempo, EvolutionModal, modalNuevoSeguimiento, nutricionHome, ModalAgendarCita },
 
 	data() {
 		return {

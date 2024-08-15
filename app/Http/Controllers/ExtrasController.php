@@ -636,14 +636,14 @@ class ExtrasController extends Controller
 				$citasResumidas = [];
 
 				foreach ($citasCompletas as $cita) {
-					$existe = false;					
+					$existe = false;
 					foreach ($citasResumidas as $item) {
 						if ($item['patient_id'] == $cita['patient_id']) {
 							$existe = true;
 							break;
 						}
 					}					
-					if (!$existe) $citasResumidas[] = $cita;					
+					if (!$existe) $citasResumidas[] = $cita;
 				}
 				/* usort($citasResumidas, function($a, $b) {
 					return strtotime($b['date']) - strtotime($a['date']);
@@ -665,10 +665,11 @@ class ExtrasController extends Controller
 					->orderBy('date', 'desc')
 					->get();
 			endif;
-				foreach($citasCompletas as $cita){
-					$pago = Payment::where('appointment_id', $cita->id)->get();
-					$cita->payment = $pago[0] ?? [];
-				}
+			foreach($citasCompletas as $cita){
+				$pago = Payment::where('appointment_id', $cita->id)->get();
+				$cita->payment = $pago[0] ?? [];
+				$cita->proximo = DB::table('proximos')->where('patient_id', $cita->patient_id)->orderBy('fecha', 'desc')->first();
+			}
 
 		}
 		if($request->get('texto')<>''){

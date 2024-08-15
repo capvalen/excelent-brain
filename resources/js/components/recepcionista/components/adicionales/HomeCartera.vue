@@ -41,6 +41,7 @@
 							<th>DNI</th>
 							<th>Celular</th>
 							<th>Ult. Cita</th>
+							<th>Prox. Cita</th>
 							<th>Antigüedad</th>
 							<th>N° Citas</th>
 							<th>N° Conf.</th>
@@ -59,6 +60,7 @@
 							<td>{{ cita.patient.dni }}</td>
 							<td>{{ cita.patient.phone }}</td>
 							<td>{{ultimaCita(cita.patient.id)}}</td>
+							<td>{{proximaCita(cita.patient.id)}}</td>
 							<td>{{queViejoEs(index)}}</td>
 							<!-- <td>{{ ultimaFecha(cita.patient.id) }}</td> -->
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('visitas', cita.patient.id)">{{ cita.visitas }}</td>
@@ -203,8 +205,16 @@ export default{
 
 			let citas = this.citasCompletas.filter(item=> item.patient_id == id );
 			fechaMasNueva = citas[0].date
-			console.log(citas[0].patient.name, citas)
+			//console.log(citas[0].patient.name, citas)
 			return moment(fechaMasNueva).fromNow(true)
+		},
+		proximaCita(id){
+			moment.locale('es')
+
+			let citas = this.citasCompletas.filter(item=> item.patient_id == id );
+				if(citas[0].proximo){
+				return moment(citas[0].proximo.fecha).format('DD/MM/YYYY')
+			}else return ''
 		},
 		queViejoEs(index){
 			moment.locale('es')
