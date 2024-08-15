@@ -479,7 +479,7 @@ export default {
       }
     },
 		fechaLatam(fecha){
-			return moment(fecha).format('DD/MM/YYYY');
+			if(fecha) return moment(fecha).format('DD/MM/YYYY');
 		},
 
     maxCharacter (character, num) {
