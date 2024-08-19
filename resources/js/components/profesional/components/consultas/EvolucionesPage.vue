@@ -1139,7 +1139,7 @@ export default {
 		async crearSOS(){
 			if(confirm(`¿Desea activar el modo S.O.S en el paciente?`)){
 
-				var textoIngresado = prompt("Por favor, ingresa tu nombre:");
+				var textoIngresado = prompt("Por favor, ingresa el motivo:");
 
 				if (textoIngresado !== null){
 					await this.axios.post(`/api/crearSOS/`,{

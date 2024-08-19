@@ -68,7 +68,7 @@
 		<tbody>
 			<tr>
 				<td class="w-40"><strong>Apellidos y nombres</strong></td>
-				<td class="w-60"> <span>{{$paciente->name}}</span></td>
+				<td class="w-60"> <span>{{$paciente->name}}</span><span>{{$paciente->nombres}}</span></td>
 			</tr>
 			<tr>
 				<td class="w-40"><strong>D.N.I.</strong></td>
