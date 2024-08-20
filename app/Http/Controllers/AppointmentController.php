@@ -507,7 +507,7 @@ class AppointmentController extends Controller
 
 		foreach($appointments as $cita){
 			//Ver si tiene falta
-			if($cita->status == '3'){
+			if($cita->status == '3' || $cita->status == '5' ){
 				$cita->faltas = DB::table('faltas')->where('idCita', $cita->idCita)->get();
 			}
 			if($cita->status == '4'){
@@ -547,7 +547,7 @@ class AppointmentController extends Controller
 			}
 
 			//Ver si tiene falta
-			if($appointment->status == '3'){
+			if($appointment->status == '3' || $appointment->status == '5' ){
 				$faltas = DB::table('faltas')->where('idCita', $appointment->id)->get();
 			}elseif($appointment->status == '4'){
 				$appointment->faltas = Reschedule::where('appointment_id', $appointment->id)->get();

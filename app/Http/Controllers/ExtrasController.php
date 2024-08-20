@@ -470,7 +470,6 @@ class ExtrasController extends Controller
 	}
 
 	public function guardarMembresia( Request $request){
-		
 		$fechas = json_decode ($request->input('fechas'));
 		$fechas_membresias = json_decode ($request->input('fechas_membresias'));
 		$membresia = json_decode ($request->input('membresia'), true);
@@ -482,6 +481,7 @@ class ExtrasController extends Controller
 			'user_id' => $request->input('user_id'),
 			'cuotas' => count($fechas),
 			'monto' => $membresia['precio'],
+			'comentarios' => $request->input('comentarios')
 		]);
 
 		foreach($fechas_membresias as $sesion){

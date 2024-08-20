@@ -29,6 +29,7 @@
 							<p class="mb-1"><strong>Fecha límite final</strong> <span>{{ fechaLatam(membresia.fin) }}</span></p>
 							<p class="mb-1"><strong>N° cuotas</strong> <span>{{ membresia.cuotas }}</span></p>
 							<p class="mb-1"><strong>Monto Total</strong> <span>S/ {{ parseFloat(membresia.monto).toFixed(2) }}</span></p>
+							<p class="mb-1"><strong>Comentarios adicionales:</strong> <span>{{ membresia.comentarios }}</span></p>
 							<p class="mt-2 mb-0">Cuotas pagadas: (<span>{{ membresia.pagados.length }} cuotas</span>) <span v-if="membresia.pagados.length>0" class="badge bg-primary rounded-pull p-2 m-1" style="cursor: pointer;" title="Voucher de pagos acumulados" @click="voucherAcumulados(index)"><i class="far fa-sticky-note"></i></span></p>
 							<ol class="list-group">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="pagado in membresia.pagados">
@@ -70,7 +71,7 @@
 					<div class="modal-body">
 						<div class="row mb-2">
 							<div class="col d-flex d-grid justify-content-between">
-								<button class="btn btn-outline-primary" @click="addCita=true">Agregar cita</button>
+								<button class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalAmpliarFechaMembresia" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
 								<span>0 de 6 Citas</span>
 							</div>
 						</div>
@@ -116,7 +117,7 @@ export default{
 	props:['queId', 'nombrePaciente', 'idUser'],
 	components:{ ModalAmpliarFechaMembresia },
 	data(){return {
-		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, addCita:false
+		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false
 	}},
 	mounted(){
 		//this.buscarMembresias()

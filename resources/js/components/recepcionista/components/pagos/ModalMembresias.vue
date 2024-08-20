@@ -172,6 +172,9 @@
 							</div>
 						</div>
 
+						<label for="">Comentarios adicionales:</label>
+						<textarea class="form-control mb-3" id="txtComentarios" v-model="comentarios" row="2"></textarea>
+
 
 						<button class="btn btn-outline-primary" data-bs-dismiss="modal" @click="guardar()"><i class="fa-regular fa-floppy-disk"></i> Guardar membresía</button>
 					</section>
@@ -189,7 +192,7 @@ export default {
 	name: 'ModalMembresias',
 	data() {
 		return {
-			txtBusqueda: '', pacientes: [], vista: 'buscar', indexGlobal: null, pacienteElegido: {}, precios: [], membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD') }, fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') }, doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:''
+			txtBusqueda: '', pacientes: [], vista: 'buscar', indexGlobal: null, pacienteElegido: {}, precios: [], membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD') }, fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') }, doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:'', comentarios:''
 		}
 	},
 	props: ['idUsuario'],
@@ -295,6 +298,7 @@ export default {
 				datos.append('nombreMembresia', mem.options[mem.selectedIndex].text )
 				datos.append('fechas', JSON.stringify(this.fechas))
 				datos.append('fechas_membresias', JSON.stringify(this.sesionesAcumuladas))
+				datos.append('comentarios', this.comentarios )
 
 				const servidor = await fetch('/api/guardarMembresia', {
 					method: 'POST', body: datos

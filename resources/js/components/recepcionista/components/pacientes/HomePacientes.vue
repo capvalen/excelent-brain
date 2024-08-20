@@ -93,7 +93,7 @@
             <button class="btn btn-outline-info btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerFaltas" @click="queId=paciente.id; cantFaltas = paciente.faults;" >{{ paciente.faults }} </button>
           </td>
 					<td>
-						<button class="btn btn-outline-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verReprogramacionesViejos(paciente.id)">{{ paciente.reprogramaciones }}</button>
+						<button class="btn btn-outline-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerReprogramacionesViejos" title="Historial de Reprogramaciones" @click="verReprogramacionesViejos(paciente.id)">{{ paciente.reprogramaciones }}</button>
 					</td>
           <td>
             <button
@@ -114,7 +114,7 @@
     <modal-faltas v-if="data" :dataPatient="data"></modal-faltas>
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales"></modal-triaje>
 		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
-		<modal-ver-reprogramaciones-viejos :reprogramaciones="reprogramaciones"></modal-ver-reprogramaciones-viejos>
+		<ModalVerReprogramacionesViejos :reprogramaciones="reprogramaciones"></ModalVerReprogramacionesViejos>
     <modal-new-patient @cargarPacienteSimpleNuevo="getPatients"></modal-new-patient>
 		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
