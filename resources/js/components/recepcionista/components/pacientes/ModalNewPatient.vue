@@ -134,6 +134,15 @@
 						</div>
 						<hr>
 
+						<p class="mb-0"><strong>buenas</strong></p>
+						<div class="form-group row">
+							<div class="col-sm-4">
+								<label for="name">Prueba</label>
+								<input type="text" class="form-control" name="contacto" id="contacto" v-model="paciente.recomendation"  placeholder="Contacto" autocomplete="off">
+							</div>
+						</div>
+						<hr>
+
             <!-- <div class="form-group row"> 
               <div class="col-sm-12">
                 <label for="name">Nombre de pariente</label>

@@ -47,7 +47,7 @@
 						<tbody>
 							<tr v-for="(cliente, index) in clientes">
 								<td>{{ index + 1 }}</td>
-								<td @click="dataProps(cliente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ (cliente.name.toLowerCase()) }} {{ cliente.nombres.toLowerCase() }}</td>
+								<td @click="dataProps(cliente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ (cliente.name.toUpperCase()) }} {{ cliente.nombres.toUpperCase() }}</td>
 								<td>{{ fechaLatam(cliente.birth_date) }}</td>
 								<td>{{ edad(cliente.birth_date) }} años</td>
 								<td>{{ cliente.confirmados }}</td>

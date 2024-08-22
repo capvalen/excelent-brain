@@ -7,6 +7,7 @@
 			<thead>
 				<th>N°</th>
 				<th>Nombres</th>
+				<th>Celular</th>
 				<th>Profesional</th>
 				<th>Mensaje</th>
 				<th>Familiares</th>
@@ -17,6 +18,7 @@
 				<tr v-for="(paciente, index) in pacientes">
 					<td>{{ index+1 }}</td>
 					<td>{{ paciente.name }} {{ paciente.nombres }}</td>
+					<td>{{ paciente.phone	}} </td>
 					<td>{{ paciente.nombreProfesional	}} </td>
 					<td>{{ paciente.comentarios }} </td>
 					<td>
