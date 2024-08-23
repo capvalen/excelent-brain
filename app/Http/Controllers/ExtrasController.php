@@ -562,7 +562,7 @@ class ExtrasController extends Controller
 			'observation'=>'',
 			'bank'=>'',
 			'voucher' => '',
-			'pay_status'=> 1,
+			'pay_status'=>2,
 			'price' => $request->get('precio'),
 			'appointment_id' => $appointment->id,
 			'continuo' => 2,

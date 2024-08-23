@@ -9,15 +9,14 @@
 				</div>
 				<div class="modal-body py-0 border-0">
 					<p class="my-2"><strong>Profesional:</strong> </p>
-					<p class="my-2"> <span>{{profesional.name}}</span></p>
-					<p class="my-2"><strong>Clase:</strong> <span>{{profesional.profession}}</span></p>
+					<select class="form-select" id="sltProfesional" v-model="idProfesional" @change="listarHorario">
+						<option value="-1">Seleccionar profesional</option>
+						<option v-for="prof in profesional" :value="prof.id">{{ prof.nombre }}</option>
+					</select>
 					<p class="my-2"><strong>Paciente:</strong> </p>
 					<p class="my-2"><span class="text-capitalize">{{paciente.name.toLowerCase()}}</span></p>
 					
 					<label for="">Tipo de servicio</label>
-					<select  class="form-select" name="type" id="sltServicio" v-model="cita.idServicio" >
-						<option v-for="precio in precios" :value="precio.id" v-if="precio.idClasificacion== profesional.idProfesion && ![1,2,7,13].includes( precio.id)">{{ precio.descripcion }}</option>
-					</select>
 					<label class="">Fecha</label>
 					<input type="date" class="form-control" v-model="fecha" @change="listarHorario()">
 					<label class="mt-2">Horario</label>
@@ -27,15 +26,6 @@
 							{{ horaLatam1(hora.check_time) }} - {{ horaLatam2(hora.departure_date) }}
 						</option>
 					</select>
-					<label class="mt-2">Modalidad</label>
-					<div class=" form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" id="flePresencial" v-model="esPresencial" >
-						<label class="form-check-label" for="flePresencial">
-							<span v-if="esPresencial"><i class="far fa-user"></i> Reunión presencial</span>
-							<span v-else><i class="fas fa-desktop"></i> Reunión virtual</span>
-						</label>
-					</div>
-					
 				</div>
 				<div class="modal-footer border-0">
 					<button type="button" class="btn btn-outline-primary" @click="separarCita()" data-bs-dismiss="modal"><i class="fa-regular fa-floppy-disk"></i> Registrar</button>
@@ -52,34 +42,33 @@ export default{
 	name: 'modalProximaCita',
 	data(){ return {
 		esPresencial:true, data:[], horarios:[], horariosAll:[], schedulesInvalid:[], hoursProfessional:[], fecha: moment().format('YYYY-MM-DD'), precios:[],
-		cita:{idServicio:null, }
+		cita:{idServicio:null, }, idProfesional:null
 	}},
-	props:['profesional', 'paciente'],
+	props:['profesional', 'paciente', 'idMembresia', 'idServicio'],
 	methods:{
 		separarCita(){
-			if(!this.cita.idServicio)
-				alertify.notify('Se debe seleccionar un servicio', 'danger', 10)
-			else if(!this.fecha)
+			if(!this.fecha)
 				alertify.notify('Se debe seleccionar una fecha', 'danger', 10)
 			else if(!this.cita.idHora)
 				alertify.notify('Se debe seleccionar un horario', 'danger', 10)
 			else{
-				const quePrecio = this.precios.find(x=> x.id == this.cita.idServicio).nuevos
+				const quePrecio = 0// this.precios.find(x=> x.id == this.cita.idServicio).nuevos
 				
 				this.axios.post('/api/reservarCitaDoctor',{
 					date: this.fecha,
-					type: this.cita.idServicio,
+					type: this.idServicio,
+					idMembresia : this.idMembresia,
 					patient_condition: 2, //paciente antigüo
 					mode: this.esPresencial ? 1: 2,
 					status:1,// sin confirmar
 					clasification: this.profesional.idProfesion,
 					recomendation: 'Auto Generado por Profesional '+ this.profesional.name,
-					professional_id: this.profesional.id,
+					professional_id: this.idProfesional,
 					patient_id: this.paciente.id,
 					schedule_id: this.cita.idHora,
 					formato_nuevo: 1,
 					byDoctor:1,
-					precio: quePrecio,
+					precio: 0,
 				}).then(response=>{ console.log(response.data);
 					if( response.data.mensaje )
 						alertify.notify('Reservado con éxito', 'success', 10)
@@ -95,7 +84,7 @@ export default{
 		},
 		async listarHorario() {
 			
-			await this.axios.get(`/api/horario/${this.profesional.id}`)
+			await this.axios.get(`/api/horario/${this.idProfesional}`)
 			.then(res => { 
 				this.horarios = res.data.schedulesInvalid;       
 				this.horariosAll = res.data.schedules;       

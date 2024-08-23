@@ -46,7 +46,7 @@
 					</td>
 					<td v-else></td>
 					<td>
-						<button v-if="paciente.vivo==1" class="btn btn-outline-primary btn-circle"  data-bs-toggle="offcanvas" data-bs-target="#offVerMembresias" @click="queId = paciente.id; nombrePaciente= paciente.name+ ', ' + paciente.nombres"><i class="far fa-star"></i></button>
+						<button v-if="paciente.vivo==1" class="btn btn-outline-primary btn-circle"  data-bs-toggle="offcanvas" data-bs-target="#offVerMembresias" @click="queId = paciente.id; nombrePaciente= paciente.name+ ', ' + paciente.nombre; dataPaciente = paciente"><i class="far fa-star"></i></button>
 					</td>
 					<td v-if="paciente.vivo==1" >
 						<div v-if="paciente.semaforo[0]">
@@ -120,7 +120,7 @@
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
 		<ModalVerFaltas :queId="queId" :cantFaltas="cantFaltas"></ModalVerFaltas>
 		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies>
-		<OffVerMembresias :queId="queId" :nombrePaciente="nombrePaciente" :idUser="$attrs.idUser"></OffVerMembresias>
+		<OffVerMembresias :queId="queId" :nombrePaciente="nombrePaciente" :idUser="$attrs.idUser" :profesional="profesionales" :paciente="dataPaciente"></OffVerMembresias>
 		
   </main>
 </template>
@@ -144,7 +144,7 @@ export default {
 
   data () {
     return {
-      dataPatients: [], queId:null,
+      dataPatients: [], queId:null, dataPaciente:null,
       data: null, dataTriajes:null,
       busqueda: [], like:0, id:-1, cantFaltas:-1, reprogramaciones:[],
       totalPatients:[], profesionales:[], nombrePaciente:'',
@@ -167,7 +167,7 @@ export default {
   components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies, ModalVerReprogramacionesViejos, OffVerMembresias },
 
   props: {
-    dataPatient: Object
+    dataPatient: Object, profesionales:null
   },
 
   methods: {

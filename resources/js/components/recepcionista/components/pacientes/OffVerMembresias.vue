@@ -71,7 +71,7 @@
 					<div class="modal-body">
 						<div class="row mb-2">
 							<div class="col d-flex d-grid justify-content-between">
-								<button class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalAmpliarFechaMembresia" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
+								<button class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
 								<span>0 de 6 Citas</span>
 							</div>
 						</div>
@@ -104,6 +104,9 @@
 		</div>
 
 		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha"></ModalAmpliarFechaMembresia>
+
+		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio"></ModalProximaCita>
+		
 	</div>
 </template>
 
@@ -111,13 +114,15 @@
 import moment from 'moment';
 import alertify from 'alertifyjs';
 import ModalAmpliarFechaMembresia from './ModalAmpliarFechaMembresia.vue'
+import ModalProximaCita from '../../../profesional/components/consultas/ModalProximaCita.vue'
+
 
 export default{
-	name:'offVerMembresias',
-	props:['queId', 'nombrePaciente', 'idUser'],
-	components:{ ModalAmpliarFechaMembresia },
+	name:'ModalVerMembresias',
+	props:['queId', 'nombrePaciente', 'idUser', 'paciente', 'profesional'],
+	components:{ ModalAmpliarFechaMembresia, ModalProximaCita },
 	data(){return {
-		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false
+		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null
 	}},
 	mounted(){
 		//this.buscarMembresias()
@@ -170,7 +175,9 @@ export default{
 				}
 			})
 		},
-		pedirCitasMembresia(id){
+		pedirCitasMembresia(id, index){
+			this.idMembresia = id
+			this.idServicio = this.membresias.find(x=> id == x.id).tipo
 			this.axios('/api/pedirCitasMembresia/'+id)
 			.then(res=> this.citas = res.data )
 		},
