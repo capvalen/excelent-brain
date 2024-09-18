@@ -4,7 +4,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import moment from 'moment'
 
-const servidor = process.env.HOME =='/home/karl' ? 'http://127.0.0.1' : 'http://192.168.0.134'; //Servidor: Linux, Windows
+const servidor = process.env.HOME =='/home/karl' ? 'http://127.0.0.1' : 'http://192.168.1.134'; //Servidor: Linux, Windows
 const options = {
 	cors: true,
 	//origin: ['http://localhost:3001']

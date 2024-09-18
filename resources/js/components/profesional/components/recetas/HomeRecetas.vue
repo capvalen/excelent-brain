@@ -40,8 +40,7 @@
     <div class="form-row">
         <div class="col-md-12">
             <label for="">Paciente</label>
-            <input v-if="prescription.patient_id==0" type="text" class="form-control text-capitalize" v-model="name_patient" placeholder="Nombre del Paciente" >
-            <input v-else type="text" class="form-control text-capitalize" v-model="name_patient" placeholder="Nombre del Paciente" readonly>
+            <input type="text" class="form-control text-capitalize" v-model="full_patient_name" placeholder="Apellidos y Nombres" :readonly="prescription.patient_id !== 0">
         </div>
     </div>
     <div class="form-row">
@@ -141,7 +140,11 @@ export default{
             },
             tipo: this.type,
             id_receta : '',
-            name_patient: '',
+            name_patient: '', // Apellidos
+            nombres_patient: '', // Nombres
+            prescription: {
+                patient_id: this.$route.params.patientId,
+            },
             last_recipes:[]
         }
     },
@@ -155,15 +158,17 @@ export default{
     components:{RecetasModal, KairosModal},
     methods:{
         getNamePatient(){
-            if(this.$route.params.patientId != 0){
+            if (this.$route.params.patientId != 0) {
             this.axios.get(`/api/getNamePatient/${this.$route.params.patientId}`)
             .then((result) => {
-                console.log(result)
-                if(result.data.last_recipe){
-                    this.name_patient = result.data.patient.name
-                    this.last_recipes = result.data.last_recipe
-                }else{
-                    this.name_patient = result.data.name
+                console.log(result);
+                if (result.data.last_recipe) {
+                    this.name_patient = result.data.patient.name; // Apellidos
+                    this.nombres_patient = result.data.patient.nombres; // Nombres
+                    this.last_recipes = result.data.last_recipe;
+                } else {
+                    this.name_patient = result.data.name; // Apellidos
+                    this.nombres_patient = result.data.nombres; // Nombres
                 }
 
 
@@ -235,6 +240,11 @@ export default{
                 return this.medicamentos.filter(medicamento => medicamento.name.toLowerCase().includes(this.buscar) || medicamento.tradename.toLowerCase().includes(this.buscar)).splice(0,6)
             }
         }
+    },
+    computed: {
+    full_patient_name() {
+        return `${this.name_patient} ${this.nombres_patient}`.trim();
+    }
     },
     beforeMount(){
         this.getNamePatient()

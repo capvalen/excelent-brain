@@ -49,7 +49,7 @@
 					</div>
 					<div class="col-sm-6">
 						<label for="name">Fecha de atención</label>
-						<input type="datetime-local" class="form-control" name="phone" id="phone" v-model="consulta.fecha" placeholder="Telefono del paciente" readonly>
+						<input type="datetime-local" class="form-control" name="fecha" id="fecha" v-model="consulta.fecha" placeholder="Fecha de atención">
 					</div>
 				</div>
 				<hr>
