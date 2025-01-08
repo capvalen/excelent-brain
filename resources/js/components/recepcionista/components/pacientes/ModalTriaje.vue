@@ -24,7 +24,7 @@
 				<div class="form-group row">
 					<div class="col-sm-12">
 						<label for="name">Apellidos y Nombres</label>
-						<input type="text" class="form-control" name="apellidos" id="dni" v-model="dataPatient.name" placeholder="Dni del paciente">
+						<input type="text" class="form-control" name="apellidos" id="apellidos_nombres" v-model="fullName" placeholder="Apellidos y Nombres">
 					</div>
 				</div>
 				<div class="form-group row">
@@ -197,6 +197,17 @@ export default {
 		}
 	},
 	computed: {
+		
+		fullName: {
+        get() {
+            return `${this.dataPatient.name} ${this.dataPatient.nombres}`;
+        },
+        set(value) {
+            const parts = value.split(" ");
+            this.dataPatient.name = parts.slice(0, -1).join(" "); // Apellidos
+            this.dataPatient.nombres = parts.slice(-1).join(" "); // Nombres
+        }
+    },
     updateValues () {
       return this.datos = this.dataPatient
     }

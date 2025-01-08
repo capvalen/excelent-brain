@@ -12,7 +12,7 @@
             <label for="">Nombre del Paciente</label>
              <input type="text" name="" v-model="buscar" id="" class="form-control input-name">
                 <div v-show="showResults" class="border border-secondary shadow w-100">
-                    <div @click="selectPatient(patient)" class="border border-secondary"  v-for="patient in filtro" :key="patient.id">{{patient.name}}</div>
+                    <div @click="selectPatient(patient)" class="border border-secondary"  v-for="patient in filtro" :key="patient.id">{{patient.name}} {{patient.nombres}}</div>
                 </div>
         </div>
 

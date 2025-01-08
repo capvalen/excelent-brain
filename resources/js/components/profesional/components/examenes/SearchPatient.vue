@@ -10,7 +10,7 @@
         class="border border-secondary" 
         @click="selectPatient(patient)" 
         :key="patient.id">
-        {{ patient.name }}
+        {{ patient.name }} {{ patient.nombres }} 
         </div>
     </div>
   </div>

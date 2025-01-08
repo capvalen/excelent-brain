@@ -27,6 +27,8 @@
           <th>Nombre y apellidos</th>
           <th>Hobbies</th>
           <th>Triaje</th>
+          <th>Plan de Seguridad</th>
+
         </tr>
       </thead>
       <tbody>
@@ -43,6 +45,10 @@
 					</td>
 					<td>
 						<button class="btn btn-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
+						<button v-if="patients.vivo==1"  class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(patients)" data-bs-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
+					</td>
+          <td>
+						<button class="btn btn-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalPlanSeguridad" title="Plan de Seguridad" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
 						<button v-if="patients.vivo==1"  class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(patients)" data-bs-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
 					</td>
         </tr>

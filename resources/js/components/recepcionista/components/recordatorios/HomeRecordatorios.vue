@@ -51,7 +51,7 @@
 								<td>{{ fechaLatam(cliente.birth_date) }}</td>
 								<td>{{ edad(cliente.birth_date) }} años</td>
 								<td>{{ cliente.confirmados }}</td>
-								<td><a v-if="cliente.phone!=''" :href="`https://wa.me/51${cliente.phone}?text=Feliz cumpleaños 🎂 ${cliente.name}, recuerda que el que piensa positivo, ve lo invisible, siente lo intangible y logra lo imposible. Te desea la clínica Excelentemente 🤗`" target="_blank"><i class="fab fa-whatsapp"></i></a></td>
+								<td><a v-if="cliente.phone!=''" :href="`https://wa.me/51${cliente.phone.replace(/\s+/g, '')}?text=Feliz cumpleaños 🎂 ${cliente.name} ${cliente.nombres}, recuerda que el que piensa positivo, ve lo invisible, siente lo intangible y logra lo imposible. Te desea la clínica Excelentemente 🤗`" target="_blank"><i class="fab fa-whatsapp"></i></a></td>
 							</tr>
 						</tbody>
 					</table>

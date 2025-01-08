@@ -239,9 +239,8 @@ export default{
                 this.showResults = true
                 return this.medicamentos.filter(medicamento => medicamento.name.toLowerCase().includes(this.buscar) || medicamento.tradename.toLowerCase().includes(this.buscar)).splice(0,6)
             }
-        }
-    },
-    computed: {
+        },
+    
     full_patient_name() {
         return `${this.name_patient} ${this.nombres_patient}`.trim();
     }
