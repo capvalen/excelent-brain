@@ -203,7 +203,7 @@
 					<vista-calendario :profesionales="profesionales" ></vista-calendario>
 				</div>
 				<div class="tab-pane fade show active" id="cuaderno-tab" role="tabpanel" aria-labelledby="cuaderno-tab" tabindex="0">
-					<vista-cuaderno :idUsuario="idUsuario" :nombreUser="nombreUser" ></vista-cuaderno>
+					<vista-cuaderno :idUsuario="idUsuario" :nombreUser="nombreUser" :idSede="idSede" ></vista-cuaderno>
 				</div>
 				<!-- Fin de segunda tab -->
 			</div>
@@ -244,7 +244,7 @@ export default {
   props: {
     profes:Array,
     horas:Array,
-    dataCit: Object, nombreUser:String
+    dataCit: Object, nombreUser:String, idSede:null
   },
 
 

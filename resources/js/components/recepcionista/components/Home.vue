@@ -5,11 +5,11 @@
         <div class="d-flex align-items-center">
         </div>
     </div>
-    <table-citas :nombreUser="nombreUser"></table-citas>
+    <table-citas :nombreUser="nombreUser" :idSede="idSede"></table-citas>
     </main>
 </template>
 
 <script>
 export default{
-	props:['nombreUser']
+	props:['nombreUser', 'idSede']
 }</script>

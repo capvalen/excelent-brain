@@ -342,7 +342,7 @@ import moment from 'moment'
 
 export default {
 	name: "ModalNuevaCita",
-	props:{ profesionalElegido: null, horaElegida: null , idUsuario:null, fechaElegida:null },
+	props:{ profesionalElegido: null, horaElegida: null , idUsuario:null, fechaElegida:null, idSede:null },
 	data(){
 		return{
 			precios: [], nosrecomienda:true, precioNuevo:true, esPresencial: true, masBasicos:true, masEmergencia:false, tieneDescuento:false, descuentoRebaja:0, tieneRebaja:false, razonPorcentaje:'', razonRebaja:'',
@@ -501,6 +501,7 @@ export default {
 				formData.append('adelanto', this.descuentoAdelanto);
 				formData.append('razonAdelanto', this.razonAdelanto);
 				formData.append('monedaAdelanto', this.monedaAdelanto);
+				formData.append('idSede', this.idSede);
 				await this.axios.post('/api/appointment', formData, config)
 				.then(response => { //Trabaja en api -> modelo (appointment)>store()
 					console.log(response.data)

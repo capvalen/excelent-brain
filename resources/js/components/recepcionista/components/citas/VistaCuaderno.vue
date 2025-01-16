@@ -167,9 +167,9 @@
 			</div>
 			
 		</div>
-		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha' @actualizarListadoCitas="actualizarListadoCitas"></ModalNuevaCita>
+		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha' @actualizarListadoCitas="actualizarListadoCitas" :idSede="idSede"></ModalNuevaCita>
     <modal-estado v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></modal-estado>
-    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
+    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario" :idSede="idSede"></pago-modal>
 		<modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario" @ocultarCita="actualizarListadoCitas"></reprog-modal>
 		<info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>
@@ -200,7 +200,7 @@
 				address:{patient:{address:{}}}
 			}, posibles:[], primero:{}
 		}},
-		props:[ 'idUsuario', 'nombreUser'],
+		props:[ 'idUsuario', 'nombreUser', 'idSede'],
 		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio },
 		methods:{
 			dayWeek (day) {

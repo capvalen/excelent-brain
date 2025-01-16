@@ -95,7 +95,7 @@ export default {
 			}
 		}
 	},
-	props:['idUsuario'],
+	props:['idUsuario', 'idSede'],
 	mounted() {
 		this.axios.get("/api/listarMonedas/")
 		.then(resp => this.monedas = resp.data)
@@ -176,6 +176,7 @@ export default {
 			}else{
 				this.$swal("Guardando datos")
 				this.form.user_id = this.idUsuario
+				this.form.idSede = this.idSede
 	
 				this.axios.post('/api/paymentExtra', this.form)
 				.then(res => {

@@ -228,7 +228,8 @@ class AppointmentController extends Controller
 				'descuento' => $request->get('descuento'),
 				'motivoDescuento' => $request->get('motivoDescuento'),
 				'adelanto' => $request->get('adelanto'),
-				'razonAdelanto' => $request->get('razonAdelanto')
+				'razonAdelanto' => $request->get('razonAdelanto'),
+				'idSede' => $request->get('idSede')
 			]);
 
 			if( $request->get('adelanto') > 0 ){
@@ -242,6 +243,7 @@ class AppointmentController extends Controller
 				$pagoExtra->observation = '';
 				$pagoExtra->continuo = $patient_condition;
 				$pagoExtra->user_id = $request->get('user_id');
+				$pagoExtra->idSede = $request->get('idSede');
 				$pagoExtra->save();
 			}
 
@@ -289,7 +291,8 @@ class AppointmentController extends Controller
 				'descuento' => $request->get('descuento'),
 				'motivoDescuento' => $request->get('motivoDescuento'),
 				'adelanto' => $request->get('adelanto'),
-				'razonAdelanto' => $request->get('razonAdelanto')
+				'razonAdelanto' => $request->get('razonAdelanto'),
+				'idSede' => $request->get('idSede')
 			]);
 			
 			//var_dump($request->input());die();
@@ -366,6 +369,7 @@ class AppointmentController extends Controller
 				$pagoExtra->observation = trim($request->get('motivoRebaja') . ' ' . $request->get('motivoDescuento'). ' ' .$request->get('razonAdelanto'));
 				$pagoExtra->continuo = $patient_condition;
 				$pagoExtra->user_id = $request->get('user_id');
+				$pagoExtra->idSede = $request->get('idSede');
 				$pagoExtra->save();
 			}
 			
@@ -720,6 +724,7 @@ class AppointmentController extends Controller
 				$pagoExtra->motivoRebaja = $request->input('dataCita.payment.motivoRebaja');
 				$pagoExtra->descuento = $request->input('dataCita.descuento');
 				$pagoExtra->motivoDescuento = $request->input('dataCita.motivoDescuento');
+				$pagoExtra->idSede = $request->input('idSede');
 				$pagoExtra->save();
 				if($request->input('caso.rebaja')>0){
 					$pagoExtra -> rebaja = $request->input('caso.rebaja');

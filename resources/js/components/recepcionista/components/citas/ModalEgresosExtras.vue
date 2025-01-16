@@ -85,7 +85,7 @@
 import moment from 'moment'
 export default {
   name: 'ModalEgresosExtras',
-  props:['idUsuario', 'nombreUser'],
+  props:['idUsuario', 'nombreUser', 'idSede'],
 
   data() {
     return {
@@ -102,6 +102,7 @@ export default {
   methods: {
     async saveData() {
       this.form.idUsuario = this.idUsuario
+      this.form.idSede = this.idSede
 			if(this.form.price < 0){
 				return this.$swal({
 					icon:'error',

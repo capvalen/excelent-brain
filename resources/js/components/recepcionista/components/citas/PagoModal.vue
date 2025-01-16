@@ -80,7 +80,7 @@ import moment from 'moment'
 			}
 		},
 		props:{
-			cita: Object, idUsuario:null
+			cita: Object, idUsuario:null, idSede:null
 		},
 		mounted() {
 			this.axios.get("/api/listarMonedas/")
@@ -88,7 +88,7 @@ import moment from 'moment'
 		},
 		methods:{
 			async update() {
-				await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso})
+				await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso, idSede:this.idSede})
 				.then(res => {
 					console.log(res.data)
 					this.dataCita.payment.pay_status = this.caso.pago;

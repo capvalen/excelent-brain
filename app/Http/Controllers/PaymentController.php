@@ -89,13 +89,14 @@ class PaymentController extends Controller
         //
     }
 
-    public function getAllExtraPayments(){
-			//Por defecto obtiene el día actual
+    public function getAllExtraPayments(Request $request){
+			//Por defecto obtiene el día actual 
 			$payments = Extra_payment::whereMonth('date', '=', date('m'))
 				->whereYear('date', '=', date('Y'))
 				->whereDay('date', '=', date('d'))
 				->where('activo', 1)
 				->where('type', '!=', 6)
+				->where('idSede', '=', $request->get('idSede'))
 				->get();
 			foreach ($payments as $payment) {
 				if($payment->appointment_id!=0){
@@ -159,10 +160,11 @@ class PaymentController extends Controller
 			return response()->json(['activos'=>$ordenados->values()->all(), 'eliminados'=>$noactivo, 'salidas'=> $salidas]);
     }
 
-    public function getExtraPaymentsByDay($date){
-			$payments = Extra_payment::where('date', 'like', $date)
+    public function getExtraPaymentsByDay(Request $request){
+			$payments = Extra_payment::where('date', 'like', $request->get('date'))
 			->where('activo', 1)
 			->where('type', '!=', 6)
+			->where('idSede', $request->get('idSede'))
 			->get();
 			foreach ($payments as $payment) {
 				if($payment->appointment_id!=0){
@@ -196,9 +198,10 @@ class PaymentController extends Controller
 				}
 				$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->first();
 			}
-			$salidas = Extra_payment::where('date', 'like',  $date)
+			$salidas = Extra_payment::where('date', 'like', $request->get('date'))
 				->where('activo', 1)
 				->where('type', '=', 6)
+				->where('idSede', $request->get('idSede'))
 				->with('usuario')
 				->get();
 			foreach ($salidas as $salida) {
@@ -212,8 +215,9 @@ class PaymentController extends Controller
 					$salida->profesional_name= '';
 				}
 			}
-			$noactivo = Extra_payment::where('date', 'like', $date)
+			$noactivo = Extra_payment::where('date', 'like', $request->get('date'))
 			->where('activo', 0)
+			->where('idSede', $request->get('idSede'))
 			->with('usuario')
 			->get();
 			$ordenados =  $payments->sortBy([

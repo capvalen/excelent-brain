@@ -252,8 +252,10 @@ Route::post('saveAditional',[AdittionalController::class, 'saveAditional']);
 
 Route::get('allAditionals', [AdittionalController::class, 'allAditionals']);
 
-Route::get('getAllExtraPayments',[PaymentController::class, 'getAllExtraPayments']);
-Route::get('getExtraPaymentsByDay/{date}', [PaymentController::class, 'getExtraPaymentsByDay']);
+//Route::get('getAllExtraPayments',[PaymentController::class, 'getAllExtraPayments']);
+Route::post('getAllExtraPayments',[PaymentController::class, 'getAllExtraPayments']);
+//Route::get('getExtraPaymentsByDay/{date}', [PaymentController::class, 'getExtraPaymentsByDay']);
+Route::post('getExtraPaymentsByDay', [PaymentController::class, 'getExtraPaymentsByDay']);
 Route::post('editarPagoExtra/', [PaymentController::class, 'editarPagoExtra']);
 
 Route::post('/subirArchivo', [PatientController::class, 'subirArchivo']);

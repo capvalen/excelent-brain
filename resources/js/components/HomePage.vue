@@ -22,6 +22,7 @@
                     v-if="currentUser.id"
                     :idUser="currentUser.id"
                     :rolUser="currentUser.rol"
+                    :idSede="currentUser.idSede"
                     :dataUser="datosUsuario" :nombreUser = "currentUser.nombre" >
                     </router-view>
                     <bWhats></bWhats>
@@ -47,7 +48,7 @@ export default {
        return{
            currentUser:{
                id:'',
-               rol:'', nombre:''
+               rol:'', nombre:'', idSede:1
            },
            datosUsuario: {},
            token: localStorage.getItem('token'),
@@ -86,11 +87,12 @@ export default {
 			this.axios.get('/api/user')
 			.then((res) => {
 					console.log('home page', res.data.user)
-					const {id, email, rol} = res.data.user
+					const {id, email, rol, idSede} = res.data.user
 
 					this.datosUsuario = res.data.user.professional
 					this.currentUser.id = id.toString()
 					this.currentUser.rol = rol
+					this.currentUser.idSede = idSede
 					this.currentUser.email = email
 					this.currentUser.nombre = res.data.user.nombre
 

@@ -3,7 +3,11 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Pagos en caja</h1>
             <div class="d-flex align-items-center d-print-none">
-                <input type="date" class="form-control" @change="selectDate" v-model="fecha">
+							<select class="form-select mx-1" id="sltSede" v-model="$attrs.idSede" disabled>
+								<option value="1">Sede Principal</option>
+								<option value="2">Sede San Carlos</option>
+							</select>
+							<input type="date" class="form-control" @change="selectDate" v-model="fecha">
             </div>
     </div>
     <div class="card px-1 pt-2 ">
@@ -324,8 +328,8 @@
 			</div>
 		</div>
 		
-		<modal-pagos-extras :idUsuario="$attrs.idUser" />
-    <modal-egresos-extras :idUsuario="$attrs.idUser" :nombreUser="$attrs.nombreUser" />
+		<modal-pagos-extras :idUsuario="$attrs.idUser" :idSede="$attrs.idSede" />
+    <modal-egresos-extras :idUsuario="$attrs.idUser" :nombreUser="$attrs.nombreUser" :idSede="$attrs.idSede"/>
 		<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto" :habilitarEliminado="habilitarEliminado" ></OffcanvasAdjuntos>
 	</div>
 </template>
@@ -341,7 +345,7 @@ import moment from 'moment'
 		data(){
 			return{
 				payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'], idSeleccionado:-1,
-				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD'), monedas:[]
+				idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD'), monedas:[], idSede:1
 			}
 		},
 		name: 'HomePagos',
@@ -356,7 +360,7 @@ import moment from 'moment'
 				getAllExtraPayments(){
 					this.habilitarEliminado=true;
 					this.foto=''
-					this.axios.get('/api/getAllExtraPayments')
+					this.axios.post('/api/getAllExtraPayments',{idSede:this.$attrs.idSede})
 						.then(res =>{ console.log(res.data)
 							this.payments = res.data.activos
 							this.salidas = res.data.salidas
@@ -370,7 +374,10 @@ import moment from 'moment'
 				selectDate(e){
 					this.habilitarEliminado = (e.target.value == moment().format('YYYY-MM-DD') ) ? true : false;
 					this.foto=''
-					this.axios.get(`/api/getExtraPaymentsByDay/${e.target.value}`)
+					this.axios.post(`/api/getExtraPaymentsByDay`,{
+						'date': e.target.value,
+						'idSede': this.$attrs.idSede
+					})
 					.then(res =>{ console.log(res.data)
 						this.payments = res.data.activos
 						this.salidas = res.data.salidas
