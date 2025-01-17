@@ -133,6 +133,7 @@ class PaymentController extends Controller
 				->whereDay('date', '=', date('d'))
 				->where('activo', 1)
 				->where('type', '=', 6)
+				->where('idSede', '=', $request->get('idSede'))
 				->with('usuario')
 				->get();
 			foreach ($salidas as $salida) {
@@ -150,6 +151,7 @@ class PaymentController extends Controller
 			$noactivo = Extra_payment::where('date', 'like', date('Y-m-d').'%')
 				->where('activo', 0)
 				->with('usuario')
+				->where('idSede', '=', $request->get('idSede'))
 				->get();
 			
 			$ordenados =  $payments->sortBy([

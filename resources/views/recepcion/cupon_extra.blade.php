@@ -24,13 +24,16 @@
 					<p class="phones">064 603228 - 984894659 - 996644350 - https://excelentemente.org</p>
 				</div>
 			</div>
-			<div class="body">
-							
+			<div class="body">							
 							@if( $extra_payment->type==6)
 								<h2>EGRESO</h2>
 							@else
 								<h2>TICKET INTERNO</h2>
-								<h2>E002-00{{$extra_payment->id}}</h2>
+								@if( $extra_payment->idSede==1)
+									<h2>E002-00{{$extra_payment->id}}</h2>
+								@elseif( $extra_payment->idSede==2)
+									<h2>E001-00{{$extra_payment->correlativo}}</h2>
+								@endif
 							@endif
 							
 					<div class="main-data">
