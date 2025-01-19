@@ -98,8 +98,8 @@
             </table>
         </div>
         <div v-if="usuario.professional.profession!='Psicólogo'">
-					<button @click="insertPrescription" class="btn btn-success">Registrar</button>
-					<button @click="print" id="printBtn" class="btn btn-success ml-1" disabled>Imprimir PDF</button>
+					<button @click="insertPrescription" class="btn btn-outline-success"><i class="far fa-save"></i> Registrar receta</button>
+					<button @click="print" id="printBtn" class="btn btn-outline-success ml-1" disabled><i class="fas fa-print"></i> Imprimir receta en PDF</button>
 				</div>
     </div>
 
@@ -208,7 +208,10 @@ export default{
             this.prescription.patient_name = this.name_patient
             this.axios.post('/api/prescription/', this.prescription)
             .then((result) => { //console.log(result.data);
-                this.$swal('Receta insertada. Ahora puede imprimir')
+                this.$swal({
+                    icon: "success",
+                    title: 'Receta insertada. Ahora puede imprimir'
+                })
                 this.id_receta = result.data.id_receta
                 document.getElementById('printBtn').disabled = false
 
