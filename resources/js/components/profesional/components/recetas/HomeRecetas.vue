@@ -100,6 +100,7 @@
         <div v-if="usuario.professional.profession!='Psicólogo'">
 					<button @click="insertPrescription" class="btn btn-outline-success"><i class="far fa-save"></i> Registrar receta</button>
 					<button @click="print" id="printBtn" class="btn btn-outline-success ml-1" disabled><i class="fas fa-print"></i> Imprimir receta en PDF</button>
+					<button @click="print" id="btnPrueba" class="btn btn-outline-warning ml-1"><i class="fas fa-print"></i> Prueba</button>
 				</div>
     </div>
 
@@ -204,20 +205,24 @@ export default{
             this.medicamento = select
         },
         insertPrescription(){
-            this.prescription.medicines = this.selected
-            this.prescription.patient_name = this.name_patient
-            this.axios.post('/api/prescription/', this.prescription)
-            .then((result) => { //console.log(result.data);
-                this.$swal({
-                    icon: "success",
-                    title: 'Receta insertada. Ahora puede imprimir'
-                })
-                this.id_receta = result.data.id_receta
-                document.getElementById('printBtn').disabled = false
-
-            }).catch((err) => {
-
-            });
+					this.prescription.medicines = this.selected
+					this.prescription.patient_name = this.name_patient + ', ' + this.nombres_patient
+					this.axios.post('/api/addPrescription/', this.prescription)
+					.then((result) => { //console.log(result.data);
+						if(result.data.id_receta>0){
+							this.$swal({
+								icon: "success",
+								title: 'Receta insertada. Ahora puede imprimir'
+							})
+							this.id_receta = result.data.id_receta
+							document.getElementById('printBtn').disabled = false
+						}else{
+							this.$swal({
+								icon: "error",
+								title: 'No se pudo procesar el pedido. Genere una receta nueva'
+							})
+						}
+					});
         },
         print(){
             window.open('/api/pdf/'+this.id_receta)
@@ -260,7 +265,7 @@ export default{
         next()
     },
     updated(){
-        console.log('updateando')
+        //console.log('updateando')
         /* if(this.name_patient != ''){
             alert('hay nombre de paciente')
         }else{

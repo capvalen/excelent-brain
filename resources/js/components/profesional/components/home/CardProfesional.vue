@@ -34,7 +34,7 @@
     </div>
       <!-- Card Body -->
   <div class="card-body text-center">
-      <img v-if="prof.photo" :src="'/img/img_profesionales/'+prof.photo" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="100px" height="100px" style="object-fit:cover;">
+      <img v-if="prof.photo" :src="'/img/'+prof.photo" alt="Imagen del Profesional" title="Imagen del profesional" class="rounded-circle" width="100px" height="100px" style="object-fit:cover;">
       <img v-else src="/storage/logo/logo.svg" alt="Profesional" class="rounded-circle" width="100px" height="100px" style="object-fit:cover;">
       <div class="profesional-data mt-3">
           <p>Nombre: {{professional.name}} {{professional.lastname}}</p>

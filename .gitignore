@@ -21,3 +21,4 @@ yarn-error.log
 storage/fonts/*
 .env
 .env.nube
+.env.nube2
