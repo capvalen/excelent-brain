@@ -22,3 +22,5 @@ storage/fonts/*
 .env
 .env.nube
 .env.nube2
+.env.laptop
+.env.local

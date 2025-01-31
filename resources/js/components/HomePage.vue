@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import io from 'socket.io-client'
+//import io from 'socket.io-client'
 import alertify from 'alertifyjs';
 
 import SideBar from './layout/Sidebar.vue'
@@ -81,7 +81,7 @@ export default {
     },
 
     mounted(){
-			const socket = io("http://localhost:3001");
+			//const socket = io("http://localhost:3001");
 
 			window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
 			this.axios.get('/api/user')
@@ -100,7 +100,7 @@ export default {
 							this.routePathValidation()
 					})
 
-					socket.emit('pedirAvisosDeAhora');
+					//socket.emit('pedirAvisosDeAhora');
 
 					this.routePathValidation()
 					
@@ -108,19 +108,19 @@ export default {
 					console.log(err)
 			});
 
-			socket.on('update', (avisos)=>{
+			/* socket.on('update', (avisos)=>{
 				avisos.forEach((aviso, index) => {
 					if(aviso.idResponsable == this.currentUser.id){
 						alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio para ${aviso.responsable}! <br> ${index+1}°. ${this.capitalizarPrimeraLetra(aviso.actividad)}</span>`, false)
 					}
 				});
-				/* if(this.currentUser.rol=="recepcionista"){
-					console.log('avisos',avisos)
-					if(avisos.length>0)
-						if(avisos[1])
-							alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio! <br> 2°. ${this.capitalizarPrimeraLetra(avisos[1].actividad)}</span>`, false)
-				} */
-			});
+				// if(this.currentUser.rol=="recepcionista"){
+				// 	console.log('avisos',avisos)
+				// 	if(avisos.length>0)
+				// 		if(avisos[1])
+				// 			alertify.message(`<i class="fas fa-envelope"></i> <span>¡Recordatorio! <br> 2°. ${this.capitalizarPrimeraLetra(avisos[1].actividad)}</span>`, false)
+				// } 
+			}); */
     },
 }
 </script>

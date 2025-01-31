@@ -31,15 +31,17 @@ class PrescriptionController extends Controller
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
-	 */
-	public function addPrescription(Request $request)
-	{
+*/
+	public function agregar2Prescription(Request $request){
+		return $request->all();
+	}
+	public function agregarPrescription(Request $request){
 		try {
-			//var_dump($request->get('professional_id')); die();
-			if($request->get('patient_id') == 0){
+			//return $request->all(); die();
+			if(intval($request->get('patient_id')) == 0){
 				$patient = Patient::create([
 					'name' => $request->get('patient_name'),
-									'activo' => 0
+					'activo' => 0
 				]);
 				$request->merge(['patient_id' => $patient->id]);
 			}
@@ -54,7 +56,6 @@ class PrescriptionController extends Controller
 			$medicines = $request->get('medicines');
 
 			foreach($medicines as $medicine){
-
 			$kairo = Kairo::where('id', $medicine['id'])->first();
 			$kairo->prescriptions()->attach($prescription->id,[
 				'amount' => $medicine['amount'],
@@ -69,7 +70,9 @@ class PrescriptionController extends Controller
 			]);
 		} catch (\Throwable $th) {
 			return response()->json([
-				'id_receta' => -1
+				'id_receta' => -1,
+				'error' => $th->getMessage(),
+				'version' => 1.01
 			]);
 		}
 		

@@ -61,7 +61,7 @@ Route::post('logout', [AuthController::class,'logout'])->middleware('auth:sanctu
 Route::resource('blog', App\Http\Controllers\BlogController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('professional', ProfessionalController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('prescription', PrescriptionController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
-Route::post('addPrescription', [PrescriptionController::class, 'addPrescription']);
+Route::post('agregarPrescription', [PrescriptionController::class, 'agregarPrescription']);
 Route::get('allPrescriptionPatient/{id}', [PrescriptionController::class, 'allPrescriptionsConsult']);
 Route::get('kairoPrescription/{date}', [PrescriptionController::class, 'kairoPrescription']);
 Route::get('kairoDelete/{id}', [PrescriptionController::class, 'kairoDelete']);

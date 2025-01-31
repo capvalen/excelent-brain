@@ -100,7 +100,7 @@
         <div v-if="usuario.professional.profession!='Psicólogo'">
 					<button @click="insertPrescription" class="btn btn-outline-success"><i class="far fa-save"></i> Registrar receta</button>
 					<button @click="print" id="printBtn" class="btn btn-outline-success ml-1" disabled><i class="fas fa-print"></i> Imprimir receta en PDF</button>
-					<button @click="print" id="btnPrueba" class="btn btn-outline-warning ml-1"><i class="fas fa-print"></i> Prueba</button>
+					<button @click="prueba" id="btnPrueba" class="btn btn-outline-warning ml-1 d-none"><i class="fas fa-print"></i> Prueba demo</button>
 				</div>
     </div>
 
@@ -204,10 +204,16 @@ export default{
         updateSelected(select){
             this.medicamento = select
         },
+				prueba(){
+					this.axios.post('/api/agregarPrescription', this.prescription)
+					.then(response =>{
+						console.log(response.data);						
+					})
+				},
         insertPrescription(){
 					this.prescription.medicines = this.selected
 					this.prescription.patient_name = this.name_patient + ', ' + this.nombres_patient
-					this.axios.post('/api/addPrescription/', this.prescription)
+					this.axios.post('/api/agregarPrescription/', this.prescription)
 					.then((result) => { //console.log(result.data);
 						if(result.data.id_receta>0){
 							this.$swal({
