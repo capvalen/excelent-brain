@@ -239,7 +239,8 @@ Route::get('chart/{date}',[AppointmentController::class, 'getDataForCharts']);
 Route::resource('paymentExtra', ExtrapaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::post('egresoExtra', [ExtrapaymentController::class, 'egresoExtra']);
 Route::post('borrarPagoExtra', [ExtrapaymentController::class, 'borrarPagoExtra']);
-Route::get('ticketCierreCaja/{fecha}/{usuario}', [ExtrapaymentController::class, 'ticketCierreCaja']);
+//route::get('ticketCierreCaja/{fecha}/{usuario}', [ExtrapaymentController::class, 'ticketCierreCaja']);
+Route::get('/ticketCierreCaja/{fecha}/{usuario}/{idSede}', [ExtrapaymentController::class, 'ticketCierreCaja']);
 
 Route::get('discharge/{id}/{idProfesional}',[PatientController::class, 'discharge']);
 

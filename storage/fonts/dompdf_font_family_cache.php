@@ -91,7 +91,7 @@ return array (
     'normal' => $fontDir . '/montserrat_light_normal_67665b4bcadb5c43deb3ec5d9323cc12',
   ),
   'roboto\', sans-serif' => array(
-    'normal' => $fontDir . '/roboto___sans_serif_normal_e9d2e7cf86b98ba5f8f31dd8f5352b9c',
+    'normal' => $fontDir . '/roboto___sans_serif_normal_e572db512a3ee136b874517592d2a0c6',
   ),
   'glyphicons halflings' => array(
     'normal' => $fontDir . '/glyphicons_halflings_normal_4bf4c90600ef2617211b8a7969a7b830',

@@ -29,8 +29,10 @@
 					@elseif ($professional->name == 'Wilbert Barzola Huaman')
 					<p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
 					<p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
-						@elseif ($professional->id ==  19) ''
+					@elseif ($professional->id ==  19)
 					<p class="header__sub">CMP N° 068076 - RNE N° 047621</p>
+					@elseif ($professional->id == 24) <!-- Nueva condición Dra Grecia -->
+                    <p class="header__sub">CMP N° 67656 - RNE N° 48050</p>
 					@else
 					<p class="header__sub">CMP N° 74376 - RNE N° 43202</p>
 					@endif
@@ -173,10 +175,12 @@
 					</div>
 
 					<div class="footer__firma">
-						@if($receta[0]->signature == 1)
-							<img src="{{public_path('img/firmadoc3.png')}}" alt="Firma" class="img-firma">        
-						@endif
-					</div>
+                    @if($professional->id == 24)
+                        <img src="{{public_path('img/firma-dra-grecia.png')}}" alt="Firma" class="img-firma">
+                    @elseif($receta[0]->signature == 1)
+                        <img src="{{public_path('img/firmadoc3.png')}}" alt="Firma" class="img-firma">        
+                    @endif
+                    </div>
 
 					
 				</div>

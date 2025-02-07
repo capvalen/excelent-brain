@@ -132,56 +132,72 @@ class ExtrapaymentController extends Controller
 		
 	}
 
-	public function ticketCierreCaja($fecha, $usuario){
-		$fecha = Carbon::now();
-		$hoy = $fecha->format('d/m/Y h:i A');
-		
-		$pagos = Extra_payment::whereDate('created_at',$fecha)
-		->where('activo', 1)
-		->where('type', '!=', 6)
-		->with('method_payment')->get();
-		$agrupados = $pagos->groupBy(function ($item){
-			$moneda = $item->method_payment->tipo ?? 'Ninguno';
-			return $moneda;
-		});
-		$sumas = $agrupados->map(function ($items, $moneda) {
-			return $items->sum('price'); // Suma los montos de cada moneda
-		});
-		$total = $sumas->sum();
-		$totalEfectivo = $sumas['Efectivo'] ?? 0;
-		$salidas =  Extra_payment::whereDate('created_at',$fecha)
-		->where('activo', 1)
-		->where('type', '=', 6)
-		->with('method_payment')->get();
-		$agrupadosSalidas = $salidas->groupBy(function ($item){
-			$moneda = $item->method_payment->tipo ?? 'Ninguno';
-			return $moneda;
-		});
-		$sumasSalidas = $agrupadosSalidas->map(function ($items, $moneda) {
-			return $items->sum('price'); // Suma los montos de cada moneda
-		});
-		$totalSalidas = $sumasSalidas->sum();
-		$anulados =  Extra_payment::whereDate('created_at',$fecha)
-		->where('activo', 0)
-		->with('method_payment')->get();
-		$agrupadosAnulados = $anulados->groupBy(function ($item){
-			$moneda = $item->method_payment->tipo ?? 'Ninguno';
-			return $moneda;
-		});
-		$sumasAnulados = $agrupadosAnulados->map(function ($items, $moneda) {
-			return $items->sum('price'); // Suma los montos de cada moneda
-		});
-		$totalAnulados = $sumasAnulados->sum();
-	/* 	//var_dump(count($sumas)); die();
-		if(count($sumas)==0){
-			$sumas['Efectivo'] == 0;
-		} */
-
-		//var_dump($totalEfectivo); die();
-
-		//return $sumas;
-		$pdf = PDF::loadView('recepcion.cupon_cierre', compact('sumas','total', 'hoy', 'usuario', 'totalEfectivo', 'totalSalidas','sumasSalidas', 'totalAnulados', 'sumasAnulados'));
-		$pdf->setPaper('a7');
-		return $pdf->stream('cupon_cierre.pdf');
-	}
+	public function ticketCierreCaja($fecha, $usuario, $idSede)
+        {
+            $fecha = Carbon::now();
+            $hoy = $fecha->format('d/m/Y h:i A');
+        
+            // Filtrar ingresos por sede
+            $pagos = Extra_payment::whereDate('created_at', $fecha)
+                ->where('activo', 1)
+                ->where('type', '!=', 6)
+                ->where('idSede', $idSede) // Filtro por sede
+                ->with('method_payment')
+                ->get();
+        
+            $agrupados = $pagos->groupBy(function ($item) {
+                return $item->method_payment->tipo ?? 'Ninguno';
+            });
+        
+            $sumas = $agrupados->map(function ($items) {
+                return $items->sum('price');
+            });
+        
+            $total = $sumas->sum();
+            $totalEfectivo = isset($sumas['Efectivo']) ? $sumas['Efectivo'] : 0;
+        
+            // Filtrar egresos por sede
+            $salidas = Extra_payment::whereDate('created_at', $fecha)
+                ->where('activo', 1)
+                ->where('type', '=', 6)
+                ->where('idSede', $idSede) // Filtro por sede
+                ->with('method_payment')
+                ->get();
+        
+            $agrupadosSalidas = $salidas->groupBy(function ($item) {
+                return $item->method_payment->tipo ?? 'Ninguno';
+            });
+        
+            $sumasSalidas = $agrupadosSalidas->map(function ($items) {
+                return $items->sum('price');
+            });
+        
+            $totalSalidas = $sumasSalidas->sum();
+        
+            // Filtrar anulados por sede
+            $anulados = Extra_payment::whereDate('created_at', $fecha)
+                ->where('activo', 0)
+                ->where('idSede', $idSede) // Filtro por sede
+                ->with('method_payment')
+                ->get();
+        
+            $agrupadosAnulados = $anulados->groupBy(function ($item) {
+                return $item->method_payment->tipo ?? 'Ninguno';
+            });
+        
+            $sumasAnulados = $agrupadosAnulados->map(function ($items) {
+                return $items->sum('price');
+            });
+        
+            $totalAnulados = $sumasAnulados->sum();
+        
+            // Generar PDF filtrado por sede
+            $pdf = PDF::loadView('recepcion.cupon_cierre', compact(
+                'sumas', 'total', 'hoy', 'usuario', 'totalEfectivo', 
+                'totalSalidas', 'sumasSalidas', 'totalAnulados', 'sumasAnulados'
+            ));
+            
+            $pdf->setPaper('a7');
+            return $pdf->stream('cupon_cierre.pdf');
+        }
 }
