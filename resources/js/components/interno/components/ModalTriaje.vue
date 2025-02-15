@@ -110,23 +110,25 @@
 					<div class="col-sm-4">
 						<label for="name">Prioridad</label>
 						<select class="form-select" id="prioridad" v-model="consulta.prioridad">
-							<option value="1">I</option>
-							<option value="2">II</option>
-							<option value="3">III</option>
-							<option value="4">IV</option>
+							<option value="1">I</option> // Urgencia inmediata (psiquiatra)
+							<option value="2">II</option> // Urgencia moderada (psiquiatría)
+							<option value="3">III</option> // Paciente con riesgo psicosocial alto (psicología)
+							<option value="4">IV</option> // Paciente con riesgo psicosocial medio (psicología)
+							<option value="5">V</option> // Paciente con riesgo psicosocial bajo (psicología)
 						</select>
 					</div>
 					<div class="col-sm-4">
 						<label for="name">Especialista</label>
-						<select class="form-select" id="prioridad" v-model="consulta.especialista">
+						<select class="form-select" id="especialista" v-model="consulta.especialista">
 							<option v-for="profesional in profesionales" :value="profesional.id">{{profesional.name}}</option>
 						</select>
 					</div>
 					<div class="col-sm-4">
 						<label for="name">Referencia</label>
-						<select class="form-select" id="prioridad" v-model="consulta.referencia">
+						<select class="form-select" id="referencia" v-model="consulta.referencia">
 							<option value="1">PSICOLOGÍA</option>
 							<option value="2">PSIQUIATRÍA</option>
+							<option value="3">AMBOS</option>
 							
 						</select>
 					</div>

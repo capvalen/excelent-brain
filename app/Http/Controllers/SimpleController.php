@@ -56,7 +56,7 @@ class SimpleController extends Controller
 
 	public function buscarDni($dni){
 
-		$token = "apis-token-7375.-NocVzIovJyr371-cz9a5bYHVsPxRMNt";
+		$token = "apis-token-13046.YQkEvNKncVoCGQl1BHuHvP2SCbaLv4QN";
 				
 		$curl = curl_init();
 

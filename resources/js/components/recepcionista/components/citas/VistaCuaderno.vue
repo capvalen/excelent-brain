@@ -62,24 +62,31 @@
 									</td>
 									<td v-else></td>
 									<td>
-										<a v-if="hora.libre==0 && horasMalas[hora.indexOcupado].payment" @click="modalInfo(horasMalas[hora.indexOcupado]);" data-bs-toggle="modal" data-bs-target="#pagoModal" class="btn btn-icon-split btn-sm"
+										<a v-if="hora.libre == 0 && horasMalas[hora.indexOcupado].payment" 
+											@click="modalInfo(horasMalas[hora.indexOcupado]);" 
+											data-bs-toggle="modal" 
+											data-bs-target="#pagoModal" 
+											class="btn btn-icon-split btn-sm"
 											:class='{
-											"btn-secondary": horasMalas[hora.indexOcupado].payment.pay_status == 1 ,
-											"btn-success": horasMalas[hora.indexOcupado].payment.pay_status == 2 ,
-											"btn-danger": [3,null].includes(horasMalas[hora.indexOcupado].payment.pay_status)
-											}' >
+												"btn-warning": horasMalas[hora.indexOcupado].payment.pay_status == 1 && horasMalas[hora.indexOcupado].payment.adelanto > 0,
+												"btn-secondary": horasMalas[hora.indexOcupado].payment.pay_status == 1 && horasMalas[hora.indexOcupado].payment.adelanto == 0,
+												"btn-success": horasMalas[hora.indexOcupado].payment.pay_status == 2,
+												"btn-danger": [3, null].includes(horasMalas[hora.indexOcupado].payment.pay_status)
+											}'>
 											<span class="icon text-white-50">
 												<i :class='{
-											"fa-regular fa-circle-question": horasMalas[hora.indexOcupado].payment.pay_status == 1 ,
-											"fas fa-check": horasMalas[hora.indexOcupado].payment.pay_status == 2 ,
-											"fas fa-exclamation-circle": [3,null].includes(horasMalas[hora.indexOcupado].payment.pay_status)
-											}'></i>
+													"fa-regular fa-circle-question": horasMalas[hora.indexOcupado].payment.pay_status == 1,
+													"fas fa-check": horasMalas[hora.indexOcupado].payment.pay_status == 2,
+													"fas fa-exclamation-circle": [3, null].includes(horasMalas[hora.indexOcupado].payment.pay_status)
+												}'></i>
 											</span>
-											<span class="text labels" v-if="horasMalas[hora.indexOcupado].payment.pay_status == 1">Sin pagar</span>
+											<span class="text labels" v-if="horasMalas[hora.indexOcupado].payment.pay_status == 1 && horasMalas[hora.indexOcupado].payment.adelanto > 0">Con adelanto</span>
+    									<span class="text labels" v-else-if="horasMalas[hora.indexOcupado].payment.pay_status == 1">Sin pagar</span>
 											<span class="text labels" v-else-if="horasMalas[hora.indexOcupado].payment.pay_status == 2">Pagado</span>
-											<span class="text labels" v-else-if="[3,null].includes(horasMalas[hora.indexOcupado].payment.pay_status)">Anulado</span>
-											</a>
+											<span class="text labels" v-else-if="[3, null].includes(horasMalas[hora.indexOcupado].payment.pay_status)">Anulado</span>
+										</a>
 									</td>
+
 									<td>
 										<a v-if="hora.libre==0" @click="modalInfo(horasMalas[hora.indexOcupado])" data-bs-toggle="modal" data-bs-target="#modalEstado" class="btn btn-icon-split btn-sm"
 										:class='{

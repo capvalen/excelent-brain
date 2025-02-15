@@ -88,6 +88,7 @@
 									<div class="col"><p><strong>PA:</strong> {{ datosConsulta.triajes[0].pa }}</p></div>
 									<div class="col"><p><strong>T:</strong> {{ datosConsulta.triajes[0].t }}</p></div>
 								</div>
+								<p> <strong>Fecha de Triaje:</strong> <span>{{ fechaLatam(datosConsulta.triajes[0].fecha) }}</span> </p>
 								<p> <strong>Motivo:</strong> <span>{{ datosConsulta.triajes[0].motivo }}</span> </p>
 								<p> <strong>Sintomatologia:</strong> <span>{{ datosConsulta.triajes[0].sintomatologia }}</span> </p>
 								<p> <strong>Antecedentes:</strong> <span>{{ datosConsulta.triajes[0].antecedentes }}</span> </p>

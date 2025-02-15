@@ -16,7 +16,8 @@
 		<div class="header">
 				<div class="text-header">
 						<h5 class="centrado mt-2">CIERRE DE CAJA</h5>
-						<p class="small m-2 mt-1">Generado al: {{$hoy}}</p>
+						<p class="small m-2 mt-1"><strong>Sede:</strong> {{ $nombreSede }}</p>
+						<p class="small m-2 mt-1">Generado el: {{$hoy}}</p>
 						<p class="small m-2 mt-1">Usuario: {{$usuario}}</p>
 				</div>
 				<hr style="width: 90%; margin:3px 5px; padding-left: 5px; ">

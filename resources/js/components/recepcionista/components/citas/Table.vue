@@ -80,27 +80,29 @@
 								</td>
 								<td>
 									<button 
-									class="btn btn-sm"
-									:class='{
-									"btn-secondary":  qCita.payment ? qCita.payment.pay_status == 1 : false,
-									"btn-success": qCita.payment ? qCita.payment.pay_status == 2 : false,
-									"btn-danger": qCita.payment ? [3, null].includes( qCita.payment.pay_status ) : false,
-									} ' > <!-- @click="modalInfo(qCita);" data-bs-toggle="modal" data-bs-target="#pagoModal" -->
+										class="btn btn-sm"
+										:class='{
+											"btn-warning": qCita.payment && qCita.payment.pay_status == 1 && qCita.payment.adelanto > 0,
+											"btn-secondary": qCita.payment && qCita.payment.pay_status == 1 && qCita.payment.adelanto == 0,
+											"btn-success": qCita.payment && qCita.payment.pay_status == 2,
+											"btn-danger": qCita.payment && [3, null].includes(qCita.payment.pay_status)
+										}'>
 										<span class="icon text-white-50">
 											<i :class="{ 
 												'fa-regular fa-circle-question': qCita.payment ? qCita.payment.pay_status == 1 : false,
 												'fas fa-check': qCita.payment ? qCita.payment.pay_status == 2 : false,
-												'fas fa-exclamation-circle': qCita.payment ? qCita.payment.pay_status==3 : false,
-												'fa-solid fa-xmark': qCita.payment ? qCita.payment.pay_status==null : false,
+												'fas fa-exclamation-circle': qCita.payment ? qCita.payment.pay_status == 3 : false,
+												'fa-solid fa-xmark': qCita.payment ? qCita.payment.pay_status == null : false,
 											}"></i>
 										</span>
 
-										<span class="text labels" v-if="qCita.payment && qCita.payment.pay_status == 1">Sin pagar</span>
+										<span class="text labels" v-if="qCita.payment && qCita.payment.pay_status == 1 && qCita.payment.adelanto > 0">Con Adelanto</span>
+										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 1">Sin pagar</span>
 										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 2">Cancelado</span>
-										<span class="text labels" v-else-if="qCita.payment && [3, null].includes( qCita.payment.pay_status )">Anulado</span>
+										<span class="text labels" v-else-if="qCita.payment && [3, null].includes(qCita.payment.pay_status)">Anulado</span>
 										<span class="text labels" v-else-if="!qCita.payment">Error</span>
-										
 									</button>
+
 									<p v-if="qCita.payment.rebaja"><i class="fas fa-wallet"></i> 
 										<small v-if="qCita.payment.rebaja>0">Rebaja S/ {{ qCita.payment.rebaja }} </small>
 										<small class="text-capitalize" v-if="qCita.payment.rebaja>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoRebaja }} </small>

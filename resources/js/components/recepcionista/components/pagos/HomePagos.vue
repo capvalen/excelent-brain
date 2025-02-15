@@ -13,7 +13,7 @@
 	<div class="card px-1 pt-2 ">
 		<div class="m-4 d-print-none">
 			<button class="btn btn-outline-success d-none" @click="exportar()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
-			<button class="btn btn-outline-primary" @click="membresias()" data-bs-target="#modalMembresias" data-bs-toggle="modal"><i class="fa-solid fa-arrow-up-right-dots"></i> Ingresar membresía</button>
+			<button class="btn btn-outline-primary" @click="membresias()" data-bs-target="#modalMembresias" data-bs-toggle="modal"><i class="fa-solid fa-arrow-up-right-dots"></i> Ingresar paquete</button>
 			<button data-bs-toggle="modal" data-bs-target="#pagoExtras" class="btn btn-outline-secondary ms-auto"><i class="fas fa-plus"></i> Ingresos extras</button>
 			<button data-bs-toggle="modal" data-bs-target="#egresosExtras" class="btn btn-outline-danger"><i class="fas fa-minus"></i> Egresos extras</button>
 			<button class="btn btn-outline-secondary " v-if="consultarFecha()" @click="verTicketCierre()"> <i class="fas fa-print"></i> Ticket de cierre</button>
@@ -452,7 +452,7 @@ export default{
 			//verTicketCierre(){ window.open('/api/ticketCierreCaja/'+this.fecha+'/'+this.$attrs.nombreUser, '_blank'); },
 
 			verTicketCierre(){
-				 const fecha = this.fecha; // La fecha que ya se tiene seleccionada
+				const fecha = this.fecha; // La fecha que ya se tiene seleccionada
 				const sede = this.idSede; // La IdSede del usuario
 
 				// Generar el enlace dinámico
