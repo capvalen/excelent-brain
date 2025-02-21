@@ -138,7 +138,8 @@ class ExtrapaymentController extends Controller
 				$hoy = $fecha->format('d/m/Y h:i A');
 
 				// Definir nombres de sede
-				$nombreSede = ($idSede == 1) ? "San Carlos" : "El Tambo";
+				$nombreSede = ($idSede == 1) ? "El Tambo" : (($idSede == 2) ? "San Carlos" : ""); 
+
 
 				// Filtrar ingresos por sede
 				$pagos = Extra_payment::whereDate('created_at', $fecha)
