@@ -110,11 +110,11 @@
 					<div class="col-sm-4">
 						<label for="name">Prioridad</label>
 						<select class="form-select" id="prioridad" v-model="consulta.prioridad">
-							<option value="1">I</option> // Urgencia inmediata (psiquiatra)
-							<option value="2">II</option> // Urgencia moderada (psiquiatría)
-							<option value="3">III</option> // Paciente con riesgo psicosocial alto (psicología)
-							<option value="4">IV</option> // Paciente con riesgo psicosocial medio (psicología)
-							<option value="5">V</option> // Paciente con riesgo psicosocial bajo (psicología)
+							<option value="1">I</option> <!-- Urgencia inmediata (psiquiatra) -->
+							<option value="2">II</option> <!-- Urgencia moderada (psiquiatría) -->
+							<option value="3">III</option> <!-- Paciente con riesgo psicosocial alto (psicología) -->
+							<option value="4">IV</option> <!-- Paciente con riesgo psicosocial medio (psicología) -->
+							<option value="5">V</option> <!-- Paciente con riesgo psicosocial bajo (psicología) -->
 						</select>
 					</div>
 					<div class="col-sm-4">
