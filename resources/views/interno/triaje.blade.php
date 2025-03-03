@@ -51,7 +51,7 @@
 		switch($numero){
 			case '1': return 'I'; break;
 			case '2': return 'II'; break;
-			case '3': return 'II'; break;
+			case '3': return 'III'; break;
 			case '4': return 'IV'; break;
 			case '5': return 'V'; break;
 			default: break;
