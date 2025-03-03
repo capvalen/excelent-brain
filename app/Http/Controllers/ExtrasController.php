@@ -469,89 +469,103 @@ class ExtrasController extends Controller
 		
 	}
 
-	public function guardarMembresia( Request $request){
-		$fechas = json_decode ($request->input('fechas'));
-		$fechas_membresias = json_decode ($request->input('fechas_membresias'));
-		$membresia = json_decode ($request->input('membresia'), true);
-		//var_dump( $fechas ); die();
-		$idMembresia=DB::table('membresias')-> insertGetId([
-			'patient_id' => $request->input('idPaciente'),
-			'fin' => $membresia['fin'],
-			'tipo' => $membresia['tipo'],
-			'user_id' => $request->input('user_id'),
-			'cuotas' => count($fechas),
-			'monto' => $membresia['precio'],
-			'comentarios' => $request->input('comentarios')
-		]);
+	public function guardarMembresia(Request $request)
+{
+    $fechas = json_decode($request->input('fechas'));
+    $fechas_membresias = json_decode($request->input('fechas_membresias'));
+    $membresia = json_decode($request->input('membresia'), true);
 
-		foreach($fechas_membresias as $sesion){
-			$cita = Appointment::create([
-				'date'=>$sesion->fecha,
-				'patient_condition'=>2, //consideremos paciente antiguo
-				'type'=>$membresia['tipo'],
-				'mode'=>1,
-				'status'=>1,
-				'clasification'=>6,
-				'professional_id'=>$sesion->idProfesional,
-				'patient_id'=>$sesion->idPaciente,
-				'schedule_id'=>$sesion->idHorario,
-				'formato_nuevo'=>1,
-				'verAviso'=>1,
-				'byDoctor'=>0,
-				'idMembresia'=>$idMembresia
-			]);
+    // Obtener la IdSede del usuario
+    $idSede = DB::table('users')->where('id', $request->input('user_id'))->value('IdSede');
 
-			Payment::create([
-				'observation'=>'',
-				'bank'=>'',
-				'voucher' => '',
-				'pay_status'=> 1,
-				'price' => 0,
-				'appointment_id' => $cita->id,
-				'continuo' => 2,
-				'user_id' => 1,
-				'rebaja' => 0,
-				'motivoRebaja' => 'Creado por membresía',
-				'descuento' => 0,
-				'motivoDescuento' => ''
-			]);
-		}
+    // Insertar en la tabla membresias
+    $idMembresia = DB::table('membresias')->insertGetId([
+        'patient_id' => $request->input('idPaciente'),
+        'fin' => $membresia['fin'],
+        'tipo' => $membresia['tipo'],
+        'user_id' => $request->input('user_id'),
+        'cuotas' => count($fechas),
+        'monto' => $membresia['precio'],
+        'comentarios' => $request->input('comentarios')
+    ]);
 
-		foreach($fechas as $fecha){
-			if( $fecha->pago ){ //cuando es true
-				$pagoExtra = new Extra_payment;
-				$pagoExtra->customer = $request->input('customer');
-				$pagoExtra->price = $fecha->monto;
-				$pagoExtra->moneda = 1;
-				$pagoExtra->voucher = '';
-				$pagoExtra->appointment_id = 0;
-				$pagoExtra->type = 7; //pago de membresía
-				$pagoExtra->observation = '';
-				$pagoExtra->continuo = 3;
-				$pagoExtra->idMembresia = $idMembresia;
-				$pagoExtra->user_id = $request->input('user_id');
-				$pagoExtra->save();
+    // Crear citas para las fechas de la membresía
+    foreach ($fechas_membresias as $sesion) {
+        $cita = Appointment::create([
+            'date' => $sesion->fecha,
+            'patient_condition' => 2, // paciente antiguo
+            'type' => $membresia['tipo'],
+            'mode' => 1,
+            'status' => 1,
+            'clasification' => 6,
+            'professional_id' => $sesion->idProfesional,
+            'patient_id' => $sesion->idPaciente,
+            'schedule_id' => $sesion->idHorario,
+            'formato_nuevo' => 1,
+            'verAviso' => 1,
+            'byDoctor' => 0,
+            'idMembresia' => $idMembresia
+        ]);
 
-				Membresia::where('id', $idMembresia)
-				->update([
-					'estado' => 2
-				]);
-			}else{
-				DB::table('deudas')->insert([
-					'patient_id' => $request->input('idPaciente'),
-					'motivo' => $request->input('nombreMembresia'),
-					'user_id' => $request->input('user_id'),
-					'fecha' => $fecha->dia,
-					'monto' => $fecha->monto,
-					'idMembresia' => $idMembresia,
-					'idPago' => $membresia['tipo']
-				]);
-			}
-		}
+        // Crear el pago extra
+        Payment::create([
+            'observation' => '',
+            'bank' => '',
+            'voucher' => '',
+            'pay_status' => 1,
+            'price' => 0,
+            'appointment_id' => $cita->id,
+            'continuo' => 2,
+            'user_id' => 1,
+            'rebaja' => 0,
+            'motivoRebaja' => 'Creado por membresía',
+            'descuento' => 0,
+            'motivoDescuento' => ''
+        ]);
+    }
 
-		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
-		
-	}
+    // Guardar los pagos adicionales (cuando "pago" es true)
+    foreach ($fechas as $fecha) {
+        if ($fecha->pago) { // cuando es true
+            $pagoExtra = new Extra_payment;
+            $pagoExtra->customer = $request->input('customer');
+            $pagoExtra->price = $fecha->monto;
+            $pagoExtra->moneda = 1;
+            $pagoExtra->voucher = '';
+            $pagoExtra->appointment_id = 0;
+            $pagoExtra->type = 7; // pago de membresía
+            $pagoExtra->observation = '';
+            $pagoExtra->continuo = 3;
+            $pagoExtra->idMembresia = $idMembresia;
+            $pagoExtra->user_id = $request->input('user_id');
+
+            // Asignar la IdSede que corresponde al usuario
+            $pagoExtra->idSede = $idSede;
+						//$pagoExtra->idSede = $request->input('idSede');
+
+            $pagoExtra->save();
+
+            // Actualizar estado de la membresía
+            Membresia::where('id', $idMembresia)
+                ->update([
+                    'estado' => 2
+                ]);
+        } else {
+            DB::table('deudas')->insert([
+                'patient_id' => $request->input('idPaciente'),
+                'motivo' => $request->input('nombreMembresia'),
+                'user_id' => $request->input('user_id'),
+                'fecha' => $fecha->dia,
+                'monto' => $fecha->monto,
+                'idMembresia' => $idMembresia,
+                'idPago' => $membresia['tipo']
+            ]);
+        }
+    }
+
+    return response()->json(['mensaje' => 'Actualizado exitoso']);
+}
+
 
 	public function reservarCitaDoctor(Request $request, Appointment $appointment){
 		//var_dump($request->all()); die();
@@ -808,6 +822,8 @@ class ExtrasController extends Controller
 	}
 
 	public function pagarDeudaMembresia(Request $request){
+		 // Obtener la IdSede del usuario
+		$idSede = DB::table('users')->where('id', $request->input('user_id'))->value('IdSede'); 
 		DB::table('deudas')->where('id', $request->input('idDeuda'))
 		->update([
 			'idActualiza' => $request->input('user_id'),
@@ -827,6 +843,8 @@ class ExtrasController extends Controller
 				$pagoExtra->continuo = 3;
 				$pagoExtra->idMembresia = $request->input('idMembresia');
 				$pagoExtra->user_id = $request->input('user_id');
+				// Asignar la IdSede que corresponde al usuario
+				$pagoExtra->idSede = $idSede;
 				$pagoExtra->save();
 			Membresia::where('id', $request->input('idMembresia'))
 			->update([

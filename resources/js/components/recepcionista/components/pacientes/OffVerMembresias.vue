@@ -166,7 +166,7 @@ export default{
 					datos.append('observación', this.membresias[index].motivo)
 					datos.append('estado', 2)
 					
-					this.axios.post('/api/pagarDeudaMembresia/', datos)
+					this.axios.post('/api/pagarDeudaMembresia', datos)
 					.then(res =>{
 						console.log(res.data)
 						this.buscarMembresias();

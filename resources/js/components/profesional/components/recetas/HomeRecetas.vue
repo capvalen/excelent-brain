@@ -213,7 +213,7 @@ export default{
         insertPrescription(){
 					this.prescription.medicines = this.selected
 					this.prescription.patient_name = this.name_patient + ', ' + this.nombres_patient
-					this.axios.post('/api/agregarPrescription/', this.prescription)
+					this.axios.post('/api/agregarPrescription', this.prescription)
 					.then((result) => { //console.log(result.data);
 						if(result.data.id_receta>0){
 							this.$swal({

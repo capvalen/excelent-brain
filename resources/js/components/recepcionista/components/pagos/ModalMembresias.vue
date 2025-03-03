@@ -84,24 +84,35 @@
 											</tr>
 										</thead>
 										<tbody id="tbodyFechas">
-											<tr v-for="(fecha, index) in fechas">
-												<td> <input type="date" class="form-control" v-model="fecha.dia"> </td>
-												<td>
-													<!-- <span v-if="membresia.tipo!=71">{{ parseFloat(fecha.monto).toFixed(2) }}</span> -->
-													<span v-if="membresia.cuotas==1">{{ parseFloat(fecha.monto).toFixed(2) }}</span> <!--membresia.tipo==71 && -->
-													<input type="number" class="form-control inputPartidos" v-if="membresia.cuotas>1" @keyup="balancearMontos()" readonly="true" v-model="fecha.monto"> <!-- membresia.tipo==71 &&  -->
-												</td>
-												<td>
-													<div class="form-check">
-														<input class="form-check-input" type="checkbox" value="" :id="'flexPago' + index"
-															v-model="fecha.pago">
-														<label class="form-check-label" :for="'flexPago' + index">
-															<span v-if="fecha.pago">Si</span>
-															<span v-else>No</span>
-														</label>
-													</div>
-												</td>
-											</tr>
+												<tr v-for="(fecha, index) in fechas">
+														<td> <input type="date" class="form-control" v-model="fecha.dia"> </td>
+														<td>
+																<!-- Si es una sola cuota, muestra el monto como texto -->
+																<span v-if="membresia.cuotas==1">{{ parseFloat(fecha.monto).toFixed(2) }}</span>
+																
+																<!-- Para la primera y segunda cuota (cuando hay más de 2), permite edición -->
+																<input type="number" class="form-control inputPartidos" 
+																		v-if="membresia.cuotas>1 && (index==0 || (index==1 && membresia.cuotas>2))" 
+																		@keyup="balancearMontos(index)" 
+																		v-model="fecha.monto">
+																
+																<!-- Para el resto de cuotas, mantiene readonly -->
+																<input type="number" class="form-control inputPartidos" 
+																		v-if="membresia.cuotas>1 && !(index==0 || (index==1 && membresia.cuotas>2))" 
+																		readonly="true" 
+																		v-model="fecha.monto">
+														</td>
+														<td>
+																<div class="form-check">
+																		<input class="form-check-input" type="checkbox" value="" :id="'flexPago' + index"
+																				v-model="fecha.pago">
+																		<label class="form-check-label" :for="'flexPago' + index">
+																				<span v-if="fecha.pago">Si</span>
+																				<span v-else>No</span>
+																		</label>
+																</div>
+														</td>
+												</tr>
 										</tbody>
 										<tfoot>
 											<tr>
@@ -264,22 +275,45 @@ export default {
 			}
 			this.membresia.fin = this.membresia.tipo==47 ?  moment().add(1,'year').format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
 		},
-		balancearMontos(){
-			console.log('bal');
-			if(parseInt(this.membresia.cuotas)>1){ //this.membresia.tipo==71 &&
-				let cantidadFechas = this.fechas.length-1
-				let montoRestante = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto))/cantidadFechas;
-				/* for(let i = 1; i<=this.fechas.length; i++){
-					this.fechas[i].monto = montoRestante.toFixed(2)
-				} */
-				this.fechas.forEach((fecha,index)=>{
-					if(index!=0){
-						console.log('aplicar', fecha, montoRestante);
-						fecha.monto = montoRestante.toFixed(2)
-					}
-				})
-			}
-		},
+		balancearMontos(editedIndex) {
+    console.log('bal');
+    if (parseInt(this.membresia.cuotas) > 1) {
+        // Si hay más de 1 cuota
+        
+        if (parseInt(this.membresia.cuotas) > 2) {
+            // Si hay más de 2 cuotas
+            
+            if (editedIndex === 0) {
+                // Si se editó la primera cuota, balanceamos desde la segunda
+                let cantidadFechasABalancear = this.fechas.length - 1;
+                let montoRestante = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto)) / cantidadFechasABalancear;
+                
+                this.fechas.forEach((fecha, index) => {
+                    if (index > 0) { // Balanceamos desde la segunda cuota
+                        console.log('aplicar desde segunda', fecha, montoRestante);
+                        fecha.monto = montoRestante.toFixed(2);
+                    }
+                });
+            } else if (editedIndex === 1) {
+                // Si se editó la segunda cuota, respetamos la primera y balanceamos desde la tercera
+                let cantidadFechasABalancear = this.fechas.length - 2;
+                let montoRestante = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto) - parseFloat(this.fechas[1].monto)) / cantidadFechasABalancear;
+                
+                this.fechas.forEach((fecha, index) => {
+                    if (index > 1) { // Balanceamos desde la tercera cuota
+                        console.log('aplicar desde tercera', fecha, montoRestante);
+                        fecha.monto = montoRestante.toFixed(2);
+                    }
+                });
+            }
+        } else if (parseInt(this.membresia.cuotas) == 2) {
+            // Si hay exactamente 2 cuotas
+            // La segunda cuota debe ser el total menos la primera
+            this.fechas[1].monto = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto)).toFixed(2);
+        }
+    }
+},
+		
 		borrarSesionAcumulada(index){
 			this.sesionesAcumuladas.splice(index,1)
 		},

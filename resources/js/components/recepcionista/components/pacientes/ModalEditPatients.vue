@@ -108,7 +108,7 @@
 
             <div class="form-group row">
               <div class="col-sm-12">
-                <label for="name">Nombre</label>
+                <label for="name">Nombre del primer contacto</label>
                 <input type="text" class="form-control" name="relative_name" v-model="dataPatient.relative[0].name" id="relativename" placeholder="Nombre de pariente">
               </div>                               
             </div>  
@@ -121,6 +121,25 @@
               <div class="col-sm-6">
                 <label for="name">Parentesco</label>
                 <input type="text" class="form-control" name="kinship" id="kinship" v-model="dataPatient.relative[0].kinship" placeholder="Parentesco"> 
+              </div>
+            </div>
+
+
+            <div class="form-group row">
+              <div class="col-sm-12">
+                <label for="name">Nombre del segundo contacto</label>
+                <input type="text" class="form-control" name="relative_name" v-model="dataPatient.relative[1].name" id="relativename" placeholder="Nombre de pariente">
+              </div>                               
+            </div>  
+
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="name">Telefono</label>
+                <input type="text" class="form-control" name="relative_phone" v-model="dataPatient.relative[1].phone" id="relativephone" placeholder="Telefono de pariente"> 
+              </div>
+              <div class="col-sm-6">
+                <label for="name">Parentesco</label>
+                <input type="text" class="form-control" name="kinship" id="kinship" v-model="dataPatient.relative[1].kinship" placeholder="Parentesco"> 
               </div>
             </div>
 

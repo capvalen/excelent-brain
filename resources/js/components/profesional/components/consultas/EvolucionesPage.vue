@@ -1143,7 +1143,7 @@ export default {
 				var textoIngresado = prompt("Por favor, ingresa el motivo:");
 
 				if (textoIngresado !== null){
-					await this.axios.post(`/api/crearSOS/`,{
+					await this.axios.post(`/api/crearSOS`,{
 						id: this.datosPaciente.id,
 						idProfesional: this.dataUser.id,
 						comentarios: textoIngresado
@@ -1161,7 +1161,7 @@ export default {
 		},
 		async quitarSOS(){
 			if(confirm(`¿Desea desactivar el modo S.O.S en el paciente?`)){
-				await this.axios.post(`/api/quitarSOS/`,{
+				await this.axios.post(`/api/quitarSOS`,{
 					id: this.datosPaciente.id
 				})
 				.then(res => {

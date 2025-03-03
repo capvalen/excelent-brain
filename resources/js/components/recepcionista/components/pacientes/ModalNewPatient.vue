@@ -120,16 +120,30 @@
 						<p class="mb-0"><strong>Datos de Contacto de Emergencia</strong></p>
 						<div class="form-group row">
 							<div class="col-sm-4">
-								<label for="name">Nombre</label>
-								<input type="text" class="form-control" name="contacto" id="contacto" v-model="paciente.relative.name"  placeholder="Contacto" autocomplete="off">
+								<label for="name">Nombre del primer contacto</label>
+								<input type="text" class="form-control" name="contacto" id="contacto" v-model="paciente.contacto"  placeholder="Contacto" autocomplete="off">
 							</div>
 							<div class="col-sm-4">
 								<label for="name">Celular emergencia</label>
-								<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="paciente.relative.phone"  placeholder="Celular" autocomplete="off">
+								<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="paciente.contacto_celular"  placeholder="Celular" autocomplete="off">
 							</div>
 							<div class="col-sm-4">
 								<label for="name">Parentesco</label>
-								<input type="text" class="form-control" name="parentezco" id="parentezco" v-model="paciente.relative.kinship"  placeholder="Parentesco" autocomplete="off">
+								<input type="text" class="form-control" name="parentezco" id="parentezco" v-model="paciente.parentezco"  placeholder="Parentesco" autocomplete="off">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-4">
+								<label for="name">Nombre del segundo contacto</label>
+								<input type="text" class="form-control" name="contacto" id="contacto" v-model="paciente.contacto2"  placeholder="Contacto" autocomplete="off">
+							</div>
+							<div class="col-sm-4">
+								<label for="name">Celular emergencia</label>
+								<input type="text" class="form-control" name="contacto_celular" id="contacto_celular" v-model="paciente.contacto_celular2"  placeholder="Celular" autocomplete="off">
+							</div>
+							<div class="col-sm-4">
+								<label for="name">Parentesco</label>
+								<input type="text" class="form-control" name="parentezco" id="parentezco" v-model="paciente.parentezco2"  placeholder="Parentesco" autocomplete="off">
 							</div>
 						</div>
 						<hr>
@@ -244,9 +258,19 @@ import alertify from 'alertifyjs'
 						this.paciente.department = res.data.patient.address.department;
 						this.paciente.province = res.data.patient.address.province;
 						this.paciente.district = res.data.patient.address.district;
-						this.paciente.name = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
-						this.paciente.phone = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
-						this.paciente.kinship = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
+						//datos del contacto de emergencia
+						this.paciente.contacto = res.data.relacion[0]?.name ?? '' ;
+						this.paciente.contacto2 = res.data.relacion[1]?.name ?? '' ;
+												
+						this.paciente.contacto_celular = res.data.relacion[0]?.phone ?? '';
+						this.paciente.contacto_celular2 = res.data.relacion[1]?.phone ?? ''; 
+												
+						this.paciente.parentezco = res.data.relacion[0]?.kinship ?? '';
+						this.paciente.parentezco2 = res.data.relacion[1]?.kinship ?? '';
+						
+						//this.paciente.name = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
+						//this.paciente.phone = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
+						//this.paciente.kinship = res.data.relacion.kinship =='null' ? '' : res.data.relacion.kinship;
 					}
 				})
 				.catch(err => {
@@ -265,7 +289,7 @@ import alertify from 'alertifyjs'
 					alertify.notify('Datos mínimos DNI, nombre y celular del paciente', 'danger', 10);
 				}
 				else{
-					this.axios.post(`/api/patient/new/`, {paciente: this.paciente})
+					this.axios.post(`/api/patient/new`, {paciente: this.paciente})
 					.then(res => { console.log(res.data);
 						this.closeModal()
 						if(parseInt(res.data)>0){
