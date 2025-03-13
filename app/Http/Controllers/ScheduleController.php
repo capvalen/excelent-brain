@@ -29,6 +29,7 @@ class ScheduleController extends Controller
         $appointment = Appointment::where('professional_id', $id)
             ->where('appointments.date', '>=', date('Y-m-d'))
 						->where('appointments.status', '<>', 4)
+						->where('appointments.status', '<>', 5)
             ->with('schedule')
             ->get();
         

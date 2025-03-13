@@ -658,7 +658,7 @@
 		<edit-modal :datosModal="dataModal"></edit-modal>
 		<modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
 		<modal-ver-triajes-viejos :triajes = "datosConsulta.triajes"></modal-ver-triajes-viejos>
-		<ModalEditarPariente v-if="datosConsulta.relative" :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
+		<ModalEditarPariente v-if="datosConsulta.relative" :id="datosExamPaciente.id" :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
 		<ModalEditarPaciente :dataPatient="dato1" ></ModalEditarPaciente>
 		<ModalVerEstados :dataPatient="datosPaciente" :estados="estados"></ModalVerEstados>
 		<ModalVerHobbies :hobbies="hobbies" :id="datosConsulta.id" :misHobbies="misHobbies" ></ModalVerHobbies>
@@ -850,9 +850,17 @@ export default {
 			this.dataModal = evolution
 		},
 		updatePariente(pariente){
-			this.datosConsulta.relative.name = pariente.nombre
-			this.datosConsulta.relative.phone = pariente.celular
-			this.datosConsulta.relative.kinship = pariente.parentesco
+			
+			if(pariente?.nombre){
+				this.datosConsulta.relative[0].name = pariente.nombre
+				this.datosConsulta.relative[0].phone = pariente.celular
+				this.datosConsulta.relative[0].kinship = pariente.parentesco
+			}
+			if(pariente?.nombre2){
+				this.datosConsulta.relative[1].name = pariente.nombre2
+				this.datosConsulta.relative[1].phone = pariente.celular2
+				this.datosConsulta.relative[1].kinship = pariente.parentesco2
+			}
 		},
 		async getHistories() {
 			await this.axios.get(`/api/patientEvolution/${this.$route.params.idPaciente}/${this.$attrs.idUser}`)

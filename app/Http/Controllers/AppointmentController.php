@@ -323,25 +323,22 @@ class AppointmentController extends Controller
 			$paciente_actualizar->marital_status= $request->get('marital_status') ?? 1;
 			$paciente_actualizar->save(); */
 
-			Relative::where('patient_id',$paciente_prueba->id)
-			->update([
-				'name'=> $request->input('name') =='null' ? null: $request->input('contacto'),
-				'phone'=> $request->input('phone') =='null' ? null: $request->input('contacto_celular'),
-				'kinship'=> $request->input('kinship') =='null' ? null: $request->input('parentezco')
-			]);
+			Relative::where('patient_id',$paciente_prueba->id)->delete();
+
+			if($request->input('contacto')){
+				Relative::create([
+					'name'=> str_replace('null', '', $request->input('contacto')),
+					'phone'=> str_replace('null', '', $request->input('contacto_celular')),
+					'kinship'=> str_replace('null', '', $request->input('parentezco')),
+					'patient_id' => $paciente_prueba->id
+				]);
+			}
 
 			if($request->input('contacto2') ){
-				Relative::where('patient_id',$paciente_prueba->id)
-				->update([
-					'name'=>  $request->input('contacto2'),
-					'phone'=> $request->input('contacto_celular2'),
-					'kinship'=> $request->input('parentezco2')
-				]);
-			}else{
 				Relative::create([
-					'name'=> $request->input('contacto2'),
-					'phone'=> $request->input('contacto_celular2'),
-					'kinship'=> $request->input('parentezco2'),
+					'name'=> str_replace('null', '', $request->input('contacto2')),
+					'phone'=> str_replace('null', '', $request->input('contacto_celular2')),
+					'kinship'=> str_replace('null', '', $request->input('parentezco2')),
 					'patient_id' => $paciente_prueba->id
 				]);
 			}

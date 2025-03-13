@@ -175,8 +175,8 @@
 										<span title="Última atención" v-if="cita.etiqueta==''" class="badge rounded-pill text-bg-dark"><i class="fa-solid fa-asterisk"></i> Sin registro previo</span>
 										<span title="Última atención" v-if="cita.etiqueta" class="badge rounded-pill text-bg-primary"><i class="fa-solid fa-genderless"></i> {{cita.etiqueta}}</span>
 									</p>
-									<p class="mb-0" v-if="cita.membresia"><strong>Membresía activa:</strong> 
-										<span title="Última atención" class="badge rounded-pill text-bg-warning"><i class="far fa-star"></i> {{cita.membresia.descripcion}}</span>
+									<p class="mb-0" v-if="cita.membresia"><strong>Paquete activo:</strong> 
+										<span title="Última atención" class="badge rounded-pill text-bg-warning"><i class="far fa-star"></i> {{cita.membresia.descripcion}}</span> <span class="badge rounded-pill text-bg-dark px-2">hasta {{ fechaLatam(cita.membresia.fin) }} de {{ cita.mebresia?.sesiones ?? 0 }} {{ (cita.membresia?.sesiones ?? 0) != 1 ? 'sesiones': 'sesión' }}</span> 
 									</p>
 								
 								</div>
@@ -192,6 +192,10 @@
 
 					<div class="alert alert-danger agrandar m-4" role="alert" v-if="alertaDeudas" >
 						<i class="fa-regular fa-comment-dots"></i> <strong>Alto!</strong> <span v-html="mensajeDeudas"></span>
+					</div>
+
+					<div class="alert alert-warning agrandar m-4" role="alert" v-if="cita.membresia" >
+						<i class="fa-regular fa-comment-dots"></i> <strong>Membresía activa:</strong> <span v-html="cita.membresia.descripcion"></span> <span>hasta {{ fechaLatam(cita.membresia.fin) }}</span>
 					</div>
 
 
@@ -253,7 +257,7 @@
 								</div>
 								<div class="col-sm-4 my-2">
 									<div class=" form-switch">
-										<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="nosrecomienda" @change="cita.recomendacion_comentario=''	">
+										<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="nosrecomienda">
 										<label class="form-check-label" for="flexSwitchCheckDefault">Referencia <span class="text-danger">*</span></label>
 									</div>
 								</div>
@@ -262,11 +266,11 @@
 									<div class="col-sm-4 my-1" >
 										<select class="form-select text-capitalize" name="" id="" v-model="cita.recomendation" >
 											<option value="" selected>Ninguno</option>
-											<option class=" text-capitalize" v-for="reco in recomendaciones" :value="reco">{{ reco }}</option>
+											<option class="text-capitalize" v-for="reco in recomendaciones" :value="reco">{{ reco }}</option>
 										</select>
 									</div>
 									<div class="col-sm-8">
-										<input type="text" class="form-control" v-model="cita.recomendacion_comentario" placeholder="¿Comentario extra sobre la recomendación?">
+										<input type="text" class="form-control text-capitalize" v-model="cita.recomendacion_comentario" placeholder="¿Comentario extra sobre la recomendación?">
 									</div>
 								</div>
 								<div class="col-sm-12 my-1" v-if="!esPresencial">
@@ -658,9 +662,9 @@ export default {
 					this.cita.contacto = res.data.relacion[0].name ?? '' ;
 					this.cita.contacto_celular = res.data.relacion[0].phone ?? '' 
 					this.cita.parentezco = res.data.relacion[0].kinship ?? ''
-					this.cita.contacto2 = res.data.relacion[1].name ?? ''
-					this.cita.contacto_celular2 = res.data.relacion[1].phone ?? '' 
-					this.cita.parentezco2 = res.data.relacion[1].kinship ?? '' 
+					this.cita.contacto2 = res.data.relacion[1]?.name ?? ''
+					this.cita.contacto_celular2 = res.data.relacion[1]?.phone ?? '' 
+					this.cita.parentezco2 = res.data.relacion[1]?.kinship ?? '' 
 					this.cita.etiqueta = res.data.patient.etiqueta;
 					this.cita.deudas = res.data.patient.deudas;
 					this.cita.prev_status = res.data.patient.new_status;
@@ -683,6 +687,7 @@ export default {
 		},    
 		horaSimple1(horita){ return moment(horita, 'HH:mm:ss').format('h:mm')},
 		horaSimple2(horita){ return moment(horita, 'HH:mm:ss').format('h:mm a')},
+		fechaLatam(horita){ return moment(horita).format('DD [de] MMMM [de] YYYY')},
 
 		emitirProf () {
 			this.$emit("emitIdProf", event.target.value);

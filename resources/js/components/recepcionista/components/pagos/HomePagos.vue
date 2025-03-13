@@ -278,7 +278,7 @@
 			</div>
 		</div>
 	</div>
-	<ModalMembresias :idUsuario="idUsuario"></ModalMembresias>
+	<ModalMembresias :idUsuario="idUsuario" :vista="'buscar'"></ModalMembresias>
 
 	<!-- Modal -->
 	<div class="modal fade" id="modalEditarPago" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -345,7 +345,8 @@ export default{
 	data(){
 		return{
 			payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'], idSeleccionado:-1,
-			idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD'), monedas:[], idSede:1
+			idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD'), monedas:[], idSede:1,
+			buscarVacio:true
 		}
 	},
 	name: 'HomePagos',

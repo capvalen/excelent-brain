@@ -117,6 +117,26 @@ class PatientController extends Controller
 				'department'=>$request->input('paciente.address.department'),
 				'patient_id' => $paciente->id
 			]);
+
+			Relative::where('patient_id',$paciente->id)->delete();
+
+			if($request->input('paciente.contacto')){
+				Relative::create([
+					'name'=> str_replace('null', '', $request->input('paciente.contacto')),
+					'phone'=> str_replace('null', '', $request->input('paciente.contacto_celular')),
+					'kinship'=> str_replace('null', '', $request->input('paciente.parentezco')),
+					'patient_id' => $paciente->id
+				]);
+			}
+
+			if($request->input('paciente.contacto2') ){
+				Relative::create([
+					'name'=> str_replace('null', '', $request->input('paciente.contacto2')),
+					'phone'=> str_replace('null', '', $request->input('paciente.contacto_celular2')),
+					'kinship'=> str_replace('null', '', $request->input('paciente.parentezco2')),
+					'patient_id' => $paciente->id
+				]);
+			}
 			echo $paciente->id;
 		}
 
@@ -315,7 +335,7 @@ class PatientController extends Controller
 			//Verificar si tiene membresía activa
 			$membresia = DB::table('membresias as m')
 			->join('precios as p', 'p.id', '=', 'm.tipo')
-			->select('m.*', 'p.descripcion')
+			->select('m.*', 'p.descripcion', 'p.sesiones')
 			->where('patient_id', $paciente->id)
 			->where('m.activo', 1)
 			->where('m.estado', 2)
@@ -578,19 +598,27 @@ class PatientController extends Controller
 		}
 
 		public function editarPariente($id, Request $request){
-			try {
-				$respuesta = Relative::find($id)
-			->update([
-				'name' => $request->input('nombre'),
-				'phone' => $request->input('celular'),
-				'kinship' => $request->input('parentesco')
-			]);
-			if($respuesta){ return response()->json([ 'msg' => 'Actualizado con éxito' ]); }
-			} catch (\Throwable $th) {
-				echo $th;
+
+			Relative::where('patient_id',$id)->delete();
+
+			if($request->input('nombre')){
+				Relative::create([
+					'name'=> str_replace('null', '', $request->input('nombre')),
+					'phone'=> str_replace('null', '', $request->input('celular2')),
+					'kinship'=> str_replace('null', '', $request->input('parentesco')),
+					'patient_id' => $id
+				]);
 			}
-			
-			
+
+			if($request->input('nombre2') ){
+				Relative::create([
+					'name'=> str_replace('null', '', $request->input('nombre2')),
+					'phone'=> str_replace('null', '', $request->input('celular2')),
+					'kinship'=> str_replace('null', '', $request->input('parentesco2')),
+					'patient_id' => $id
+				]);
+			}
+			return response()->json([ 'msg' => 'Actualizado con éxito' ]);
 		}
 
 		public function datosPacienteSemaforo($id){
@@ -695,7 +723,8 @@ class PatientController extends Controller
 			->join('professionals', 'sos.idProfesional', '=', 'professionals.id')
 			->join('patients', 'sos.idPaciente', '=', 'patients.id')
 			->select('sos.*', 'professionals.name as nombreProfesional', 'patients.*', 'sos.id as idSos')
-			->where('sos.activo','=', 1)->get();
+			->where('sos.activo','=', 1)
+			->orderByDesc('idSos')->get();
 
 			foreach ($pacientes as $paciente) {
 				$relaciones = Relative::where('patient_id', $paciente->idPaciente)->get();

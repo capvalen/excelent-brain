@@ -191,7 +191,9 @@ import alertify from 'alertifyjs'
 				token:'087d16c0688f5150268342d085a55d54b5064c7649596011f03b35b935899a50',
 				provincias:[], distritos:[], paciente:{
 					dni:'', name:'', phone:'',
-					relative:{}, address:{}
+					relative:{}, address:{},
+					contacto: '', contacto_celular:'', parentezco:'',
+					contacto2: '', contacto_celular2:'', parentezco2:'',
 				}
       }
     },

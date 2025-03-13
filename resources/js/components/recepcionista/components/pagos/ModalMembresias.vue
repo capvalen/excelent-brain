@@ -202,11 +202,11 @@ import { TimeScale } from 'chart.js';
 export default {
 	name: 'ModalMembresias',
 	data() {
-		return {
-			txtBusqueda: '', pacientes: [], vista: 'buscar', indexGlobal: null, pacienteElegido: {}, precios: [], membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD') }, fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') }, doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:'', comentarios:''
+		return { // vista: 'buscar',
+			txtBusqueda: '', pacientes: [], indexGlobal: null, pacienteElegido: {}, precios: [], membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD') }, fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') }, doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:'', comentarios:''
 		}
 	},
-	props: ['idUsuario'],
+	props: ['idUsuario', 'vista'],
 	methods: {
 		async searchHistoria() {
 			let search = this.txtBusqueda.split('/'),
