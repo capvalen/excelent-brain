@@ -175,12 +175,14 @@
 					</div>
 
 					<div class="footer__firma">
-                    @if($professional->id == 24)
-                        <img src="{{public_path('img/firma-dra-grecia.png')}}" alt="Firma" class="img-firma">
-                    @elseif($receta[0]->signature == 1)
-                        <img src="{{public_path('img/firmadoc3.png')}}" alt="Firma" class="img-firma">        
-                    @endif
-                    </div>
+						@if(($professional->id == 24 || $professional->id == 5) && isset($receta[0]) && $receta[0]->signature == 1)
+								@if($professional->id == 24)
+										<img src="{{ public_path('img/firma-dra-grecia.png') }}" alt="Firma" class="img-firma">
+								@elseif($professional->id == 5)
+										<img src="{{ public_path('img/firmadoc3.png') }}" alt="Firma" class="img-firma">
+								@endif
+						@endif
+				</div>
 
 					
 				</div>

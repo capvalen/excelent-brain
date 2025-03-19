@@ -124,7 +124,7 @@
               </div>
             </div>
 
-
+          <div v-if="dataPatient.relative.length > 1">
             <div class="form-group row">
               <div class="col-sm-12">
                 <label for="name">Nombre del segundo contacto</label>
@@ -142,7 +142,7 @@
                 <input type="text" class="form-control" name="kinship" id="kinship" v-model="dataPatient.relative[1].kinship" placeholder="Parentesco"> 
               </div>
             </div>
-
+          </div>
           </form>
         </div>
         <div class="modal-footer border-0">
@@ -166,7 +166,13 @@ export default {
     return {
       datos: '',
 			ubigeo: {departamentos:[], provincias:[], distritos:[]},
-			provincias:[], distritos:[],relacion:[]
+			provincias:[], distritos:[],relacion:[],
+      dataPatient: {
+        relative: [
+        { id: -1, name: '', phone: '', kinship: '' }, // Primer contacto vacío
+        { id: -1, name: '', phone: '', kinship: '' }  // Segundo contacto vacío 
+        ]
+      }
     }
   },
 
@@ -212,8 +218,11 @@ export default {
 		},
 		capturaSeñal() {
       console.log('apli');
-      if(this.dataPatient.relative.length==0){
-        this.dataPatient.relative.push({ id:-1, name: '', nombres: '', phone:'' })
+      if (this.dataPatient.relative.length == 0){
+        this.dataPatient.relative.push({ id:-1, name: '', phone: '', kinship:'' })
+      }
+      if (this.dataPatient.relative.length == 1) {
+        this.dataPatient.relative.push({ id: -1, name: '', phone: '', kinship: '' });
       }
 			this.listarDepartamentos(false);
     },
