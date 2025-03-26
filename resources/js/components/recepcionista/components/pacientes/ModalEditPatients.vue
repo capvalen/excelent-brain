@@ -102,7 +102,19 @@
               </div>       
             </div> 
 
-            <hr>
+            <div class="form-group row">
+              <label for="">Referencia</label>
+							<div class="col-sm-4 my-1" >
+										<select class="form-select text-capitalize" name="tipo_recomendacion" id="tipo_recomendacion" v-model="patientData.recomendation" >
+											<option value="" selected>Ninguno</option>
+                      <option class="text-capitalize" v-for="reco in recomendaciones" :value="reco">{{ reco }}</option>
+										</select>
+									</div>
+									<div class="col-sm-8">
+										<input type="text" class="form-control text-capitalize" v-model="patientData.recomendacion_comentario" placeholder="¿Comentario extra sobre la recomendación?">
+							</div>
+						</div>
+
             <h5 class="modal-title" id="exampleModalLabel"> Datos del familiar</h5>
 
             <!-- Primer contacto -->
@@ -177,6 +189,7 @@ export default {
         occupation: '',
         marital_status: '',
         instruction_degree: '',
+        recomendation:'', recomendacion_comentario:'',
         address: {
           address: '',
           department: -1,
@@ -190,7 +203,8 @@ export default {
       },
       ubigeo: { departamentos: [], provincias: [], distritos: [] },
       provincias: [],
-      distritos: []
+      distritos: [],
+      recomendaciones:['Facebook', 'Instagram', 'TikTok', 'Linkedin', 'Youtube', 'Spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio', 'Paciente Antiguo', 'Otros Centros de Salud', 'Google Maps / Business', 'Referencia del Establecimiento', 'Sucamec', 'Página Web']
     }
   },
 

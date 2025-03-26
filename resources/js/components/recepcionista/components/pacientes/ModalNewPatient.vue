@@ -117,6 +117,19 @@
 							</div>
             </div>
 
+            <div class="form-group row">
+              <label for="">Referencia</label>
+							<div class="col-sm-4 my-1" >
+										<select class="form-select text-capitalize" name="tipo_recomendacion" id="tipo_recomendacion" v-model="paciente.recomendation" >
+											<option value="" selected>Ninguno</option>
+                      <option class="text-capitalize" v-for="reco in recomendaciones" :value="reco">{{ reco }}</option>
+										</select>
+									</div>
+									<div class="col-sm-8">
+										<input type="text" class="form-control text-capitalize" v-model="paciente.recomendacion_comentario" placeholder="¿Comentario extra sobre la recomendación?">
+							</div>
+						</div>
+						
 						<p class="mb-0"><strong>Datos de Contacto de Emergencia</strong></p>
 						<div class="form-group row">
 							<div class="col-sm-4">
@@ -192,9 +205,11 @@ import alertify from 'alertifyjs'
 				provincias:[], distritos:[], paciente:{
 					dni:'', name:'', phone:'',
 					relative:{}, address:{},
+					recomendation:'', recomendacion_comentario:'',
 					contacto: '', contacto_celular:'', parentezco:'',
 					contacto2: '', contacto_celular2:'', parentezco2:'',
-				}
+				},
+				recomendaciones:['Facebook', 'Instagram', 'TikTok', 'Linkedin', 'Youtube', 'Spotify', 'TV', 'Amigos o familiares', 'Referencia profesional', 'Publicidad escrita', 'Campañas de salud', 'Convenio', 'Paciente Antiguo', 'Otros Centros de Salud', 'Google Maps / Business', 'Referencia del Establecimiento', 'Sucamec', 'Página Web']
       }
     },
 
@@ -269,6 +284,8 @@ import alertify from 'alertifyjs'
 												
 						this.paciente.parentezco = res.data.relacion[0]?.kinship ?? '';
 						this.paciente.parentezco2 = res.data.relacion[1]?.kinship ?? '';
+						this.paciente.recomendation = res.data.patient.recomendation;
+						this.paciente.recomendacion_comentario = res.data.patient.recomendacion_comentario;
 						
 						//this.paciente.name = res.data.relacion.name =='null' ? '' : res.data.relacion.name;
 						//this.paciente.phone = res.data.relacion.phone =='null' ? '' : res.data.relacion.phone;
@@ -342,6 +359,7 @@ import alertify from 'alertifyjs'
 			this.paciente.gender =2;
 			this.paciente.marital_status =1;
 			this.paciente.instruction_degree = 6;
+			this.recomendaciones.sort();
     }
 
   }
