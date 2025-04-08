@@ -64,10 +64,10 @@
 						endif;
 						@endphp
 						<p class="name">CLIENTE: {{$extra_payment->customer}}</p>
-						<p>USUARIO: -</p>
+						<p>USUARIO: {{$extra_payment->user->nombre}}</p>
 						{{-- <p>DNI: {{$patient[0]->dni}}</p> --}}
 						{{-- <p>DIRECCIÓN: {{$patient[0]->address->address}}</p> --}}
-							<p>MEDIO DE PAGO: {{ $extra_payment->method_payment->tipo }}</p>
+						<p>MEDIO DE PAGO: {{ $extra_payment->method_payment->tipo }}</p>
 					</div>
 					<table style="padding: 0px 15px 0px 15px; margin-top:10px;">
 						<thead>

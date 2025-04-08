@@ -33,4 +33,8 @@ class Extra_payment extends Model
     public function tipo_pagos(){
         return $this->hasOne("App\Models\TipoPago", 'id', 'type');
     }
+
+    public function user(){
+    return $this->belongsTo(User::class, 'user_id');
+    }
 }
