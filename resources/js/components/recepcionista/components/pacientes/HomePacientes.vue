@@ -22,7 +22,7 @@
           <th>Nombre y apellidos</th>
           <th>Hobbie</th>
           <th>Club</th>
-          <th>Membresía</th>
+          <th>Paquete</th>
           <th>Semáforo</th>
           <th>Triaje</th>
           <th>Faltas</th>

@@ -40,7 +40,7 @@
 						<p class="mb-0"><strong>Celular</strong> {{ pacienteElegido.phone }}</p>
 						<p class="mb-0"><strong>Última atención</strong> {{ pacienteElegido.etiqueta == '' ? 'Sin registro' :
 							pacienteElegido.etiqueta }}</p>
-						<label class="mt-3" for="">Tipo de membresía</label>
+						<label class="mt-3" for="">Tipo de paquete</label>
 						<select name="" class="form-select" id="sltMembresia" v-model="membresia.tipo" @change="calcularFechas()">
 							<option v-for="precio in precios" :value="precio.id">{{ precio.descripcion }}</option>
 						</select>

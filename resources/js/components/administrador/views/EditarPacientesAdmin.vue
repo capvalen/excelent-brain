@@ -1,6 +1,6 @@
 <template lang="">
 	<div>
-		<h3>Editar pacientes (Nivel genencial)</h3>
+		<h3>Editar pacientes (Nivel gerencial)</h3>
 		<div class="card">
 			<div class="card-body">
 				<div class="d-sm-flex align-items-center justify-content-around mt-4">
