@@ -217,7 +217,8 @@
 										<option value="6">Nutrición</option>
 										<option value="1" v-if="profesionalElegido.idProfesion=='1'" selected >Psiquiatrica</option>
 										<option value="2" v-if="profesionalElegido.idProfesion=='2'" selected >Psicológica</option>
-										
+										<option value="7" v-if="profesionalElegido.idProfesion=='7'" selected >Terapista</option>
+										<option value="8" v-if="profesionalElegido.idProfesion=='8'" selected >Tecnólogo</option>
 									</select>
 								</div>
 								<div class="col-sm-4">
@@ -696,6 +697,8 @@ export default {
 			switch (profesion) {
 				case 'Psicólogo': this.cita.clasification = 2; break;
 				case 'Psiquiatra': this.cita.clasification = 1; break;
+				case 'Terapista': this.cita.clasification = 7; break;
+				case 'Tecnólogo': this.cita.clasification = 8; break;
 				default: this.cita.clasification = ''; break;
 			}
 		},

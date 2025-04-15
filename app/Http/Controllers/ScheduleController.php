@@ -92,6 +92,8 @@ class ScheduleController extends Controller
                 $cita->patient->relative= $relacion[0];
             else
                 $cita->patient->relative= [];
+            
+			$cita->patient->semaforo = DB::table('semaforo')->where('patient_id', $cita->patient_id )->where('activo',1)->orderBy('registro', 'desc')->first();
         }
 
 

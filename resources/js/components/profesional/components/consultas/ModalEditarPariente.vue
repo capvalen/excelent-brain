@@ -14,7 +14,7 @@
                 <label><strong>Pariente N° {{ i + 1 }}</strong></label>
                 
                 <div class="mb-3">
-                  <label for="nombre-pariente-{{i}}" class="form-label">Nombre</label>
+                  <label :for="'nombre-pariente-'+i" class="form-label">Nombre</label>
                   <input 
                     type="text" 
                     :id="'nombre-pariente-' + i" 
@@ -26,7 +26,7 @@
                 </div>
                 
                 <div class="mb-3">
-                  <label for="celular-pariente-{{i}}" class="form-label">Celular</label>
+                  <label :for="'celular-pariente-'+i" class="form-label">Celular</label>
                   <input 
                     type="tel" 
                     :id="'celular-pariente-' + i" 
@@ -39,7 +39,7 @@
                 </div>
                 
                 <div class="mb-3">
-                  <label for="parentesco-pariente-{{i}}" class="form-label">Parentesco</label>
+                  <label :for="'parentesco-pariente-'+i" class="form-label">Parentesco</label>
                   <select 
                     :id="'parentesco-pariente-' + i" 
                     class="form-select text-capitalize" 

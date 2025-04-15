@@ -9,6 +9,8 @@ class Patient extends Model
 {
     use HasFactory;
     protected $fillable=['name','nombres','email','birth_date','dni','phone','occupation','instruction_degree','birth_date','marital_status','discharge','faults', 'gender', 'type_dni', 'club', 'hobbies', 'activo', 'etiqueta', 'new_status', 'seguimiento', 'vivo', 'recomendation', 'recomendacion_comentario', 'sos'];
+    
+
     //Relacion uno a uno Patient-Relaive
     public function relative()
     {
@@ -83,7 +85,7 @@ class Patient extends Model
     public function Exams() {
         return $this->hasMany('App\Models\Exam');
     }
-		public function Semaforo()
+    public function semaforo()
     {
         return $this->hasMany("App\Models\Semaforo");
     }

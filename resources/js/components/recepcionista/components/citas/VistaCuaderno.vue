@@ -50,7 +50,26 @@
 									</td>
 									<td v-else></td>
 									<td class="puntero" v-if="hora.libre=='0'" data-bs-toggle="modal" data-bs-target="#patientModal" @click="asignar(horasMalas[hora.indexOcupado]); modalInfo(horasMalas[hora.indexOcupado]);">
-										<span class="badge rounded-5 p-2 bg-danger" v-if="faltanDatos(horasMalas[hora.indexOcupado].patient)" title="Faltan datos"><i class="fas fa-brain"></i></span>
+										<span class="badge rounded-5 p-2"
+										:class="{
+											'bg-white': [1].includes(horasMalas[hora.indexOcupado].patient.semaforo?.codigo),
+											'bg-success': [2,3,4].includes(horasMalas[hora.indexOcupado].patient.semaforo?.codigo),
+											'bg-warning': [5,6,7].includes(horasMalas[hora.indexOcupado].patient.semaforo?.codigo),
+											'bg-danger': [8,9,10].includes(horasMalas[hora.indexOcupado].patient.semaforo?.codigo),
+											'bg-secondary': !horasMalas[hora.indexOcupado].patient.semaforo,
+										}">
+											<span v-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==1" title="Neutro"><i class="fas fa-smile"></i></span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==2" title="Cumplidor"> <i class="fas fa-laugh-wink"></i> </span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==3" title="Promotor"> <i class="fas fa-laugh-wink"></i> </span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==4" title="Wow"> <i class="fas fa-laugh-wink"></i> </span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==5" title="Reprogramador"> <i class="fas fa-meh"></i> </span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==6" title="Exigente"> <i class="fas fa-meh"></i> </span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==7" title="Deudor"> <i class="fas fa-angry"></i> </span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==8" title="Insatisfecho"> <i class="fas fa-frown"></i> </span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==9" title="Paciente de riesgo"> <i class="fas fa-frown"></i> </span>
+											<span v-else-if="horasMalas[hora.indexOcupado].patient.semaforo?.codigo==10" title="Problemático"> <i class="fas fa-frown"></i> </span>
+											<span v-if="!horasMalas[hora.indexOcupado].patient.semaforo" title="Normal"> <i class="fas fa-smile"></i> </span>
+										</span>
 										<span class="text-uppercase" >{{ (horasMalas[hora.indexOcupado].patient.name).toLowerCase() }} {{ horasMalas[hora.indexOcupado].patient.nombres }}</span>
 									</td>
 									<td v-else>
@@ -347,7 +366,7 @@
 				this.posibles = this.horasMalas.filter(posible=> posible.professional_id == idProf && posible.date == this.fecha && laCita.id != posible.id )
 			},
 			faltanDatos(paciente){
-				console.log('paciente', paciente)
+				//console.log('paciente', paciente)
 				if( !paciente.name || !paciente.phone || !paciente.email || paciente.gender==2 || !paciente.address.address || !paciente.relative.name || !paciente.relative.phone || !paciente.kinship)
 					return true
 				else return false

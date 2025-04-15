@@ -59,31 +59,34 @@
 					<td v-if="paciente.vivo==1" >
 						<div v-if="paciente.semaforo[0]">
 							<button v-if="paciente.semaforo[0].codigo==1" class="btn btn-primary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span  title="Normal"><i class="fas fa-smile"></i></span>
+								<span  title="Neutro"><i class="fas fa-smile"></i></span>
 							</button>
 							<button v-if="paciente.semaforo[0].codigo==2" class="btn btn-success btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Excelente"> <i class="fas fa-laugh-wink"></i> </span>
+								<span title="Cumplidor"> <i class="fas fa-laugh-wink"></i> </span>
 							</button>
 							<button v-if="paciente.semaforo[0].codigo==3" class="btn btn-success btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Exigente"> <i class="fas fa-laugh-wink"></i> </span>
+								<span title="Promotor"> <i class="fas fa-laugh-wink"></i> </span>
 							</button>
 							<button v-if="paciente.semaforo[0].codigo==4" class="btn btn-success btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Deudor"> <i class="fas fa-laugh-wink"></i> </span>
+								<span title="Wow"> <i class="fas fa-laugh-wink"></i> </span>
 							</button>
 							<button v-if="paciente.semaforo[0].codigo==5" class="btn btn-warning btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Insatisfecho"> <i class="fas fa-meh"></i> </span> 
+								<span title="Reprogramador"> <i class="fas fa-meh"></i> </span> 
 							</button>
 							<button v-if="paciente.semaforo[0].codigo==6" class="btn btn-warning btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Peligroso"> <i class="fas fa-meh"></i> </span>
+								<span title="Exigente"> <i class="fas fa-meh"></i> </span>
 							</button>
 							<button v-if="paciente.semaforo[0].codigo==7" class="btn btn-danger btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Peligroso"> <i class="fas fa-angry"></i> </span>
+								<span title="Deudor"> <i class="fas fa-angry"></i> </span>
 							</button>
 							<button v-if="paciente.semaforo[0].codigo==8" class="btn btn-warning btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Peligroso"> <i class="fas fa-frown"></i> </span>
+								<span title="Insatisfecho"> <i class="fas fa-frown"></i> </span>
 							</button>
-							<button v-if="paciente.semaforo[0].codigo==9" class="btn btn-warning btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
-								<span title="Peligroso"> <i class="fas fa-frown"></i> </span>
+							<button v-if="paciente.semaforo[0].codigo==9" class="btn btn-danger btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
+								<span title="Paciente de riesgo"> <i class="fas fa-frown"></i> </span>
+							</button>
+							<button v-if="paciente.semaforo[0].codigo==10" class="btn btn-danger btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerEstados" @click="dataProps(paciente)">
+								<span title="Problemático"> <i class="fas fa-frown"></i> </span>
 							</button>
 						</div>
 						<div v-else>
@@ -165,7 +168,8 @@ export default {
 				{id: 6, valor: 'exigente', detalle: 'un paciente/cliente que siempre pide un trato especial'},
 				{id: 7, valor: 'deudor', detalle: 'paciente con deudas'},
 				{id: 8, valor: 'insatisfecho', detalle: 'suele quejarse de los servicios'},
-				{id: 9, valor: 'peligroso', detalle: 'paciente con amenazas o actos de violencia.'},
+				{id: 9, valor: 'paciente de riesgo', detalle: 'paciente con amenazas o actos de violencia.'},
+				{id: 10, valor: 'problemático', detalle: 'paciente con problemas.'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], misHobbies:[],
 
@@ -278,8 +282,6 @@ export default {
 	updated () {
 		this.actualizarDatos
 	},
-
-
   created () {
     this.getPatients();
 		this.listarprofesional();

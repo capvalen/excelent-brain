@@ -17,9 +17,10 @@ class ProfessionalController extends Controller
     public function index()
     {
         $profesionales = Professional::select('professionals.*','users.email')
-				->where('profession','Psicólogo')
+				->where('profession','<>','Ninguno')
+				/*->where('profession','Psicólogo')
 				->orWhere('profession','Psiquiatra')
-				->orWhere('profession','Nutricionista')
+				->orWhere('profession','Nutricionista')*/
 				->join('users','users.id','=','professionals.user_id')
 				->get();
 
@@ -84,9 +85,18 @@ class ProfessionalController extends Controller
                 'user_id' => $user->id
             ]);
         }else{
+            switch ($request->get('profession')) {
+                case 'Psiquiatra': $idProfesion = 1; break;
+                case 'Psicólogo': $idProfesion = 2; break;
+                case 'Nutricionista': $idProfesion = 6; break;
+                case 'Terapista': $idProfesion = 7; break;
+                case 'Tecnólogo': $idProfesion = 8; break;
+                default: break;
+            }
             $prof = Professional::create([
                 'name' => $request->get('name'),
                 'phone' => $request->get('phone'),
+                'idProfesion' => $idProfesion,
                 'profession' => $request->get('profession'),
                 'cv_description' => $request->get('cv_description'),
                 'photo'=> '-',

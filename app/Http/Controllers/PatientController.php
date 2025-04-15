@@ -28,10 +28,9 @@ class PatientController extends Controller
 	public function index()
 	{
 		$patient = Patient::where('activo', '=', 1)
-		->with('initial_psychiatric_history', 'initial_psychological_history')
+		->with('initial_psychiatric_history', 'initial_psychological_history', 'semaforo')
 		->whereNotNull('dni')
-		
-			->get();
+		->limit(50)->get();
 		return response()->json($patient);
 	}
 
@@ -151,15 +150,15 @@ class PatientController extends Controller
 	}
 	public function getLast10Patients (){
 		$patients = Patient::where('activo', '=', 1)
-		->with('relative', 'address', 'prescriptions')
+		->with('relative', 'address', 'prescriptions', 'semaforo')
 		->latest('created_at')->take(20)
 		->get();
 		foreach($patients as $patient){
 			$triaje = DB::table('triaje')->where('patient_id', $patient->id)->get();
 			//$patient->triaje_count=$triaje->count();
 			$patient->triajes = $triaje ;
-			$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
-			$patient->semaforo = $semaforo;
+			//$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
+			//$patient->semaforo = $semaforo;
 
 			$conteo= Appointment::where('patient_id', $patient->id)
 			->where('status', 4)
