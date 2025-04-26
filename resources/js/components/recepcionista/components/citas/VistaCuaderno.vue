@@ -221,10 +221,12 @@
 	export default{
 		name: 'VistaCuaderno',
 		data(){ return{
-			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], cita:{}, profesionalElegido:[], horaElegida:[], alternativo:false, precios:[], recetas:[],
-			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ], cita: {
-				address:{patient:{address:{}}}
-			}, posibles:[], primero:{}
+			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], profesionalElegido:[], horaElegida:[], alternativo:false, precios:[], recetas:[],
+			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ],
+			cita: {
+				address:{patient:{address:{}}, patient:[]},
+				patient:{address:[], relative:[]}
+			}, posibles:[], primero:{patient:[]}
 		}},
 		props:[ 'idUsuario', 'nombreUser', 'idSede'],
 		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio },

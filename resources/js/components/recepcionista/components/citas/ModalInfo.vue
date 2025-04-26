@@ -103,7 +103,7 @@
         return text.toLowerCase();
       },
 			queServicio(idTipo){ //console.log('queTipo', idTipo);
-				return this.precios.find(x=> x.id == idTipo).descripcion
+				if( idTipo ) return this.precios.find(x=> x.id == idTipo).descripcion
 			},
     },
 

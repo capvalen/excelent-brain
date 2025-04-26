@@ -279,9 +279,9 @@ export default {
       this.horariosAll = [];
       this.horarios = [];
       this.hoursProfessional = [];
-      setTimeout(() => {
+      /*setTimeout(() => {
         document.getElementById("professional_id").value = ""
-      }, 0)
+      }, 0)*/
 
       //await axios.get('/api/appoitmentsReception')
       await axios.get('/api/searchByDateAppointment/'+ moment().format('YYYY-MM-DD'))

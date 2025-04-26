@@ -11,7 +11,7 @@
 					<select class="form-select text-capitalize" id="" v-model="idCambio">
 						<option class="text-capitalize" v-for="(posible, index) in posibles" :value="index">{{posible.patient.name.toLowerCase()}}</option>
 					</select>
-					<p class="mt-3 mb-0">Se intercambiará por: <strong class="text-capitalize">{{ primero.patient.name.toLowerCase() }}</strong></p>
+					<p class="mt-3 mb-0">Se intercambiará por: <strong class="text-capitalize">{{ primero.patient.name?.toLowerCase() }}</strong></p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="intercambiar()"><i class="fas fa-retweet"></i> Cambiar</button>

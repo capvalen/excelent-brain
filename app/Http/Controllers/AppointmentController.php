@@ -704,8 +704,26 @@ class AppointmentController extends Controller
 			'motivoDescuento' => $request->input('caso.motivoDescuento'),
 			'payment_method'=> $request->input('caso.moneda')
 		]);
-		
-		if($request->input('caso.pago') == '2'){ // Modo pagado
+
+		if( $request->input('caso.pago') == '3' ){ //en caso de adelantos
+			$pagoExtra = new Extra_payment;
+			$pagoExtra->customer = $request->input('dataCita.patient.name') .' ' . $request->input('dataCita.patient.nombres');
+			$pagoExtra->price = $request->input('caso.monto_adelanto'); //el precio de adelanto
+			$pagoExtra->moneda = $request->input('caso.moneda');
+			$pagoExtra->voucher_issued = $request->input('caso.comprobante');
+			$pagoExtra->appointment_id = $request->input('dataCita.id');
+			$pagoExtra->type = 8;
+			$pagoExtra->observation = $request->input('dataCita.payment.observation');
+			$pagoExtra->continuo = $request->input('caso.continuo');
+			$pagoExtra->user_id = $request->input('caso.user_id');
+			$pagoExtra->rebaja = $request->input('dataCita.payment.rebaja');
+			$pagoExtra->motivoRebaja = $request->input('dataCita.payment.motivoRebaja');
+			$pagoExtra->descuento = $request->input('dataCita.descuento');
+			$pagoExtra->motivoDescuento = $request->input('dataCita.motivoDescuento');
+			$pagoExtra->idSede = $request->input('idSede');
+			$pagoExtra->save();
+		}		
+		else if($request->input('caso.pago') == '2'){ // Modo pagado y adelanto
 			
 				$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $request->input('dataCita.patient.name') .' ' . $request->input('dataCita.patient.nombres');
@@ -861,6 +879,12 @@ class AppointmentController extends Controller
 			$appointment->update([
 				'status' => $valueStatus
 			]);
+		}
+
+		if($valueStatus == 1 || $valueStatus==3){ //status cita sin confirmar, debe eliminar HC
+			$hc = Medical_evolution::latest()->first();
+			$hc->activo=0;
+			$hc->save();
 		}
 
 		if($valueStatus == 3){ //status cita anulada

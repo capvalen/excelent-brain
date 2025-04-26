@@ -1,6 +1,6 @@
 <template>
-	<div class="modal fade" id="pagoModal" ref="pagoModal" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal fade" id="pagoModal" ref="pagoModal" tabindex="-1" role="dialog" aria-hidden="true" >
+		<div class="modal-dialog modal-dialog-centered" role="document" v-if="dataCita.patient && dataCita.payment">
 			<div class="modal-content modal-sm">
 				<div class="modal-header border-0">
 					<h5 class="modal-title" id="exampleModalLabel">Pago de cita</h5>
@@ -9,13 +9,13 @@
 					</button>
 				</div>
 
-				<div class="modal-body">
+				<div class="modal-body" >
 					<form action="">
 						<div class="form-group row">
 							<div class="col-sm-12">
 								<!-- <input type="text" class="form-control" name="price" id="price" v-model="dataCita.payment.price"> -->
 								<p class="mb-0"><small>Cuenta de la persona:</small></p>
-								<p class="lead text-capitalize mb-2 fw-bold"> <span>{{(dataCita.patient.name).toLowerCase()}} {{(dataCita.patient.nombres).toLowerCase()}}</span></p>
+								<p class="lead text-capitalize mb-2 fw-bold"> <span>{{(dataCita.patient?.name ?? '').toLowerCase()}} {{(dataCita.patient?.nombres ?? '').toLowerCase()}}</span></p>
 							 	<p class="lead mb-0"><small>Precio a cobrar: S/</small> {{ parseFloat(dataCita.payment.price).toFixed(2) }}</p>
 							 	<p v-if="dataCita.payment.rebaja>0" class="lead mb-0"><small>Rebajado: S/</small> {{ parseFloat(dataCita.payment.rebaja).toFixed(2) }}</p>
 							 	<p v-if="dataCita.payment.adelanto>0" class="lead mb-0"><small>Adelanto: </small> S/ {{ parseFloat(dataCita.payment.adelanto).toFixed(2) }}</p>
@@ -30,8 +30,9 @@
 							
 							<div class="col-sm-12 mt-2">
 									<label class="mt-2 mb-0" for="">Estado de pago</label>
-									<select v-if="caso.pago==1" class="form-select" name="pay_status" id="pay_status" v-model="caso.pago">
+									<select v-if="caso.pago==1" class="form-select" name="pay_status" id="pay_status" v-model="caso.pago" @change="caso.monto_adelanto=0">
 										<option value="1">Sin pagar</option>
+										<option value="3">Adelanto</option>
 										<option value="2">Pagado</option>
 									</select>
 									<p v-else>
@@ -39,6 +40,10 @@
 										<span>Pagado</span>
 									</p>
 							</div>                                                      
+							<div class="col-sm-12" v-if="caso.pago">
+								<label class="mt-2 mb-0" for="">Monto de adelanto</label>
+								<input type="text" class="form-control" v-model="caso.monto_adelanto">									
+							</div>
 							<div class="col-sm-12">
 									<label class="mt-2 mb-0" for="">Método de pago</label>
 									<select class="form-select" id="pay_type" required name="pay_type" v-model="caso.moneda">
@@ -76,7 +81,7 @@ import moment from 'moment'
 		data() {
 			return{
 				dataCita: null,
-				caso: {pago:1, moneda:1, comprobante:'', continuo: 1, user_id:-1, rebaja:0, motivoRebaja:''}, maximo:15, monedas:[], neto:0
+				caso: {pago:1, moneda:1, comprobante:'', continuo: 1, user_id:-1, rebaja:0, motivoRebaja:''}, maximo:15, monedas:[], neto:0, monto_adelanto:0
 			}
 		},
 		props:{
@@ -160,18 +165,18 @@ import moment from 'moment'
 		watch:{
 			cita: function (){
 				this.dataCita = this.cita;
-				this.caso.pago = this.dataCita.payment.pay_status;
-				this.caso.moneda = this.dataCita.payment.payment_method == undefined ? 1:this.dataCita.payment.payment_method ;
-				this.caso.continuo = this.dataCita.payment.continuo;
+				this.caso.pago = this.dataCita.payment?.pay_status;
+				this.caso.moneda = this.dataCita.payment?.payment_method == undefined ? 1:this.dataCita.payment?.payment_method ;
+				this.caso.continuo = this.dataCita.payment?.continuo;
 				this.caso.user_id = this.idUsuario
-				this.neto = parseFloat(this.dataCita.payment.price)
+				this.neto = parseFloat(this.dataCita.payment?.price)
 			}
 		},
 		created () {
 			this.dataCita = this.cita;
-			this.caso.pago = this.dataCita.payment.pay_status;
-			this.caso.moneda = this.dataCita.payment.payment_method == undefined ? 1:this.dataCita.payment.payment_method ;
-			this.caso.continuo = this.dataCita.payment.continuo;
+			this.caso.pago = this.dataCita.payment?.pay_status;
+			this.caso.moneda = this.dataCita.payment?.payment_method == undefined ? 1:this.dataCita?.payment.payment_method ;
+			this.caso.continuo = this.dataCita.payment?.continuo;
 			this.caso.user_id = this.idUsuario
 
 

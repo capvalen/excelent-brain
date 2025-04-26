@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg" role="document" >
       <div class="modal-content">
         <div class="modal-header border-0">
           <h5 class="modal-title" id="exampleModalLabel"> Datos del Paciente para actualizar</h5>
@@ -8,7 +8,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" v-if="dataCit.patient">
 					<p class="mb-0"><strong>Datos Personales del paciente</strong></p>
           <form action="">
             <div class="form-group row">
