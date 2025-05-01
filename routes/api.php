@@ -103,6 +103,7 @@ Route::post('insertarSemaforo', [PatientController::class, 'insertarSemaforo']);
 Route::post('eliminarSemaforo/{id}', [PatientController::class, 'eliminarSemaforo']);
 Route::get('verReprogramaciones/{id}', [PatientController::class, 'verReprogramaciones']);
 Route::get('pedirSeguimientos', [PatientController::class, 'pedirSeguimientos']);
+Route::get('pedirSeguimientosActivos', [PatientController::class, 'pedirSeguimientosActivos']);
 
 Route::resource('kairos', KairoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 
@@ -164,6 +165,8 @@ Route::post('nuevoUsuarioBasico', [ExtrasController::class, 'nuevoUsuarioBasico'
 Route::post('eliminarUsuario', [ExtrasController::class, 'eliminarUsuario']);
 Route::post('crearAcontecimiento', [ExtrasController::class, 'crearAcontecimiento']);
 Route::get('cargarLineas/{id}', [ExtrasController::class, 'cargarLineas']);
+Route::put('/dividirPago/{id}', [ExtrasController::class, 'dividirPago']);
+
 
 Route::post('pedirReporte/{idReporte}', [ExtrasController::class,'pedirReporte']);
 Route::post('pedirReporteGerencial/{idReporte}', [ExtrasController::class,'pedirReporteGerencial']);
@@ -272,3 +275,4 @@ Route::get('/buscarDni/{dni}', [SimpleController::class, 'buscarDni']);
 
 Route::post('/crearNutricionPrimera', [SimpleController::class, 'crearNutricionPrimera']);
 Route::post('/listarNutriciones', [SimpleController::class, 'listarNutriciones']);
+

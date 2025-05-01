@@ -61,9 +61,8 @@
 				await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso})
 				.then(res => {
 					console.log(res.data)
-					this.dataCita.payment.pay_status = this.caso.pago;
 					this.closeModal()
-					//this.$swal('Pago actualizado con éxito')
+					
 					if( this.caso.pago ==2){
 						this.$swal.fire({
 							title: 'Pago actualizado con éxito',
@@ -85,7 +84,7 @@
 							showCancelButton: true,
 							cancelButtonText:
 								'Salir'
-						})
+						})						
 					}
 				})
 				.catch(err => {
@@ -105,7 +104,6 @@
 				console.log('algo');
 			}
 		},
-
 		mounted() {
 			this.axios.get("/api/listarMonedas/")
 			.then(resp => this.monedas = resp.data)

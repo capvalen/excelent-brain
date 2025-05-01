@@ -510,7 +510,7 @@
 </template>
 <script>
 import ModalSeguimiento from "../../../recepcionista/components/adicionales/ModalSeguimiento.vue"
-import ModalEditPatients from '../../..//recepcionista/components/pacientes/ModalEditPatients.vue'
+import ModalEditPatients from '../../..//recepcionista/components/pacientes/ModalEditPatient.vue'
 import moment from 'moment';
 
 	export default{

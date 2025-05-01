@@ -415,7 +415,7 @@
 		<ModalNuevoAviso :usuario="idUsuario"></ModalNuevoAviso>
 		<ModalEditarAviso :queAviso="queAviso" :usuario="idUsuario"></ModalEditarAviso>
 		<ModalNuevoInteresado :usuario="idUsuario" @actualizarInteresados="cargarDatos('interesados')"></ModalNuevoInteresado>
-		<ModalEditPatients v-if="data" :dataPatient="data"></ModalEditPatients>
+		<ModalEditarPaciente v-if="data" :dataPatient="data"></ModalEditarPaciente>
 		<ModalResponderInteresado :queInteresado="queInteresado"></ModalResponderInteresado>
 		<ModalPagarDeuda :deuda="queDeuda" :usuario="idUsuario"></ModalPagarDeuda>
 		<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="queId" :idUsuario="$attrs.idUser" :idRegistro="idRegistro" @cambiar="actualizar()"></ModalCambiarSeguimiento>
@@ -428,7 +428,7 @@
 import ModalNuevoAviso from './ModalNuevoAviso.vue'
 import ModalEditarAviso from './ModalEditarAviso.vue'
 import ModalNuevoInteresado from './ModalNuevoInteresado.vue'
-import ModalEditPatients from '../pacientes/ModalEditPatients.vue'
+import ModalEditarPaciente from '../pacientes/ModalEditPatient.vue'
 import ModalResponderInteresado from './ModalResponderInteresado.vue'
 import ModalPagarDeuda from './ModalPagarDeuda.vue'
 import ModalCambiarSeguimiento from '../adicionales/ModalCambiarSeguimiento.vue'
@@ -437,7 +437,7 @@ import ModalCambiarDeudas from './ModalCambiarDeudas.vue'
 import moment from 'moment';
 
 export default {
-	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditPatients, ModalResponderInteresado, ModalPagarDeuda, ModalCambiarSeguimiento, ModalCambiarDeudas },
+	components:{ ModalNuevoAviso, ModalEditarAviso, ModalNuevoInteresado, ModalEditarPaciente, ModalResponderInteresado, ModalPagarDeuda, ModalCambiarSeguimiento, ModalCambiarDeudas },
 	name: 'HomeRecordatorios',
 	data() {
 		return {

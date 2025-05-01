@@ -172,6 +172,7 @@ class AppointmentController extends Controller
 					'recomendation'=>$request->get('recomendation'),
 					'recomendacion_comentario'=>$request->get('recomendacion_comentario'),
 				]);
+				$paciente_prueba = $patient;
 			}
 			
 			$relative = Relative::create([
@@ -388,6 +389,7 @@ class AppointmentController extends Controller
 				'professional_id'=> $request->input('professional_id'),
 				'schedule' => $request->get('check_time'),
 			]);
+
 			//Agregar por defecto a extra payments
 			$pagoExtra = new Extra_payment;
 			$pagoExtra->customer =  $request->get('name') .' '. $request->get('nombres');
@@ -401,6 +403,15 @@ class AppointmentController extends Controller
 			$pagoExtra->user_id = $request->get('user_id');
 			$pagoExtra->save();
 		}
+
+		$contarCitas = Medical_evolution::where('activo', 1)
+		->where('patient_id', $paciente_prueba->id );
+		if ($contarCitas->count() == 1) {
+			// Obtener el único registro
+			$cita = $contarCitas->first();
+			$cita->update([ 'content' => 'Primera evolución' ]);
+		}
+
 				//echo 'nombre: '. trim(str_replace('  ', ' ' , $request->get('name')));
 		return response()->json([ 'cita'=>$appointment, 'estado' => $request->get('price') ]);
 		} catch (\Throwable $th) {
@@ -705,7 +716,18 @@ class AppointmentController extends Controller
 			'payment_method'=> $request->input('caso.moneda')
 		]);
 
-		if( $request->input('caso.pago') == '3' ){ //en caso de adelantos
+		if( $request->input('caso.pago') == '3' ){ //en caso de adelantos por vista cuaderno
+
+			$appointment->payment->update([
+				'pay_status' => 1, //solo se paga el adelanto, por eso queda pendiente de completar el pago
+				'adelanto' => $appointment->payment->adelanto + $request->input('caso.monto_adelanto')
+			]);
+
+			/*$pago = Payment::find($request->input('dataCita.payment.id'));
+			$pago->update([
+				'adelanto' => $pago->adelanto + $request->input('caso.monto_adelanto')				
+			]);*/
+
 			$pagoExtra = new Extra_payment;
 			$pagoExtra->customer = $request->input('dataCita.patient.name') .' ' . $request->input('dataCita.patient.nombres');
 			$pagoExtra->price = $request->input('caso.monto_adelanto'); //el precio de adelanto
@@ -764,6 +786,7 @@ class AppointmentController extends Controller
 							'patient_id'=> $request->input('dataCita.patient.id'),
 							'professional_id'=> $request->input('dataCita.professional.id'),
 							'schedule' => $request->input('dataCita.schedule.check_time'),
+							'content' => 'Primera evoluciónc'
 						]);
 					}
 				}
@@ -839,7 +862,8 @@ class AppointmentController extends Controller
 			'price' => $precioNuevo,
 			'appointment_id' => $nuevaCita->id,
 			'continuo' => $request->input('payment.continuo'),
-			'user_id' => $request->get('user_id')
+			'user_id' => $request->get('user_id'),
+			'adelanto' => $request->input('payment.adelanto')
 		]);
 
 		//Consultar

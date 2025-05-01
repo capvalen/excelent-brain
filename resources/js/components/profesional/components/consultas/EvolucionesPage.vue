@@ -683,7 +683,7 @@ import moment from 'moment';
 import modalVerDetalle from './ModalVerDetalle.vue';
 import ModalComentarios from './ModalComentarios.vue';
 import ModalVerTriajesViejos from './../../../recepcionista/components/pacientes/ModalVerTriajesViejos.vue';
-import ModalEditarPaciente from './../../../recepcionista/components/pacientes/ModalEditPatients.vue'
+import ModalEditarPaciente from './../../../recepcionista/components/pacientes/ModalEditPatient.vue'
 import ModalEditarPariente from './ModalEditarPariente.vue'
 import ModalVerEstados from './../../../recepcionista/components/pacientes/ModalVerEstados.vue'
 import ModalVerHobbies from './../../../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
@@ -708,6 +708,9 @@ export default {
 			datosConsulta: { triajes:[], examenes_basicos:[], examenes_personalizados:{burns:[], gads:[], scrs:[], zung_anxieties :[], zung_depressions :[]} },
 			evolucionPsiquiatria: [1,2,3,4,5,6,16,17], //Ver tabla de precios, son los IDs
 			evolucionPsicologia: [7,8,9,10,11,12,18,22,27], //Ver tabla de precios, son los IDs
+			evolucionTerapista: [90,91], //Ver tabla de precios, son los IDs
+			evolucionTecnologo: [92,93], //Ver tabla de precios, son los IDs
+			evolucionNutricion: [77,78], //Ver tabla de precios, son los IDs
 			cardUpdate: '',         // Va el el nombre del card | Psiquiatra | Psicologia | perfil | etc
 			dobleClick: false,relative: [],
 			switch: 0,
@@ -1267,12 +1270,18 @@ export default {
 			let valor = null
 			if (valor = this.evolucionPsiquiatria.indexOf(tips)>-1) return 'evolucionPsiquiatria'
 			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'evolucionPsicologia'
+			else if (valor = this.evolucionTerapista.indexOf(tips)>-1) return 'evolucionTerapista'
+			else if (valor = this.evolucionTecnologo.indexOf(tips)>-1) return 'evolucionTecnologo'
+			else if (valor = this.evolucionNutricion.indexOf(tips)>-1) return 'evolucionNutricion'
 			else return 'evoOtro'
 		},
 		dondeEsta2(tips){
 			let valor = null
 			if (valor = this.evolucionPsiquiatria.indexOf(tips)>-1) return 'Psiquiatría'
 			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'Psicología'
+			else if (valor = this.evolucionTerapista.indexOf(tips)>-1) return 'Terapista'
+			else if (valor = this.evolucionTecnologo.indexOf(tips)>-1) return 'Tec. Médico'
+			else if (valor = this.evolucionNutricion.indexOf(tips)>-1) return 'Nutrición'
 			else return 'Otro sin especificar'
 		},
 		cargarLineas(){
@@ -1328,6 +1337,9 @@ export default {
 <style scoped>
 .evolucionPsiquiatria .card-header{ background: #e74a3b }
 .evolucionPsicologia .card-header{ background: #4e73df }
+.evolucionTerapista .card-header{ background: #46fd83 }
+.evolucionTecnologo .card-header{ background: #ff8c4a }
+.evolucionNutricion .card-header{ background: #ffde4a }
 .evoOtro .card-header{ background: rgb(88, 88, 107)}
 .tarjeta .card-header:hover {
 	cursor: pointer;

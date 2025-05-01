@@ -1179,4 +1179,31 @@ class ExtrasController extends Controller
 		}
 	}
 
+	function dividirPago($id, Request $request){		
+		//return $request->all();
+		$pagoExtra = Extra_payment::find($id);
+		
+		$nuevoPago = new Extra_payment();
+		$nuevoPago->customer = $pagoExtra->customer;
+		$nuevoPago->price = $request->input('caso.monto');
+		$nuevoPago->moneda = $request->input('caso.moneda');
+		$nuevoPago->voucher = $pagoExtra->voucher;
+		$nuevoPago->appointment_id = $pagoExtra->appointment_id;
+		$nuevoPago->type = $pagoExtra->type;
+		$nuevoPago->observation = $request->input('caso.observacion');
+		$nuevoPago->continuo = $pagoExtra->continuo;
+		$nuevoPago->idMembresia = $pagoExtra->idMembresia;
+		$nuevoPago->user_id = $request->input('idUsuario');
+		$pagoExtra->idSede =$pagoExtra->idSede;
+		$pagoExtra->date = now()->toDateString();
+		$nuevoPago->tipo = $pagoExtra->tipo;
+		$nuevoPago->idSede = $pagoExtra->idSede;
+		$nuevoPago->save();
+
+		$pagoExtra->update([
+			'price' => $pagoExtra->price - $request->input('caso.monto')
+		]);
+		return $nuevoPago;
+	}
+
 }

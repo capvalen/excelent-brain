@@ -6,3 +6,4 @@ INSERT INTO `precios` (`id`, `descripcion`, `nuevos`, `continuos`, `especialMemb
 (NULL, 'Terápia contínua - Terapista', '0', '0', '0', '7', '0', '1', '1'),
 (NULL, 'Terápia incial - Tec. Médico', '0', '0', '0', '8', '0', '1', '1'),
 (NULL, 'Terápia contínua - Tec. Médico', '0', '0', '0', '8', '0', '1', '1');
+ALTER TABLE `seguimientos` ADD `activo` TINYINT NULL DEFAULT '1' AFTER `icono`;

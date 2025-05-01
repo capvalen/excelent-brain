@@ -1,6 +1,6 @@
 <template>
 	<div class="modal fade" id="pagoModal" ref="pagoModal" tabindex="-1" role="dialog" aria-hidden="true" >
-		<div class="modal-dialog modal-dialog-centered" role="document" v-if="dataCita.patient && dataCita.payment">
+		<div class="modal-dialog modal-dialog-centered" role="document" >
 			<div class="modal-content modal-sm">
 				<div class="modal-header border-0">
 					<h5 class="modal-title" id="exampleModalLabel">Pago de cita</h5>
@@ -30,7 +30,7 @@
 							
 							<div class="col-sm-12 mt-2">
 									<label class="mt-2 mb-0" for="">Estado de pago</label>
-									<select v-if="caso.pago==1" class="form-select" name="pay_status" id="pay_status" v-model="caso.pago" @change="caso.monto_adelanto=0">
+									<select v-if="caso.pago==1 || caso.pago==3" class="form-select" name="pay_status" id="pay_status" v-model="caso.pago" @change="caso.monto_adelanto=0">
 										<option value="1">Sin pagar</option>
 										<option value="3">Adelanto</option>
 										<option value="2">Pagado</option>
@@ -40,7 +40,7 @@
 										<span>Pagado</span>
 									</p>
 							</div>                                                      
-							<div class="col-sm-12" v-if="caso.pago">
+							<div class="col-sm-12" v-if="caso.pago==3">
 								<label class="mt-2 mb-0" for="">Monto de adelanto</label>
 								<input type="text" class="form-control" v-model="caso.monto_adelanto">									
 							</div>
@@ -121,6 +121,11 @@ import moment from 'moment'
 							cancelButtonText:
 								'Salir'
 						})
+					}
+					if(this.caso.pago == '3' || this.caso.pago==3){
+						this.caso.pago = 1
+						this.cita.payment.pay_status = this.caso.pago
+						this.cita.payment.adelanto = this.caso.monto_adelanto
 					}
 				})
 				.catch(err => {

@@ -9,7 +9,7 @@
       <div class="modal-body">
 				<label for="">Tipo de seguimiento</label>
         <select class="form-select" v-model="seguir.idSeguimiento">
-					<option v-for="seguimiento in seguimientos" v-if="seguimiento.id<=8 || seguimiento.id==13 || seguimiento.id== 14 || seguimiento.id== 15 || seguimiento.id== 16 " :value="seguimiento.id">{{ seguimiento.icono }} {{seguimiento.seguimiento}}</option>
+					<option v-for="seguimiento in seguimientos" :value="seguimiento.id">{{ seguimiento.icono }} {{seguimiento.seguimiento}}</option>
 				</select>
 				<label for="">¿Algún dato para anotar?</label>
 				<input type="text" class="form-control" v-model="seguir.motivo">

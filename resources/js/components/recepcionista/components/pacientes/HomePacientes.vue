@@ -34,10 +34,10 @@
         <tr v-for="(paciente, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
 
-<td class="text-capitalize" @click="dataProps(paciente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">
-  <span v-if="paciente.vivo==0"><i class="fas fa-cross"></i></span>  
-  {{ paciente.name ? paciente.name.toUpperCase() : 'SIN NOMBRE' }} {{ paciente.nombres ? paciente.nombres.toUpperCase() : '' }}
-</td>
+					<td class="text-capitalize" @click="dataPaciente = paciente" data-bs-toggle="modal" data-bs-target="#modalEdicionPaciente" style="cursor:pointer">
+						<span v-if="paciente.vivo==0"><i class="fas fa-cross"></i></span>  
+						{{ paciente.name ? paciente.name.toUpperCase() : 'SIN NOMBRE' }} {{ paciente.nombres ? paciente.nombres.toUpperCase() : '' }}
+					</td>
 
 <!--			
 <td class="text-capitalize" @click="dataProps(paciente)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer"><span v-if="paciente.vivo==0"><i class="fas fa-cross"></i></span>  {{ paciente.name ? lowerCase(paciente.name) : 'Sin nombre' }} {{ lowerCase(paciente.nombres) }}</td>
@@ -120,7 +120,7 @@
       </tbody>
     </table>
 
-    <modal-edit-patient v-if="data" :dataPatient="data"></modal-edit-patient>
+		<ModalEdicionPaciente :dataPatient="dataPaciente"></ModalEdicionPaciente>
     <modal-recetas v-if="data" :dataPatient="data"></modal-recetas>
     <modal-faltas v-if="data" :dataPatient="data"></modal-faltas>
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales"></modal-triaje>
@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import ModalEditPatient from './ModalEditPatients.vue';
+import ModalEdicionPaciente from './ModalEditarPaciente.vue';
 import ModalRecetas from './ModalRecetas.vue';
 import ModalFaltas from './ModalFaltas.vue';
 import ModalTriaje from './ModalTriaje.vue';
@@ -151,14 +151,14 @@ import ModalVerHobbies from './reportes/ModalVerHobbies.vue'
 import OffVerMembresias from './OffVerMembresias.vue';
 
 export default {
-  name: 'Pacientes',
+  name: 'HomePacientes',
 
   data () {
     return {
-      dataPatients: [], queId:null, dataPaciente:null,
+      dataPatients: [], queId:null,
       data: null, dataTriajes:null,
       busqueda: [], like:0, id:-1, cantFaltas:-1, reprogramaciones:[],
-      totalPatients:[], profesionales:[], nombrePaciente:'',
+      totalPatients:[], nombrePaciente:'',
 			estados:[
 				{id: 1, valor: 'Neutro', detalle: 'No tiene ningún registro de actitud'},
 				{id: 2, valor: 'cumplidor', detalle: 'es un paciente exclente'},
@@ -171,15 +171,18 @@ export default {
 				{id: 9, valor: 'paciente de riesgo', detalle: 'paciente con amenazas o actos de violencia.'},
 				{id: 10, valor: 'problemático', detalle: 'paciente con problemas.'},
 			],
-			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], misHobbies:[],
+			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], misHobbies:[], dataPaciente:{dni:'', phone:'',name:'',nombres:'',email:'',birth_date:'',occupation:'',marital_status:'',instruction_degree:'',
+				relative:[{}, {}],
+				address:[{}],
+			}
 
     }
   },
 
-  components: { ModalEditPatient, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies, ModalVerReprogramacionesViejos, OffVerMembresias },
+  components: { ModalEdicionPaciente, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies, ModalVerReprogramacionesViejos, OffVerMembresias },
 
   props: {
-    dataPatient: Object, profesionales:null
+    profesionales:null
   },
 
   methods: {
@@ -253,7 +256,7 @@ export default {
 
     dataProps (data) {
 			this.data = data;
-			this.$emit('cambioDato');
+			//this.$emit('cambioDato');
     },
 		datosLike(like, id){
 			this.like = like;

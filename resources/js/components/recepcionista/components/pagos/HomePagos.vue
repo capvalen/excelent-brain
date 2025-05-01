@@ -93,10 +93,11 @@
 						<td>{{ payment.profesional_name }}</td>
 						<td>{{ fechaLatam(payment.fechaCita) }} {{ payment.horario }}</td>
 						<td class="d-print-none" style="white-space: nowrap">
+							<button class="btn btn-sm btn-outline-warning" v-if="esAdmin" @click="pagoSeleccionado = payment" title="Dividir pago" data-bs-toggle="modal" data-bs-target="#modalDividirPago" ><i class="fas fa-divide"></i></button>
 							<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
-							<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
+							<button class="btn btn-outline-primary btn-sm" title="Editar pago" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
 							<!-- <a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a> -->
-							<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+							<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" title="Ver PDF" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 						</td>
 					</tr>
 			</tbody>
@@ -121,7 +122,7 @@
 					<th class="text-warning" colspan="15"><i class="fas fa-angle-right"></i> Cuadro de salidas de dinero</th>
 				</tr>
 				<tr>
-					<td class="text-warning d-print-none" v-if="tienePrivilegios=='1'">@</td>
+					<td class="text-warning d-print-none" v-if="esAdmin">@</td>
 					<td class="text-warning">N°</td>
 					<td class="text-warning"><i class="far fa-user"></i> | Registro</td>
 					<td class="text-warning">Fact. Bol.</td>
@@ -138,8 +139,8 @@
 			</thead>
 			<tbody>
 					<tr v-for="(payment, index) in salidas">
-						<td class="d-print-none" v-if="tienePrivilegios=='1'">
-							<button class="btn btn-sm btn-outline-danger" @click="mostrarModalBorrar(payment.id, index)" data-bs-toggle="modal" data-bs-target="#modalMotivoBorrar" ><i class="fa-solid fa-xmark"></i></button>
+						<td class="d-print-none" v-if="esAdmin">
+							<button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalMotivoBorrar" ><i class="fa-solid fa-xmark"></i></button>
 						</td>
 						<td>
 							<span>{{index+1}}</span>
@@ -331,6 +332,7 @@
 	<modal-pagos-extras :idUsuario="$attrs.idUser" :idSede="$attrs.idSede" />
 	<modal-egresos-extras :idUsuario="$attrs.idUser" :nombreUser="$attrs.nombreUser" :idSede="$attrs.idSede"/>
 	<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto" :habilitarEliminado="habilitarEliminado" ></OffcanvasAdjuntos>
+	<ModalDividirPago :pago="pagoSeleccionado" :idUsuario="$attrs.idUser"></ModalDividirPago>
 </div>
 </template>
 
@@ -339,19 +341,20 @@ import ModalMembresias from "./ModalMembresias.vue"
 import ModalPagosExtras from './../citas/ModalPagosExtras.vue'
 import ModalEgresosExtras from './../citas/ModalEgresosExtras.vue'
 import OffcanvasAdjuntos from './OffcanvasAdjuntos.vue'
+import ModalDividirPago from "./ModalDividirPago.vue"
 import moment from 'moment'
 
 export default{
 	data(){
 		return{
 			payments:[], sumaTipos:[], sumaSalidas:[], salidas:[], monedas:['Efectivo', 'Depósito bancario',  'POS', 'Aplicativo Yape', 'Banco: BCP', 'Banco: BBVA', 'Banco: Interbank', 'Banco: Nación', 'Banco: Scotiabank', 'Aplicativo Plin', 'Open pay'], idSeleccionado:-1,
-			idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD'), monedas:[], idSede:1,
+			idUsuario: null, tienePrivilegios: null, razon:'', queId:null, queINdex:null, contenido:'', eliminados:[], caso:{id:-1,index:-1,moneda:1, boleta:'', comprobante:'', observacion:'', tipo:-1}, foto:'', habilitarEliminado:false, fecha:moment().format('YYYY-MM-DD'), monedas:[], idSede:1, pagoSeleccionado:null,
 			buscarVacio:true
 		}
 	},
 	name: 'HomePagos',
 	props:{},
-	components:{ ModalMembresias, ModalPagosExtras, ModalEgresosExtras, OffcanvasAdjuntos },
+	components:{ ModalMembresias, ModalPagosExtras, ModalEgresosExtras, OffcanvasAdjuntos, ModalDividirPago },
 	methods:{
 		verAdjunto(id){
 			this.idSeleccionado=id;
@@ -461,6 +464,12 @@ export default{
 				// Redirigir a la URL generada
 				window.open(url, '_blank');
 			},
+			esAdmin(){
+				let puede = false
+				if(this.tienePrivilegios==1 || this.tienePrivilegios=='1')
+					puede = true
+				return puede
+			},
 
 
 			queMoneda(idMoneda){
@@ -487,8 +496,7 @@ export default{
 		suma: function (){
 			this.sumaTipos=[]
 			if(this.payments.length>0){
-				return this.payments.reduce((suma, item)=>{
-					console.log(item);
+				return this.payments.reduce((suma, item)=>{ //console.log(item);
 					let queIndex= this.sumaTipos.findIndex(x=> x.moneda== this.queMoneda(item.moneda) );
 					if( queIndex>-1 ){ //encuentra
 						if( item.type==6)

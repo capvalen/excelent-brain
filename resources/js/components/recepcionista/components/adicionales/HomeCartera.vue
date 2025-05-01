@@ -119,7 +119,7 @@
 			</div>
 		</div>
 	</div>
-	<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="idGlobal" @cambiar="cambiarItem" @borrarIDSeguimiento="idGlobal=-1" :idUsuario="$attrs.idUser"></ModalCambiarSeguimiento>
+	<ModalCambiarSeguimiento :seguimientos="seguimientosActivos" :idPaciente="idGlobal" @cambiar="cambiarItem" @borrarIDSeguimiento="idGlobal=-1" :idUsuario="$attrs.idUser"></ModalCambiarSeguimiento>
 	<ModalSeguimiento :profesionales="profesionales" :elegido="elegido" :idProfesional="filtro.idProfesional" :idUsuario="$attrs.idUser"></ModalSeguimiento>
 
 	</div>
@@ -135,7 +135,7 @@ export default{
 	data(){ return {
 		profesionales:[], años:[], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
 		filtro: {idProfesional: 10, año: moment().format('YYYY'), mes:-1}, citasResumidas:[], citasCompletas:[], previewCitas:[], titulo:'', idGlobal:-1, indexGlobal:-1,
-		seguimientos:[], elegido:[]
+		seguimientos:[], seguimientosActivos:[], elegido:[]
 	}},
 	components:{ModalCambiarSeguimiento, ModalSeguimiento},
 	methods:{
@@ -147,7 +147,9 @@ export default{
 
 			await this.axios.get('/api/pedirSeguimientos')
 			.then(response => this.seguimientos = response.data )
-			this.seguimientos.sort()
+			await this.axios.get('/api/pedirSeguimientosActivos')
+			.then(response => this.seguimientosActivos = response.data )
+			this.seguimientosActivos.sort()
 		},
 		buscarCartera(){
 			let condicion

@@ -122,7 +122,7 @@ export default{
 	props:['queId', 'nombrePaciente', 'idUser', 'paciente', 'profesional'],
 	components:{ ModalAmpliarFechaMembresia, ModalProximaCita },
 	data(){return {
-		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null
+		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null
 	}},
 	mounted(){
 		//this.buscarMembresias()

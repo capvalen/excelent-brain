@@ -99,7 +99,7 @@
 													"fas fa-exclamation-circle": [3, null].includes(horasMalas[hora.indexOcupado].payment.pay_status)
 												}'></i>
 											</span>
-											<span class="text labels" v-if="horasMalas[hora.indexOcupado].payment.pay_status == 1 && horasMalas[hora.indexOcupado].payment.adelanto > 0">Con adelanto</span>
+											<span class="text labels" v-if="parseInt(horasMalas[hora.indexOcupado].payment.pay_status) == 1 && horasMalas[hora.indexOcupado].payment.adelanto > 0">Con adelanto</span>
     									<span class="text labels" v-else-if="horasMalas[hora.indexOcupado].payment.pay_status == 1">Sin pagar</span>
 											<span class="text labels" v-else-if="horasMalas[hora.indexOcupado].payment.pay_status == 2">Pagado</span>
 											<span class="text labels" v-else-if="[3, null].includes(horasMalas[hora.indexOcupado].payment.pay_status)">Anulado</span>
