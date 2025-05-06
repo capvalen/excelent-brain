@@ -279,7 +279,7 @@ class PatientController extends Controller
 	 */
 	public function update(Request $request,  Patient $patient)
 	{
-		
+		//return  $request->input('relative')[1]['name']; die();
 		$patient->update($request->all());	
 
 		// $patient->relative->update([
@@ -295,6 +295,30 @@ class PatientController extends Controller
 			'department' => $request->input('address.department'),
 		]);
 
+		Relative::where('patient_id',$patient->id)->delete();
+
+		//evaluamos si el contacto tiene nombre
+		// puede llamarse: $request->input('relative.0.name') 
+ 
+		if(!empty($request->input('relative')[0]['name'])){
+			Relative::create([
+				'name'=> str_replace('null', '', $request->input('relative')[0]['name'] ?? '' ),
+				'phone'=> str_replace('null', '', $request->input('relative')[0]['phone'] ?? '' ),
+				'kinship'=> str_replace('null', '', $request->input('relative')[0]['kinship'] ?? '' ),
+				'patient_id' => $patient->id
+			]);
+		}
+
+		if(!empty($request->input('relative')[1]['name'])){
+			Relative::create([
+				'name'=> str_replace('null', '', $request->input('relative')[1]['name'] ?? '' ),
+				'phone'=> str_replace('null', '', $request->input('relative')[1]['phone'] ?? '' ),
+				'kinship'=> str_replace('null', '', $request->input('relative')[1]['kinship'] ?? '' ),
+				'patient_id' => $patient->id
+			]);
+		}
+
+		/* cambiado por nuevo código
 		if( $request->get('relative')[0]['id']<>-1 ){
 			Relative::find($request->input('relative')[0]['id'])
 			->update([
@@ -302,7 +326,7 @@ class PatientController extends Controller
 				'phone' => $request->get('relative')[0]['phone'] ?? '',
 				'kinship' => $request->get('relative')[0]['kinship'] ?? ''
 			]);
-		}
+		}*/
 
 		return response()->json(['mensaje' => 'success']);
 		

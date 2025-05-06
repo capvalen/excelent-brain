@@ -1,4 +1,4 @@
-dataPatient<template>
+<template>
 	<div class="modal fade" id="modalEdicionPaciente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
@@ -225,14 +225,13 @@ export default {
   },
 
   updated() {
-    
-    this.updateValues;
+    //this.updateValues;
+		//console.log('ver paciente rel ',this.dataPatient.relative)
   },
 
   created () {
     this.updateValues;
 		this.listarDepartamentos();
-
   },
 } 
 </script>

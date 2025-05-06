@@ -34,7 +34,7 @@
         <tr v-for="(paciente, index) in busqueda" :key = "index">
           <th>{{ index+1 }}</th>
 
-					<td class="text-capitalize" @click="dataPaciente = paciente" data-bs-toggle="modal" data-bs-target="#modalEdicionPaciente" style="cursor:pointer">
+					<td class="text-capitalize" @click="prepararPaciente(paciente)" data-bs-toggle="modal" data-bs-target="#modalEdicionPaciente" style="cursor:pointer">
 						<span v-if="paciente.vivo==0"><i class="fas fa-cross"></i></span>  
 						{{ paciente.name ? paciente.name.toUpperCase() : 'SIN NOMBRE' }} {{ paciente.nombres ? paciente.nombres.toUpperCase() : '' }}
 					</td>
@@ -272,6 +272,15 @@ export default {
         this.profesionales=response.data;
       })
     },
+		prepararPaciente(paciente){
+			if(!paciente.relative[0]) paciente.relative[0]={
+				name:'', address:[], kinship:'', id:-1
+			}
+			if(!paciente.relative[1]) paciente.relative[1]={
+				name:'', address:[], kinship:'', id:-1
+			}
+			this.dataPaciente = paciente
+		},
 		verTriajesViejos(index){
 			this.dataTriajes = this.busqueda[index].triajes;
 		},

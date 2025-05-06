@@ -62,7 +62,7 @@
 						<tbody>
 							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
 								<td class="d-none">{{qCita.id}}</td>
-								<td class="text-uppercase puntero" :title="qCita.patient ? qCita.patient.name +' ' + qCita.patient.nombres : '...'" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal">
+								<td class="text-uppercase puntero" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal2">
 									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
 									<!-- <i class="fas fa-brain"></i> -->
 									<span> {{index+1}}.</span> <span>{{ qCita.patient.name }} {{ qCita.patient.nombres }}</span>
@@ -216,9 +216,8 @@
     <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
     <modal-estado  v-if="cita" :dataCit="cita"></modal-estado>
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
-    <info-modal v-if="cita" :dataCit="cita"></info-modal>
+    <info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
-
     
   </div>
 </template>
@@ -226,7 +225,7 @@
 <script>
 import PagoModal from './PagoModal.vue'
 import InfoModal from './ModalInfo.vue'
-//import ModalPatient from './ModalPatient.vue'
+import ModalPatient from './ModalPatient_table.vue'
 import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
 import modalVerRecetas from './ModalVerRecetas.vue'
@@ -241,7 +240,7 @@ import alertify from 'alertifyjs'
 export default {
   name: 'table-cita',
 
-  components: { PagoModal, InfoModal, ReprogModal, ModalEstadoCita, VistaCalendario, VistaCuaderno, modalVerRecetas }, //ModalPatient,
+  components: { PagoModal, InfoModal, ReprogModal, ModalEstadoCita, VistaCalendario, VistaCuaderno, modalVerRecetas, ModalPatient },
 
   props: {
     profes:Array,
@@ -255,7 +254,7 @@ export default {
       citas:[], fechaSinImportancia: moment().format('YYYY-MM-DD'), idUsuario:-1, tienePrivilegios:0,
       profesionales:[],
       horarios:[],
-      hoursProfessional: [], recetas:[],
+      hoursProfessional: [], recetas:[], precios:[],
       cita: null,
       schedulesInvalid: [],
       horariosAll: [],horasSolas:[],horasMalas:[],
@@ -524,7 +523,11 @@ export default {
 		queRazon(faltas){
 			if(faltas) return faltas.reason
 			else return ''
-		}
+		},
+		async listarPrecios(){
+			await this.axios.get('/api/listarPreciosTodos')
+			.then( response => this.precios = response.data)
+		},
 		
   },
 
@@ -540,6 +543,7 @@ export default {
 		.then((res) => {
 			this.idUsuario = res.data.user.id
 			this.tienePrivilegios = res.data.user.privilegios
+			this.listarPrecios();
 		})
 	},
 
