@@ -26,6 +26,7 @@ use App\Http\Controllers\ScrController;
 use App\Http\Controllers\Zung_anxietyController;
 use App\Http\Controllers\Zung_depressionController;
 use App\Http\Controllers\ExtrasController;
+use App\Http\Controllers\LimboController;
 use App\Http\Controllers\SimpleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,6 @@ use App\Models\Professional;
 use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Prescription_detail;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -276,3 +276,4 @@ Route::get('/buscarDni/{dni}', [SimpleController::class, 'buscarDni']);
 Route::post('/crearNutricionPrimera', [SimpleController::class, 'crearNutricionPrimera']);
 Route::post('/listarNutriciones', [SimpleController::class, 'listarNutriciones']);
 
+Route::resource('limbos', LimboController::class)->only(['index', 'store', 'update', 'show', 'destroy']);

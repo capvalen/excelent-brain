@@ -9,15 +9,32 @@
           </button>
         </div>
         <div class="modal-body border-0">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioTipo" id="exampleRadios1" value="reprogramar"  v-model="caso">
+                <label class="form-check-label" for="exampleRadios1">
+                  Reprogramación de cita
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioTipo" id="exampleRadios2" value="limbo" v-model="caso">
+                <label class="form-check-label" for="exampleRadios2">
+                  Enviar al limbo
+                </label>
+              </div>
+            </div>
+          </div>
           <form action="" id="reproCita" @submit.prevent="onSubmit">
-            <div class="form-group">
+            <div class="form-group mt-3">
               <div class="form-group">
-                <label for="">Motivo de reprogramación</label>
+                <label v-if="caso=='reprogramar'">Motivo de reprogramación</label>
+                <label v-if="caso!='reprogramar'">Motivo para enviar al limbo</label>
                 <textarea class="form-control" v-model="data.reschedule" name="reschedule" id="" rows="2"></textarea>
               </div>
             </div>
             
-            <div class="form-group row">
+            <div class="form-group row" v-if="caso=='reprogramar'">
               <div class="col-sm-6">
                 <label for="">Profesional</label>                                  
                 <select 
@@ -53,7 +70,7 @@
               </div>
             </div>
                
-            <div class="form-group row">
+            <div class="form-group row" v-if="caso=='reprogramar'">
               <div class="col-sm-6">
                 <label for="">Horario actual</label>
                 <input 
@@ -82,7 +99,10 @@
             </div>
 
             <div class="modal-footer pt-0 border-0">
-              <button @click="update($event)" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="fa-regular fa-floppy-disk"></i> Reprogramar</button>
+              <button @click="update($event)" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="fa-regular fa-floppy-disk"></i> 
+                <span v-if="caso=='reprogramar'">Reprogramar</span>
+                <span v-if="caso!='reprogramar'">Enviar a limbo</span>
+              </button>
             </div>
           </form>
         </div>
@@ -107,6 +127,7 @@ export default {
       horariosAll: {},
       hoursProfessional: [],
       schedulesInvalid: [],
+      caso: 'reprogramar'
     }
   },
   props:{
@@ -126,8 +147,30 @@ export default {
       })
     },
     
-    async update ($event) {
-			$event.preventDefault();
+    async update ($event) {			
+      $event.preventDefault();
+      if(this.caso=='reprogramar') this.reprogramar()
+      else this.irALimbo()
+    },
+    irALimbo(){
+      if( this.data.reschedule =='' ){
+				alertify.notify('Debe haber un motivo de reprogramación', 'danger', 10)
+        return;
+      }
+
+      this.axios.post('/api/limbos',{
+        appointment_id: this.dataCit.id,
+        user_id: this.idUsuario,
+        motivo: this.data.reschedule
+      }).then(res => { //console.log(res.data);
+					this.closeModal()
+					this.$emit('ocultarCita')
+					this.$swal({icon:'sucess', title: 'Cita reprogramada con éxito'})
+					//this.$parent.searchHistoria()
+				})
+    },
+
+    async reprogramar(){
       if ( document.getElementById('sltProfesionalHorarioID').value=='' ) 
 				alertify.notify('El horario no puede estar vacío', 'danger', 10)
 			else if( this.data.reschedule =='' )

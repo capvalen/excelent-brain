@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Address;
 use App\Models\Appointment;
 use App\Models\Extra_payment;
+use App\Models\Limbo;
 use Illuminate\Support\Facades\DB;
 use App\Models\Prescription;
 use Illuminate\Http\Request;
@@ -827,6 +828,9 @@ class AppointmentController extends Controller
 		try {
 
 		//$appointment->update($request->all());
+		$limbo = Limbo::where('appointment_id', $request->get('id') );
+		if($limbo) $limbo->delete();
+
 		$cita = Appointment::find($request->get('id'));
 		$cita->update([
 			'status' => 4

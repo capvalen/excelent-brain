@@ -28,6 +28,7 @@ class ScheduleController extends Controller
 
         $appointment = Appointment::where('professional_id', $id)
             ->where('appointments.date', '>=', date('Y-m-d'))
+						->where('appointments.status', '<>', 6) //limbo
 						->where('appointments.status', '<>', 4)
 						->where('appointments.status', '<>', 5)
             ->with('schedule')
@@ -51,6 +52,7 @@ class ScheduleController extends Controller
         
       $appointment = Appointment::where('professional_id', $id)
 			->whereDate('appointments.date', '=', $fecha)
+			->where('appointments.status', '<>', 6) // limbo
 			->where('appointments.status', '<>', 4)
 			->where('appointments.status', '<>', 3)
 			->with('schedule')
@@ -68,6 +70,7 @@ class ScheduleController extends Controller
     public function horarioCuadernoOcupado($fecha, $dia){
 			       
         $appointment = Appointment::whereDate('appointments.date', '=', $fecha)
+        ->where('appointments.status', '<>', 6) //limbo
         ->where('appointments.status', '<>', 5) //eliminados
         ->where('appointments.status', '<>', 4)
         ->where('appointments.status', '<>', 3)

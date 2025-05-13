@@ -74,6 +74,8 @@ const HomeCont = () => import('./components/recepcionista/components/continuante
 const HomeAdicionales = () => import('./components/recepcionista/components/adicionales/HomeAdicionales.vue')
 const HomeCartera = () => import('./components/recepcionista/components/adicionales/HomeCartera.vue')
 const HomeRecordatorios = () => import('./components/recepcionista/components/recordatorios/HomeRecordatorios.vue')
+const HomeLimbo = () => import('./components/recepcionista/components/citas/HomeLimbo.vue')
+
 
 
 // --- USUARIOS SIMPLES
@@ -496,6 +498,11 @@ export const routes = [
 					path: 'pacientes-sos',
 					name: 'pacientes-sos',
 					component: PacientesSos
+				},
+				{
+					path: 'limbo',
+					name: 'limbo',
+					component: HomeLimbo
 				},
       ]
   },
