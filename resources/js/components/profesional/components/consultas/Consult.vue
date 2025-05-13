@@ -68,11 +68,6 @@
 
                 <!-- consultas iniciales Psiquiatria y Psicologia-->
                 <button @click="evolucionModal" data-bs-toggle="modal" data-bs-target="#evolutionModal" class="btn btn-consult btn-action" title="Agregar historia inicial psiquiatria" v-if="dataConsult.patient.initial_psychiatric_history === null && dataConsult.professional.profession == 'Psiquiatra'"> <i class="fas fa-portrait"></i> </button>
-                <!-- 
-                  |
-                  |
-                  | 
-                -->
                 <button
                 @click="evolucionModal" data-bs-toggle="modal" data-bs-target="#evolutionModal" class="btn btn-consult btn-action" title="Agregar historia inicial psicología" v-else-if="dataConsult.patient.initial_psychological_history === null && dataConsult.professional.profession == 'Psicólogo'"
                 >
@@ -88,6 +83,11 @@
                 >
                 <i class="fas fa-portrait"></i>
                 </router-link>
+
+                <button
+                @click="prepararPaciente(dataConsult.patient)" data-bs-toggle="modal" data-bs-target="#modalTriaje" class="btn btn-consult btn-action" title="Agregar triaje" >
+                <i class="fa-solid fa-shield-heart"></i>
+                </button>
                 <!-- <router-link
                 class="btn btn-consult btn-action"
                 title="Ver evoluciones"
@@ -98,21 +98,31 @@
             </div>
           </div>
       </div>
+      <ModalTriaje></ModalTriaje>
+      <modal-triaje :dataPatient="datosPaciente" :profesionales="profesional" ></modal-triaje>
   </div>
 </template>
 
 <script>
+import ModalTriaje from '../../../recepcionista/components/pacientes/ModalTriaje.vue';
+
 export default {
   name: 'consulta',
   data () {
     return {
-      estadoConsulta: {}
+      estadoConsulta: {}, datosPaciente:{}, profesional:[]
     }
   },
+  components:{ ModalTriaje },
   props: {
     dataConsult: Object,
   },
   methods: {
+    prepararPaciente(paciente){
+      this.profesional.push(this.dataConsult.professional)
+
+      this.datosPaciente = paciente
+    },
     horaHumana (hora) {
       hora = parseInt(hora.substring(0,2))
       if (hora > 12) {

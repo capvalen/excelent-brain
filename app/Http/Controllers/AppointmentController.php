@@ -826,7 +826,6 @@ class AppointmentController extends Controller
 	{
 		//var_dump($request->all()); die();
 		try {
-
 		//$appointment->update($request->all());
 		$limbo = Limbo::where('appointment_id', $request->get('id') );
 		if($limbo) $limbo->delete();
@@ -891,6 +890,20 @@ class AppointmentController extends Controller
 			]);
 		}
 		
+
+		return response()->json(['mensaje' => 'se actualizó la cita']);
+	} catch (\Throwable $th) {
+		echo $th;
+	}
+	}
+	public function mandarVacio(Request $request, Appointment $appointment)
+	{
+		//var_dump($request->all()); die();
+		try {
+		
+		$cita = Appointment::find($request->get('id'));
+		//return var_dump( $cita->id ); die();
+		$cita->update($request->all() );
 
 		return response()->json(['mensaje' => 'se actualizó la cita']);
 	} catch (\Throwable $th) {

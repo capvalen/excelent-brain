@@ -92,4 +92,7 @@ class Patient extends Model
     public function nutricion(){
         return $this->hasOne('App\Models\Nutricion');
     }
+    public function acuerdos() {
+        return $this->hasMany(Acuerdo::class)->orderBy('id', 'desc');
+    }
 }

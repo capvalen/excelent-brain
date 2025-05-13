@@ -73,6 +73,16 @@
 					</div>
 				</div>
 				<div class="form-group row">
+					<div class="col-sm-3">
+						<label for="">Peso</label>
+						<input type="text" class="form-control" name="peso" id="peso" v-model="consulta.peso" autocomplete="off">
+					</div>
+					<div class="col-sm-3">
+						<label for="">Talla</label>
+						<input type="text" class="form-control" name="talla" id="talla" v-model="consulta.talla" autocomplete="off">
+					</div>
+				</div>
+				<div class="form-group row">
 					<div class="col-sm-12">
 						<label for="name">Personal responsable</label>
 						<input type="text" class="form-control" name="responsable" id="responsable" v-model="consulta.responsable" placeholder="Nombres del Personal Responsable" autocomplete="off">

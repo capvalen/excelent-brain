@@ -37,8 +37,16 @@
                     required
                   >
                 </div>
-                
                 <div class="mb-3">
+                  <label :for="'celular-pariente-'+i" class="form-label">Parentesco</label>
+                  <input 
+                    type="parentesco" 
+                    :id="'parentesco-pariente-' + i" 
+                    class="form-control" 
+                    v-model="parientes[i].parentesco"
+                    :placeholder="'Parentesco con el paciente ' + (i + 1)">
+                </div>
+                <div class="mb-3 d-none">
                   <label :for="'parentesco-pariente-'+i" class="form-label">Parentesco</label>
                   <select 
                     :id="'parentesco-pariente-' + i" 

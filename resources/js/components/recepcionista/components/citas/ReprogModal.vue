@@ -23,19 +23,25 @@
                   Enviar al limbo
                 </label>
               </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioTipo" id="exampleRadios3" value="vacio" v-model="caso">
+                <label class="form-check-label" for="exampleRadios3">
+                  Mover a sitio vacío
+                </label>
+              </div>
             </div>
           </div>
           <form action="" id="reproCita" @submit.prevent="onSubmit">
-            <div class="form-group mt-3">
+            <div class="form-group mt-3" v-if="caso!='vacio'">
               <div class="form-group">
                 <label v-if="caso=='reprogramar'">Motivo de reprogramación</label>
-                <label v-if="caso!='reprogramar'">Motivo para enviar al limbo</label>
+                <label v-if="caso=='limbo'">Motivo para enviar al limbo</label>
                 <textarea class="form-control" v-model="data.reschedule" name="reschedule" id="" rows="2"></textarea>
               </div>
             </div>
             
-            <div class="form-group row" v-if="caso=='reprogramar'">
-              <div class="col-sm-6">
+            <div class="form-group row" v-if="caso=='reprogramar' || caso=='vacio'">
+              <div class="col-sm-6" v-if="caso=='reprogramar'">
                 <label for="">Profesional</label>                                  
                 <select 
                 class="form-select value-professional" 
@@ -70,7 +76,7 @@
               </div>
             </div>
                
-            <div class="form-group row" v-if="caso=='reprogramar'">
+            <div class="form-group row" v-if="caso=='reprogramar' || caso=='vacio'">
               <div class="col-sm-6">
                 <label for="">Horario actual</label>
                 <input 
@@ -150,6 +156,7 @@ export default {
     async update ($event) {			
       $event.preventDefault();
       if(this.caso=='reprogramar') this.reprogramar()
+      else if(this.caso=='vacio') this.mandarVacio()
       else this.irALimbo()
     },
     irALimbo(){
@@ -182,6 +189,23 @@ export default {
 					this.closeModal()
 					this.$emit('ocultarCita')
 					this.$swal({icon:'sucess', title: 'Cita reprogramada con éxito'})
+					//this.$parent.searchHistoria()
+				})
+				.catch(err => {
+					console.error(err)
+				})
+			}
+    },
+    async mandarVacio(){
+      if ( document.getElementById('sltProfesionalHorarioID').value=='' ) 
+				alertify.notify('El horario no puede estar vacío', 'danger', 10)
+      else{
+				this.data.user_id = this.idUsuario;
+				await this.axios.put(`/api/mandarVacio/${this.dataCit.id}`, this.data)
+				.then(res => { console.log(res.data);
+					this.closeModal()
+					this.$emit('ocultarCita')
+					this.$swal({icon:'sucess', title: 'Cita cambiada con éxito'})
 					//this.$parent.searchHistoria()
 				})
 				.catch(err => {

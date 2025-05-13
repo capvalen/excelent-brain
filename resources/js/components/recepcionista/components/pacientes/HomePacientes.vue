@@ -20,6 +20,7 @@
         <tr>
           <th>N°</th>
           <th>Nombre y apellidos</th>
+          <th>Acuerdos</th>
           <th>Hobbie</th>
           <th>Club</th>
           <th>Paquete</th>
@@ -37,6 +38,10 @@
 					<td class="text-capitalize" @click="prepararPaciente(paciente)" data-bs-toggle="modal" data-bs-target="#modalEdicionPaciente" style="cursor:pointer">
 						<span v-if="paciente.vivo==0"><i class="fas fa-cross"></i></span>  
 						{{ paciente.name ? paciente.name.toUpperCase() : 'SIN NOMBRE' }} {{ paciente.nombres ? paciente.nombres.toUpperCase() : '' }}
+					</td>
+					<td>
+						<button class="btn btn-outline-primary btn-circle btn-md" title="Ver acuerdos" data-bs-toggle="modal" data-bs-target="#modalAcuerdos"
+						@click="dataPaciente = paciente" ><i class="fa-solid fa-handshake-angle"></i></button>
 					</td>
 
 <!--			
@@ -132,6 +137,7 @@
 		<ModalVerFaltas :queId="queId" :cantFaltas="cantFaltas"></ModalVerFaltas>
 		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies>
 		<OffVerMembresias :queId="queId" :nombrePaciente="nombrePaciente" :idUser="$attrs.idUser" :profesional="profesionales" :paciente="dataPaciente"></OffVerMembresias>
+		<ModalAcuerdos :paciente="dataPaciente" :idUser="$attrs.idUser"></ModalAcuerdos>
 		
   </main>
 </template>
@@ -149,6 +155,7 @@ import ModalCambiarLike from './ModalCambiarLike.vue'
 import ModalVerFaltas from './reportes/ModalVerFaltas.vue'
 import ModalVerHobbies from './reportes/ModalVerHobbies.vue'
 import OffVerMembresias from './OffVerMembresias.vue';
+import ModalAcuerdos from './ModalAcuerdos.vue';
 
 export default {
   name: 'HomePacientes',
@@ -179,7 +186,7 @@ export default {
     }
   },
 
-  components: { ModalEdicionPaciente, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies, ModalVerReprogramacionesViejos, OffVerMembresias },
+  components: { ModalEdicionPaciente, ModalRecetas, ModalFaltas, ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerEstados, ModalCambiarLike, ModalVerFaltas, ModalVerHobbies, ModalVerReprogramacionesViejos, OffVerMembresias, ModalAcuerdos },
 
   props: {
     profesionales:null

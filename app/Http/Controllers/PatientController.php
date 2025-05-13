@@ -107,7 +107,9 @@ class PatientController extends Controller
 					'gender'=> $request->input('paciente.gender') ?? 2,
 					'birth_date'=> $request->input('birth_date') =='null' ? null: $request->input('paciente.birth_date'),
 					'occupation'=> $request->input('occupation') =='null' ? null: $request->input('paciente.occupation'),
-					'marital_status'=> $request->input('paciente.marital_status')
+					'marital_status'=> $request->input('paciente.marital_status'),
+					'recomendation' => $request->input('paciente.recomendation'),
+					'recomendacion_comentario' => $request->input('paciente.recomendacion_comentario'),
 				]);
 			Address::create([
 				'address'=> $request->input('paciente.address.address'),
@@ -150,7 +152,7 @@ class PatientController extends Controller
 	}
 	public function getLast10Patients (){
 		$patients = Patient::where('activo', '=', 1)
-		->with('relative', 'address', 'prescriptions', 'semaforo')
+		->with('relative', 'address', 'prescriptions', 'semaforo', 'acuerdos', 'acuerdos.usuario')
 		->latest('created_at')->take(20)
 		->get();
 		foreach($patients as $patient){
@@ -311,9 +313,9 @@ class PatientController extends Controller
 
 		if(!empty($request->input('relative')[1]['name'])){
 			Relative::create([
-				'name'=> str_replace('null', '', $request->input('relative')[1]['name'] ?? '' ),
-				'phone'=> str_replace('null', '', $request->input('relative')[1]['phone'] ?? '' ),
-				'kinship'=> str_replace('null', '', $request->input('relative')[1]['kinship'] ?? '' ),
+				'name'=> $request->input('relative')[1]['name'] ?? '' ,
+				'phone'=> $request->input('relative')[1]['phone'] ?? '' ,
+				'kinship'=> $request->input('relative')[1]['kinship'] ?? '' ,
 				'patient_id' => $patient->id
 			]);
 		}

@@ -669,6 +669,7 @@
 		<evolution-modal :dataUser="dataUser.profession" :datosIdEvolucion="datosIdEvolucion" ></evolution-modal>
 		<modalNuevoSeguimiento :idProfesional="dataUser.id"  :idEvolucion="idEvolucion" @agregarComentario="agregarComentario"></modalNuevoSeguimiento>
 		<ModalAgendarCita :profesional="dataUser" :paciente="datosPaciente"></ModalAgendarCita>
+		
 
 	</div>
 </template>
@@ -853,8 +854,7 @@ export default {
 			this.dataModal = evolution
 		},
 		updatePariente(pariente){
-			
-			if(pariente?.nombre){
+			/* if(pariente?.nombre){
 				this.datosConsulta.relative[0].name = pariente.nombre
 				this.datosConsulta.relative[0].phone = pariente.celular
 				this.datosConsulta.relative[0].kinship = pariente.parentesco
@@ -863,7 +863,8 @@ export default {
 				this.datosConsulta.relative[1].name = pariente.nombre2
 				this.datosConsulta.relative[1].phone = pariente.celular2
 				this.datosConsulta.relative[1].kinship = pariente.parentesco2
-			}
+			} */
+			this.datosConsulta.relative = pariente
 		},
 		async getHistories() {
 			await this.axios.get(`/api/patientEvolution/${this.$route.params.idPaciente}/${this.$attrs.idUser}`)

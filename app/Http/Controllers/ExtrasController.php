@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Acuerdo;
 use App\Models\Appointment;
 use App\Models\Extra_payment;
 use App\Models\Faltas;
@@ -808,6 +809,26 @@ class ExtrasController extends Controller
 		]);
 		
 		return response()->json([ 'archivo' => $filename ]);
+	}
+	public function subirArchivoAcuerdo( Request $request){
+		$file = $request->file('file');
+		if($file){
+			$filename = uniqid() . '.' . $file->getClientOriginalExtension();
+			//$file->storeAs('adjuntos', $filename,'public');
+			$file->move(public_path('storage/adjuntos'), $filename);
+		}else $filename='';
+
+		$acuerdo = new Acuerdo();
+		$acuerdo->patient_id = $request->get('patient_id');
+		$acuerdo->titulo = $request->get('titulo') ?? '';
+		$acuerdo->descripcion = $request->get('descripcion') ?? '';
+		$acuerdo->archivo = '';
+		$acuerdo->ruta = $filename;
+		$acuerdo->user_id = $request->get('user_id');
+		$acuerdo->activo = 1;
+		$acuerdo->save();
+
+		return response()->json([ 'archivo' => $acuerdo ]);
 	}
 
 	public function respuestaInteresado(Request $request){

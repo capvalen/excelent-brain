@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcuerdoController;
 use App\Http\Controllers\AdittionalController;
 use App\Http\Controllers\ProfessionalController;
 use App\Http\Controllers\PrescriptionController;
@@ -80,6 +81,7 @@ Route::get('getPatientsMonth/{date}', [AppointmentController::class, 'getPatient
 Route::post('updateStatus/{id}/{value}', [AppointmentController::class, 'updateStatus']);
 Route::get('updateModeAppoinment/{id}', [AppointmentController::class, 'updateMode']);
 Route::put('reprogramado/{id}', [AppointmentController::class, 'reprogramado']);
+Route::put('mandarVacio/{id}', [AppointmentController::class, 'mandarVacio']);
 Route::post('intercambiar', [AppointmentController::class, 'intercambiar']);
 
 Route::resource('appointment/payment', PaymentController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
@@ -154,6 +156,7 @@ Route::post('guardarMembresia/', [ExtrasController::class, 'guardarMembresia']);
 Route::post('reservarCitaDoctor/', [ExtrasController::class, 'reservarCitaDoctor']);
 Route::get('verAdjuntoPago/{id}', [ExtrasController::class, 'verAdjuntoPago']);
 Route::post('subirArchivoPago/', [ExtrasController::class, 'subirArchivoPago']);
+Route::post('subirArchivoAcuerdo/', [ExtrasController::class, 'subirArchivoAcuerdo']);
 Route::post('eliminarAdjunto/{id}', [ExtrasController::class, 'eliminarAdjunto']);
 Route::post('respuestaInteresado', [ExtrasController::class, 'respuestaInteresado']);
 Route::post('pagarDeudaMembresia', [ExtrasController::class, 'pagarDeudaMembresia']);
@@ -277,3 +280,4 @@ Route::post('/crearNutricionPrimera', [SimpleController::class, 'crearNutricionP
 Route::post('/listarNutriciones', [SimpleController::class, 'listarNutriciones']);
 
 Route::resource('limbos', LimboController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
+Route::resource('acuerdos', AcuerdoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
