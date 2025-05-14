@@ -176,7 +176,7 @@
 										<span title="Última atención" v-if="cita.etiqueta" class="badge rounded-pill text-bg-primary"><i class="fa-solid fa-genderless"></i> {{cita.etiqueta}}</span>
 									</p>
 									<p class="mb-0" v-if="cita.membresia"><strong>Paquete activo:</strong> 
-										<span title="Última atención" class="badge rounded-pill text-bg-warning"><i class="far fa-star"></i> {{cita.membresia.descripcion}}</span> <span class="badge rounded-pill text-bg-dark px-2">hasta {{ fechaLatam(cita.membresia.fin) }} de {{ cita.mebresia?.sesiones ?? 0 }} {{ (cita.membresia?.sesiones ?? 0) != 1 ? 'sesiones': 'sesión' }}</span> 
+										<span title="Última atención" class="badge rounded-pill text-bg-warning"><i class="far fa-star"></i> {{cita.membresia?.precio.descripcion}}</span> <span class="badge rounded-pill text-bg-dark px-2">hasta {{ fechaLatam(cita.membresia.fin) }} de {{ cita.membresia?.precio.sesiones ?? 0 }} {{ (cita.membresia?.precio.sesiones ?? 0) != 1 ? 'sesiones totales': 'sesión.' }}</span> 
 									</p>
 								
 								</div>

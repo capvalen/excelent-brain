@@ -20,7 +20,7 @@
 					<div :id="'collapse'+membresia.id" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
 						<div class="accordion-body">
 							<p class="mb-1"><strong>Tipo</strong> <span>{{ membresia.descripcion }}</span></p>
-							<p class="mb-1"><strong>Estado</strong>
+							<p class="mb-1 d-none"><strong>Estado</strong>
 								<span v-if="membresia.estado==1" class="text-warning" >En espera</span>
 								<span v-if="membresia.estado==2" class="text-success" >Activo</span>
 								<span v-if="membresia.estado==3" class="text-danger" >Suspendido</span>
@@ -28,9 +28,9 @@
 							<p class="mb-1"><strong>Fecha de inicio</strong> <span>{{ fechaLatam(membresia.inicio) }}</span></p>
 							<p class="mb-1"><strong>Fecha límite final</strong> <span>{{ fechaLatam(membresia.fin) }}</span></p>
 							<p class="mb-1"><strong>N° cuotas</strong> <span>{{ membresia.cuotas }}</span></p>
+							<p class="mb-1"><strong>Cuotas pagadas:</strong> (<span>{{ membresia.pagados.length }} cuotas</span>) <span v-if="membresia.pagados.length>0" class="badge bg-primary rounded-pull p-2 m-1" style="cursor: pointer;" title="Voucher de pagos acumulados" @click="voucherAcumulados(index)"><i class="far fa-sticky-note"></i></span></p>
 							<p class="mb-1"><strong>Monto Total</strong> <span>S/ {{ parseFloat(membresia.monto).toFixed(2) }}</span></p>
 							<p class="mb-1"><strong>Comentarios adicionales:</strong> <span>{{ membresia.comentarios }}</span></p>
-							<p class="mt-2 mb-0">Cuotas pagadas: (<span>{{ membresia.pagados.length }} cuotas</span>) <span v-if="membresia.pagados.length>0" class="badge bg-primary rounded-pull p-2 m-1" style="cursor: pointer;" title="Voucher de pagos acumulados" @click="voucherAcumulados(index)"><i class="far fa-sticky-note"></i></span></p>
 							<ol class="list-group">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="pagado in membresia.pagados">
 									<div class="ms-2 me-auto">
@@ -53,6 +53,7 @@
 							</ol>
 							<p v-if="membresia.deudas.length==0">No hay deudas pendientes</p>
 							<button class="mt-2 btn btn-outline-secondary btn-sm" data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia.id)">Ver fechas de citas generadas</button>
+							<button class="mt-2 btn btn-outline-danger btn-sm" @click="anular(index)">Anular membresía</button>
 						</div>
 					</div>
 				</div>
@@ -136,6 +137,12 @@ export default{
 			this.queCita = id;
 			this.queFecha = fecha
 			$('#modalAmpliarFechaMembresia').modal('show')
+		},
+		anular(index){
+			if(confirm(`¿Desea anular la membresía ${this.membresias[index].descripcion}?`)){
+				this.axios.post('/api/anularMembresia/', { id: this.membresias[index].id} )
+				.then(resp => location.reload())
+			}
 		},
 		pagarDeuda(index, indice){
 			const swalWithBootstrapButtons = this.$swal.mixin({

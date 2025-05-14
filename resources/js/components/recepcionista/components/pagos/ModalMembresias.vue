@@ -44,7 +44,8 @@
 						<select name="" class="form-select" id="sltMembresia" v-model="membresia.tipo" @change="calcularFechas()">
 							<option v-for="precio in precios" :value="precio.id">{{ precio.descripcion }}</option>
 						</select>
-						<label for="">Cantidad de sesiones: {{ cantSesiones }}</label>
+						<p class="mb-0 mt-2"><i class="fa-regular fa-hourglass"></i> Cantidad de sesiones: {{ cantSesiones }}</p>
+						<p class="mb-2"><i class="fa-regular fa-calendar-xmark"></i> Membresía caduca en {{ cantMeses }} meses</p>
 
 
 						<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
@@ -333,6 +334,7 @@ export default {
 				datos.append('fechas', JSON.stringify(this.fechas))
 				datos.append('fechas_membresias', JSON.stringify(this.sesionesAcumuladas))
 				datos.append('comentarios', this.comentarios )
+				datos.append('meses', this.cantMeses )
 
 				const servidor = await fetch('/api/guardarMembresia', {
 					method: 'POST', body: datos
@@ -422,6 +424,10 @@ export default {
 		cantSesiones() { 
 			const precio = this.precios.find(x => x.id == this.membresia.tipo)
 			return precio ? precio.sesiones :''
+		},
+		cantMeses() { 
+			const precio = this.precios.find(x => x.id == this.membresia.tipo)
+			return precio ? precio.meses : 0
 		}
 	},
 	mounted() {

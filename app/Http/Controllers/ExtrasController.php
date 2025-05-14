@@ -478,11 +478,13 @@ class ExtrasController extends Controller
 
     // Obtener la IdSede del usuario
     $idSede = DB::table('users')->where('id', $request->input('user_id'))->value('IdSede');
+		$hoy = Carbon::now();
+		$fin = $hoy->addMonths($request->input('meses'));
 
     // Insertar en la tabla membresias
     $idMembresia = DB::table('membresias')->insertGetId([
         'patient_id' => $request->input('idPaciente'),
-        'fin' => $membresia['fin'],
+        'fin' => $fin->format('Y-m-d'),  //$membresia['fin'],
         'tipo' => $membresia['tipo'],
         'user_id' => $request->input('user_id'),
         'cuotas' => count($fechas),
@@ -567,6 +569,15 @@ class ExtrasController extends Controller
     return response()->json(['mensaje' => 'Actualizado exitoso']);
 }
 
+	public function anularMembresia(Request $request){
+		$membresia = Membresia::where('id', $request->input('id'));
+		$membresia->update([
+			'activo' => 0,
+			'estado' => 3	
+		]);
+		
+		return response()->json([ 'mensaje' => 'Eliminado exitoso' ]);
+	}
 
 	public function reservarCitaDoctor(Request $request, Appointment $appointment){
 		//var_dump($request->all()); die();
@@ -830,6 +841,20 @@ class ExtrasController extends Controller
 
 		return response()->json([ 'archivo' => $acuerdo ]);
 	}
+	public function subirArchivoTriaje( Request $request){
+		$file = $request->file('file');
+		$filename = uniqid() . '.' . $file->getClientOriginalExtension();
+		//$file->storeAs('adjuntos', $filename,'public');
+		$file->move(public_path('storage/adjuntos'), $filename);
+
+
+		$archivo = DB::table('triaje_archivo')->insert([
+			'patient_id' => $request->get('idPaciente'),
+			'ruta' => $filename,
+		]);
+		
+		return response()->json([ 'archivo' => $archivo ]);
+	}
 
 	public function respuestaInteresado(Request $request){
 		//var_dump($request->all()); die();
@@ -944,7 +969,9 @@ class ExtrasController extends Controller
 		$membresias = DB::table('membresias as m')
 		->join('precios as p', 'p.id', '=', 'm.tipo')
 		->select('m.*', 'p.descripcion', 'p.sesiones')
-		->where('patient_id', $id)->orderBy('inicio', 'desc')->get();
+		->where('patient_id', $id)
+		->where('m.activo', 1)
+		->orderBy('inicio', 'desc')->get();
 		foreach ($membresias as $membresia) {
 			if($membresia->cuotas>0){
 				#buscar Pagos realizados y deudas

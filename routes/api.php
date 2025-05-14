@@ -153,10 +153,12 @@ Route::get('preciosMembresias/', [ExtrasController::class,'preciosMembresias']);
 Route::get('cargarUsuarios/', [ExtrasController::class,'cargarUsuarios']);
 Route::post('addRecomendation/', [ExtrasController::class, 'addRecomendation']);
 Route::post('guardarMembresia/', [ExtrasController::class, 'guardarMembresia']);
+Route::post('anularMembresia/', [ExtrasController::class, 'anularMembresia']);
 Route::post('reservarCitaDoctor/', [ExtrasController::class, 'reservarCitaDoctor']);
 Route::get('verAdjuntoPago/{id}', [ExtrasController::class, 'verAdjuntoPago']);
 Route::post('subirArchivoPago/', [ExtrasController::class, 'subirArchivoPago']);
 Route::post('subirArchivoAcuerdo/', [ExtrasController::class, 'subirArchivoAcuerdo']);
+Route::post('subirArchivoTriaje/', [ExtrasController::class, 'subirArchivoTriaje']);
 Route::post('eliminarAdjunto/{id}', [ExtrasController::class, 'eliminarAdjunto']);
 Route::post('respuestaInteresado', [ExtrasController::class, 'respuestaInteresado']);
 Route::post('pagarDeudaMembresia', [ExtrasController::class, 'pagarDeudaMembresia']);
@@ -268,6 +270,7 @@ Route::post('editarPagoExtra/', [PaymentController::class, 'editarPagoExtra']);
 
 Route::post('/subirArchivo', [PatientController::class, 'subirArchivo']);
 Route::post('/pedirArchivos', [PatientController::class, 'pedirArchivos']);
+Route::post('/pedirArchivosTriaje', [PatientController::class, 'pedirArchivosTriaje']);
 
 Route::get('/listarMonedas', [SimpleController::class, 'listarMonedas']);
 Route::post('/cambiarMuerte', [SimpleController::class, 'cambiarMuerte']);

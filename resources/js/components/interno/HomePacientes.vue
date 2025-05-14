@@ -45,11 +45,10 @@
 					</td>
 					<td>
 						<button class="btn btn-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalVerTriajesViejos" title="Historial de Triajes" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
-						<button v-if="patients.vivo==1"  class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(patients)" data-bs-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
+						<button v-if="patients.vivo==1"  class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" title="Crear triaje" @click="dataProps(patients)" data-bs-target="#modalTriaje"><i class="fa-solid fa-stethoscope"></i></button>
 					</td>
           <td>
-						<button class="btn btn-secondary btn-circle btn-md" data-bs-toggle="modal" data-bs-target="#modalPlanSeguridad" title="Plan de Seguridad" @click="verTriajesViejos(index)">{{ patients.triajes.length }}</button>
-						<button v-if="patients.vivo==1"  class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(patients)" data-bs-target="#modalTriaje"><i class="fas fa-file-medical-alt"></i></button>
+						<button v-if="patients.vivo==1"  class="btn btn-info btn-circle btn-md" data-bs-toggle="modal" @click="dataProps(patients)" data-bs-target="#modalArchivosTriaje"><i class="fa-solid fa-shield-heart"></i></button>
 					</td>
         </tr>
       </tbody>
@@ -59,7 +58,8 @@
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales" ></modal-triaje>
     <modal-new-patient ></modal-new-patient>
 		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
-		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies> 
+		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies>
+    <ModalArchivosTriaje :idPaciente="data?.id"></ModalArchivosTriaje>
 
   </main>
 </template>
@@ -70,9 +70,10 @@ import ModalTriaje from './../recepcionista/components/pacientes/ModalTriaje.vue
 import ModalVerTriajesViejos from './../recepcionista/components/pacientes/ModalVerTriajesViejos.vue'
 import ModalNewPatient from './../recepcionista/components/pacientes/ModalNewPatient.vue'
 import ModalVerHobbies from './../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
+import ModalArchivosTriaje from './ModalArchivosTriaje.vue'
 
 export default {
-  name: 'Pacientes',
+  name: 'HomePacientesInterno',
 
   data () {
     return {
@@ -84,7 +85,7 @@ export default {
     }
   },
 
-  components: { ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerHobbies },
+  components: { ModalTriaje, ModalVerTriajesViejos, ModalNewPatient, ModalVerHobbies, ModalArchivosTriaje },
 
   props: {
     dataPatient: Object

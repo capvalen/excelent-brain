@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Address;
 use App\Models\Appointment;
 use App\Models\Medical_evolution;
+use App\Models\Membresia;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Patient_seguimiento;
@@ -357,8 +358,16 @@ class PatientController extends Controller
 			->orderBy('fecha', 'desc')
 			->get();
 
+			$membresia = Membresia::where('activo', 1)
+			->where('patient_id', $paciente->id)
+			//->whereDate( 'inicio', '>=', Carbon::now()->format('Y-m-d') )
+			->whereDate( 'fin', '>=', Carbon::now()->format('Y-m-d') )
+			->orderBy('fin', 'desc')
+			->with('precio')
+			->first();
+			
 			//Verificar si tiene membresía activa
-			$membresia = DB::table('membresias as m')
+			/* $membresia = DB::table('membresias as m')
 			->join('precios as p', 'p.id', '=', 'm.tipo')
 			->select('m.*', 'p.descripcion', 'p.sesiones')
 			->where('patient_id', $paciente->id)
@@ -366,7 +375,7 @@ class PatientController extends Controller
 			->where('m.estado', 2)
 			->whereDate( 'm.inicio', '<=', Carbon::now() )
 			->whereDate( 'm.fin', '>=', Carbon::now() )
-			->first();
+			->first(); */
 
 			return response()->json([
 				'patient'=>$paciente,
@@ -563,13 +572,13 @@ class PatientController extends Controller
 			try {
 				$triaje = DB::insert('INSERT INTO `triaje`(`patient_id`, `motivo`, `sintomatologia`, `antecedentes`, `prioridad`, `especialista`,
 			 `responsable`,`fv`, `fc`, `fr`, `pa`, `t`,
-			 `pruebas`, `referencia`, peso, talla
+			 `pruebas`, `referencia`, peso, talla, fecha
 			) VALUES (?,?,?,?,?,?,
 			?,?,?,?,?,?,
-			?,?,?,?)',
+			?,?,?,?,?)',
 			[ $id, $triaje['motivo'],$triaje['sintomatologia'],$triaje['antecedentes'],$triaje['prioridad'], $triaje['especialista'],
 			$triaje['responsable'], $triaje['fv'], $triaje['fc'], $triaje['fr'], $triaje['pa'], $triaje['t'],
-			$triaje['pruebas'], $triaje['referencia'],$triaje['peso'], $triaje['talla']
+			$triaje['pruebas'], $triaje['referencia'],$triaje['peso'], $triaje['talla'],$triaje['fecha']
 			]);
 		
 			$ultimoID = DB::getPdo()->lastInsertId();
@@ -713,6 +722,11 @@ class PatientController extends Controller
 		public function pedirArchivos(Request $request){
 			//var_dump($request->all()); die();
 			$archivos = DB::table('archivos')->where('patient_id', $request->get('idPaciente'))->get();
+			return $archivos;
+		}
+		public function pedirArchivosTriaje(Request $request){
+			//var_dump($request->all()); die();
+			$archivos = DB::table('triaje_archivo')->where('patient_id', $request->get('idPaciente'))->get();
 			return $archivos;
 		}
 

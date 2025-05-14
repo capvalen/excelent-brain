@@ -49,7 +49,7 @@
 					</div>
 					<div class="col-sm-6">
 						<label for="name">Fecha de atención</label>
-						<input type="datetime-local" class="form-control" name="phone" id="phone" v-model="consulta.fecha" placeholder="Telefono del paciente" readonly>
+						<input type="datetime-local" class="form-control" name="phone" id="phone" v-model="consulta.fecha" placeholder="Telefono del paciente" >
 					</div>
 				</div>
 				<hr>
@@ -146,7 +146,7 @@
       </div>
 			
       <div class="modal-footer border-0">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="insertarTriaje()">Guardar</button>
+        <button type="button" class="btn btn-outline-primary" data-dismiss="modal" @click="insertarTriaje()"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
       </div>
     </div>
   </div>
