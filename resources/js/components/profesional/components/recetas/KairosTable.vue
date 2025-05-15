@@ -39,7 +39,7 @@ export default{
     },
     methods:{  
     getKairos(){
-            this.axios.get('/api/kairos/')
+            this.axios.get('/api/kairos')
             .then((result) => {
                 this.medicamentos = result.data
                 console.log(result.data)

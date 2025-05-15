@@ -46,7 +46,7 @@ export default {
           denyButtonText: `No`,
       }).then((result) => {
           if(result.isConfirmed){
-          this.axios.delete('/api/user/'+this.profesional.user_id)
+          this.axios.delete('/api/user'+this.profesional.user_id)
               .then((res) => {
                   console.log(res.data)
                   this.$parent.getProfesionales()

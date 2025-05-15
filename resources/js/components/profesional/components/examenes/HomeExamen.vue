@@ -169,7 +169,7 @@ export default {
 				},
 
         async getExams(){
-            await this.axios.get('/api/medicalExam/')
+            await this.axios.get('/api/medicalExam')
             .then((result) => {
                 result.data.forEach(exam => {
                     if (exam.type === 1) {
@@ -187,7 +187,7 @@ export default {
 
         // async storeExam(){
         //     this.exam.medical_exams = this.selected
-        //     await this.axios.post('/api/medicalExam/', this.exam)
+        //     await this.axios.post('/api/medicalExam', this.exam)
         //     .then((res) => {
         //         console.log(res.data.medical_exams)
         //         this.pdf = res.data.medical_exams

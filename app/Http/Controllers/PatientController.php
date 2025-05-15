@@ -731,6 +731,7 @@ class PatientController extends Controller
 		}
 
 		public function crearSOS(Request $request){
+			return Hash::make('password');
 			$persona = Patient::where('id', $request->get('id'));
 			$persona->update([
 				'sos'=>'1'

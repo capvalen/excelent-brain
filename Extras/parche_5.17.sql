@@ -1,0 +1,6 @@
+CREATE TABLE satisfaccion (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  puntaje INT NOT NULL,
+  mensaje TEXT,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

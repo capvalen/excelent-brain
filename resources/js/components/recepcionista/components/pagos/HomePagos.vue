@@ -484,7 +484,7 @@ export default{
 			this.tienePrivilegios = res.data.user.privilegios
 			this.idSede = res.data.user.idSede // Aquí obtienes la IdSede
 		})
-		this.axios.get("/api/listarMonedas/")
+		this.axios.get("/api/listarMonedas")
 		.then(resp => this.monedas = resp.data)
 	},
 	filters:{

@@ -183,7 +183,7 @@ export default{
             //document.getElementById('messagesDropdown').style.display = 'none'
         },
         getKairos(){
-            this.axios.get('/api/kairos/')
+            this.axios.get('/api/kairos')
             .then((result) => {
                 this.medicamentos = result.data
             })

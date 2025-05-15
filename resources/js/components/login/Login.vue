@@ -31,6 +31,7 @@
 										<button @click="login" class="btn btn-warning btn-user btn-block">Login</button>
 										<hr>
 										<p><small>Versión: {{ version }}</small></p>
+										
 									</form>
 								</div>
 							</div>

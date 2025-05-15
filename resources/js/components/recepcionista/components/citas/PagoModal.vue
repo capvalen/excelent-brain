@@ -88,7 +88,7 @@ import moment from 'moment'
 			cita: Object, idUsuario:null, idSede:null
 		},
 		mounted() {
-			this.axios.get("/api/listarMonedas/")
+			this.axios.get("/api/listarMonedas")
 			.then(resp => this.monedas = resp.data)
 		},
 		methods:{

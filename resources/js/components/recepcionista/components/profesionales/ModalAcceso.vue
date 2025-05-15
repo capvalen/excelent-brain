@@ -39,7 +39,7 @@ export default {
     methods:{
         updateAccesos(e){
             e.preventDefault()
-            this.axios.put('/api/user/'+this.prof.user_id, this.prof)
+            this.axios.put('/api/user'+this.prof.user_id, this.prof)
             .then(res => {
                 this.closeModal()
                 this.$swal('Acceso actualizado con éxito')

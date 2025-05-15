@@ -97,7 +97,7 @@ export default {
 	},
 	props:['idUsuario', 'idSede'],
 	mounted() {
-		this.axios.get("/api/listarMonedas/")
+		this.axios.get("/api/listarMonedas")
 		.then(resp => this.monedas = resp.data)
 	},
 	methods: {

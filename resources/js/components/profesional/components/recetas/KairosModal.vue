@@ -51,7 +51,7 @@ export default{
  },
  methods:{
      insertKairos(){
-         this.axios.post('/api/kairos/',this.kairo)
+         this.axios.post('/api/kairos',this.kairo)
          .then((result) => {
              console.log(result)
              this.$swal('Medicamento agregado correctamente')
