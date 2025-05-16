@@ -223,14 +223,12 @@ export default {
 	},
 
   computed: {
-    updateValues () {
-      
+    updateValues () {      
       return this.datos = this.dataPatient
     }
   },
 
-  updated() {
-    
+  updated() {    
     this.updateValues;
   },
 

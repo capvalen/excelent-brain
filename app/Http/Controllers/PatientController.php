@@ -684,6 +684,12 @@ class PatientController extends Controller
 				$semaforo = DB::table('semaforo')->where('patient_id', $patient->id )->where('activo',1)->orderBy('registro', 'desc')->get();
 				$patient->semaforo = $semaforo;
 			}
+			if(empty($patient->relative[1]))
+				$patient->relative[1] = (object)[
+					'id' => -1,
+					'name' => "",
+					'phone' => "", 'kinship' => ""
+				];
 
 			return response()->json($patients);
 		}
@@ -731,7 +737,6 @@ class PatientController extends Controller
 		}
 
 		public function crearSOS(Request $request){
-			return Hash::make('password');
 			$persona = Patient::where('id', $request->get('id'));
 			$persona->update([
 				'sos'=>'1'

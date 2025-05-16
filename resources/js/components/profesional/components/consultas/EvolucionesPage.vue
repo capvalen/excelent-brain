@@ -51,8 +51,7 @@
 					<!-- Card Header - Dropdown -->
 					<div class="card-header bg-primary py-3 d-flex flex-row align-items-center justify-content-between">
 						<h6 class="m-0 font-weight-bold text-white"><i class="fas fa-user"></i> Datos personales del paciente</h6>
-						<button class="btn btn-sm btn-outline-light" @click="datos1Paciente()"><i class="fa-regular fa-pen-to-square"></i></button>
-						<!-- data-bs-toggle="modal" data-bs-target="#patientModal"  -->
+						<button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalEdicionPaciente" @click="datos1Paciente()" ><i class="fa-regular fa-pen-to-square"></i></button>
 					</div>
 					<!-- Card Body -->
 					<div class="card-body">
@@ -658,8 +657,8 @@
 		<edit-modal :datosModal="dataModal"></edit-modal>
 		<modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
 		<modal-ver-triajes-viejos :triajes = "datosConsulta.triajes"></modal-ver-triajes-viejos>
+		<modal-editar-paciente :dataPatient="dato1" ></modal-editar-paciente>
 		<ModalEditarPariente v-if="datosConsulta.relative" :id="datosExamPaciente.id" :relative="datosConsulta.relative" @updatePariente="updatePariente"></ModalEditarPariente>
-		<ModalEditarPaciente :dataPatient="dato1" ></ModalEditarPaciente>
 		<ModalVerEstados :dataPatient="datosPaciente" :estados="estados"></ModalVerEstados>
 		<ModalVerHobbies :hobbies="hobbies" :id="datosConsulta.id" :misHobbies="misHobbies" ></ModalVerHobbies>
 		<ModalComentarios :comentarios="comentarios" :idProfesional="dataUser.id" @refrescarComentarios="updateComentarios" ></ModalComentarios>
@@ -684,7 +683,7 @@ import moment from 'moment';
 import modalVerDetalle from './ModalVerDetalle.vue';
 import ModalComentarios from './ModalComentarios.vue';
 import ModalVerTriajesViejos from './../../../recepcionista/components/pacientes/ModalVerTriajesViejos.vue';
-import ModalEditarPaciente from './../../../recepcionista/components/pacientes/ModalEditPatient.vue'
+import ModalEditarPaciente from './../../../recepcionista/components/pacientes/ModalEditarPaciente.vue'
 import ModalEditarPariente from './ModalEditarPariente.vue'
 import ModalVerEstados from './../../../recepcionista/components/pacientes/ModalVerEstados.vue'
 import ModalVerHobbies from './../../../recepcionista/components/pacientes/reportes/ModalVerHobbies.vue'
@@ -720,7 +719,7 @@ export default {
 			consultaHoy: false,
 			dataCies: null,
 			searchCie: '',
-			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '', comentarios:[] }, comentarios:[], dato1:[], idEvolucion:-1,
+			cieAdd: [], indexGlobal: -1, miniRespuesta: { nombre: '', contenido: '', firma: '', comentarios:[] }, comentarios:[], dato1:{}, idEvolucion:-1,
 			datosIdEvolucion:{patient:{id:-1}, professional:{id:-1}},
 			component: "ExamTable",
 			datosExamenes: [],
@@ -1264,7 +1263,7 @@ export default {
 			this.axios.get('/api/patientById/'+this.$route.params.idPaciente)
 			.then(res => {
 				this.dato1 = res.data[0];
-				$("#patientModal" ).modal('show')
+				//$("#patientModal" ).modal('show')
 			}) 
 		},
 		dondeEsta(tips){

@@ -98,7 +98,6 @@
             </div>
           </div>
       </div>
-      <ModalTriaje></ModalTriaje>
       <modal-triaje :dataPatient="datosPaciente" :profesionales="profesional" ></modal-triaje>
   </div>
 </template>
