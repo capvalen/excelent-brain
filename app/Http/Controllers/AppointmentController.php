@@ -721,7 +721,8 @@ class AppointmentController extends Controller
 
 			$appointment->payment->update([
 				'pay_status' => 1, //solo se paga el adelanto, por eso queda pendiente de completar el pago
-				'adelanto' => $appointment->payment->adelanto + $request->input('caso.monto_adelanto')
+				'adelanto' => $appointment->payment->adelanto + $request->input('caso.monto_adelanto'),
+				'price' => $appointment->payment->price - $request->input('caso.monto_adelanto')
 			]);
 
 			/*$pago = Payment::find($request->input('dataCita.payment.id'));
