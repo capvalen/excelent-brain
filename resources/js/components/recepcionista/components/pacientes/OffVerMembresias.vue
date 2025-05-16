@@ -104,9 +104,9 @@
 			</div>
 		</div>
 
-		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha"></ModalAmpliarFechaMembresia>
+		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha" tipo="tipo"></ModalAmpliarFechaMembresia>
 
-		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio"></ModalProximaCita>
+		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio" ></ModalProximaCita>
 		
 	</div>
 </template>

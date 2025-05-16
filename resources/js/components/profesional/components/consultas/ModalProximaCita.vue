@@ -53,6 +53,7 @@ export default{
 				alertify.notify('Se debe seleccionar un horario', 'danger', 10)
 			else{
 				const quePrecio = 0// this.precios.find(x=> x.id == this.cita.idServicio).nuevos
+				const queProfesional = this.profesional.find(x=> x.id = this.idProfesional)
 				
 				this.axios.post('/api/reservarCitaDoctor',{
 					date: this.fecha,
@@ -61,8 +62,8 @@ export default{
 					patient_condition: 2, //paciente antigüo
 					mode: this.esPresencial ? 1: 2,
 					status:1,// sin confirmar
-					clasification: this.profesional.idProfesion,
-					recomendation: 'Auto Generado por Profesional '+ this.profesional.name,
+					clasification: queProfesional?.idProfesion,
+					recomendation: 'Auto Generado por Profesional '+ queProfesional.name,
 					professional_id: this.idProfesional,
 					patient_id: this.paciente.id,
 					schedule_id: this.cita.idHora,

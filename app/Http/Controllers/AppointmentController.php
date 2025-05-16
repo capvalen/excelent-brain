@@ -781,17 +781,18 @@ class AppointmentController extends Controller
 					->where('date',$request->input('dataCita.date')) */
 					->get();
 
-					if(count($medicalEvolutionExistents) == 0){
-						Medical_evolution::create([
-							'type' => $request->input('dataCita.type'),
-							'date' => $request->input('dataCita.date'),
-							'auth' => 0,
-							'patient_id'=> $request->input('dataCita.patient.id'),
-							'professional_id'=> $request->input('dataCita.professional.id'),
-							'schedule' => $request->input('dataCita.schedule.check_time'),
-							'content' => 'Primera evolución -Sist-'
-						]);
-					}
+					$primera = count($medicalEvolutionExistents) == 0 ? 'Primera evolución -Sist-': '';
+
+					Medical_evolution::create([
+						'type' => $request->input('dataCita.type'),
+						'date' => $request->input('dataCita.date'),
+						'auth' => 0,
+						'patient_id'=> $request->input('dataCita.patient.id'),
+						'professional_id'=> $request->input('dataCita.professional.id'),
+						'schedule' => $request->input('dataCita.schedule.check_time'),
+						'content' =>  $primera
+					]);
+					
 				}
 
 		}else{ // No se cancela
@@ -970,10 +971,13 @@ class AppointmentController extends Controller
 			if($pago[0]->pay_status  == 2){ //estado = pagado Debe estar pagado y confirmado para que saque la cita con el doctor
 
 				$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCit.patient.id'))
-				->where('professional_id', $request->input('dataCit.professional.id'))
-				->where('date',$request->input('dataCit.date'))
+				->where('activo', 1)
+				/* ->where('professional_id', $request->input('dataCit.professional.id'))
+				->where('date',$request->input('dataCit.date')) */
 				->get();
 				//echo 'contado ' .count($medicalEvolutionExistents);
+
+				$primera = count($medicalEvolutionExistents) == 0 ? 'Primera evolución -Sist-': '';
 
 				if(count($medicalEvolutionExistents) == 0){
 					Medical_evolution::create([
@@ -981,7 +985,9 @@ class AppointmentController extends Controller
 						'date' => $request->input('dataCit.date'),
 						'auth' => 0,
 						'patient_id'=> $request->input('dataCit.patient.id'),
-						'professional_id'=> $request->input('dataCit.professional.id')
+						'professional_id'=> $request->input('dataCit.professional.id'),
+						'schedule' => $request->input('dataCit.schedule.check_time'),
+						'content' =>  $primera
 					]);
 				}
 				

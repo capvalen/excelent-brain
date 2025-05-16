@@ -95,7 +95,7 @@ import moment from 'moment'
 			async update() {
 				await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso, idSede:this.idSede})
 				.then(res => {
-					console.log(res.data)
+					//console.log(res.data)
 					this.dataCita.payment.pay_status = this.caso.pago;
 					this.closeModal()
 					//this.$swal('Pago actualizado con éxito')
@@ -126,6 +126,7 @@ import moment from 'moment'
 						this.caso.pago = 1
 						this.cita.payment.pay_status = this.caso.pago
 						this.cita.payment.adelanto = this.caso.monto_adelanto
+						this.$emit('actualizarAdelanto', this.caso.monto_adelanto)
 					}
 				})
 				.catch(err => {

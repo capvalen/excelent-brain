@@ -82,7 +82,7 @@
 									<td v-else></td>
 									<td>
 										<a v-if="hora.libre == 0 && horasMalas[hora.indexOcupado].payment" 
-											@click="modalInfo(horasMalas[hora.indexOcupado]);" 
+											@click="modalInfo(horasMalas[hora.indexOcupado]);indexElegido = hora.indexOcupado" 
 											data-bs-toggle="modal" 
 											data-bs-target="#pagoModal" 
 											class="btn btn-icon-split btn-sm"
@@ -195,7 +195,7 @@
 		</div>
 		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha' @actualizarListadoCitas="actualizarListadoCitas" :idSede="idSede"></ModalNuevaCita>
     <modal-estado v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></modal-estado>
-    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario" :idSede="idSede"></pago-modal>
+    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario" :idSede="idSede" @actualizarAdelanto="actualizarAdelanto"></pago-modal>
 		<modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario" @ocultarCita="actualizarListadoCitas"></reprog-modal>
 		<info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>
@@ -222,7 +222,7 @@
 		name: 'VistaCuaderno',
 		data(){ return{
 			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], profesionalElegido:[], horaElegida:[], alternativo:false, precios:[], recetas:[],
-			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ],
+			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ], indexElegido:-1,
 			cita: {
 				address:{patient:{address:{}}, patient:[]},
 				patient:{address:[], relative:[]}
@@ -251,6 +251,10 @@
 			},
 			asignar(dato){
 				this.cita = dato;
+			},
+			actualizarAdelanto(adelanto){
+				this.horasMalas[this.indexElegido].payment.price = parseFloat(this.horasMalas[this.indexElegido].payment.price) - parseFloat(adelanto)
+				this.horasMalas[this.indexElegido].payment.adelanto = parseFloat(this.horasMalas[this.indexElegido].payment.adelanto) + parseFloat(adelanto)
 			},
 			async eliminar(id){
       this.$swal({
