@@ -63,6 +63,7 @@
 						:dataConsult="consult"
 						@datosEmitModal="evolucionModal"
 						@emitInfoModal="getInfoModal"
+						@llamarModalTriaje="llamarModalTriaje"
 						></consult-card>
 					</div>
 
@@ -87,6 +88,7 @@
 						:dataConsult="consult"
 						@datosEmitModal="evolucionModal"
 						@emitInfoModal="getInfoModal"
+						@llamarModalTriaje="llamarModalTriaje"
 						></consult-card>
 					</div>
 
@@ -107,6 +109,7 @@
 						:dataConsult="consult"
 						@datosEmitModal="evolucionModal"
 						@emitInfoModal="getInfoModal"
+						@llamarModalTriaje="llamarModalTriaje"
 						></consult-card>
 					</div>
 
@@ -126,6 +129,7 @@
 						:dataConsult="consult"
 						@datosEmitModal="evolucionModal"
 						@emitInfoModal="getInfoModal"
+						@llamarModalTriaje="llamarModalTriaje"
 						></consult-card>
 					</div>
 
@@ -145,6 +149,7 @@
 						:dataConsult="consult"
 						@datosEmitModal="evolucionModal"
 						@emitInfoModal="getInfoModal"
+						@llamarModalTriaje="llamarModalTriaje"
 						></consult-card>
 					</div>
 
@@ -164,6 +169,7 @@
 						:dataConsult="consult"
 						@datosEmitModal="evolucionModal"
 						@emitInfoModal="getInfoModal"
+						@llamarModalTriaje="llamarModalTriaje"
 						></consult-card>
 					</div>
 
@@ -180,6 +186,8 @@
 		:datosIdEvolucion="datosEvolucion"
 		@updateCalendar="updatedCalendar"
 		></evolution-modal>
+		<ModalTriaje :dataPatient="datosPaciente" :profesionales="profesional" ></ModalTriaje>
+
 	</main>
 </template>
 
@@ -192,6 +200,8 @@ import ConsultCard from './Consult.vue'
 import InfoModal from './InfoModal.vue'
 import EvolutionModal from './EvolucionModal.vue'
 import { operationDate, formatDate, dateNow } from '../../../../helpers/Time.js'
+import ModalTriaje from '../../../recepcionista/components/pacientes/ModalTriaje.vue';
+
 
 
 export default {
@@ -200,6 +210,7 @@ export default {
 	data () {
 		return {
 			infoModal: null,
+			datosPaciente:[], profesional: [],
 			
 			/* == Array de consultas == */
 			consultasHoy: [],
@@ -244,16 +255,14 @@ export default {
 		}
 	},
 
-	components: { ConsultCard, InfoModal, EvolutionModal },
+	components: { ConsultCard, InfoModal, EvolutionModal, ModalTriaje },
 
 	methods: {
-
-		/**
-		 * @function 
-		 * ## hace la peticion al servidor para devolver las consultas del 
-		 * profesional
-		 */
-
+		llamarModalTriaje(paciente){
+			this.datosPaciente = paciente
+			this.profesional = {0: this.dataUser}
+			$('#modalTriaje').modal('show')
+		},
 		async showConsult () {
 			await this.axios.get(`/api/appointment/${this.dataUser.id}`)
 			.then(res => {

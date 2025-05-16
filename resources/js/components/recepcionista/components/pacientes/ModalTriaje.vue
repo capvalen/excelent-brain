@@ -154,13 +154,13 @@ import moment from "moment"
 export default {
 	name: 'modalTriaje',
 	props: {
-		dataPatient: Object, profesionales:[]
+		dataPatient: [], profesionales:[]
 	},
 	data(){
 		return {
 			datos:'', consulta:{
 				fecha: moment().format('YYYY-MM-DD HH:mm'),
-				patient_id: this.dataPatient.id,
+				patient_id: -1,
 				motivo:'', sintomatologia:'',antecedentes:'', especialista:2, prioridad:1,
 				responsable: '', fv: '', fc: '', fr: '', pa: '', t: '', referencia:1, pruebas:'', peso:'', talla:''
 			}
@@ -168,6 +168,7 @@ export default {
 	},
 	methods:{
 		async insertarTriaje(){
+			this.consulta.patient_id = this.dataPatient.id
 			await axios.post(`/api/insertarTriaje/${this.dataPatient.id}`,[this.dataPatient, this.consulta] )
 			.then(res => {
 				console.log(res.data)
@@ -193,15 +194,15 @@ export default {
 		}
 	},
 	watch:{
-		dataPatient(){
+		/* dataPatient(){
 			this.datos = this.dataPatient;
-		}
+		} */
 	},
-	computed: {
-		
+	computed: {		
 		fullName: {
         get() {
-            return `${this.dataPatient.name} ${this.dataPatient.nombres}`;
+					console.log('asignar',JSON.stringify(this.dataPatient))
+          return `${this.dataPatient.name} ${this.dataPatient.nombres}`;
         },
         set(value) {
             const parts = value.split(" ");
@@ -209,9 +210,6 @@ export default {
             this.dataPatient.nombres = parts.slice(-1).join(" "); // Nombres
         }
     },
-    updateValues () {
-      return this.datos = this.dataPatient
-    }
   },
 	updated() {
     //this.updateValues;

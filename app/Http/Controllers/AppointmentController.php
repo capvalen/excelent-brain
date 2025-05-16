@@ -776,8 +776,9 @@ class AppointmentController extends Controller
 				//Debemos de confirmar si esta confirmado para habilitar al profesional
 				if( $appointment->status == '2'){
 					$medicalEvolutionExistents = Medical_evolution::where('patient_id', $request->input('dataCita.patient.id'))
-					->where('professional_id', $request->input('dataCita.professional.id'))
-					->where('date',$request->input('dataCita.date'))
+					->where('activo', 1)
+					/* ->where('professional_id', $request->input('dataCita.professional.id'))
+					->where('date',$request->input('dataCita.date')) */
 					->get();
 
 					if(count($medicalEvolutionExistents) == 0){
@@ -788,7 +789,7 @@ class AppointmentController extends Controller
 							'patient_id'=> $request->input('dataCita.patient.id'),
 							'professional_id'=> $request->input('dataCita.professional.id'),
 							'schedule' => $request->input('dataCita.schedule.check_time'),
-							'content' => 'Primera evoluciónc'
+							'content' => 'Primera evolución -Sist-'
 						]);
 					}
 				}

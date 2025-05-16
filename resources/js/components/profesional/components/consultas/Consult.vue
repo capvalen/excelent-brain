@@ -7,8 +7,7 @@
         "border-left-danger": dataConsult.status === 3,
         "consultAnulada": dataConsult.status === 3,
         "border-left-success": dataConsult.status === 2,
-      }'
-      >
+      }' >
           <div class="card-body">
               <div class="row no-gutters align-items-center">
                   <div class="col mr-2">
@@ -85,8 +84,9 @@
                 </router-link>
 
                 <button
-                @click="prepararPaciente(dataConsult.patient)" data-bs-toggle="modal" data-bs-target="#modalTriaje" class="btn btn-consult btn-action" title="Agregar triaje" >
+                @click="prepararPaciente(dataConsult.patient)" class="btn btn-consult btn-action" title="Agregar triaje" >
                 <i class="fa-solid fa-shield-heart"></i>
+								<!-- data-bs-toggle="modal" data-bs-target="#modalTriaje" -->
                 </button>
                 <!-- <router-link
                 class="btn btn-consult btn-action"
@@ -98,12 +98,10 @@
             </div>
           </div>
       </div>
-      <modal-triaje :dataPatient="datosPaciente" :profesionales="profesional" ></modal-triaje>
   </div>
 </template>
 
 <script>
-import ModalTriaje from '../../../recepcionista/components/pacientes/ModalTriaje.vue';
 
 export default {
   name: 'consulta',
@@ -112,15 +110,15 @@ export default {
       estadoConsulta: {}, datosPaciente:{}, profesional:[]
     }
   },
-  components:{ ModalTriaje },
+  components:{  }, //ModalTriaje
   props: {
     dataConsult: Object,
   },
   methods: {
     prepararPaciente(paciente){
-      this.profesional.push(this.dataConsult.professional)
-
-      this.datosPaciente = paciente
+			//this.profesional = {0: this.dataConsult.professional}
+     //this.datosPaciente = paciente
+			this.$emit('llamarModalTriaje', paciente)
     },
     horaHumana (hora) {
       hora = parseInt(hora.substring(0,2))
