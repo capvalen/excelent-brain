@@ -112,7 +112,7 @@
               </div>
               <div class="col-sm-6">
 								<label for="name">Género</label>
-								<select class="form-control" id="sexo" v-model="dataCit.patient.gender">
+								<select class="form-select" id="sexo" v-model="dataCit.patient.gender">
 									<option value="2">Sin definir</option>
 									<option value="0">Femenino</option>
 									<option value="1">Masculino</option>

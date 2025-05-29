@@ -92,12 +92,20 @@
 								<a v-if="dataUser.id==5 || dataUser.id==18" :href="`/api/pdfEvolution/thorough/${historia.id}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
 								<a v-else :href="`/api/pdfEvolution/restricted/${historia.id}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
 								<a v-if="dataUser.profession!='Psicólogo'" :href="`/profesional/recetas/${historia.id}`" class="btn btn-primary btn-circle" title="Generar receta"><i class="fa-solid fa-vial"></i></a>
+								<button 
+                @click="prepararPaciente(historia)" class="btn btn-info btn-circle" title="Agregar triaje" >
+                <i class="fa-solid fa-shield-heart"></i>
+								<!-- data-bs-toggle="modal" data-bs-target="#modalTriaje" -->
+                </button>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
+    <modal-triaje v-if="datosPaciente" :dataPatient="datosPaciente" :profesionales="profesionales" ></modal-triaje>
+
 	</main>
 </template>
 
@@ -114,13 +122,15 @@
 
 <script>
 import StorieModal from './StorieModal.vue'
+import ModalTriaje from '../../../recepcionista/components/pacientes/ModalTriaje.vue';
+
 export default {
 	name: 'home-stories',
 
 	data() {
 		return {
 			historias: {},
-			busqueda: null
+			busqueda: null, datosPaciente:null, profesionales:null
 		}
 	},
 
@@ -128,9 +138,14 @@ export default {
 		dataUser: Object
 	},
 
-	components: { StorieModal },
+	components: { StorieModal, ModalTriaje },
 
 	methods: {
+		prepararPaciente(paciente){
+			this.datosPaciente = paciente
+			this.profesional = {0: [{name: this.$attrs.nombreUser, id: this.$attrs.idUser}]}
+			$('#modalTriaje').modal('show')
+		},
 		async getPatient() {
 			//this.axios.get('/api/patient/')
 			this.axios.get('/api/patientMine/'+this.dataUser.id)

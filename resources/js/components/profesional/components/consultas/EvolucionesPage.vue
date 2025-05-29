@@ -39,6 +39,11 @@
 			</div>
 		</div>
 
+		<div class=" my-3" v-if="datosConsulta.discharge=='1'">
+			<div class="alert alert-success" role="alert">
+				<i class="fa-solid fa-thumbs-up"></i> <strong>Excelente!</strong> Paciente dado de alta
+			</div>
+		</div>
 		<div class=" my-3" v-if="datosConsulta.sos=='1'">
 			<div class="alert alert-danger" role="alert">
 				<i class="fa-solid fa-skull-crossbones"></i> <i class="fa-solid fa-skull-crossbones"></i> <i class="fa-solid fa-skull-crossbones"></i> <strong>Alerta!</strong> Paciente con riesgo de suicidio <i class="fa-solid fa-skull-crossbones"></i> <i class="fa-solid fa-skull-crossbones"></i> <i class="fa-solid fa-skull-crossbones"></i>

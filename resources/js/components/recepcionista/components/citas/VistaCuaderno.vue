@@ -145,7 +145,7 @@
 
 										<!-- Cita virtual - con link -->
 										<a 
-										:href="`https://wa.me/51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone : ''}?text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, 
+										:href="`https://wa.me/51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone.replaceAll(' ', '') : ''}?text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, 
 										le recordamos que tiene reservada una cita online el día de hoy a las 
 										${horasMalas[hora.indexOcupado].schedule ? horaLatam2(horasMalas[hora.indexOcupado].schedule.check_time) : ''}, 
 										le dejo el enlace de la cita ${horasMalas[hora.indexOcupado].link}`"
@@ -159,7 +159,7 @@
 
 										<!-- Cita presencial -->
 										<a 
-										:href="`https://wa.me/51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone : ''}?text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${horasMalas[hora.indexOcupado].schedule ? horaLatam2(horasMalas[hora.indexOcupado].schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
+										:href="`https://wa.me/51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone.replaceAll(' ', '') : ''}?text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${horasMalas[hora.indexOcupado].schedule ? horaLatam2(horasMalas[hora.indexOcupado].schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
 										target="_blank" 
 										title="Enviar mensaje" 
 										class="btn btn-info btn-circle btn-sm"

@@ -169,7 +169,7 @@ export default{
 					datos.append('user_id', this.idUser)
 					datos.append('nombre', this.nombrePaciente)
 					datos.append('precio', this.membresias[index].deudas[indice].monto)
-					datos.append('tipo', this.membresias[index].tipo)
+					datos.append('tipo', this.membresias[index].idClasificacion)
 					datos.append('observación', this.membresias[index].motivo)
 					datos.append('estado', 2)
 					

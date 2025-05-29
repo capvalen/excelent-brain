@@ -126,7 +126,7 @@ import moment from 'moment'
 						this.caso.pago = 1
 						this.cita.payment.pay_status = this.caso.pago
 						this.cita.payment.adelanto = this.caso.monto_adelanto
-						this.$emit('actualizarAdelanto', this.caso.monto_adelanto)
+						//this.$emit('actualizarAdelanto', this.caso.monto_adelanto)
 					}
 				})
 				.catch(err => {

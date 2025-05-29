@@ -187,10 +187,10 @@ export default {
     },
     async guardarCambios() {
       // Validamos antes de guardar
-      if (!this.validarDatos()) {
+      /*if (!this.validarDatos()) {
         this.$emit('error', 'Por favor, corrija los errores en el formulario');
         return;
-      }
+      }*/
       
       this.cargando = true;
       

@@ -968,7 +968,7 @@ class ExtrasController extends Controller
 	public function buscarMembresias($id){
 		$membresias = DB::table('membresias as m')
 		->join('precios as p', 'p.id', '=', 'm.tipo')
-		->select('m.*', 'p.descripcion', 'p.sesiones')
+		->select('m.*', 'p.descripcion', 'p.sesiones', 'p.idClasificacion')
 		->where('patient_id', $id)
 		->where('m.activo', 1)
 		->orderBy('inicio', 'desc')->get();

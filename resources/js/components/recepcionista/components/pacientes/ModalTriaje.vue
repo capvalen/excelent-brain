@@ -201,7 +201,7 @@ export default {
 	computed: {		
 		fullName: {
         get() {
-					console.log('asignar',JSON.stringify(this.dataPatient))
+					//console.log('asignar',JSON.stringify(this.dataPatient))
           return `${this.dataPatient.name} ${this.dataPatient.nombres}`;
         },
         set(value) {

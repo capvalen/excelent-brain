@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel"> Datos del Paciente</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" id="btnCerrarEdPac" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -68,6 +68,15 @@
                 <label for="name">Fecha de nacimiento</label>
                 <input type="date" class="form-control" name="birth_date" v-model="dataPatient.birth_date" id="birth_date">
               </div>
+							<div class="col-sm-6">
+								<label for="name">Género</label>
+								<select class="form-select" id="sexo" v-model="dataPatient.gender">
+									<option value="2">Sin definir</option>
+									<option value="0">Femenino</option>
+									<option value="1">Masculino</option>
+							    <option value="3">LGTB+</option>
+								</select>
+							</div>
               <div class="col-sm-6">
                 <label for="name">Ocupación</label>
                 <input type="text" class="form-control" name="occupation" v-model="dataPatient.occupation" id="occupation" placeholder="Ocuación del paciente"> 
@@ -143,7 +152,7 @@
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" @click="updatePatient()" class="btn btn-outline-primary"><i class="fas fa-sync-alt"></i> Actualizar</button>
+          <button type="button" @click="updatePatient()" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="fas fa-sync-alt"></i> Actualizar</button>
         </div>
     </div>
   </div>
@@ -180,7 +189,7 @@ export default {
     },
 
     closeModal() {
-      document.getElementById('cerrModalPatient').click();
+      document.getElementById('btnCerrarEdPac').click();
     },
 		async listarDepartamentos(){
 			await this.axios.get('/api/departamentos')
@@ -201,7 +210,7 @@ export default {
 			this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == idDepa)
 			if(borrar) this.dataPatient.patient.address.district=-1;
 		},
-		moverDistritos(){
+		moverDistritos(){			
 			let idProv= this.dataPatient.address.province;
 			this.distritos = this.ubigeo.distritos.filter(distrito=> distrito.idProv == idProv)
 		},
@@ -218,8 +227,8 @@ export default {
 	},
 
   computed: {
-    updateValues () {
-      
+    updateValues () {      
+			this.listarDepartamentos();
       return this.datos = this.dataPatient
     }
   },
@@ -231,7 +240,6 @@ export default {
 
   created () {
     this.updateValues;
-		this.listarDepartamentos();
   },
 } 
 </script>

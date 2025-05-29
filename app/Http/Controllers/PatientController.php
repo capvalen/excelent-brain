@@ -638,7 +638,7 @@ class PatientController extends Controller
 			if($request->input('nombre')){
 				Relative::create([
 					'name'=> str_replace('null', '', $request->input('nombre')),
-					'phone'=> str_replace('null', '', $request->input('celular2')),
+					'phone'=> str_replace('null', '', $request->input('celular')),
 					'kinship'=> str_replace('null', '', $request->input('parentesco')),
 					'patient_id' => $id
 				]);
