@@ -979,17 +979,17 @@ class AppointmentController extends Controller
 
 				$primera = count($medicalEvolutionExistents) == 0 ? 'Primera evolución -Sist-': '';
 
-				if(count($medicalEvolutionExistents) == 0){
-					Medical_evolution::create([
-						'type' => $request->input('dataCit.type'),
-						'date' => $request->input('dataCit.date'),
-						'auth' => 0,
-						'patient_id'=> $request->input('dataCit.patient.id'),
-						'professional_id'=> $request->input('dataCit.professional.id'),
-						'schedule' => $request->input('dataCit.schedule.check_time'),
-						'content' =>  $primera
-					]);
-				}
+				//if(count($medicalEvolutionExistents) == 0){
+				Medical_evolution::create([
+					'type' => $request->input('dataCit.type'),
+					'date' => $request->input('dataCit.date'),
+					'auth' => 0,
+					'patient_id'=> $request->input('dataCit.patient.id'),
+					'professional_id'=> $request->input('dataCit.professional.id'),
+					'schedule' => $request->input('dataCit.schedule.check_time'),
+					'content' =>  $primera
+				]);
+				//}
 				
 			}
 			

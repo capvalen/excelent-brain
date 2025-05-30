@@ -195,7 +195,7 @@ class PatientController extends Controller
 		$patients = Patient::where('activo', 1)
 		->where('name', 'LIKE', "%".$nombre ."%")
 		->orWhere('dni', $nombre )
-		->with('relative', 'address', 'prescriptions')
+		->with('relative', 'address', 'prescriptions', 'acuerdos', 'acuerdos.usuario')
 		->orderBy('name', 'asc')
 		->get();
 		foreach($patients as $patient){

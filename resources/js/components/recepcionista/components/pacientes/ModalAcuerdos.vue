@@ -67,6 +67,7 @@ export default {
 	}},
 	methods:{
 		subirArchivo(){
+			console.log('que archivo')
 			const file = document.querySelector('#fileArchivo');
 			const formData = new FormData();
 			formData.append('file', file.files[0]);
