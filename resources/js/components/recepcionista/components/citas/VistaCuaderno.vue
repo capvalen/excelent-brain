@@ -295,7 +295,7 @@
 						if(hora>-1)
 							profesional.horarios.push(this.horasSolas[hora]) */
 						profesional.horarios = this.horasSolas
-						.filter( horaSola => horaSola.professional_id === profesional.id )
+						.filter( horaSola => parseInt(horaSola.professional_id) == parseInt(profesional.id) )
 						.map(horaSola=> ({...horaSola, libre:1, indexOcupado:-1}) )
 					});
 
