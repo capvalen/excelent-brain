@@ -143,7 +143,8 @@ export default {
 	methods: {
 		prepararPaciente(paciente){
 			this.datosPaciente = paciente
-			this.profesional = {0: [{name: this.$attrs.nombreUser, id: this.$attrs.idUser}]}
+			this.profesionales = [{name: this.$attrs.nombreUser, id: this.$attrs.idUser}]
+			
 			$('#modalTriaje').modal('show')
 		},
 		async getPatient() {

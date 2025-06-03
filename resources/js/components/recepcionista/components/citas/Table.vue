@@ -205,7 +205,7 @@
 					<vista-calendario :profesionales="profesionales" ></vista-calendario>
 				</div>
 				<div class="tab-pane fade show active" id="cuaderno-tab" role="tabpanel" aria-labelledby="cuaderno-tab" tabindex="0">
-					<vista-cuaderno :idUsuario="idUsuario" :nombreUser="nombreUser" :idSede="idSede" ></vista-cuaderno>
+					<vista-cuaderno :nombreUser="nombreUser" :idSede="idSede" ></vista-cuaderno>
 				</div>
 				<!-- Fin de segunda tab -->
 			</div>
@@ -541,7 +541,7 @@ export default {
 	mounted(){
 		this.axios.get('/api/user')
 		.then((res) => {
-			this.idUsuario = res.data.user.id
+			this.idUsuario = parseInt(res.data.user.id)
 			this.tienePrivilegios = res.data.user.privilegios
 			this.listarPrecios();
 		})

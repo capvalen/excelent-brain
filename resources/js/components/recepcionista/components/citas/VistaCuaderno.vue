@@ -222,13 +222,13 @@
 		name: 'VistaCuaderno',
 		data(){ return{
 			fecha: moment().format('YYYY-MM-DD'), doctores:[], horasSolas:[], horasMalas:[], profesionalElegido:[], horaElegida:[], alternativo:false, precios:[], recetas:[],
-			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ], indexElegido:-1,
+			tipoViejo:['Terapia Inicial niño/adolescente', 'Terapia Inicial adulto', 'Terapia Inicial pareja', 'Terapia Inicial familiar', 'Terapia continua niño/adolescente', 'Terapia continua adulto', 'Terapia continua pareja', 'Terapia continua familiar', 'Orientación Vocacional', 'Sucamec inicial', 'Sucamec renovación', 'Kurame' ], indexElegido:-1, idUsuario:-1,
 			cita: {
 				address:{patient:{address:{}}, patient:[]},
 				patient:{address:[], relative:[]}
 			}, posibles:[], primero:{patient:[]}
 		}},
-		props:[ 'idUsuario', 'nombreUser', 'idSede'],
+		props:[ 'nombreUser', 'idSede'],
 		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio },
 		methods:{
 			dayWeek (day) {
@@ -379,6 +379,11 @@
 			}
 		},
 		mounted(){
+			this.axios.get('/api/user')
+			.then((res) => {
+				this.idUsuario = parseInt(res.data.user.id)
+				this.tienePrivilegios = res.data.user.privilegios
+			})
 			this.listarProfesionales();
 			this.listarPrecios();
 		}

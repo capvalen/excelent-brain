@@ -17,6 +17,7 @@ use App\Models\Payment;
 use App\Models\Relative;
 use App\Models\Medical_evolution;
 use App\Models\Payment_method;
+use App\Models\Precio;
 use App\Models\Reschedule;
 use App\Models\Schedule;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -439,7 +440,7 @@ class AppointmentController extends Controller
 
 		$consults = Appointment::where('professional_id', $professional->id)
 			->whereBetween('date', [$dateWeekBefore, $dateWeekAfter])
-			->with('patient', 'professional', 'schedule', 'payment')
+			->with('patient', 'professional', 'schedule', 'payment', 'precio')
 			->with('patient.initial_psychiatric_history')
 			->with('patient.initial_psychological_history')
 			->orderBy(function ($query) {
@@ -447,7 +448,7 @@ class AppointmentController extends Controller
 					->from('schedules')
 					->whereColumn('schedules.id', 'appointments.schedule_id');
     	})->get();
-
+				
 		return response()->json([
 			'antes'=> $dateWeekBefore,
 			'despues'=> $dateWeekAfter,
@@ -782,9 +783,10 @@ class AppointmentController extends Controller
 					->get();
 
 					$primera = count($medicalEvolutionExistents) == 0 ? 'Primera evolución -Sist-': '';
+					$tpago = Precio::where('id', $request->input('dataCita.type'))->first();
 
 					Medical_evolution::create([
-						'type' => $request->input('dataCita.type'),
+						'type' => $tpago->idClasificacion,
 						'date' => $request->input('dataCita.date'),
 						'auth' => 0,
 						'patient_id'=> $request->input('dataCita.patient.id'),
@@ -860,7 +862,7 @@ class AppointmentController extends Controller
 		else:
 			$precioNuevo =  floatval($request->input('payment.price'));
 		endif;
-		$payment = Payment::create([
+		/* $payment = Payment::create([
 			'observation'=>'Viene de reprogramación, el pago se encuentra en el día: ' . $fechado->format('d/m/Y'),
 			'bank'=>'',
 			'voucher' => $request->input('payment.voucher'),
@@ -870,20 +872,26 @@ class AppointmentController extends Controller
 			'continuo' => $request->input('payment.continuo'),
 			'user_id' => $request->get('user_id'),
 			'adelanto' => $request->input('payment.adelanto')
-		]);
+		]); */
 
 		//Consultar
 		$pagoExtra = Extra_payment::where('appointment_id', $request->get('id') );
 		$pagoExtra->update([
 			'appointment_id'=> $nuevaCita->id,
-			'observation' => 'reprogramado',
+			'observation'=>'Viene de reprogramación, el pago se encuentra en el día: ' . $fechado->format('d/m/Y')
+		]);
+
+		$pagoAnterior = Payment::where('appointment_id', $request->get('id') );
+		$pagoAnterior->update([
+			'appointment_id'=> $nuevaCita->id,
+			'observation' =>$request->input('payment.observation'),
 			//'activo' => 0,
 		]);
 
-		$cita->payment->update([
+		/* $cita->payment->update([
 			'pay_status' => 3, //nuevo status para el pago: reprogramado/anulado
 			'observation' => 'reprogramado'
-		]);
+		]); */
 
 		if ($request->reschedule) {
 			$reschedule = Reschedule::create([
@@ -978,10 +986,11 @@ class AppointmentController extends Controller
 				//echo 'contado ' .count($medicalEvolutionExistents);
 
 				$primera = count($medicalEvolutionExistents) == 0 ? 'Primera evolución -Sist-': '';
+				$tpago = Precio::where('id', $request->input('dataCit.type'))->first();
 
 				//if(count($medicalEvolutionExistents) == 0){
 				Medical_evolution::create([
-					'type' => $request->input('dataCit.type'),
+					'type' => $tpago->idClasificacion,
 					'date' => $request->input('dataCit.date'),
 					'auth' => 0,
 					'patient_id'=> $request->input('dataCit.patient.id'),
@@ -1286,7 +1295,7 @@ class AppointmentController extends Controller
 	}
 	public function cuponMismaSerie($id){ //Viene el appointment_id
 		$extra_payment = Extra_payment::where('appointment_id', $id)
-		->with('appointment', 'method_payment')
+		->with('appointment', 'method_payment', 'appointment.professional')
 		->with('appointment.schedule')
 		->orderBy('created_at', 'desc')
 		->first();

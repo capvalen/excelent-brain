@@ -10,7 +10,8 @@
       }' >
           <div class="card-body">
               <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
+								<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-uppercase mb-1">{{dataConsult.precio.descripcion}}</div>
                       <div class="text-xs font-weight-bold text-uppercase mb-1">
 												<span class="text-primary" v-if="dataConsult.status ==2 && dataConsult.payment.pay_status==2">Pagado & Confirmado</span>
 												<span class="text-primary" v-else-if="dataConsult.status ==2">Confirmado sin pagar</span>

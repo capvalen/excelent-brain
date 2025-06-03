@@ -49,6 +49,11 @@
 							echo $fecha->format('d/m/Y H:i a');
 							@endphp</span>
 						</p>
+						<p>PROFESIONAL: <span>
+								@php
+									echo $extra_payment->appointment->professional->name;
+								@endphp
+							</span></p>
 						@php
 						if( $extra_payment->appointment ):
 							@endphp
@@ -60,6 +65,7 @@
 								@endphp
 								</span>
 							</p>
+							
 							@php
 						endif;
 						@endphp
@@ -133,11 +139,11 @@
 							</tr>
 							<tr>
 								<td>OP.GRAVADA</td>
-								<td style="text-align: right;">S/ {{$extra_payment->price - $extra_payment->price*.18}}</td>
+								<td style="text-align: right;">S/ {{ sprintf('%.2f', $extra_payment->price - $extra_payment->price*.18) }}</td>
 							</tr>
 							<tr>
 								<td>I.G.V</td>
-								<td style="text-align: right;">S/ {{$extra_payment->price*.18}}</td>
+								<td style="text-align: right;">S/ {{ sprintf('%.2f',$extra_payment->price*.18) }}</td>
 							</tr>
 							<tr>
 								<td><strong>IMPORTE TOTAL</strong></td>

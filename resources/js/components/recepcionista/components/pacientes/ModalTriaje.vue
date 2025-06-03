@@ -191,12 +191,22 @@ export default {
       .catch(err => {
         console.error(err)        
       })
+		},
+		limpiarModal(){
+			this.datos=''
+			this.consulta = {
+				fecha: moment().format('YYYY-MM-DD HH:mm'),
+				patient_id: -1,
+				motivo:'', sintomatologia:'',antecedentes:'', especialista:2, prioridad:1,
+				responsable: '', fv: '', fc: '', fr: '', pa: '', t: '', referencia:1, pruebas:'', peso:'', talla:''
+			}
 		}
 	},
 	watch:{
-		/* dataPatient(){
-			this.datos = this.dataPatient;
-		} */
+		dataPatient(){
+			this.limpiarModal();
+			//this.datos = this.dataPatient;
+		}
 	},
 	computed: {		
 		fullName: {
