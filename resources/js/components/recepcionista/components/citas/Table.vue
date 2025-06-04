@@ -103,15 +103,15 @@
 										<span class="text labels" v-else-if="!qCita.payment">Error</span>
 									</button>
 
-									<p v-if="qCita.payment.rebaja"><i class="fas fa-wallet"></i> 
+									<p v-if="parseFloat(qCita.payment.rebaja)>0"><i class="fas fa-wallet"></i> 
 										<small v-if="qCita.payment.rebaja>0">Rebaja S/ {{ qCita.payment.rebaja }} </small>
 										<small class="text-capitalize" v-if="qCita.payment.rebaja>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoRebaja }} </small>
 									</p>
-									<p v-if=" qCita.payment.descuento"><i class="fas fa-wallet"></i> 
+									<p v-if=" parseFloat(qCita.payment.descuento)>0"><i class="fas fa-wallet"></i> 
 										<small v-if="qCita.payment.descuento>0">Descuento S/ {{ qCita.payment.descuento }} </small>
 										<small class="text-capitalize" v-if="qCita.payment.descuento>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoDescuento }} </small>
 									</p>
-									<p v-if="qCita.payment.adelanto"><i class="fas fa-wallet"></i> 
+									<p v-if="parseFloat(qCita.payment.adelanto)>0"><i class="fas fa-wallet"></i> 
 										<small v-if="qCita.payment.adelanto>0">Adelanto S/ {{ qCita.payment.adelanto }} </small>
 										<small class="text-capitalize" v-if="qCita.payment.adelanto>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.razonAdelanto }} </small>
 									</p>
@@ -191,7 +191,7 @@
 											>
 											<i class="fa fa-align-justify"></i>
 											</a>
-											<button data-bs-toggle="modal" @click="buscarRecetas(qCita.patient.id)" data-bs-target="#recetasModal" class="btn btn-info btn-circle btn-sm" title="Ver recetas">
+											<button data-bs-toggle="modal" @click="buscarRecetas(qCita.patient.id)" data-bs-target="#recetasModal" class="btn btn-info btn-circle btn-sm d-none" title="Ver recetas">
 											<i class="fas fa-file"></i></button>
 									</div>
 								</td>
@@ -209,7 +209,6 @@
 				</div>
 				<!-- Fin de segunda tab -->
 			</div>
-			<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
 
     </div>
 
@@ -228,7 +227,7 @@ import InfoModal from './ModalInfo.vue'
 import ModalPatient from './ModalPatient_table.vue'
 import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
-import modalVerRecetas from './ModalVerRecetas.vue'
+
 
 
 import VistaCalendario from './VistaCalendario.vue'
@@ -240,7 +239,7 @@ import alertify from 'alertifyjs'
 export default {
   name: 'table-cita',
 
-  components: { PagoModal, InfoModal, ReprogModal, ModalEstadoCita, VistaCalendario, VistaCuaderno, modalVerRecetas, ModalPatient },
+  components: { PagoModal, InfoModal, ReprogModal, ModalEstadoCita, VistaCalendario, VistaCuaderno, ModalPatient },
 
   props: {
     profes:Array,
@@ -509,12 +508,7 @@ export default {
 			}else return '<span class="badge rounded-pill p-2 text-bg-secondary" title="Sin dato"><i class="fas fa-smile"></i></span>'
 
 		},
-		buscarRecetas(id){
-			this.axios(`/api/verRecetaPorId/${id}`)
-			.then(res =>{
-				this.recetas = res.data;
-			})
-		},
+		
 		queObservacion(faltas){
 			
 			if(faltas) return faltas.observaciones

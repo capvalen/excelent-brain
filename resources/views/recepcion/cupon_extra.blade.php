@@ -49,11 +49,11 @@
 							echo $fecha->format('d/m/Y H:i a');
 							@endphp</span>
 						</p>
-						<p>PROFESIONAL: <span>
-								@php
-									echo $extra_payment->appointment->professional->name;
-								@endphp
-							</span></p>
+						@php
+						if($extra_payment->appointment_id>0):
+							echo "<p>PROFESIONAL:". $extra_payment->appointment->professional->name . "</p>";
+						endif;
+						@endphp
 						@php
 						if( $extra_payment->appointment ):
 							@endphp

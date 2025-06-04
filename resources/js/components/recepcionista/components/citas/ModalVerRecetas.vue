@@ -42,6 +42,7 @@ import moment from 'moment'
 export default{
 	name: 'modalVerRecetas',
 	props:['prescriptions'],
+	
 	data(){ return{
 
 	}},
@@ -49,7 +50,11 @@ export default{
 		fechaLatam(fecha){
 			return moment(fecha).format('DD/MM/YYYY');
 		},
-	}
+	},
+	updated(){
+		console.log('viene recetaaaaaaaaaaaa', this.prescriptions)
+		
+	},
 	
 }
 </script>

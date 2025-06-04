@@ -202,6 +202,7 @@
 		<modal-search-patient></modal-search-patient>
 		<ModalIntercambio :posibles="posibles" :primero="primero" @actualizar="actualizarListadoCitas"></ModalIntercambio>
 		
+		<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
 
 	</div>
 </template>
@@ -215,6 +216,7 @@
 	import ModalPatient from './ModalPatient.vue'
 	import ModalSearchPatient from './ModalSearchPatient.vue'
 	import ModalIntercambio from './ModalIntercambio.vue'
+	import modalVerRecetas from './ModalVerRecetas.vue'
 		
 	import alertify from 'alertifyjs'
 	
@@ -229,7 +231,7 @@
 			}, posibles:[], primero:{patient:[]}
 		}},
 		props:[ 'nombreUser', 'idSede'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio, modalVerRecetas },
 		methods:{
 			dayWeek (day) {
 				switch (day) {
