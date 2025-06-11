@@ -54,11 +54,11 @@
 														v-for="(exam, index) in dataSearchExam" :key="index">
 																<span 
 																class="w-100 px-2 py-2 cie--hover d-inline-block pointer cie-item" 
-																:data-id="exam.id"
-																:class="{ 'cie-danger': selected.find(el => el.id == `${exam.id}`) }"
+																:data-id="exam.id"																
 																@click="insertExam(exam)">
 																		{{ exam.name }}
 																</span>
+																<!-- :class="{ 'cie-danger': selected.find(el => el.id == `${exam.id}`) }" -->
 														</div>
 													</div>
                         </div>
@@ -206,11 +206,16 @@ export default {
             let switchDuplicate = false
 
             this.selected.find(el => {
-                if (el.id == `${exam.id}`) return switchDuplicate = true;
+                if (el.id == `${exam.id}`) {
+           			 this.showResults= true
+									return switchDuplicate = true;
+								}
             });
+
+						if(!switchDuplicate) this.selected.push(exam)
             
-            if (this.selected.length !== 0 && !switchDuplicate) this.selected.push(exam);
-            if (this.selected.length === 0) this.selected.push(exam)
+            /* if (this.selected.length !== 0 && !switchDuplicate) this.selected.push(exam);
+            if (this.selected.length === 0) this.selected.push(exam) */
 
             this.buscar=''
             this.showResults= false

@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\Schedule;
 use App\Models\Professional;
+use App\Models\Patient;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -75,7 +76,7 @@ class ScheduleController extends Controller
         ->where('appointments.status', '<>', 4)
         ->where('appointments.status', '<>', 3)
         ->with('schedule')
-        ->with('patient')
+        ->with(['patient', 'patient.ultimoSemaforo'])
         ->with('payment')
         ->with('professional')
         ->get();
@@ -96,7 +97,19 @@ class ScheduleController extends Controller
             else
                 $cita->patient->relative= [];
             
-			$cita->patient->semaforo = DB::table('semaforo')->where('patient_id', $cita->patient_id )->where('activo',1)->orderBy('registro', 'desc')->first();
+					//$cita->patient->semaforo = DB::table('semaforo')->where('patient_id', $cita->patient_id )->where('activo',1)->orderBy('registro', 'desc')->first();
+
+					/* $semaforo = DB::table('semaforo')
+						->where('patient_id', $cita->patient_id)
+						->where('activo', 1)
+						->orderBy('registro', 'desc')
+						->first();
+
+					if ($semaforo) {
+							$semaforo->codigo = (int) $semaforo->codigo;
+					}
+
+					$cita->patient->semaforo = $semaforo; */
         }
 
 

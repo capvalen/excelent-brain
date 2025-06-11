@@ -270,8 +270,7 @@ export default {
 				this.consultas = res.data.consult
 				this.todasConsultas = this.consultas
 				this.consultWeek()
-								alertify.notify('<i class="fa-regular fa-calendar-check"></i> Citas actualizadas ', 'success', 5);
-
+					alertify.notify('<i class="fa-regular fa-calendar-check"></i> Citas actualizadas ', 'success', 5);
 			})
 			.catch(error => {
 				console.log(error)

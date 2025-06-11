@@ -12,6 +12,11 @@ class Semaforo extends Model
 
     protected $fillable=['patient_id', 'codigo', 'observaciones', 'activo', 'registro'];
     //Relacion uno a uno Patient-Relative
+
+		protected $casts = [
+			'codigo' => 'int'
+    ];
+
     public function patient()
     {
         return $this->hasOne("App\Models\Patient");

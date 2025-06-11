@@ -89,6 +89,12 @@ class Patient extends Model
     {
         return $this->hasMany("App\Models\Semaforo");
     }
+		public function ultimoSemaforo()
+		{
+				return $this->hasOne(Semaforo::class)
+										->where('activo', 1)
+										->orderBy('id', 'desc');
+		}
     public function nutricion(){
         return $this->hasOne('App\Models\Nutricion');
     }

@@ -51,8 +51,7 @@
 							<tr>
 								<th>Paciente</th>
 								<th>Profesional</th>
-								<th>Fecha</th>
-								<th>Hora</th>
+								<th>Fecha y Hora</th>
 								<th>Modo</th>
 								<th>Pago</th>
 								<th>Estado de Cita</th>
@@ -68,9 +67,9 @@
 									<span> {{index+1}}.</span> <span>{{ qCita.patient.name }} {{ qCita.patient.nombres }}</span>
 								</td>
 								<td class="text-capitalize" :title="qCita.professional ? qCita.professional.name : '...'">{{ qCita.professional ? maxStringCharacter(lowerCase(qCita.professional.name), 15) : '...' }}</td>
-								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-bs-toggle="modal" data-bs-target="#infoModal">{{ qCita.date ? fechaLatam(qCita.date) : '...' }}</td>
-								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-bs-toggle="modal" data-bs-target="#infoModal">
-										<span>{{ qCita.schedule ? horaHumana(qCita.schedule.check_time) : '...'}}</span>
+								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-bs-toggle="modal" data-bs-target="#infoModal">{{ qCita.date ? fechaLatam(qCita.date) : '...' }}
+									<br>
+									<span>{{ qCita.schedule ? horaHumana(qCita.schedule.check_time) : '...'}}</span>
 										<br>
 										<span>{{ qCita.schedule ? horaHumana(qCita.schedule.departure_date) : '...'}}</span> 
 								</td>
@@ -85,7 +84,8 @@
 											"btn-warning": qCita.payment && qCita.payment.pay_status == 1 && qCita.payment.adelanto > 0,
 											"btn-secondary": qCita.payment && qCita.payment.pay_status == 1 && qCita.payment.adelanto == 0,
 											"btn-success": qCita.payment && qCita.payment.pay_status == 2,
-											"btn-danger": qCita.payment && [3, null].includes(qCita.payment.pay_status)
+											"btn-danger": qCita.payment && [3, null].includes(qCita.payment.pay_status),
+											"btn-secondary": [null].includes(qCita.payment),
 										}'>
 										<span class="icon text-white-50">
 											<i :class="{ 
@@ -100,21 +100,23 @@
 										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 1">Sin pagar</span>
 										<span class="text labels" v-else-if="qCita.payment && qCita.payment.pay_status == 2">Cancelado</span>
 										<span class="text labels" v-else-if="qCita.payment && [3, null].includes(qCita.payment.pay_status)">Anulado</span>
-										<span class="text labels" v-else-if="!qCita.payment">Error</span>
+										<span class="text labels" v-else-if="!qCita.payment">Sin registro de pago</span>
 									</button>
 
-									<p v-if="parseFloat(qCita.payment.rebaja)>0"><i class="fas fa-wallet"></i> 
-										<small v-if="qCita.payment.rebaja>0">Rebaja S/ {{ qCita.payment.rebaja }} </small>
-										<small class="text-capitalize" v-if="qCita.payment.rebaja>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoRebaja }} </small>
-									</p>
-									<p v-if=" parseFloat(qCita.payment.descuento)>0"><i class="fas fa-wallet"></i> 
-										<small v-if="qCita.payment.descuento>0">Descuento S/ {{ qCita.payment.descuento }} </small>
-										<small class="text-capitalize" v-if="qCita.payment.descuento>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoDescuento }} </small>
-									</p>
-									<p v-if="parseFloat(qCita.payment.adelanto)>0"><i class="fas fa-wallet"></i> 
-										<small v-if="qCita.payment.adelanto>0">Adelanto S/ {{ qCita.payment.adelanto }} </small>
-										<small class="text-capitalize" v-if="qCita.payment.adelanto>0"><i class="fas fa-angle-double-right"></i> {{ qCita.payment.razonAdelanto }} </small>
-									</p>
+									<template v-if="qCita.payment">
+										<p v-if="qCita.payment.rebaja>0"><i class="fas fa-wallet"></i>
+												<small >Rebaja S/ {{ qCita.payment.rebaja }} </small>
+												<small class="text-capitalize" ><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoRebaja }} </small>
+										</p>
+										<p v-if=" qCita.payment.descuento>0"><i class="fas fa-wallet"></i>
+												<small >Descuento S/ {{ qCita.payment.descuento }} </small>
+												<small class="text-capitalize" ><i class="fas fa-angle-double-right"></i> {{ qCita.payment.motivoDescuento }} </small>
+										</p>
+										<p v-if="qCita.payment.adelanto>0"><i class="fas fa-wallet"></i>
+												<small >Adelanto S/ {{ qCita.payment.adelanto }} </small>
+												<small class="text-capitalize" ><i class="fas fa-angle-double-right"></i> {{ qCita.payment.razonAdelanto }} </small>
+										</p>
+									</template>
 								</td>
 								<td>
 									<button 
@@ -142,7 +144,7 @@
 									<small class="text-capitalize" v-if="qCita.status == 4 && qCita.faltas"><br><i class="far fa-comment"></i> {{queRazon(qCita.faltas[0])}} <span v-if="qCita.faltas[0].fechaProxima!=''">- Proxima cita: {{ fechaLatam(qCita.faltas[0].fechaProxima )}}</span></small>
 								</td>
 								<td>
-									<div class="row d-flex align-items-center justify-content-around gap-1">
+									<div class="d-flex align-items-center justify-content-around gap-1">
 											<!-- <a @click="modalInfo(cita)" title="Actualizar paciente" data-toggle="modal" data-target="#patientModal" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a> -->
 											
 											<a v-if="qCita.status == 3"  title="Cita cancelada"  class="btn btn-danger btn-circle btn-sm"><i class="fas fa-calendar"></i></a>
@@ -191,7 +193,7 @@
 											>
 											<i class="fa fa-align-justify"></i>
 											</a>
-											<button data-bs-toggle="modal" @click="buscarRecetas(qCita.patient.id)" data-bs-target="#recetasModal" class="btn btn-info btn-circle btn-sm d-none" title="Ver recetas">
+											<button data-bs-toggle="modal" @click="buscarRecetas(qCita.patient.id)" data-bs-target="#recetasModalRepetido" class="btn btn-info btn-circle btn-sm" title="Ver recetas">
 											<i class="fas fa-file"></i></button>
 									</div>
 								</td>
@@ -217,6 +219,7 @@
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></reprog-modal>
+		<modalVerRecetasRepetido :prescriptions="recetas"></modalVerRecetasRepetido>
     
   </div>
 </template>
@@ -227,6 +230,8 @@ import InfoModal from './ModalInfo.vue'
 import ModalPatient from './ModalPatient_table.vue'
 import ModalEstadoCita from './ModalEstadoCita.vue'
 import ReprogModal from './ReprogModal.vue'
+import ModalVerRecetasRepetido from './ModalVerRecetasRepetido.vue'
+
 
 
 
@@ -239,7 +244,7 @@ import alertify from 'alertifyjs'
 export default {
   name: 'table-cita',
 
-  components: { PagoModal, InfoModal, ReprogModal, ModalEstadoCita, VistaCalendario, VistaCuaderno, ModalPatient },
+  components: { PagoModal, InfoModal, ReprogModal, ModalEstadoCita, VistaCalendario, VistaCuaderno, ModalPatient, ModalVerRecetasRepetido },
 
   props: {
     profes:Array,
@@ -299,6 +304,12 @@ export default {
 
       this.cita = null;
     },
+		buscarRecetas(id){
+			this.axios(`/api/verRecetaPorId/${id}`)
+			.then(res =>{
+				this.recetas = res.data;
+			})
+		},
 
     async eliminar(id){
       this.$swal({

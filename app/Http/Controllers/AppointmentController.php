@@ -602,15 +602,18 @@ class AppointmentController extends Controller
 	{
 		$professional = Professional::where('user_id', $idUser)->first();
 
-		$consult = Appointment::where('appointments.professional_id', $professional->id)
+		$consults = Appointment::where('professional_id', $professional->id)
 			->where('date', '=', $idDate)
-			->with('patient', 'professional', 'schedule', 'payment')
+			->with('patient', 'professional', 'schedule', 'payment', 'precio')
 			->with('patient.initial_psychiatric_history')
 			->with('patient.initial_psychological_history')
-			->orderBy('date', 'asc')
-			->get();
+			->orderBy(function ($query) {
+				$query->selectRaw('check_time')
+					->from('schedules')
+					->whereColumn('schedules.id', 'appointments.schedule_id');
+    	}, 'desc')->get();
 
-		return response()->json($consult);
+		return response()->json($consults);
 	}
 
 	public function getEvolutions ($id) {

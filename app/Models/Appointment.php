@@ -9,6 +9,7 @@ class Appointment extends Model
 {
     use HasFactory;
     protected $fillable=['date','type','patient_condition','link','mode','status','clasification','recomendation','professional_id','patient_id','schedule_id', 'formato_nuevo', 'byDoctor', 'idMembresia', 'recomendacion_comentario'];
+		
     //Relación inversa de uno a muchos Patient-Appointment
     public function patient() {
         return $this->belongsTo("App\Models\Patient");
