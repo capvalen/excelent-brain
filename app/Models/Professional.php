@@ -36,5 +36,14 @@ class Professional extends Model
     public function medical_evolutions() {
         return $this->hasMany("App\Models\Medical_evolution");
     }
+
+		/* --- Lista todos los horarios no relacionados pero no reconoce el día*/
+		public function schedulesNoUsados()
+		{
+			return $this->schedules()
+				->whereDoesntHave('appointments')
+				->get();
+		} 
+
      
 }

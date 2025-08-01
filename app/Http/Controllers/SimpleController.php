@@ -56,26 +56,18 @@ class SimpleController extends Controller
 
 	public function buscarDni($dni){
 
-		$token = "apis-token-15723.OUEtzYtiRsBJ2mHYrE4BEoY1Zg6o0Fur";
+		$token = env('RENIEC_TOKEN');
+		$url = "https://dniruc.apisperu.com/api/v1/dni/" . urlencode($dni).'?token='.$token;
 				
 		$curl = curl_init();
-
-		// Buscar dni
-		curl_setopt_array($curl, array(
-			// para user api versión 2
-			CURLOPT_URL => 'https://api.apis.net.pe/v2/reniec/dni?numero=' . $dni,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_SSL_VERIFYPEER => 0,
-			CURLOPT_ENCODING => '',
-			CURLOPT_MAXREDIRS => 2,
-			CURLOPT_TIMEOUT => 0,
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_CUSTOMREQUEST => 'GET',
-			CURLOPT_HTTPHEADER => array(
-				'Referer: https://apis.net.pe/consulta-dni-api',
-				'Authorization: Bearer ' . $token
-			),
-		));
+		// Configurar opciones de cURL
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); // Devuelve el resultado como string
+    curl_setopt($curl, CURLOPT_TIMEOUT, 30);          // Tiempo máximo de espera
+    curl_setopt($curl, CURLOPT_HTTPHEADER, [
+        'Accept: application/json'
+    ]);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // Opcional: desactivar verificación SSL (no recomendado en producción)
 
 		$response = curl_exec($curl);
 

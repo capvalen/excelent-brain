@@ -282,5 +282,7 @@ Route::get('/buscarDni/{dni}', [SimpleController::class, 'buscarDni']);
 Route::post('/crearNutricionPrimera', [SimpleController::class, 'crearNutricionPrimera']);
 Route::post('/listarNutriciones', [SimpleController::class, 'listarNutriciones']);
 
+Route::get('/horasLibres/{id}/{fecha}', [ProfessionalController::class, 'horasLibres']);
+
 Route::resource('limbos', LimboController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 Route::resource('acuerdos', AcuerdoController::class)->only(['index', 'store', 'update', 'show', 'destroy']);

@@ -5,7 +5,9 @@
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
 		<div class="offcanvas-body">
-			
+			<div class="mb-2">
+				<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-spiral"></i> Nuevo paquete</button>
+			</div>
 			<div>
 				<p><strong>Paciente:</strong> <span>{{nombrePaciente}}</span></p>
 				<p><strong>Membresías asignadas:</strong></p>
@@ -107,6 +109,7 @@
 		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha" tipo="tipo"></ModalAmpliarFechaMembresia>
 
 		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio" ></ModalProximaCita>
+		<ModalPaqueteria :paciente="paciente" :profesionales="profesional"></ModalPaqueteria>
 		
 	</div>
 </template>
@@ -116,12 +119,13 @@ import moment from 'moment';
 import alertify from 'alertifyjs';
 import ModalAmpliarFechaMembresia from './ModalAmpliarFechaMembresia.vue'
 import ModalProximaCita from '../../../profesional/components/consultas/ModalProximaCita.vue'
+import ModalPaqueteria from './ModalPaqueteria.vue';
 
 
 export default{
 	name:'ModalVerMembresias',
 	props:['queId', 'nombrePaciente', 'idUser', 'paciente', 'profesional'],
-	components:{ ModalAmpliarFechaMembresia, ModalProximaCita },
+	components:{ ModalAmpliarFechaMembresia, ModalProximaCita, ModalPaqueteria },
 	data(){return {
 		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null
 	}},

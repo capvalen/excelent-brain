@@ -67,7 +67,7 @@ export default {
 	}},
 	methods:{
 		subirArchivo(){
-			console.log('que archivo')
+			//console.log('que archivo')
 			const file = document.querySelector('#fileArchivo');
 			const formData = new FormData();
 			formData.append('file', file.files[0]);
@@ -76,7 +76,7 @@ export default {
 			formData.append('titulo', this.titulo);
 			formData.append('descripcion', this.descripcion);
 
-			this.axios.post('/api/subirArchivoAcuerdo/', formData)
+			this.axios.post('/api/subirArchivoAcuerdo', formData)
 			.then(response => {
 				if(response.data.archivo) this.paciente.acuerdos.unshift(response.data.archivo)
 			} )

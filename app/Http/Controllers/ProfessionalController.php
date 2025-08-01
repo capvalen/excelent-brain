@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\Professional;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 class ProfessionalController extends Controller
@@ -217,7 +219,33 @@ class ProfessionalController extends Controller
         ]);
     }
 
-    public function dataTableProf(){
+    public function horasLibres($id, $fecha){
+			$profesional = Professional::find($id);
 
+			$dias = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+			$carbonFecha = Carbon::parse(	$fecha);
+			$indice = $carbonFecha->dayOfWeek; // Retorna 0=domingo, 1=lunes...
+			$dia = $dias[$indice];
+			
+			//Solución 1: llamando a todos los índices, pero hay error
+			/* 
+			$ocupados = $profesional->schedulesNoUsados();
+			$ocupado = [];
+			foreach ($ocupados as $ocupa) {
+				if( strtolower($ocupa->day) == $dia)
+					$ocupado[] = $ocupa;
+			}
+			return $ocupado; */
+			
+			//Solución 2: pide todos los horarios, luego filtra por el día, luego filtra los horarios que esten libres de la tabla appointments en la fecha seleccionada.
+			$ocupado =  $profesional->schedules()
+			->where('day', $dia) //que no estén relacionados
+			->whereDoesntHave('appointments', function ($query) use ($fecha) {
+					$query->whereDate('date', $fecha);
+			})->get();
+			return $ocupado;
+				
+			
+		
     }
 }
