@@ -25,7 +25,7 @@
                     :idSede="currentUser.idSede"
                     :dataUser="datosUsuario" :nombreUser = "currentUser.nombre" >
                     </router-view>
-                    <bWhats></bWhats>
+                    <!-- <bWhats></bWhats> -->
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@ import alertify from 'alertifyjs';
 
 import SideBar from './layout/Sidebar.vue'
 import NavBar from './layout/Nav.vue'
-import bWhats from './profesional/components/consultas/grafico/botonWhatsapp.vue'
+//import bWhats from './profesional/components/consultas/grafico/botonWhatsapp.vue'
 
 export default {
     name:'homepage',
@@ -62,7 +62,7 @@ export default {
         professional: Object
     },
     
-    components: { NavBar, SideBar, bWhats },
+    components: { NavBar, SideBar }, //bWhats
 
     methods: {
 			routePathValidation () {

@@ -4,7 +4,7 @@
 		<div class="modal-dialog modal-dialog-centered modal-sm">
 			<div class="modal-content">
 				<div class="modal-header border-0">
-					<h1 class="modal-title fs-5" id="exampleModalLabel">Programación de cita</h1>
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Programación de citas</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body py-0 border-0">
@@ -44,7 +44,7 @@ export default{
 		esPresencial:true, data:[], horarios:[], horariosAll:[], schedulesInvalid:[], hoursProfessional:[], fecha: moment().format('YYYY-MM-DD'), precios:[],
 		cita:{idServicio:null, }, idProfesional:null
 	}},
-	props:['profesional', 'paciente', 'idMembresia', 'idServicio'],
+	props:['profesional', 'paciente', 'idMembresia', 'idServicio', 'membresia'],
 	methods:{
 		separarCita(){
 			if(!this.fecha)

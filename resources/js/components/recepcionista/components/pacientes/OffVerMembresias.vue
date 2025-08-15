@@ -28,7 +28,9 @@
 								<span v-if="membresia.estado==3" class="text-danger" >Suspendido</span>
 							</p>
 							<p class="mb-1"><strong>Fecha de inicio</strong> <span>{{ fechaLatam(membresia.inicio) }}</span></p>
-							<p class="mb-1"><strong>Fecha límite final</strong> <span>{{ fechaLatam(membresia.fin) }}</span></p>
+							<p v-if="tipoMembresia(membresia) == 'tiempo'" class="mb-1"><strong>Fecha límite final</strong> <span>{{ fechaLatam(membresia.fin) }}</span></p>
+							<p v-else>Membresía por sesiones</p>
+
 							<p class="mb-1"><strong>N° cuotas</strong> <span>{{ membresia.cuotas }}</span></p>
 							<p class="mb-1"><strong>Cuotas pagadas:</strong> (<span>{{ membresia.pagados.length }} cuotas</span>) <span v-if="membresia.pagados.length>0" class="badge bg-primary rounded-pull p-2 m-1" style="cursor: pointer;" title="Voucher de pagos acumulados" @click="voucherAcumulados(index)"><i class="far fa-sticky-note"></i></span></p>
 							<p class="mb-1"><strong>Monto Total</strong> <span>S/ {{ parseFloat(membresia.monto).toFixed(2) }}</span></p>
@@ -54,8 +56,9 @@
 								</li>
 							</ol>
 							<p v-if="membresia.deudas.length==0">No hay deudas pendientes</p>
-							<button class="mt-2 btn btn-outline-secondary btn-sm" data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia.id)">Ver fechas de citas generadas</button>
-							<button class="mt-2 btn btn-outline-danger btn-sm" @click="anular(index)">Anular membresía</button>
+
+							<button v-if="tipoMembresia(membresia)=='sesiones'" class="mt-2 btn btn-secondary " data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia)"> <i class="fa-solid fa-list"></i> Ver fechas de citas</button>
+							<button class="mt-2 btn btn-danger " @click="anular(index)"><i class="fa-solid fa-ban"></i> Anular membresía</button>
 						</div>
 					</div>
 				</div>
@@ -65,17 +68,22 @@
 
 		<!-- Modal para ampliar la fecha -->
 		<div class="modal fade" id="modalVerCitas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog ">
+			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header border-0">
-						<h1 class="modal-title fs-5" id="exampleModalLabel">Citas de Membresía</h1>
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Citas programadas para membresías</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
+						<div class="row">
+							<div class="col">
+								<p><strong>Membresía seleccionada:</strong> {{ membresiaActiva.descripcion }}</p>
+							</div>
+						</div>
 						<div class="row mb-2">
 							<div class="col d-flex d-grid justify-content-between">
 								<button class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
-								<span>0 de 6 Citas</span>
+								<span><i class="fa-solid fa-receipt"></i> {{ citas.length }} de {{membresiaActiva.sesiones}} Citas</span>
 							</div>
 						</div>
 						<table class="table">
@@ -108,7 +116,7 @@
 
 		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha" tipo="tipo"></ModalAmpliarFechaMembresia>
 
-		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio" ></ModalProximaCita>
+		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio" :membresia ='membresiaActiva' ></ModalProximaCita>
 		<ModalPaqueteria :paciente="paciente" :profesionales="profesional"></ModalPaqueteria>
 		
 	</div>
@@ -127,7 +135,7 @@ export default{
 	props:['queId', 'nombrePaciente', 'idUser', 'paciente', 'profesional'],
 	components:{ ModalAmpliarFechaMembresia, ModalProximaCita, ModalPaqueteria },
 	data(){return {
-		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null
+		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null, membresiaActiva:[]
 	}},
 	mounted(){
 		//this.buscarMembresias()
@@ -186,10 +194,11 @@ export default{
 				}
 			})
 		},
-		pedirCitasMembresia(id, index){
-			this.idMembresia = id
-			this.idServicio = this.membresias.find(x=> id == x.id).tipo
-			this.axios('/api/pedirCitasMembresia/'+id)
+		pedirCitasMembresia(membresia){
+			this.membresiaActiva = membresia
+			this.idMembresia = membresia.id
+			this.idServicio = this.membresias.find(x=> this.idMembresia == x.id).tipo
+			this.axios('/api/pedirCitasMembresia/'+this.idMembresia)
 			.then(res=> this.citas = res.data )
 		},
 		voucherAcumulados(index){
@@ -201,6 +210,10 @@ export default{
 			window.open( `/api/cuponMembresia/${this.membresias[index].pagados[0].idMembresia}/${sumasa}` , '_blank')
 
 		},
+		tipoMembresia(membresia){
+			if(membresia.meses > 0 ) return 'tiempo'
+			if(membresia.sesiones > 0) return 'sesiones'
+		},
 		fechaLatam(fecha) { return moment(fecha).format('DD/MM/YYYY'); },
 	},
 	watch:{
@@ -210,3 +223,7 @@ export default{
 	}
 }
 </script>
+<style scoped>
+.btn-secondary:hover {
+    color: #393939;
+}</style>
