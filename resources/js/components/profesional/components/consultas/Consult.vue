@@ -11,7 +11,15 @@
           <div class="card-body">
               <div class="row no-gutters align-items-center">
 								<div class="col mr-2">
-										<div class="text-xs font-weight-bold text-uppercase mb-1">{{dataConsult.precio.descripcion}}</div>
+										<div class="text-xs font-weight-bold text-uppercase mb-1">
+											<span class="text-primary" v-if="parseInt(dataConsult.idMembresia) > 0">
+												<p class="mb-0">Paquete: <span>{{dataConsult.precio.descripcion.replace('-', 'de')}}</span></p>
+												<p>Sessión #<span>{{dataConsult.num_sesion}}</span></p>
+											</span>
+											
+											<span class="text-primary" v-else="parseInt(dataConsult.idMembresia) > 0">Cita regular: <span>{{dataConsult.precio.descripcion}}</span></span> 
+											
+										</div>
                       <div class="text-xs font-weight-bold text-uppercase mb-1">
 												<span class="text-primary" v-if="dataConsult.status ==2 && dataConsult.payment.pay_status==2">Pagado & Confirmado</span>
 												<span class="text-primary" v-else-if="dataConsult.status ==2">Confirmado sin pagar</span>

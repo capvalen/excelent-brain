@@ -1,0 +1,1 @@
+ALTER TABLE `appointments` ADD `num_sesion` VARCHAR(15) NULL DEFAULT NULL AFTER `recomendacion_comentario`; 

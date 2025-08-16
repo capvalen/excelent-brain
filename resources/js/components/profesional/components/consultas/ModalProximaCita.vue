@@ -18,7 +18,8 @@
 					
 					<label for="">Tipo de servicio</label>
 					<label class="">Fecha</label>
-					<input type="date" class="form-control" v-model="fecha" @change="listarHorario()">
+					<input v-if="tipoMembresia()=='sesiones'" type="date" class="form-control text-primary" v-model="fecha" @change="listarHorario()">
+					<input v-if="tipoMembresia()=='tiempo'" type="date" :max="membresia.fin" class="form-control" v-model="fecha" @change="listarHorario()">
 					<label class="mt-2">Horario</label>
 					<select name="" id="" class="form-select" v-model="cita.idHora">
 						<option value="" disabled selected>Selecciona un horario</option>
@@ -71,6 +72,8 @@ export default{
 					byDoctor:1,
 					precio: 0,
 				}).then(response=>{ console.log(response.data);
+					this.idProfesional = -1
+					this.cita.idHora = ''
 					if( response.data.mensaje )
 						alertify.notify('Reservado con éxito', 'success', 10)
 					else
@@ -143,15 +146,17 @@ export default{
 				case 6: return "Domingo"; break;
 			}
 		},
+		tipoMembresia(){
+			let membresia = this.membresia
+			if(membresia.meses > 0 ) return 'tiempo'
+			if(membresia.sesiones > 0) return 'sesiones'
+		},
 		horaLatam1(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm') },
 		horaLatam2(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm a') },
 	},
 	mounted(){
 		this.listarPrecios()
 	},
-	computed:{
-	
-	}
 }
 </script>
 <style scoped>

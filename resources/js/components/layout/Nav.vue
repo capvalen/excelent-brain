@@ -76,4 +76,7 @@ export default {
 .img-profile {
     object-fit: contain;
 }
+.dropdown-toggle::after{
+	font-family: 'Font Awesome 7 Free'!important;
+}
 </style>

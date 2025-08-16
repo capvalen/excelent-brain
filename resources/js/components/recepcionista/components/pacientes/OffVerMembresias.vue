@@ -57,7 +57,7 @@
 							</ol>
 							<p v-if="membresia.deudas.length==0">No hay deudas pendientes</p>
 
-							<button v-if="tipoMembresia(membresia)=='sesiones'" class="mt-2 btn btn-secondary " data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia)"> <i class="fa-solid fa-list"></i> Ver fechas de citas</button>
+							<button class="mt-2 btn btn-secondary " data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia)"> <i class="fa-solid fa-list"></i> Ver fechas de citas</button>
 							<button class="mt-2 btn btn-danger " @click="anular(index)"><i class="fa-solid fa-ban"></i> Anular membresía</button>
 						</div>
 					</div>
@@ -81,9 +81,15 @@
 							</div>
 						</div>
 						<div class="row mb-2">
-							<div class="col d-flex d-grid justify-content-between">
-								<button class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
-								<span><i class="fa-solid fa-receipt"></i> {{ citas.length }} de {{membresiaActiva.sesiones}} Citas</span>
+							<div class="col d-flex d-grid justify-content-between align-items-center">
+								<template v-if="tipoMembresia(membresiaActiva) == 'sesiones'">
+									<span><i class="fa-solid fa-receipt"></i> {{ citas.length }} de {{membresiaActiva.sesiones}} Citas</span>
+									<button v-if="parseInt(citas.length) < parseInt(membresiaActiva.sesiones) " class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
+								</template>
+								<template v-if="tipoMembresia(membresiaActiva) == 'tiempo'">
+									<span>Límite de la membresía: <i class="fa-regular fa-clock"></i> {{ fechaLatam(membresiaActiva.fin) }}</span>
+									<button v-if="calcularMesesMembresia() " class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
+								</template>
 							</div>
 						</div>
 						<table class="table">
@@ -98,7 +104,7 @@
 							<tbody>
 								<tr v-for="(cita, index) in citas">
 									<td>{{ index+1 }}</td>
-									<td>{{ cita.date }} {{ cita.schedule.check_time }}</td>
+									<td>{{ fechaLatam(cita.date) }} {{ horaLatam(cita.schedule.check_time) }}</td>
 									<td>{{ cita.professional.nombre }}</td>
 									<td>
 										<span v-if="cita.status==1">Sin Confirmar</span>
@@ -210,11 +216,25 @@ export default{
 			window.open( `/api/cuponMembresia/${this.membresias[index].pagados[0].idMembresia}/${sumasa}` , '_blank')
 
 		},
+		calcularMesesMembresia(){
+			let hoy = moment().startOf('day');
+			let fin = moment(this.membresiaActiva.fin, 'YYYY-MM-DD')
+
+			if (fin.isBefore(hoy)) { //fecha es menor
+				return false;
+			} else if (fin.isAfter(hoy)) { //fecha es mayor
+				return true;
+			} else { // fecha es igual
+			 	return true
+			}
+
+		},
 		tipoMembresia(membresia){
 			if(membresia.meses > 0 ) return 'tiempo'
 			if(membresia.sesiones > 0) return 'sesiones'
 		},
 		fechaLatam(fecha) { return moment(fecha).format('DD/MM/YYYY'); },
+		horaLatam(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm a') },
 	},
 	watch:{
 		queId(){

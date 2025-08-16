@@ -581,8 +581,12 @@ class ExtrasController extends Controller
 
 	public function reservarCitaDoctor(Request $request, Appointment $appointment){
 		//var_dump($request->all()); die();
+		$num_citas = $appointment::where('idMembresia', '=', $request->get('idMembresia') )->count();
+		$request->merge([ 'num_sesion' => $num_citas+1 ]);
+
 		$appointment ->fill($request->all());
 		$appointment->save();
+		
 
 		Payment::create([
 			'observation'=>'',
