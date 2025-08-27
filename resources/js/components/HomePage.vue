@@ -127,7 +127,7 @@ export default {
 
 <style>
 .alertify-notifier .ajs-message{
-	background: rgb(8 8 8 / 95%)!important;
+	background: rgb(8 8 8 / 95%)!;
     color: #fff!important;
     text-align: left!important;
 }

@@ -170,6 +170,7 @@ Route::post('nuevoUsuarioBasico', [ExtrasController::class, 'nuevoUsuarioBasico'
 Route::post('eliminarUsuario', [ExtrasController::class, 'eliminarUsuario']);
 Route::post('crearAcontecimiento', [ExtrasController::class, 'crearAcontecimiento']);
 Route::get('cargarLineas/{id}', [ExtrasController::class, 'cargarLineas']);
+Route::get('cambiarEstadoMembresia/{id}/{estado}/{congelar}', [ExtrasController::class, 'cambiarEstadoMembresia']);
 Route::put('/dividirPago/{id}', [ExtrasController::class, 'dividirPago']);
 
 

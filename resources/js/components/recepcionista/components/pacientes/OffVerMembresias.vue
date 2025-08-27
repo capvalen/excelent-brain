@@ -5,15 +5,12 @@
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
 		<div class="offcanvas-body">
-			<div class="mb-2">
-				<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-spiral"></i> Nuevo paquete</button>
-			</div>
 			<div>
 				<p><strong>Paciente:</strong> <span>{{nombrePaciente}}</span></p>
 				<p><strong>Membresías asignadas:</strong></p>
 			</div>
 			<div class="accordion" id="accordionExample">
-				<div class="accordion-item" v-for="(membresia, index) in membresias">
+				<div class="accordion-item" v-for="(membresia, index) in membresias" @click="membresiaActiva = membresia">
 					<h2 class="accordion-header">
 						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse'+membresia.id" aria-expanded="false" :aria-controls="'#collapse'+membresia.id">
 							{{membresia.descripcion}} - {{ fechaLatam(membresia.inicio) }}
@@ -21,21 +18,29 @@
 					</h2>
 					<div :id="'collapse'+membresia.id" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
 						<div class="accordion-body">
-							<p class="mb-1"><strong>Tipo</strong> <span>{{ membresia.descripcion }}</span></p>
-							<p class="mb-1 d-none"><strong>Estado</strong>
-								<span v-if="membresia.estado==1" class="text-warning" >En espera</span>
-								<span v-if="membresia.estado==2" class="text-success" >Activo</span>
-								<span v-if="membresia.estado==3" class="text-danger" >Suspendido</span>
+							<p class="mb-1"><strong>Paquete</strong> <span>{{ membresia.descripcion }}</span></p>
+							<p class="mb-1"><strong>Tipo</strong>
+								<span v-if="tipoMembresia(membresia) == 'tiempo'" class="mb-1">Paquete de temporada</span>
+								<span v-else class="mb-1">Paquete por sesiones</span>
+							</p>
+							<p class="mb-1"><strong>Estado</strong>
+								<button v-if="membresia.estado==1" @click="abrirEstados(membresia.estado)" class="badge border-0 text-bg-warning" data-bs-toggle="modal" data-bs-target="#modalEstado">Sin activar</button>
+								<button v-if="membresia.estado==2" @click="abrirEstados(membresia.estado)" class="badge border-0 text-bg-success" data-bs-toggle="modal" data-bs-target="#modalEstado">Activo</button>
+								<button v-if="membresia.estado==3" @click="abrirEstados(membresia.estado)" class="badge border-0 text-bg-success" data-bs-toggle="modal" data-bs-target="#modalEstado">Concluido</button>
+								<button v-if="membresia.estado==4" @click="abrirEstados(membresia.estado)" class="badge border-0 text-bg-warning" data-bs-toggle="modal" data-bs-target="#modalEstado">Prorrateado </button>
+								<button v-if="membresia.estado==5" @click="abrirEstados(membresia.estado)" class="badge border-0 text-bg-secondary" data-bs-toggle="modal" data-bs-target="#modalEstado">Congelado </button>
+								<button v-if="membresia.estado==6" @click="abrirEstados(membresia.estado)" class="badge border-0 text-bg-danger" data-bs-toggle="modal" data-bs-target="#modalEstado">Cancelado </button>
 							</p>
 							<p class="mb-1"><strong>Fecha de inicio</strong> <span>{{ fechaLatam(membresia.inicio) }}</span></p>
 							<p v-if="tipoMembresia(membresia) == 'tiempo'" class="mb-1"><strong>Fecha límite final</strong> <span>{{ fechaLatam(membresia.fin) }}</span></p>
-							<p v-else>Membresía por sesiones</p>
+							<p v-else><strong>Sesiones</strong> {{ membresia.contador_paquetes }} de {{ membresia.sesiones }}</p>
 
 							<p class="mb-1"><strong>N° cuotas</strong> <span>{{ membresia.cuotas }}</span></p>
 							<p class="mb-1"><strong>Cuotas pagadas:</strong> (<span>{{ membresia.pagados.length }} cuotas</span>) <span v-if="membresia.pagados.length>0" class="badge bg-primary rounded-pull p-2 m-1" style="cursor: pointer;" title="Voucher de pagos acumulados" @click="voucherAcumulados(index)"><i class="far fa-sticky-note"></i></span></p>
 							<p class="mb-1"><strong>Monto Total</strong> <span>S/ {{ parseFloat(membresia.monto).toFixed(2) }}</span></p>
-							<p class="mb-1"><strong>Comentarios adicionales:</strong> <span>{{ membresia.comentarios }}</span></p>
-							<ol class="list-group">
+							<p class="mb-1"><strong>Comentarios:</strong> <span>{{ membresia.comentarios }}</span></p>
+							<p class="mt-2 mb-0"><span class="text-muted">Cuotas pagadas:</span></p>
+							<ol class="list-group mb-2">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="pagado in membresia.pagados">
 									<div class="ms-2 me-auto">
 										<div><span class="fw-bold">Pagado:</span> {{ fechaLatam(pagado.date) }} </div>
@@ -44,8 +49,8 @@
 								</li>
 							</ol>
 							<p class="text-muted" v-if="membresia.pagados.length==0"><small>No hay pagos registrados aún</small></p>
-							<p class="mt-2 mb-0">Cuotas pendientes de pago:</p>
-							<ol class="list-group">
+							<p class="mt-2 mb-0"><span class="text-muted">Cuotas pendientes de pago:</span></p>
+							<ol class="list-group mb-2">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="(deuda, indice) in membresia.deudas">
 									<div class="ms-2 me-auto">
 										<div><span class="fw-bold">Fecha de pago:</span> {{ fechaLatam(deuda.fecha) }} </div>
@@ -57,8 +62,8 @@
 							</ol>
 							<p v-if="membresia.deudas.length==0">No hay deudas pendientes</p>
 
-							<button class="mt-2 btn btn-secondary " data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia)"> <i class="fa-solid fa-list"></i> Ver fechas de citas</button>
-							<button class="mt-2 btn btn-danger " @click="anular(index)"><i class="fa-solid fa-ban"></i> Anular membresía</button>
+							<button v-if="tipoMembresia(membresia)=='sesiones'" class="mt-2 btn btn-secondary " data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia)"> <i class="fa-solid fa-list"></i> Ver fechas de citas</button>
+							<button class="mt-2 btn btn-danger d-none" @click="anular(index)"><i class="fa-solid fa-ban"></i> Anular membresía</button>
 						</div>
 					</div>
 				</div>
@@ -120,6 +125,30 @@
 			</div>
 		</div>
 
+		<!-- Modal -->
+		<div class="modal fade" id="modalEstado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header border-0">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar estado</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<ul class="list-group">
+							<li class="list-group-item list-group-item-action puntero" data-bs-dismiss="modal" :class="{'active':queEstado=='1'}" @click="cambiarEstado(1,'Inactivo', $event)"><i class="fa-solid fa-circle-notch"></i> Inactivo</li>
+							<li class="list-group-item list-group-item-action puntero" data-bs-dismiss="modal" :class="{'active':queEstado=='2'}" @click="cambiarEstado(2,'Activo', $event)"><i class="fa-solid fa-circle-notch"></i> Activo</li>
+							<li class="list-group-item list-group-item-action puntero" data-bs-dismiss="modal" :class="{'active':queEstado=='3'}" @click="cambiarEstado(3,'Concluido', $event)"><i class="fa-solid fa-circle-notch"></i> Concluido</li>
+							<li class="list-group-item list-group-item-action puntero" data-bs-dismiss="modal" :class="{'active':queEstado=='4'}" @click="cambiarEstado(4,'Prorrateado', $event)"><i class="fa-solid fa-circle-notch"></i> Prorrateado</li>
+							<li class="list-group-item list-group-item-action puntero" data-bs-dismiss="modal" :class="{'active':queEstado=='5'}" @click="cambiarEstado(5,'Congelado', $event)"
+								v-if="tipoMembresia(membresiaActiva) == 'tiempo'"
+							><i class="fa-solid fa-circle-notch"></i> Congelado</li>
+							<li class="list-group-item list-group-item-action puntero" data-bs-dismiss="modal" :class="{'active':queEstado=='6'}" @click="cambiarEstado(6,'Cancelado', $event)"><i class="fa-solid fa-circle-notch"></i> Cancelado</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha" tipo="tipo"></ModalAmpliarFechaMembresia>
 
 		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio" :membresia ='membresiaActiva' ></ModalProximaCita>
@@ -141,7 +170,7 @@ export default{
 	props:['queId', 'nombrePaciente', 'idUser', 'paciente', 'profesional'],
 	components:{ ModalAmpliarFechaMembresia, ModalProximaCita, ModalPaqueteria },
 	data(){return {
-		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null, membresiaActiva:[]
+		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null, membresiaActiva:[], queEstado:null, verDias:false, congelar:0
 	}},
 	mounted(){
 		//this.buscarMembresias()
@@ -206,6 +235,32 @@ export default{
 			this.idServicio = this.membresias.find(x=> this.idMembresia == x.id).tipo
 			this.axios('/api/pedirCitasMembresia/'+this.idMembresia)
 			.then(res=> this.citas = res.data )
+		},
+		abrirEstados(estado){
+			this.idMembresia = this.membresiaActiva.id;
+			this.queEstado=estado
+			const membresia = this.membresias.find(x=> this.idMembresia == x.id)
+			this.congelar = 0
+
+			if(estado == '5'){
+				const hoy = moment().startOf('day');
+				const final = moment(membresia.fin, 'YYYY-MM-DD')
+				if(hoy.isBefore(final))
+					this.congelar = final.diff(hoy,'days')-1
+				else
+					this.congelar = 0
+			}
+		},
+		cambiarEstado(estado, texto, event){
+			if (event.target.classList.contains('active')) return false;
+			if(confirm(`¿Deseas cambiar el estado a ${texto}?`)){
+				this.axios('/api/cambiarEstadoMembresia/'+this.idMembresia+'/'+estado+'/'+this.congelar)
+				.then(res=> {
+					this.membresias.find(x=> this.idMembresia == x.id).estado = estado
+					if(estado == 5)
+						this.membresias.find(x=> this.idMembresia == x.id).fin = moment().add(this.congelar, 'days').format('YYYY-MM-DD')
+				})
+			}
 		},
 		voucherAcumulados(index){
 			var sumasa = 0;

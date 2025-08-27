@@ -48,7 +48,7 @@
 						<p class="mb-2"><i class="fa-regular fa-calendar-xmark"></i> Membresía caduca en {{ cantMeses }} meses</p>
 
 
-						<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+						<ul class="nav nav-tabs mt-3 d-none" id="myTab" role="tablist">
 							<li class="nav-item" role="presentation">
 								<button class="nav-link active" id="pagos-tab" data-bs-toggle="tab" data-bs-target="#pagos-tab-pane"
 									type="button" role="tab" aria-controls="pagos-tab-pane" aria-selected="true"><i
@@ -65,18 +65,33 @@
 							<div class="tab-pane fade show active" id="pagos-tab-pane" role="tabpanel" aria-labelledby="pagos-tab"
 								tabindex="0">
 								<!-- Inicio de tab de Pagos -->
-								<div class="row">
+								<div class="row pt-3">
 									<div class="col-6">
-										<label class="mb-0 mt-2 " for="">N° Cuotas</label>
-										<input type="number" class="form-control" v-model="membresia.cuotas" @change="calcularFechas()" max="3">
+										<label class="mt-2 " for="">N° Cuotas</label>
+										<input type="number" class="form-control" v-model="membresia.cuotas" @change="calcularFechas()" min="0" max="5">
 									</div>
+									<div class="col-6">
+										<label clas="mb-0 mt-2">¿Tiene descuento?</label>
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" value="" id="HayDescto" v-model="membresia.conDescuento" @change="membresia.descuento = 0">
+											<label class="form-check-label">
+													<span v-if="!membresia.conDescuento">No</span>
+													<span v-else>Si</span>
+											</label>
+										</div>
+									</div>
+									<div class="col-6" v-if="membresia.conDescuento">
+										<label for="mt-2">Descuento</label>
+										<input type="number" class="form-control" v-model="membresia.descuento" @change="calcularFechas()" max="50">
+									</div>
+								</div>
 
 
 									<!-- <div class="d-grid col-8 ms-auto">
 									<button class="btn btn-outline-primary float-end mt-3" @click="calcularFechas()"><i class="fa-regular fa-handshake"></i> Calcular montos y fechas</button>
 								</div> -->
 
-									<table class="table table-hover table-borderless" v-show="fechas.length > 0">
+									<table class="table table-hover table-borderless " v-show="fechas.length > 0">
 										<thead>
 											<tr>
 												<th class="pb-1">Fecha de pago</th>
@@ -93,14 +108,9 @@
 																
 																<!-- Para la primera y segunda cuota (cuando hay más de 2), permite edición -->
 																<input type="number" class="form-control inputPartidos" 
-																		v-if="membresia.cuotas>1 && (index==0 || (index==1 && membresia.cuotas>2))" 
+																		v-if="membresia.cuotas>1 " 
 																		@keyup="balancearMontos(index)" 
-																		v-model="fecha.monto">
-																
-																<!-- Para el resto de cuotas, mantiene readonly -->
-																<input type="number" class="form-control inputPartidos" 
-																		v-if="membresia.cuotas>1 && !(index==0 || (index==1 && membresia.cuotas>2))" 
-																		readonly="true" 
+																		:readonly="index == fechas.length-1" 
 																		v-model="fecha.monto">
 														</td>
 														<td>
@@ -116,13 +126,20 @@
 												</tr>
 										</tbody>
 										<tfoot>
+											<tr v-if="membresia.conDescuento">
+												<th>Sub Total</th>
+												<th>S/ {{ subTotal }}</th>
+											</tr>
+											<tr v-if="membresia.conDescuento">
+												<th>Descuento</th>
+												<th>S/ {{ parseFloat( membresia.descuento).toFixed(2) }}</th>
+											</tr>
 											<tr>
 												<th>Total a pagar</th>
-												<th>S/ {{ mostrarPrecio }}</th>
+												<th>S/ {{ parseFloat(subTotal - membresia.descuento).toFixed(2) }}</th>
 											</tr>
 										</tfoot>
 									</table>
-								</div>
 								<!-- Fin de tab de Pagos -->
 							</div>
 							<div class="tab-pane fade py-3" id="membresia-tab-pane" role="tabpanel" aria-labelledby="membresia-tab"
@@ -188,7 +205,9 @@
 						<textarea class="form-control mb-3" id="txtComentarios" v-model="comentarios" row="2"></textarea>
 
 
-						<button class="btn btn-outline-primary" data-bs-dismiss="modal" @click="guardar()"><i class="fa-regular fa-floppy-disk"></i> Guardar membresía</button>
+						<div class="d-flex justify-content-end">
+							<button class="btn btn-outline-primary" data-bs-dismiss="modal" @click="guardar()"><i class="fa-regular fa-floppy-disk"></i> Guardar membresía</button>
+						</div>
 					</section>
 				</div>
 
@@ -204,7 +223,10 @@ export default {
 	name: 'ModalMembresias',
 	data() {
 		return { // vista: 'buscar',
-			txtBusqueda: '', pacientes: [], indexGlobal: null, pacienteElegido: {}, precios: [], membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD') }, fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') }, doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:'', comentarios:''
+			txtBusqueda: '', pacientes: [], indexGlobal: null, pacienteElegido: {}, precios: [],
+			membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD'), descuento:0, conDescuento:false },
+			fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') },
+			doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:'', comentarios:'',
 		}
 	},
 	props: ['idUsuario', 'vista'],
@@ -256,7 +278,7 @@ export default {
 		},
 		calcularFechas() {
 			this.fechas = [];
-			const precioBase = this.mostrarPrecio;
+			const precioBase = this.mostrarPrecio ;
 			const precioParcial = Math.ceil((precioBase / this.membresia.cuotas)*10)/10
 			var hoy = moment()
 			this.membresia.precio = precioBase;
@@ -275,84 +297,87 @@ export default {
 				hoy = moment(hoy).add(1, 'month')
 			}
 			this.membresia.fin = this.membresia.tipo==47 ?  moment().add(1,'year').format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
+			this.balancearMontos(0);
 		},
 		balancearMontos(editedIndex) {
-    console.log('bal');
-    if (parseInt(this.membresia.cuotas) > 1) {
-        // Si hay más de 1 cuota
-        
-        if (parseInt(this.membresia.cuotas) > 2) {
-            // Si hay más de 2 cuotas
-            
-            if (editedIndex === 0) {
-                // Si se editó la primera cuota, balanceamos desde la segunda
-                let cantidadFechasABalancear = this.fechas.length - 1;
-                let montoRestante = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto)) / cantidadFechasABalancear;
-                
-                this.fechas.forEach((fecha, index) => {
-                    if (index > 0) { // Balanceamos desde la segunda cuota
-                        console.log('aplicar desde segunda', fecha, montoRestante);
-                        fecha.monto = montoRestante.toFixed(2);
-                    }
-                });
-            } else if (editedIndex === 1) {
-                // Si se editó la segunda cuota, respetamos la primera y balanceamos desde la tercera
-                let cantidadFechasABalancear = this.fechas.length - 2;
-                let montoRestante = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto) - parseFloat(this.fechas[1].monto)) / cantidadFechasABalancear;
-                
-                this.fechas.forEach((fecha, index) => {
-                    if (index > 1) { // Balanceamos desde la tercera cuota
-                        console.log('aplicar desde tercera', fecha, montoRestante);
-                        fecha.monto = montoRestante.toFixed(2);
-                    }
-                });
-            }
-        } else if (parseInt(this.membresia.cuotas) == 2) {
-            // Si hay exactamente 2 cuotas
-            // La segunda cuota debe ser el total menos la primera
-            this.fechas[1].monto = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto)).toFixed(2);
-        }
-    }
-},
-		
+			const descuento = this.membresia.descuento ?? 0;
+			if (parseInt(this.membresia.cuotas) >1) {
+				if (editedIndex === 0) {
+					// Si se editó la primera cuota, balanceamos desde la segunda
+					let cantidadFechasABalancear = this.fechas.length - 1;
+					let montoRestante = (parseFloat(this.fechas[0].total) - parseFloat(this.fechas[0].monto) - descuento) / cantidadFechasABalancear;
+					
+					this.fechas.forEach((fecha, index) => {
+							if (index > 0) { // Balanceamos desde la segunda cuota
+									console.log('aplicar desde segunda', fecha, montoRestante);
+									fecha.monto = montoRestante.toFixed(2);
+							}
+					});
+				} else if(editedIndex<= this.fechas.length-2) {
+					// Si se editó la segunda cuota, respetamos la primera y balanceamos desde la tercera
+					let cantidadFechasABalancear = this.fechas.length - editedIndex+1;
+					let sumaAnteriores = this.fechas.filter( (_,index) => index<= editedIndex )
+					.reduce( (acc, item) => acc + parseFloat(item.monto), 0 )
+
+					let montoRestante = (parseFloat(this.fechas[0].total) - sumaAnteriores - descuento) / cantidadFechasABalancear;
+
+					for(let i=editedIndex+1; i<this.fechas.length; i++)
+						this.fechas[i].monto = montoRestante.toFixed(2)
+						
+				}
+			}
+		},
 		borrarSesionAcumulada(index){
 			this.sesionesAcumuladas.splice(index,1)
 		},
 		async guardar() {
-			if (this.membresia.cuotas <= 0) alertify.notify('<i class="fa-solid fa-bomb"></i> El número de cuotas mínimo debe ser 1', 'danger', 10);
-			else if (!this.membresia.fin) alertify.notify('<i class="fa-solid fa-bomb"></i> Ingrese el último día de la memebresía', 'danger', 10);
-			else {
-				var mem = document.getElementById("sltMembresia");
-
-				let datos = new FormData();
-				datos.append('idPaciente', this.pacienteElegido.id)
-				datos.append('customer', this.pacienteElegido.name+ ' '+ this.pacienteElegido.nombres)
-				datos.append('motivo', this.pacienteElegido.id)
-				datos.append('membresia', JSON.stringify(this.membresia))
-				datos.append('user_id', this.idUsuario)
-				datos.append('nombreMembresia', mem.options[mem.selectedIndex].text )
-				datos.append('fechas', JSON.stringify(this.fechas))
-				datos.append('fechas_membresias', JSON.stringify(this.sesionesAcumuladas))
-				datos.append('comentarios', this.comentarios )
-				datos.append('meses', this.cantMeses )
-
-				const servidor = await fetch('/api/guardarMembresia', {
-					method: 'POST', body: datos
-				})
-				
-				const respuesta = await servidor.json();
-				if (respuesta.mensaje) {
-					this.pacienteElegido = []
-					this.fechas = []
-					this.$swal({
-						title: 'Se guardó la membresía',
-						showConfirmButton: false,
-						icon:'success'
-					})
-					alertify.notify('<i class="fa-regular fa-calendar-check"></i> Membresía guardada', 'success', 10);
-				} else
-					alertify.notify('<i class="fa-regular fa-bomb"></i> Hubo un error guardando', 'danger', 10);
+			if (this.membresia.cuotas <= 0){
+				alertify.notify('<i class="fa-solid fa-bomb"></i> El número de cuotas mínimo debe ser 1', 'danger', 10);
+				return false;
 			}
+			if (!this.membresia.fin){
+				alertify.notify('<i class="fa-solid fa-bomb"></i> Ingrese el último día de la memebresía', 'danger', 10);
+				return false;
+			}
+
+			if(this.membresia.descuento >0 && this.comentarios ==''){
+				alertify.notify('<i class="fa-solid fa-bomb"></i> Debe agregar un motivo por el descuento', 'danger', 10);
+				return false;
+			}else{
+				this.comentarios = 'Descuento por: '+ this.comentarios
+			}
+				
+			var mem = document.getElementById("sltMembresia");
+
+			let datos = new FormData();
+			datos.append('idPaciente', this.pacienteElegido.id)
+			datos.append('customer', this.pacienteElegido.name+ ' '+ this.pacienteElegido.nombres)
+			datos.append('motivo', this.pacienteElegido.id)
+			datos.append('membresia', JSON.stringify(this.membresia))
+			datos.append('user_id', this.idUsuario)
+			datos.append('nombreMembresia', mem.options[mem.selectedIndex].text )
+			datos.append('fechas', JSON.stringify(this.fechas))
+			datos.append('fechas_membresias', JSON.stringify(this.sesionesAcumuladas))
+			datos.append('comentarios', this.comentarios )
+			datos.append('meses', this.cantMeses )
+
+			const servidor = await fetch('/api/guardarMembresia', {
+				method: 'POST', body: datos
+			})
+			
+			const respuesta = await servidor.json();
+			if (respuesta.mensaje) {
+				this.pacienteElegido = []
+				this.fechas = []
+				this.$swal({
+					title: 'Se guardó la membresía',
+					showConfirmButton: false,
+					icon:'success'
+				})
+				alertify.notify('<i class="fa-regular fa-calendar-check"></i> Membresía guardada', 'success', 10);
+			} else
+				alertify.notify('<i class="fa-regular fa-bomb"></i> Hubo un error guardando', 'danger', 10);
+			
 		},
 		async listarProfesionales() {
 			await this.axios.get('/api/profesional')
@@ -417,6 +442,14 @@ export default {
 			const nuevos = this.precios.find(x => x.id == this.membresia.tipo)
 			return nuevos ? parseFloat(nuevos.nuevos).toFixed(2) : 0;
 		},
+		subTotal(){
+			if (this.membresia.cuotas == '1') {
+				return this.membresia.precio;
+			}else{
+				const sum = this.fechas.reduce( (acc, item) => {return acc + parseFloat(item.monto)} ,0)
+				return sum.toFixed(2)
+			}
+		},
 		cuentaMes() {
 			moment.locale('es')
 			return moment(this.membresia.fin).fromNow()
@@ -428,7 +461,8 @@ export default {
 		cantMeses() { 
 			const precio = this.precios.find(x => x.id == this.membresia.tipo)
 			return precio ? precio.meses : 0
-		}
+		},
+		
 	},
 	mounted() {
 		this.preciosMembresias();

@@ -470,6 +470,29 @@ class ExtrasController extends Controller
 		
 	}
 
+	public function cambiarEstadoMembresia($id,$estado,$congelar){
+		$membresia = Membresia::find($id);
+
+		if($membresia->estado == 5){
+			$fecha = Carbon::now();
+			$fechaFinal = $nuevaFechaFin = $fecha->addDays($membresia->congelados);
+
+			$membresia->update([
+				'estado' => $estado,
+				'fin' => $fechaFinal,
+				'congelados' => 0,
+				'comentarios' => $membresia->comentarios . ' Descongelado el ' . Carbon::now()->format('d/m/Y')
+			]);
+		}
+		else{
+			$membresia->update([
+				'estado' => $estado,
+				'congelados' => $congelar
+			]);
+		}
+		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
+	}
+
 	public function guardarMembresia(Request $request)
 {
     $fechas = json_decode($request->input('fechas'));
@@ -489,6 +512,7 @@ class ExtrasController extends Controller
         'user_id' => $request->input('user_id'),
         'cuotas' => count($fechas),
         'monto' => $membresia['precio'],
+				'estado' => 2,
         'comentarios' => $request->input('comentarios')
     ]);
 
@@ -977,6 +1001,9 @@ class ExtrasController extends Controller
 		->where('m.activo', 1)
 		->orderBy('inicio', 'desc')->get();
 		foreach ($membresias as $membresia) {
+			$contador_paquetes = Appointment::where('idMembresia', $membresia->id)->count();
+			$membresia->contador_paquetes = $contador_paquetes;
+			
 			if($membresia->cuotas>0){
 				#buscar Pagos realizados y deudas
 				$membresia->pagados = Extra_payment::where('idMembresia', $membresia->id)->get();

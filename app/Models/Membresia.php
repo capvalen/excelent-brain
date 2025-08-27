@@ -11,7 +11,7 @@ class Membresia extends Model
 
     use HasFactory;
     //protected $table = "membresias";
-    protected $fillable=['patient_id', 'inicio', 'fin', 'tipo', 'user_id', 'cuotas', 'monto', 'estado', 'activo' ];
+    protected $fillable=['patient_id', 'inicio', 'fin', 'tipo', 'user_id', 'cuotas', 'monto', 'estado', 'congelados', 'activo' ];
 
     public function precio(){
         return $this->belongsTo( Precio::class, 'tipo' );
