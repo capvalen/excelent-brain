@@ -44,7 +44,7 @@
 											<span v-if="horasMalas[hora.indexOcupado].clasification==4">Kurame</span>
 										</span>
 										<span v-else>
-											<span>{{ queServicio(horasMalas[hora.indexOcupado].type) }}</span>
+											<p class="mb-0" v-html="queServicio(horasMalas[hora.indexOcupado])"></p>
 										</span>
 										<!-- <span v-if="horasMalas[hora.indexOcupado].formato_nuevo=='0'">{{ tipoViejo[horasMalas[hora.indexOcupado].type-1] }}:</span> -->
 									</td>
@@ -339,8 +339,11 @@
 			verHorariosMañana(){ this.fecha = moment().add(1, 'day').format('YYYY-MM-DD'); this.obtenerHorarios(); },
 			verHorariosPasado(){ this.fecha = moment().add(2, 'day').format('YYYY-MM-DD'); this.obtenerHorarios(); },
 			refrescarHorarios(){ this.obtenerHorarios(); },
-			queServicio(idTipo){ //console.log('queTipo', idTipo);
-				return this.precios.find(x=> x.id == idTipo).descripcion
+			queServicio(servicio){
+				let texto =  this.precios.find(x=> x.id == servicio.type).descripcion
+				if( servicio.membresia )
+					texto +='<small><br>'+servicio.num_sesion+' de '+servicio.membresia.precio.sesiones+' ('+ servicio.membresia.precio.descripcion +')</small>'
+				return texto;
 			},
 			changeMode(id, indice){
 				this.$swal.fire({

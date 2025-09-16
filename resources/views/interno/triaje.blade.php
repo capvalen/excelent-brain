@@ -157,11 +157,12 @@
 			<tr>
 				<th style="border-top:1px solid black">Peso</th>
 				<th style="border-top:1px solid black">Talla</th>
+				<th style="border-top:1px solid black">Saturación</th>
 			</tr>
 			<tr>
 				<td><span>{{$triaje->peso}}</span></td>
 				<td><span>{{$triaje->talla}}</span></td>
-			
+				<td><span>{{$triaje->saturacion}}</span></td>
 			</tr>
 		</tbody>
 	</table>

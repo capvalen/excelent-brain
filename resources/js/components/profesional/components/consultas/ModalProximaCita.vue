@@ -9,7 +9,7 @@
 				</div>
 				<div class="modal-body py-0 border-0">
 					<p class="my-2"><strong>Profesional:</strong> </p>
-					<select class="form-select" id="sltProfesional" v-model="idProfesional" @change="listarHorario">
+					<select class="form-select" id="sltProfesional" v-model="idProfesional" @change="listarHorario(); filtrarPrecios()">
 						<option value="-1">Seleccionar profesional</option>
 						<option v-for="prof in profesional" :value="prof.id">{{ prof.nombre }}</option>
 					</select>
@@ -17,9 +17,13 @@
 					<p class="my-2"><span class="text-capitalize">{{paciente.name.toLowerCase()}}</span></p>
 					
 					<label for="">Tipo de servicio</label>
+					<select class="form-select" id="sltPreciosv2" v-model="cita.idServicio">
+						<option value="-1">Seleccione un servicio</option>
+						<option v-for="precio in preciosFiltrados" :value="precio.id">{{ precio.descripcion }}</option>
+					</select>
 					<label class="">Fecha</label>
 					<input v-if="tipoMembresia()=='sesiones'" type="date" class="form-control text-primary" v-model="fecha" @change="listarHorario()">
-					<input v-if="tipoMembresia()=='tiempo'" type="date" :max="membresia.fin" class="form-control" v-model="fecha" @change="listarHorario()">
+					<input v-if="tipoMembresia()=='tiempo'" type="date" :max="membresia.fin" class="form-control text-danger" v-model="fecha" @change="listarHorario()">
 					<label class="mt-2">Horario</label>
 					<select name="" id="" class="form-select" v-model="cita.idHora">
 						<option value="" disabled selected>Selecciona un horario</option>
@@ -42,7 +46,7 @@ import moment from 'moment';
 export default{
 	name: 'modalProximaCita',
 	data(){ return {
-		esPresencial:true, data:[], horarios:[], horariosAll:[], schedulesInvalid:[], hoursProfessional:[], fecha: moment().format('YYYY-MM-DD'), precios:[],
+		esPresencial:true, data:[], horarios:[], horariosAll:[], schedulesInvalid:[], hoursProfessional:[], fecha: moment().format('YYYY-MM-DD'), precios:[], preciosFiltrados:[],
 		cita:{idServicio:null, }, idProfesional:null
 	}},
 	props:['profesional', 'paciente', 'idMembresia', 'idServicio', 'membresia'],
@@ -58,7 +62,7 @@ export default{
 				
 				this.axios.post('/api/reservarCitaDoctor',{
 					date: this.fecha,
-					type: this.idServicio,
+					type: this.cita.idServicio,
 					idMembresia : this.idMembresia,
 					patient_condition: 2, //paciente antigüo
 					mode: this.esPresencial ? 1: 2,
@@ -70,7 +74,7 @@ export default{
 					schedule_id: this.cita.idHora,
 					formato_nuevo: 1,
 					byDoctor:1,
-					precio: 0,
+					precio: 0
 				}).then(response=>{ console.log(response.data);
 					this.idProfesional = -1
 					this.cita.idHora = ''
@@ -82,9 +86,17 @@ export default{
 
 			}
 		},
+		filtrarPrecios(){
+			console.log('filtrarPrecios')
+			if( this.idProfesional>0 ){
+				let indexProf = this.profesional.findIndex(x=> x.id == this.idProfesional)
+				console.log('indexprof',indexProf)
+				this.preciosFiltrados = this.precios.filter(x=> x.idClasificacion == this.profesional[indexProf].idProfesion)
+			}
+		},
 		async listarPrecios(){
-			await this.axios.get('/api/listarPrecios')
-			.then( response => this.precios = response.data)
+			const resp = await this.axios.get('/api/listarPrecios')
+			this.precios = await resp.data
 		},
 		async listarHorario() {
 			

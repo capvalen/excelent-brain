@@ -13,8 +13,11 @@
 								<div class="col mr-2">
 										<div class="text-xs font-weight-bold text-uppercase mb-1">
 											<span class="text-primary" v-if="parseInt(dataConsult.idMembresia) > 0">
-												<p class="mb-0">Paquete: <span>{{dataConsult.precio.descripcion.replace('-', 'de')}}</span></p>
-												<p>Sessión #<span>{{dataConsult.num_sesion}}</span></p>
+												<p class="mb-0"><span>{{dataConsult.precio.descripcion.replace('-', 'de')}}</span></p>
+												<p v-if="dataConsult.membresia">
+													<span  v-if="dataConsult.membresia.precio.sesiones > 0">{{dataConsult.num_sesion}} de {{ dataConsult.membresia.precio.sesiones }}</span> 
+													<span>(Paquete: {{ dataConsult.membresia.precio.descripcion }})</span>
+												</p>
 											</span>
 											
 											<span class="text-primary" v-else="parseInt(dataConsult.idMembresia) > 0">Cita regular: <span>{{dataConsult.precio.descripcion}}</span></span> 

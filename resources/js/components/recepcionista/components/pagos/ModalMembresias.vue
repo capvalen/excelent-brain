@@ -45,7 +45,7 @@
 							<option v-for="precio in precios" :value="precio.id">{{ precio.descripcion }}</option>
 						</select>
 						<p class="mb-0 mt-2"><i class="fa-regular fa-hourglass"></i> Cantidad de sesiones: {{ cantSesiones }}</p>
-						<p class="mb-2"><i class="fa-regular fa-calendar-xmark"></i> Membresía caduca en {{ cantMeses }} meses</p>
+						<p class="mb-2"><i class="fa-regular fa-calendar-xmark"></i> Membresía caduca en {{ cantMeses }} mes{{cantMeses == 1 ? '' : 'es'}}</p>
 
 
 						<ul class="nav nav-tabs mt-3 d-none" id="myTab" role="tablist">
@@ -70,7 +70,7 @@
 										<label class="mt-2 " for="">N° Cuotas</label>
 										<input type="number" class="form-control" v-model="membresia.cuotas" @change="calcularFechas()" min="0" max="5">
 									</div>
-									<div class="col-6">
+									<div class="col-6 d-none">
 										<label clas="mb-0 mt-2">¿Tiene descuento?</label>
 										<div class="form-check">
 											<input class="form-check-input" type="checkbox" value="" id="HayDescto" v-model="membresia.conDescuento" @change="membresia.descuento = 0">
@@ -110,7 +110,7 @@
 																<input type="number" class="form-control inputPartidos" 
 																		v-if="membresia.cuotas>1 " 
 																		@keyup="balancearMontos(index)" 
-																		:readonly="index == fechas.length-1" 
+																		:readonly="index > 0" 
 																		v-model="fecha.monto">
 														</td>
 														<td>
@@ -203,7 +203,6 @@
 
 						<label for="">Comentarios adicionales:</label>
 						<textarea class="form-control mb-3" id="txtComentarios" v-model="comentarios" row="2"></textarea>
-
 
 						<div class="d-flex justify-content-end">
 							<button class="btn btn-outline-primary" data-bs-dismiss="modal" @click="guardar()"><i class="fa-regular fa-floppy-disk"></i> Guardar membresía</button>
@@ -360,6 +359,7 @@ export default {
 			datos.append('fechas_membresias', JSON.stringify(this.sesionesAcumuladas))
 			datos.append('comentarios', this.comentarios )
 			datos.append('meses', this.cantMeses )
+			datos.append('num_sesion', 0 )
 
 			const servidor = await fetch('/api/guardarMembresia', {
 				method: 'POST', body: datos

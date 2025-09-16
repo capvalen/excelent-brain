@@ -572,13 +572,13 @@ class PatientController extends Controller
 			try {
 				$triaje = DB::insert('INSERT INTO `triaje`(`patient_id`, `motivo`, `sintomatologia`, `antecedentes`, `prioridad`, `especialista`,
 			 `responsable`,`fv`, `fc`, `fr`, `pa`, `t`,
-			 `pruebas`, `referencia`, peso, talla, fecha
+			 `pruebas`, `referencia`, peso, talla, fecha, saturacion
 			) VALUES (?,?,?,?,?,?,
 			?,?,?,?,?,?,
-			?,?,?,?,?)',
+			?,?,?,?,?,?)',
 			[ $id, $triaje['motivo'],$triaje['sintomatologia'],$triaje['antecedentes'],$triaje['prioridad'], $triaje['especialista'],
 			$triaje['responsable'], $triaje['fv'], $triaje['fc'], $triaje['fr'], $triaje['pa'], $triaje['t'],
-			$triaje['pruebas'], $triaje['referencia'],$triaje['peso'], $triaje['talla'],$triaje['fecha']
+			$triaje['pruebas'], $triaje['referencia'],$triaje['peso'], $triaje['talla'],$triaje['fecha'], $triaje['saturacion'] 
 			]);
 		
 			$ultimoID = DB::getPdo()->lastInsertId();

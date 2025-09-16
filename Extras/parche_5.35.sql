@@ -1,2 +1,0 @@
-ALTER TABLE `appointments` ADD `num_sesion` VARCHAR(15) NULL DEFAULT NULL AFTER `recomendacion_comentario`; 
-ALTER TABLE `membresias` CHANGE `estado` `estado` INT(11) NULL DEFAULT '1' COMMENT '1=pendiente, 2=en curso, 3=concluido, 4=prorrateado, 5=congelado, 6=cancelado';

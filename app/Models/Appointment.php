@@ -41,6 +41,10 @@ class Appointment extends Model
     public function precio(){
         return $this->hasOne('App\Models\Precio', 'id', 'type');
     }
+    public function membresia(){
+        return $this->hasOne('App\Models\Membresia', 'id', 'idMembresia')
+				->with('precio');
+    }
     public function pagosExtras(){
         return $this->hasMany("App\Models\Extra_payment",'appointment_id', 'id');
     }

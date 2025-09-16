@@ -57,7 +57,7 @@ export default{
 		queId(){
 			this.axios(`/api/verHistorialFaltas/${this.queId}`)
 			.then(response=> this.faltas = response.data)
-			console.log(this.faltas.length);
+			//console.log(this.faltas.length);
 		}
 	}
 }</script>

@@ -35,7 +35,7 @@ class AppointmentController extends Controller
 
 	public function index()
 	{
-		return Appointment::with('professional','patient', 'payment','schedule','patient.address','patient.relative','reschedule')
+		return Appointment::with('professional','patient', 'payment','schedule','patient.address','patient.relative','reschedule','precio')
 		->get();
 	}
 
@@ -440,7 +440,7 @@ class AppointmentController extends Controller
 
 		$consults = Appointment::where('professional_id', $professional->id)
 			->whereBetween('date', [$dateWeekBefore, $dateWeekAfter])
-			->with('patient', 'professional', 'schedule', 'payment', 'precio')
+			->with('patient', 'professional', 'schedule', 'payment', 'precio','membresia')
 			->with('patient.initial_psychiatric_history')
 			->with('patient.initial_psychological_history')
 			->orderBy(function ($query) {

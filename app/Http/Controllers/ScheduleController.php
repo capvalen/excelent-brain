@@ -79,6 +79,7 @@ class ScheduleController extends Controller
         ->with(['patient', 'patient.ultimoSemaforo'])
         ->with('payment')
         ->with('professional')
+        ->with('membresia')
         ->get();
         //return $appointment; die();
         
@@ -96,6 +97,7 @@ class ScheduleController extends Controller
                 $cita->patient->relative= $relacion[0];
             else
                 $cita->patient->relative= [];
+
             
 					//$cita->patient->semaforo = DB::table('semaforo')->where('patient_id', $cita->patient_id )->where('activo',1)->orderBy('registro', 'desc')->first();
 

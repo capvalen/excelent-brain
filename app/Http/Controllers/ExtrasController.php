@@ -494,7 +494,7 @@ class ExtrasController extends Controller
 	}
 
 	public function guardarMembresia(Request $request)
-{
+	{
     $fechas = json_decode($request->input('fechas'));
     $fechas_membresias = json_decode($request->input('fechas_membresias'));
     $membresia = json_decode($request->input('membresia'), true);
@@ -591,7 +591,7 @@ class ExtrasController extends Controller
     }
 
     return response()->json(['mensaje' => 'Actualizado exitoso']);
-}
+	}
 
 	public function anularMembresia(Request $request){
 		$membresia = Membresia::where('id', $request->input('id'));
@@ -606,7 +606,7 @@ class ExtrasController extends Controller
 	public function reservarCitaDoctor(Request $request, Appointment $appointment){
 		//var_dump($request->all()); die();
 		$num_citas = $appointment::where('idMembresia', '=', $request->get('idMembresia') )->count();
-		$request->merge([ 'num_sesion' => $num_citas+1 ]);
+		$request->merge(['num_sesion' => $num_citas+1 ]);
 
 		$appointment ->fill($request->all());
 		$appointment->save();
@@ -1034,6 +1034,7 @@ class ExtrasController extends Controller
 		$citas = Appointment::where('idMembresia', $id)
 		->with('professional')
 		->with('schedule')
+		->with('precio')
 		->get();
 		return response()->json($citas);
 	}

@@ -71,6 +71,10 @@
 						<label for="">T</label>
 						<input type="text" class="form-control" name="t" id="t" v-model="consulta.t" autocomplete="off">
 					</div>
+					<div class="col-sm-2">
+						<label for="">Saturación</label>
+						<input type="number" class="form-control" name="talla" id="talla" v-model="consulta.saturacion" autocomplete="off">
+					</div>
 				</div>
 				<div class="form-group row">
 					<div class="col-sm-3">
@@ -162,7 +166,7 @@ export default {
 				fecha: moment().format('YYYY-MM-DD HH:mm'),
 				patient_id: -1,
 				motivo:'', sintomatologia:'',antecedentes:'', especialista:2, prioridad:1,
-				responsable: '', fv: '', fc: '', fr: '', pa: '', t: '', referencia:1, pruebas:'', peso:'', talla:''
+				responsable: '', fv: '', fc: '', fr: '', pa: '', t: '', referencia:1, pruebas:'', peso:'', talla:'', saturacion:''
 			}
 		}
 	},

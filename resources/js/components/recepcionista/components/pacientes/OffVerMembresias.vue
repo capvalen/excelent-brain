@@ -62,8 +62,8 @@
 							</ol>
 							<p v-if="membresia.deudas.length==0">No hay deudas pendientes</p>
 
-							<button v-if="tipoMembresia(membresia)=='sesiones'" class="mt-2 btn btn-secondary " data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia)"> <i class="fa-solid fa-list"></i> Ver fechas de citas</button>
-							<button class="mt-2 btn btn-danger d-none" @click="anular(index)"><i class="fa-solid fa-ban"></i> Anular membresía</button>
+							<button class="mt-2 btn btn-secondary " data-bs-target="#modalVerCitas" data-bs-toggle="modal" @click="pedirCitasMembresia(membresia)"> <i class="fa-solid fa-list"></i> Ver fechas de citas</button>
+							<button class="mt-2 btn btn-danger" @click="anular(index)"><i class="fa-solid fa-ban"></i> Anular membresía</button>
 						</div>
 					</div>
 				</div>
@@ -82,14 +82,23 @@
 					<div class="modal-body">
 						<div class="row">
 							<div class="col">
-								<p><strong>Membresía seleccionada:</strong> {{ membresiaActiva.descripcion }}</p>
+								<p><strong>Membresía seleccionada:</strong>
+									<span v-if="parseInt(membresiaActiva.sesiones) == 12">{{ membresiaActiva.descripcion }} + Lectura de resultaos</span>
+									<span v-else>{{ membresiaActiva.descripcion }}</span>
+								</p>
 							</div>
 						</div>
 						<div class="row mb-2">
 							<div class="col d-flex d-grid justify-content-between align-items-center">
 								<template v-if="tipoMembresia(membresiaActiva) == 'sesiones'">
-									<span><i class="fa-solid fa-receipt"></i> {{ citas.length }} de {{membresiaActiva.sesiones}} Citas</span>
-									<button v-if="parseInt(citas.length) < parseInt(membresiaActiva.sesiones) " class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
+									<span><i class="fa-solid fa-receipt"></i> {{ contarCitasActivas() }} de {{membresiaActiva.sesiones}} Citas</span>
+									<template v-if="parseInt(membresiaActiva.sesiones) == 12">
+										<button v-if="contarCitasActivas() < 12 " class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
+										<button v-if="contarCitasActivas() == 12 " class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar lectura</button>
+									</template>
+									<template v-else>
+										<button v-if="contarCitasActivas() < parseInt(membresiaActiva.sesiones) " class="btn btn-outline-primary"  @click="activarFechas=true" data-bs-target="#modalProximaCita" data-bs-toggle="modal"><i class="fa-solid fa-plus"></i> Agregar cita</button>
+									</template>
 								</template>
 								<template v-if="tipoMembresia(membresiaActiva) == 'tiempo'">
 									<span>Límite de la membresía: <i class="fa-regular fa-clock"></i> {{ fechaLatam(membresiaActiva.fin) }}</span>
@@ -103,6 +112,7 @@
 									<th>N°</th>
 									<th>Fecha y hora</th>
 									<th>Profesional</th>
+									<th>Servicio</th>
 									<th>Estado</th>
 								</tr>
 							</thead>
@@ -111,10 +121,11 @@
 									<td>{{ index+1 }}</td>
 									<td>{{ fechaLatam(cita.date) }} {{ horaLatam(cita.schedule.check_time) }}</td>
 									<td>{{ cita.professional.nombre }}</td>
+									<td>{{ cita.precio.descripcion }}</td>
 									<td>
 										<span v-if="cita.status==1">Sin Confirmar</span>
-										<span v-if="cita.status==2">Cita Confirmada </span>
-										<span v-if="cita.status==3">Cita Anulada </span>
+										<span class="text-primary" v-if="cita.status==2">Cita Confirmada </span>
+										<span class="text-danger" v-if="cita.status==3">Cita Anulada </span>
 									</td>
 								</tr>
 							</tbody>
@@ -283,6 +294,10 @@ export default{
 			 	return true
 			}
 
+		},
+		contarCitasActivas(){
+			let contador = this.citas.filter(x=> x.status != '3').length
+			return contador
 		},
 		tipoMembresia(membresia){
 			if(membresia.meses > 0 ) return 'tiempo'
