@@ -105,7 +105,7 @@ class Medical_examController extends Controller
     public function createPdf($exams){
         
         $objectExam = json_decode($exams);
-        $data = Appointment::find($objectExam->appointment);
+        $data = Appointment::with('professional')->find($objectExam->appointment); // Cargamos la relación 'professional'
 
         // ->with('patient')
         // ->with('patient.cies')
@@ -134,11 +134,13 @@ class Medical_examController extends Controller
         // $data[0]->examenes = [];
 
         array_push($examsAll->value, $leafLaboratory);
+        // Se cargan los datos del profesional
+        $professional = $data->professional;  
         
         // json_decode($examsAll, TRUE);
         // return $examsAll->value;
 
-        $pdf = PDF::loadView('profesional.pdf_exam', compact('data', 'objectExam', 'examsAll'));
+        $pdf = PDF::loadView('profesional.pdf_exam', compact('data', 'objectExam', 'examsAll', 'professional'));
         $pdf->setPaper('a4', 'landscape');
         return $pdf->stream('mi-archivo.pdf');
 

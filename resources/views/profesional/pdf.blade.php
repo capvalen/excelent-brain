@@ -19,34 +19,63 @@
         <div class="pdf-content">
             <div class="header__content" style="margin-top:10px">
                 
-                <img src="{{public_path('img/logo-reporte.png')}}" alt="Excelentemente" class="header-logo">
+                @if (in_array($professionalId, [32, 33, 34]))
+                    <img src="{{ public_path('img/logo-reportee.png') }}" alt="Excelentemente" class="header-logo-big">
+                @else
+                    <img src="{{ public_path('img/logo-reportee.png') }}" alt="Excelentemente" class="header-logo">
+                @endif
 
                 <div class="header" style="margin-top:50px">
-                    <p class="header__name">{{ $professionalName }}</p>
-                    <p class="header__sub">MÉDICO PSIQUIATRA</p>
-
+                    @if (!in_array($professionalId, [32, 33, 34]))
+                        <p class="header__name">{{ $professionalName }}</p>
+                        <p class="header__sub">MÉDICO PSIQUIATRA</p>
+                    @endif
+                
                     @switch($professionalId)
                         @case(null)
-                            <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
+                            @if (!in_array($professionalId, [32, 33, 34]))
+                                <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
+                            @endif
                             @break
                         @case(5)
                             <p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
-                            <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
+                            @if (!in_array($professionalId, [32, 33, 34]))
+                                <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
+                            @endif
+                            @break
+                        @case(15)
+                            @if (!in_array($professionalId, [32, 33, 34]))
+                                <p class="header__sub">CMP N° 74376 - RNE N° 43202</p>
+                            @endif
                             @break
                         @case(19)
-                            <p class="header__sub">CMP N° 068076 - RNE N° 047621</p>
+                            @if (!in_array($professionalId, [32, 33, 34]))
+                                <p class="header__sub">CMP N° 068076 - RNE N° 047621</p>
+                            @endif
                             @break
                         @case(24)
-                            <p class="header__sub">CMP N° 67656 - RNE N° 48050</p>
+                            @if (!in_array($professionalId, [32, 33, 34]))
+                                <p class="header__sub">CMP N° 67656 - RNE N° 48050</p>
+                            @endif
                             @break
                         @case(27)
-                            <p class="header__sub">CMP N° 85900 - RNE ET</p>
+                            @if (!in_array($professionalId, [32, 33, 34]))
+                                <p class="header__sub">CMP N° 85900 - RNE ET</p>
+                            @endif
+                            @break
+                        @case(32)
+                        @case(33)
+                        @case(34)
+                            {{-- No se muestra CMP ni RNE --}}
                             @break
                         @default
-                            <p class="header__sub">CMP N° 74376 - RNE N° 43202</p>
+                            @if (!in_array($professionalId, [32, 33, 34]))
+                                <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
+                            @endif
                     @endswitch
-                    
-                    <p class="header__sub">Consultas previa cita, llamar al celular: 996644350</p>
+                
+                    <p class="header__sub">Consultas previa cita, llamar al celular: </p>
+                    <p class="header__sub">Sede El Tambo: 996 644 350 | Sede San Carlos: 976 577 368 </p>
                 </div>
                 <br>
                 <div class="separate"></div>
@@ -145,7 +174,6 @@
                         <table class="contact__datos">
                             <thead>
                                 <tr>
-                                    <th>Central</th>
                                     <th>Dirección</th>
                                     <th>Nuestras redes</th>
                                 </tr>
@@ -154,13 +182,9 @@
                             <tbody>
                                 <tr>
                                     <td class="datos__item">
-                                        <p>996644350</p>
-                                        <p>(064) 603228</p>
-                                    </td>
-
-                                    <td class="datos__item">
-                                        <span>Jr. Rebagliatti N° 166 El Tambo – Huancayo</span><br>
-                                        <span>(a media cuadra del colegio de Arquitectos)</span>
+                                        <span>Jr. Rebagliatti N° 166 El Tambo - Huancayo</span><br>
+                                        <span>Av. Uruguay N° 595 San Carlos - Huancayo</span><br>
+                                        <span><strong>Visítanos:</strong> https://excelentemente.org</span>
                                     </td>
 
                                     <td class="datos__item">
@@ -171,7 +195,8 @@
                                             <span><img src="{{public_path('img/3046120.png')}}" alt="Tiktok"></span>
                                             <span><img src="{{public_path('img/3669986.png')}}" alt="Spotify"></span>
                                         </div>
-                                        <span class="icon-redes">@excelentementepsicologia</span>
+                                        <span class="icon-redes">@excelentementepsicologia</span><br>
+                                        <span class="icon-redes"><strong>PodCast:</strong> Excelentemente Podcast</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -183,7 +208,7 @@
                             $showSignature = isset($receta[0]) && $receta[0]->signature == 1;
                         @endphp
                         
-                        @if($showSignature)
+                        @if($showSignature && in_array($professionalId, [5, 24, 27]))
                             @switch($professionalId)
                                 @case(24)
                                     <img src="{{ public_path('img/firma-dra-grecia.png') }}" alt="Firma" class="img-firma">
@@ -200,7 +225,7 @@
                 </div>
             </div>
             <div class="botica__info">
-                PODEMOS AYUDARTE A COTIZAR TU RECETA DE MEDICAMENTOS O TU ORDEN DE EXAMENES AUXILIARES, COMUNICATE CON NOSOTROS A NUESTRA CENTRAL:<br> 064-603228 o 952945143
+                COTIZA TUS MEDICAMENTOS AL:<STRONG> 952 945 143 </STRONG> | <i>JUNTOS CUIDAMOS TU <STRONG>SALUD MENTAL</STRONG></i>
             </div>
         </div>
     </div>
@@ -245,7 +270,7 @@
         z-index: -10;
         opacity: .05
     }
-
+    
     .light-signature{
         font-size:15px;
         font-family:'Montserrat-Light';
@@ -268,6 +293,15 @@
         position: absolute
     }
 
+    .header-logo-big {
+    width: 400px !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-bottom: -50px !important;
+    display: block !important;
+        
+    }
     .header {
         text-align: center;
         z-index: 100;
@@ -415,7 +449,7 @@
 
     .datos__item{
         font-size: 13px;
-                    text-align: center;
+        text-align: left;
     }
 
     .contact__recipe {
@@ -464,7 +498,7 @@
     .contact__datos {
         width: 100%;
         clear: both;
-        margin-left: 8px;
+        margin-left: 10px;
         padding-right: 25px;
     }
 
@@ -473,12 +507,12 @@
     }
 
     .contact__datos thead tr th {
-        text-align: start !important;
+        text-align: left !important;
     }
 
     .icon-redes {
         margin-top: 8px;
-                    text-align: center;
+        text-align: left;
     }
 
     /* firma  */

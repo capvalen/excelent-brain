@@ -282,6 +282,8 @@ Route::get('/buscarDni/{dni}', [SimpleController::class, 'buscarDni']);
 
 Route::post('/crearNutricionPrimera', [SimpleController::class, 'crearNutricionPrimera']);
 Route::post('/listarNutriciones', [SimpleController::class, 'listarNutriciones']);
+Route::post('reportsJimmy', [SimpleController::class, 'reportsJimmy']);
+
 
 Route::get('/horasLibres/{id}/{fecha}', [ProfessionalController::class, 'horasLibres']);
 
