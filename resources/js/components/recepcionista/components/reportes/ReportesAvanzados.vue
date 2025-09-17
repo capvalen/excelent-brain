@@ -529,7 +529,7 @@
 								<td colspan="11" v-if="resultados.citas.length==0">No se encontraron registros</td>
 							</tr>
 							<tr v-for="cita in resultados.citas">
-								<td>{{ fechaLatam(cita.DIA) }}</td>
+								<td>{{ cita.DIA }}</td>
 								<td>{{ cita.HORARIO }}</td>
 								<td>{{ cita.PROFESIONAL }}</td>
 								<td>{{ cita.PACIENTE }}</td>
@@ -549,7 +549,7 @@
 								<td colspan="11" v-if="resultados.sinCitas.length==0">No se encontraron registros</td>
 							</tr>
 							<tr v-for="sinCita in resultados.sinCitas">
-								<td>{{ fechaLatam(sinCita.DIA) }}</td>
+								<td>{{ sinCita.DIA }}</td>
 								<td>{{ sinCita.HORARIO }}</td>
 								<td>{{ sinCita.PROFESIONAL }}</td>
 								<td>{{ sinCita.PACIENTE }}</td>
@@ -569,7 +569,7 @@
 								<td colspan="11" v-if="resultados.entradas.length==0">No se encontraron registros</td>
 							</tr>
 							<tr v-for="entrada in resultados.entradas">
-								<td>{{ fechaLatam(entrada.DIA) }}</td>
+								<td>{{ entrada.DIA }}</td>
 								<td>{{ entrada.HORARIO }}</td>
 								<td>{{ entrada.PROFESIONAL }}</td>
 								<td>{{ entrada.PACIENTE }}</td>
@@ -589,7 +589,7 @@
 								<td colspan="11" v-if="resultados.adelantos.length==0">No se encontraron registros</td>
 							</tr>
 							<tr v-for="adelanto in resultados.adelantos">
-								<td>{{ fechaLatam(adelanto.DIA) }}</td>
+								<td>{{ adelanto.DIA }}</td>
 								<td>{{ adelanto.HORARIO }}</td>
 								<td>{{ adelanto.PROFESIONAL }}</td>
 								<td>{{ adelanto.PACIENTE }}</td>
@@ -609,7 +609,7 @@
 								<td colspan="11" v-if="resultados.limbos.length==0">No se encontraron registros</td>
 							</tr>
 							<tr v-for="limbo in resultados.limbos">
-								<td>{{ fechaLatam(limbo.DIA) }}</td>
+								<td>{{ limbo.DIA }}</td>
 								<td>{{ limbo.HORARIO }}</td>
 								<td>{{ limbo.PROFESIONAL }}</td>
 								<td>{{ limbo.PACIENTE }}</td>
@@ -694,7 +694,7 @@ import moment from 'moment';
 			},
 			pedirReporte(){
 				if( this.idReporte == 19 ){
-					this.axios.post('/api/reportsJimmy',{ fecha: this.dia })
+					this.axios.post('/api/reportsJimmy',{ fecha: this.dia, sede: 1})
 					.then(serv =>{
 						this.resultados=serv.data;
 					})
