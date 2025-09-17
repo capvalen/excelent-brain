@@ -127,7 +127,7 @@ class SimpleController extends Controller
 		$diaSemana = str_replace('sábado', 'sabado', $diaSemana);
 				
 		$sqlCitas = "SELECT 
-		schedules.day AS DÍA, 
+		schedules.day AS DIA, 
 		schedules.check_time AS HORARIO,  
 		professionals.name AS PROFESIONAL, 
 		COALESCE(
@@ -188,7 +188,7 @@ class SimpleController extends Controller
 
 
 		$sqlSinCitas = "SELECT 
-    Null AS DÍA,
+    Null AS DIA,
     NULL AS HORARIO,  
     NULL AS PROFESIONAL, 
     COALESCE(NULLIF(extra_payments.customer, ''), '-') AS PACIENTE,  -- Muestra el nombre del paciente si existe
@@ -207,10 +207,10 @@ class SimpleController extends Controller
 		WHERE extra_payments.appointment_id = 0
 		AND extra_payments.type != 6
 		and extra_payments.date = '{$fecha}'-- Filtramos por aquellos sin cita asociada
-		ORDER BY DÍA ASC, HORARIO ASC;";
+		ORDER BY DIA ASC, HORARIO ASC;";
 
 		$sqlEntradas = "SELECT 
-    Null AS DÍA,
+    Null AS DIA,
     NULL AS HORARIO,  
     NULL AS PROFESIONAL, 
     COALESCE(NULLIF(extra_payments.customer, ''), '-') AS PACIENTE,  -- Muestra el nombre del paciente si existe
@@ -229,10 +229,10 @@ class SimpleController extends Controller
 		WHERE extra_payments.appointment_id = 0
 		and extra_payments.type = 6
 		and extra_payments.date = '{$fecha}'-- Filtramos por aquellos sin cita asociada
-		ORDER BY DÍA ASC, HORARIO ASC;";
+		ORDER BY DIA ASC, HORARIO ASC;";
 
 		$sqlAdelantos = "SELECT 
-    Null AS DÍA,
+    Null AS DIA,
     NULL AS HORARIO,  
     NULL AS PROFESIONAL, 
     COALESCE(NULLIF(extra_payments.customer, ''), '-') AS PACIENTE,  -- Muestra el nombre del paciente si existe
@@ -251,10 +251,10 @@ class SimpleController extends Controller
 		WHERE extra_payments.date = '{$fecha}'-- Filtramos por aquellos sin cita asociada
 		and appointments.date != '{$fecha}'
 		and extra_payments.idSede = 1
-		ORDER BY DÍA ASC, HORARIO ASC;";
+		ORDER BY DIA ASC, HORARIO ASC;";
 
 		$sqlLimbo = "SELECT 
-    Null AS DÍA,
+    Null AS DIA,
     NULL AS HORARIO,  
     NULL AS PROFESIONAL, 
     COALESCE(NULLIF(extra_payments.customer, ''), '-') AS PACIENTE,  -- Muestra el nombre del paciente si existe
@@ -273,7 +273,7 @@ class SimpleController extends Controller
 		WHERE extra_payments.date = '{fecha}'-- Filtramos por aquellos sin cita asociada
 		and appointments.status = 6
 		and extra_payments.idSede = 1
-		ORDER BY DÍA ASC, HORARIO ASC;";
+		ORDER BY DIA ASC, HORARIO ASC;";
 	
 		$citas = DB::select($sqlCitas);
 		$sinCitas = DB::select($sqlSinCitas);

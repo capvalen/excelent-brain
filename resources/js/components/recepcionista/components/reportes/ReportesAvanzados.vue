@@ -23,6 +23,10 @@
 							<option class="text-capitalize" v-for="(mes, index) in meses" :value="index+1">{{ mes }}</option>
 						</select>
 					</div>
+					<div class="col-12 col-md-3" v-show="verDias">
+						<label for="">Día</label>
+						<input type="date" class="form-control" v-model="dia"">
+					</div>
 					<div class="col-12 col-md-3 d-flex align-items-end">
 						<button class="btn btn-outline-primary" @click="pedirReporte()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
 					</div>
@@ -520,6 +524,7 @@ import moment from 'moment';
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
 			idReporte:0, resultados:[], ocultarFechas:false, dataPaciente:[],
 			fecha:{ año: moment().format('YYYY'), mes: moment().format('M') },
+			dia: moment().format('YYYY-MM-DD'), verDias: false,
 			reportes:[
 				{id: 1, nombrado: 'Pacientes ausentes mayor a 7 días'},
 				{id: 0, nombrado: 'Recetas sueltas'},
@@ -540,6 +545,7 @@ import moment from 'moment';
 				{id: 16, nombrado: 'Citas confirmadas'},
 				{id: 17, nombrado: 'Pacientes con datos incompletos'},
 				{id: 18, nombrado: 'Pacientes desde cartera de clientes'},
+				{id: 19, nombrado: 'Rerporte financiero diario'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
 			estados:[
@@ -563,8 +569,16 @@ import moment from 'moment';
 				this.años.reverse();
 			},
 			pedirReporte(){
+				if( this.idReporte == '19' ){
+					this.axios.post('/api/reportsJimmy',{ fecha: this.dia })
+					.then(serv =>{
+						this.resultados=serv.data;
+					})
+					return false
+				}
+
 				this.axios.post('/api/pedirReporte/'+this.idReporte,{
-					año: this.fecha.año, mes: this.fecha.mes
+					año: this.fecha.año, mes: this.fecha.mes, fecha: this.dia
 				})
 				.then(serv=> { console.log(serv.data);
 					this.resultados=serv.data
@@ -583,10 +597,12 @@ import moment from 'moment';
 				this.resultados=[];
 				//incluidos a ocultar: 1,2,3,4,
 				this.ocultarFechas=true;
+				this.verDias=false;
 				this.filtroAnual = this.idReporte==12 ? true : false;
 				switch(this.idReporte){
 					case 0: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 18:
-						this.ocultarFechas=false;
+						this.ocultarFechas=false;break;
+					case 19:this.verDias=true;break;
 				}
 			},
 			fechaFrom(fecha){
