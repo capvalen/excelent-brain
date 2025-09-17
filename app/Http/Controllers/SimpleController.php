@@ -283,14 +283,12 @@ class SimpleController extends Controller
 		
 
 		//return $sqlEntradas;
-		return response()->json([
-			array(
-				'citas' => $citas,
-				'sinCitas' => $sinCitas,
-				'entradas' => $entradas,
-				'adelantos' => $adelantos,
-				'limbo' => $limbo
-				)
+		return response()->json([		
+			'citas' => $citas,
+			'sinCitas' => $sinCitas,
+			'entradas' => $entradas,
+			'adelantos' => $adelantos,
+			'limbos' => $limbo				
 		]);
 		
 	}

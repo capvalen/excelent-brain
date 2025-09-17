@@ -503,6 +503,130 @@
 						</tbody>
 					</table>
 				</div>
+				<div v-if="idReporte == 19" class="table-responsive">
+					<template v-if="resultados.citas">
+						<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Día</th>
+								<th>Horario</th>
+								<th>Profesional</th>
+								<th>Paciente</th>
+								<th>Tipo</th>
+								<th>Moneda</th>
+								<th>Pago</th>
+								<th>Voucher</th>
+								<th>Observación</th>
+								<th>Tipo Pago</th>
+								<th>Fecha Pago Anterior</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="table-dark" colspan="11">Orientado a entradas con citas</td>
+							</tr>
+							<tr>
+								<td colspan="11" v-if="resultados.citas.length==0">No se encontraron registros</td>
+							</tr>
+							<tr v-for="cita in resultados.citas">
+								<td>{{ fechaLatam(cita.DIA) }}</td>
+								<td>{{ cita.HORARIO }}</td>
+								<td>{{ cita.PROFESIONAL }}</td>
+								<td>{{ cita.PACIENTE }}</td>
+								<td>{{ cita.TIPO_PACIENTE }}</td>
+								<td>{{ cita.MONEDA }}</td>
+								<td>{{ cita.PAGO }}</td>
+								<td>{{ cita.VOUCHER }}</td>
+								<td>{{ cita.OBSERVACION }}</td>
+								<td>{{ cita.TIPO_PAGO }}</td>
+								<td>{{ cita.FECHA_PAGO_ANTERIOR }}</td>
+							</tr>
+
+							<tr>
+								<td class="table-dark" colspan="11">Orientado a entradas sin citas</td>
+							</tr>
+							<tr>
+								<td colspan="11" v-if="resultados.sinCitas.length==0">No se encontraron registros</td>
+							</tr>
+							<tr v-for="sinCita in resultados.sinCitas">
+								<td>{{ fechaLatam(sinCita.DIA) }}</td>
+								<td>{{ sinCita.HORARIO }}</td>
+								<td>{{ sinCita.PROFESIONAL }}</td>
+								<td>{{ sinCita.PACIENTE }}</td>
+								<td>{{ sinCita.TIPO_PACIENTE }}</td>
+								<td>{{ sinCita.MONEDA }}</td>
+								<td>{{ sinCita.PAGO }}</td>
+								<td>{{ sinCita.VOUCHER }}</td>
+								<td>{{ sinCita.OBSERVACION }}</td>
+								<td>{{ sinCita.TIPO_PAGO }}</td>
+								<td>{{ sinCita.FECHA_PAGO_ANTERIOR }}</td>
+							</tr>
+
+							<tr>
+								<td class="table-dark" colspan="11">Orientado a entradas sin citas</td>
+							</tr>
+							<tr>
+								<td colspan="11" v-if="resultados.entradas.length==0">No se encontraron registros</td>
+							</tr>
+							<tr v-for="entrada in resultados.entradas">
+								<td>{{ fechaLatam(entrada.DIA) }}</td>
+								<td>{{ entrada.HORARIO }}</td>
+								<td>{{ entrada.PROFESIONAL }}</td>
+								<td>{{ entrada.PACIENTE }}</td>
+								<td>{{ entrada.TIPO_PACIENTE }}</td>
+								<td>{{ entrada.MONEDA }}</td>
+								<td>{{ entrada.PAGO }}</td>
+								<td>{{ entrada.VOUCHER }}</td>
+								<td>{{ entrada.OBSERVACION }}</td>
+								<td>{{ entrada.TIPO_PAGO }}</td>
+								<td>{{ entrada.FECHA_PAGO_ANTERIOR }}</td>
+							</tr>
+
+							<tr>
+								<td class="table-dark" colspan="11">Adelantos o pagos de otros días</td>
+							</tr>
+							<tr>
+								<td colspan="11" v-if="resultados.adelantos.length==0">No se encontraron registros</td>
+							</tr>
+							<tr v-for="adelanto in resultados.adelantos">
+								<td>{{ fechaLatam(adelanto.DIA) }}</td>
+								<td>{{ adelanto.HORARIO }}</td>
+								<td>{{ adelanto.PROFESIONAL }}</td>
+								<td>{{ adelanto.PACIENTE }}</td>
+								<td>{{ adelanto.TIPO_PACIENTE }}</td>
+								<td>{{ adelanto.MONEDA }}</td>
+								<td>{{ adelanto.PAGO }}</td>
+								<td>{{ adelanto.VOUCHER }}</td>
+								<td>{{ adelanto.OBSERVACION }}</td>
+								<td>{{ adelanto.TIPO_PAGO }}</td>
+								<td>{{ adelanto.FECHA_PAGO_ANTERIOR }}</td>
+							</tr>
+
+							<tr>
+								<td class="table-dark" colspan="11">Pagos del día subidos al limbo.</td>
+							</tr>
+							<tr>
+								<td colspan="11" v-if="resultados.limbos.length==0">No se encontraron registros</td>
+							</tr>
+							<tr v-for="limbo in resultados.limbos">
+								<td>{{ fechaLatam(limbo.DIA) }}</td>
+								<td>{{ limbo.HORARIO }}</td>
+								<td>{{ limbo.PROFESIONAL }}</td>
+								<td>{{ limbo.PACIENTE }}</td>
+								<td>{{ limbo.TIPO_PACIENTE }}</td>
+								<td>{{ limbo.MONEDA }}</td>
+								<td>{{ limbo.PAGO }}</td>
+								<td>{{ limbo.VOUCHER }}</td>
+								<td>{{ limbo.OBSERVACION }}</td>
+								<td>{{ limbo.TIPO_PAGO }}</td>
+								<td>{{ limbo.FECHA_PAGO_ANTERIOR }}</td>
+							</tr>
+
+							</tbody>
+						</table>
+					</template>
+
+				</div>
 				
 				
 			</div>
@@ -545,7 +669,7 @@ import moment from 'moment';
 				{id: 16, nombrado: 'Citas confirmadas'},
 				{id: 17, nombrado: 'Pacientes con datos incompletos'},
 				{id: 18, nombrado: 'Pacientes desde cartera de clientes'},
-				{id: 19, nombrado: 'Rerporte financiero diario'},
+				{id: 19, nombrado: 'Reporte financiero diario'},
 			],
 			hobbies:['pintura','dibujo', 'fotografía', 'tejido', 'costura', 'joyería', 'senderismo', 'acampar', 'jardinería', 'pesca', 'ciclismo', 'deportes', 'fútbol', 'basket', 'tenis', 'ajedrez', 'juegos de mesa', 'billar', 'música', 'tocar un instrumento', 'canto', 'composición musical', 'producción musical', 'gastronomía', 'cocina', 'recetas', 'horneado', 'postres', 'manualidades', 'origami', 'modelodo en arcilla', 'creación', 'natación', 'surf', 'kayac', 'buceo', 'esquí', 'tecnología', 'programación', 'robótica', 'computación', 'edición de videos', 'diseño gráfico', 'coleccionismo', 'monedas', 'vinilos', 'baile', 'danzas', 'escritura', 'periodismo', 'poesía', 'libros', 'lectura', 'cuentos', 'idiomas', 'viajes', 'exploración de lugares', 'fitnes', 'gym', 'yoga', 'pilates', 'entrenamiento', 'meditación', 'voluntariado', 'mascotas', 'animalista', 'astronomía', 'jardinería', 'plantas', 'huertos', 'paisajes', 'cine', 'series', 'novelas'], 
 			estados:[
@@ -569,7 +693,7 @@ import moment from 'moment';
 				this.años.reverse();
 			},
 			pedirReporte(){
-				if( this.idReporte == '19' ){
+				if( this.idReporte == 19 ){
 					this.axios.post('/api/reportsJimmy',{ fecha: this.dia })
 					.then(serv =>{
 						this.resultados=serv.data;
@@ -609,7 +733,7 @@ import moment from 'moment';
 				moment.locale('es')
 				return moment(fecha, 'YYYY-MM-DD').fromNow();
 			},
-			fechaLatam(fecha){ return moment(fecha).format('DD/MM/YYYY'); },
+			fechaLatam(fecha){ if(fecha) return moment(fecha).format('DD/MM/YYYY'); },
 			horaLatam(horita){ return moment(horita, 'HH:mm:ss').format('hh:mm a') },
 			sumaProfesionales(){
 				this.suma={}
@@ -676,7 +800,6 @@ import moment from 'moment';
 				});
 			},
 			queEstado(id){
-				console.log('queentra', id)
 				const servi= this.resultados.estados.find(x=> x.id==id)
 				if(servi) return servi.seguimiento
 				else return 'Otros'
