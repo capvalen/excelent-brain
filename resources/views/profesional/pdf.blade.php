@@ -98,11 +98,12 @@
                         @endphp</small>
 
                         <span class="paciente__title">Diagnóstico:</span>
-                        @foreach ($receta[0]->patient->cies as $cie)
+												<small class="font-size-small">{{$receta[0]->patient->cies[0]->code }}</small>
+                        <!-- @foreach ($receta[0]->patient->cies as $cie)
                             <small class="font-size-small">
                                {{ $cie->code }}
                             </small>
-                        @endforeach
+                        @endforeach -->
                     </div>
                 </div>
 

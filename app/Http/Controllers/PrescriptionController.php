@@ -130,7 +130,10 @@ class PrescriptionController extends Controller
 	public function createPDF($id){
 		$receta = Prescription::where('id',$id)
 		->with('patient')
-		->with(['patient.cies', 'kairos' => function($q2) { $q2->withPivot('amount','way','indications');}])
+		->with([
+			'patient.cies' => function($q1) { $q1->orderBy('id','desc');},
+			'kairos' => function($q2) { $q2->withPivot('amount','way','indications');}
+		])
 		->get();
 
 		$id_paciente = $receta[0]->patient->id;
@@ -142,6 +145,7 @@ class PrescriptionController extends Controller
 		}else{
 					$professional = Professional::find($receta[0]->professional_id);
 		}
+		
 				
 		$pdf = PDF::loadView('profesional.pdf', compact('receta', 'professional'));
 		$pdf->setPaper('a4', 'landscape');
