@@ -208,7 +208,7 @@
                             $showSignature = isset($receta[0]) && $receta[0]->signature == 1;
                         @endphp
                         
-                        @if($showSignature && in_array($professionalId, [5, 24, 27]))
+                        @if($showSignature && in_array($professionalId, [5, 24, 27, 32, 34]))
                             @switch($professionalId)
                                 @case(24)
                                     <img src="{{ public_path('img/firma-dra-grecia.png') }}" alt="Firma" class="img-firma">
@@ -218,6 +218,12 @@
                                     @break
                                 @case(27)
                                     <img src="{{ public_path('img/firma-dra-nancy.jpg') }}" alt="Firma" class="img-firma">
+                                    @break
+                                @case(32)
+                                    <img src="{{ public_path('img/firma_wendy.jpg') }}" alt="Firma" class="img-firma">
+                                    @break
+                                @case(34)
+                                    <img src="{{ public_path('img/firma_ursula.jpg') }}" alt="Firma" class="img-firma">
                                     @break
                             @endswitch
                         @endif

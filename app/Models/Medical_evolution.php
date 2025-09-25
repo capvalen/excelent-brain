@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Medical_evolution extends Model
 {
     use HasFactory;
-    protected $fillable=['type','date','schedule','content','auth','patient_id', 'professional_id'];
+    protected $fillable=['type','date','schedule','content','auth','patient_id', 'professional_id', 'diagnostic', 'treatment'];
+		protected $casts = [
+        'diagnostic' => 'array',
+    ];
     //Relacion INVERSA uno a uno Appoinment-Medical_evolution
     public function patient()
     {

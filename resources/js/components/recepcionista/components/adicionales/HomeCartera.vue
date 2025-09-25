@@ -18,7 +18,7 @@
 							<option v-for="año in años" :value="año">{{año}}</option>
 						</select>
 					</div>
-					<div class="col-3 d-none">
+					<div class="col-3">
 						<label for="">Mes</label>
 						<select class="form-select text-capitalize" v-model="filtro.mes">
 							<option value="-1">Todo el año</option>

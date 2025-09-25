@@ -49,8 +49,8 @@
 					<table class="table table-striped w-100 mt-4">
 						<thead class="bg-success text-white">
 							<tr>
-								<th>Servicio</th>
 								<th>Paciente</th>
+								<th>Servicio</th>
 								<th>Profesional</th>
 								<th>Fecha y Hora</th>
 								<th>Modo</th>
@@ -62,17 +62,17 @@
 						<tbody>
 							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
 								<td class="d-none">{{qCita.id}}</td>
+								<td class="text-uppercase puntero" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal2">
+									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
+									<!-- <i class="fas fa-brain"></i> -->
+									<span> {{index+1}}.</span> <span>{{ qCita.patient.name }} {{ qCita.patient.nombres }}</span>
+								</td>
 								<td>
 									<p class="mb-0"><span>{{qCita.precio.descripcion.replace('-', 'de')}}</span></p>
 									<p v-if="qCita.membresia">
 											<span  v-if="qCita.membresia.precio.sesiones > 0">{{qCita.num_sesion}} de {{ qCita.membresia.precio.sesiones }}</span> 
 											<span>(Paquete: {{ qCita.membresia.precio.descripcion }})</span>
 										</p>
-								</td>
-								<td class="text-uppercase puntero" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal2">
-									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
-									<!-- <i class="fas fa-brain"></i> -->
-									<span> {{index+1}}.</span> <span>{{ qCita.patient.name }} {{ qCita.patient.nombres }}</span>
 								</td>
 								<td class="text-capitalize" :title="qCita.professional ? qCita.professional.name : '...'">{{ qCita.professional ? maxStringCharacter(lowerCase(qCita.professional.name), 15) : '...' }}</td>
 								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-bs-toggle="modal" data-bs-target="#infoModal">{{ qCita.date ? fechaLatam(qCita.date) : '...' }}

@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cie extends Model
 {
-    use HasFactory;
+	use HasFactory;
+	public $timestamps = false;
     protected $fillable=['code','description'];
+		protected $visible = ['id', 'code', 'description'];
      //Relacion muchos a muchos Patients-Cies
      public function patients()
      {

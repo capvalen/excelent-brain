@@ -368,7 +368,7 @@
 													<i class="fas fa-save" title="Guardar cambios"></i>
 												</button>
 												<!-- v-model="inicialPsiquiatria.diagnostic" -->
-												<div class="cie-content rounded overflow-auto">
+												<div class="cie-content rounded overflow-auto" v-if="searchCie.length>0">
 													<div v-for="(cie, index) in dataCies" :key="index">
 														<span class="w-100 px-2 py-2 cie--hover d-inline-block pointer cie-item"
 															:class="{ 'cie-danger': inicialPsiquiatria.diagnostic.find(el => el == cie.id) }"
@@ -1146,6 +1146,8 @@ export default {
 				this.inicialPsiquiatria.diagnostic.push(event.target.dataset.id)
 				this.datosConsulta.cies.push(event.target.textContent.trim());
 			}
+
+			this.searchCie = ''
 		},
 
 		deleteCie() {
