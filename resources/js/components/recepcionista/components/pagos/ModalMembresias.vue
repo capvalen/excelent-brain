@@ -70,7 +70,7 @@
 										<label class="mt-2 " for="">N° Cuotas</label>
 										<input type="number" class="form-control" v-model="membresia.cuotas" @change="calcularFechas()" min="0" max="5">
 									</div>
-									<div class="col-6 d-none">
+									<div class="col-6">
 										<label clas="mb-0 mt-2">¿Tiene descuento?</label>
 										<div class="form-check">
 											<input class="form-check-input" type="checkbox" value="" id="HayDescto" v-model="membresia.conDescuento" @change="membresia.descuento = 0">
@@ -299,7 +299,7 @@ export default {
 			this.balancearMontos(0);
 		},
 		balancearMontos(editedIndex) {
-			const descuento = this.membresia.descuento ?? 0;
+			const descuento = 0//this.membresia.descuento ?? 0;
 			if (parseInt(this.membresia.cuotas) >1) {
 				if (editedIndex === 0) {
 					// Si se editó la primera cuota, balanceamos desde la segunda
@@ -343,7 +343,7 @@ export default {
 				alertify.notify('<i class="fa-solid fa-bomb"></i> Debe agregar un motivo por el descuento', 'danger', 10);
 				return false;
 			}else{
-				this.comentarios = 'Descuento por: '+ this.comentarios
+				this.comentarios = 'Descuento por: S/ ' + this.membresia.descuento + ' '+ this.comentarios
 			}
 				
 			var mem = document.getElementById("sltMembresia");

@@ -23,7 +23,7 @@
 					</select>
 					<label class="">Fecha</label>
 					<input v-if="tipoMembresia()=='sesiones'" type="date" class="form-control text-primary" v-model="fecha" @change="listarHorario()">
-					<input v-if="tipoMembresia()=='tiempo'" type="date" :max="membresia.fin" class="form-control text-danger" v-model="fecha" @change="listarHorario()">
+					<input v-if="tipoMembresia()=='tiempo'" type="date" :max="membresia.fin" class="form-control" v-model="fecha" @change="listarHorario()">
 					<label class="mt-2">Horario</label>
 					<select name="" id="" class="form-select" v-model="cita.idHora">
 						<option value="" disabled selected>Selecciona un horario</option>
@@ -87,10 +87,8 @@ export default{
 			}
 		},
 		filtrarPrecios(){
-			console.log('filtrarPrecios')
 			if( this.idProfesional>0 ){
 				let indexProf = this.profesional.findIndex(x=> x.id == this.idProfesional)
-				console.log('indexprof',indexProf)
 				this.preciosFiltrados = this.precios.filter(x=> x.idClasificacion == this.profesional[indexProf].idProfesion)
 			}
 		},
@@ -168,6 +166,11 @@ export default{
 	},
 	mounted(){
 		this.listarPrecios()
+	},
+	watch: {
+		idProfesional(){
+			this.horarios=[]
+		}
 	},
 }
 </script>

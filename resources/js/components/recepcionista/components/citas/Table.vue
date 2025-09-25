@@ -49,6 +49,7 @@
 					<table class="table table-striped w-100 mt-4">
 						<thead class="bg-success text-white">
 							<tr>
+								<th>Servicio</th>
 								<th>Paciente</th>
 								<th>Profesional</th>
 								<th>Fecha y Hora</th>
@@ -61,6 +62,13 @@
 						<tbody>
 							<tr v-for="(qCita, index) in citas" :key="qCita.id" >
 								<td class="d-none">{{qCita.id}}</td>
+								<td>
+									<p class="mb-0"><span>{{qCita.precio.descripcion.replace('-', 'de')}}</span></p>
+									<p v-if="qCita.membresia">
+											<span  v-if="qCita.membresia.precio.sesiones > 0">{{qCita.num_sesion}} de {{ qCita.membresia.precio.sesiones }}</span> 
+											<span>(Paquete: {{ qCita.membresia.precio.descripcion }})</span>
+										</p>
+								</td>
 								<td class="text-uppercase puntero" @click="modalInfo(qCita)" data-bs-toggle="modal" data-bs-target="#patientModal2">
 									<!-- <span v-html="retornarCara(qCita.patient)"></span> -->
 									<!-- <i class="fas fa-brain"></i> -->
@@ -177,9 +185,9 @@
 
 											<!-- Cita presencial -->
 											<a 
-											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name +' '+qCita.patient.nombres : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
+											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name +' '+qCita.patient.nombres : ''}, le recordamos que tiene reservada una cita: %0AFecha ${fechaLatam(qCita.date)} %0AHora: ${horaHumana(qCita.schedule.check_time)} %0AProfesional: ${qCita.professional.name} %0AEn el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
 											target="_blank" 
-											title="Enviar mensaje" 
+											title="Enviar recordatorio de cita" 
 											class="btn btn-info btn-circle btn-sm"
 											v-else-if="!qCita.link"
 											>

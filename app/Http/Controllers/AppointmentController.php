@@ -576,7 +576,7 @@ class AppointmentController extends Controller
 
 	public function searchByDateAppointment($date){
 		$appointments = Appointment::where('date', $date)
-			->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative', 'patient.semaforo')
+			->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative', 'patient.semaforo','precio', 'membresia')
 			/* ->orderBy('professional_id')
 			->orderBy('check_time', 'desc') */
 			->get()

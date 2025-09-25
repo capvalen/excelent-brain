@@ -159,9 +159,10 @@
 
 										<!-- Cita presencial -->
 										<a 
-										:href="`https://wa.me/51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone.replaceAll(' ', '') : ''}?text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, le recordamos que tiene reservada una cita el día de hoy a las ${horasMalas[hora.indexOcupado].schedule ? horaLatam2(horasMalas[hora.indexOcupado].schedule.check_time) : ''}, en el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
+										:href="`whatsapp://send?phone=51${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.phone.replaceAll(' ', '') : ''}&text=Buen día ${horasMalas[hora.indexOcupado].patient ? horasMalas[hora.indexOcupado].patient.name + ' '+ horasMalas[hora.indexOcupado].patient.nombres : ''}, le recordamos que tiene reservada una cita: %0AFecha ${fechaLatam(horasMalas[hora.indexOcupado].date)} %0AHora: ${horaLatam2(horasMalas[hora.indexOcupado].schedule.check_time)} %0AProfesional: ${horasMalas[hora.indexOcupado].professional.name} %0AEn el Centro Psicológico y Psiquiátrico EXCELENTEMENTE. Al culminar su sesión, no se olvide de reservar su próxima cita.`"
+
 										target="_blank" 
-										title="Enviar mensaje" 
+										title="Enviar recordatorio de cita" 
 										class="btn btn-info btn-circle btn-sm"
 										v-else-if="!horasMalas[hora.indexOcupado].link"
 										>
@@ -381,7 +382,10 @@
 				if( !paciente.name || !paciente.phone || !paciente.email || paciente.gender==2 || !paciente.address.address || !paciente.relative.name || !paciente.relative.phone || !paciente.kinship)
 					return true
 				else return false
-			}
+			},
+			fechaLatam(fecha){
+				if(fecha) return moment(fecha).format('DD/MM/YYYY');
+			},
 		},
 		mounted(){
 			this.axios.get('/api/user')
