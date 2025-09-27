@@ -101,6 +101,7 @@ export default{
 			await this.axios.get(`/api/horario/${this.idProfesional}`)
 			.then(res => { 
 				this.horarios = res.data.schedulesInvalid;       
+				console.log('horarios', this.horarios)
 				this.horariosAll = res.data.schedules;       
 				this.hoursProfessional = this.horarios;
 

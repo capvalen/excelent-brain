@@ -78,8 +78,8 @@
 								<td class="puntero" @click="modalInfo(qCita)" title="Información de la cita" data-bs-toggle="modal" data-bs-target="#infoModal">{{ qCita.date ? fechaLatam(qCita.date) : '...' }}
 									<br>
 									<span>{{ qCita.schedule ? horaHumana(qCita.schedule.check_time) : '...'}}</span>
-										<br>
-										<span>{{ qCita.schedule ? horaHumana(qCita.schedule.departure_date) : '...'}}</span> 
+									<br>
+									<span>{{ qCita.schedule ? horaHumana(qCita.schedule.departure_date) : '...'}}</span> 
 								</td>
 								<td :title="qCita.mode == 1 ? 'Presencial':'Virtual'">
 									<button disabled v-if="qCita.mode == 1" class="btn btn-info btn-sm"><i class="far fa-user"></i></button> <!-- @click="changeMode(qCita.id)" -->
@@ -173,7 +173,7 @@
 											<a 
 											:href="`whatsapp://send?phone=51${qCita.patient ? qCita.patient.phone : ''}&text=Buen día ${qCita.patient ? qCita.patient.name + '' + qCita.patient.nombres : ''}, 
 											le recordamos que tiene reservada una cita online el día de hoy a las 
-											${qCita.schedule ? horaHumana(qCita.schedule.check_time) : ''}, 
+											${horaHumana(qCita.schedule.check_time)}, 
 											le dejo el enlace de la cita ${qCita.link}`"
 											target="_blank" 
 											title="Enviar mensaje (cita virtual)" 
@@ -297,13 +297,6 @@ export default {
       //await axios.get('/api/appoitmentsReception')
       await axios.get('/api/searchByDateAppointment/'+ moment().format('YYYY-MM-DD'))
       .then(res => {
-
-       /*  const nani = res.data.sort(function(a,b){
-          if(a.schedule != null || b.schedule != null){
-            return a.professional.id - b.professional.id || new Date(a.date+':'+a.schedule.check_time).getTime() - new Date(b.date+':'+b.schedule.check_time).getTime() 
-          }
-        }) */
-			 //this.citas = nani;
         this.citas = res.data;
       })
       .catch(err => {
@@ -365,17 +358,7 @@ export default {
 				this.horasSolas = res.data.solos;
 				this.horasMalas = res.data.invalidos;
 			})
-      // this.schedulesInvalid = new Array (this.schedulesInvalid);
-
-      //let arraySchedulesInvalid = []
-			
-			//No vale el codigo siguiente:
-      /* this.hoursProfessional.forEach(el => {
-        if (!arraySchedulesInvalid.includes(el.schedule_id)) {
-          arraySchedulesInvalid.push(el.schedule_id)
-        }
-      }) */
-			
+      
 			this.horasSolas.forEach(fecha=>{
 				if(fecha.day == this.diaDeLaSemana(new Date(diaSeleccionado).getDay()) ){ //Digamos Martes
 					this.horarios.push(fecha)
@@ -420,10 +403,6 @@ export default {
       .catch(err => {
         console.error(err)
       })
-
-      // event.target.value === ''
-      //   ? this.listar()
-      //   : this.busqueda = this.citas.filter((el, index) => el.patient.name.match(new RegExp(`${event.target.value}`,'ig')) && index < 9 ? el : null)
     },
 
     actualizarDatosArray (info) {

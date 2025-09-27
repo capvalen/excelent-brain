@@ -505,7 +505,7 @@ class AppointmentController extends Controller
 		$appointments =Appointment::
 		join('patients as p', 'p.id', '=', 'appointments.patient_id')
 		->select('appointments.*', 'appointments.id as idCita') // Agregar la columna raw aquí
-		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative')
+		->with('professional','patient', 'payment', 'schedule','patient.address','patient.relative', 'precio', 'schedule', 'membresia')
 		->where(DB::raw("CONCAT(p.name, ' ', p.nombres)"), 'like', '%'. $nombre . '%')
 		->orWhere(DB::raw("CONCAT(p.nombres, ' ', p.name)"), 'like', $nombre . '%')
 		->orWhere('p.dni', $dni)
@@ -528,50 +528,8 @@ class AppointmentController extends Controller
 				$cita->faltas = Reschedule::where('appointment_id', $cita->idCita)->get();
 			}
 		}
-		/*->orderBy(function ($query) {
-			$query->selectRaw('check_time')
-				->from('schedules')
-				->whereColumn('schedules.id', 'appointments.schedule_id');
-		})*/
-		
-		return $appointments; die(); //Codigo de abajo inservible para lo que solicita la busqueda por nombres
-
-		foreach($appointments as $appointment) {
-			/* if (preg_match("/$nombre/i", $appointment->patient->name)) {
-				// --- Si existen los parametros
-				// ---- Si existe la variable professional
-				if ($profesional && preg_match("/$profesional/i", $appointment->professional->name)) {
-
-					// ---- Si existe la variable fecha
-					if ($fecha && $appointment->date == $fecha) {
-						array_push($queryAppointments, $appointment);
-					}
-					if ($fecha == 'null') {
-						array_push($queryAppointments, $appointment);
-					}
-				}
-
-				if ($profesional == 'null' && $fecha == 'null') {
-					array_push($queryAppointments, $appointment);
-				}
-			} */
-			//comparar si el DNI coincide
-			if( preg_match("/$dni/", $appointment->patient->dni ) ){
-				array_push($queryAppointments, $appointment);
-			}
-
-			//Ver si tiene falta
-			if($appointment->status == '3' || $appointment->status == '5' ){
-				$faltas = DB::table('faltas')->where('idCita', $appointment->id)->get();
-			}elseif($appointment->status == '4'){
-				$appointment->faltas = Reschedule::where('appointment_id', $appointment->id)->get();
-			}else{
-				$faltas = [];
-			}
-			array_push($queryAppointments, array( 'faltas' => $faltas) );
-		}
-
-		return response()->json($queryAppointments);
+	
+		return response()->json($appointments);
 	}
 
 	public function searchByDateAppointment($date){
