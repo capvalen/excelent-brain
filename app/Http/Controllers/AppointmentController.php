@@ -20,6 +20,7 @@ use App\Models\Payment_method;
 use App\Models\Precio;
 use App\Models\Reschedule;
 use App\Models\Schedule;
+use App\Models\Triaje;
 use Barryvdh\DomPDF\Facade as PDF;
 use Faker\Provider\ar_SA\Payment as Ar_SAPayment;
 use Illuminate\Support\Facades\App;
@@ -1223,11 +1224,11 @@ class AppointmentController extends Controller
 	}
 
 	public function pdfTriaje($id){
-		$triaje = DB::table('triaje')->find($id);
+		$triaje = Triaje::find($id);
 		$paciente = Patient::find($triaje->patient_id);
 		$apoderado = Relative::where('patient_id', $triaje->patient_id )->first();
 		$especialista = Professional::find($triaje->especialista)->name;
-		
+
 		$pdf = PDF::loadView('interno.triaje', compact('triaje', 'paciente', 'apoderado', 'especialista'));
 		$pdf -> setPaper('a5');
 		return $pdf->stream('triaje.pdf');

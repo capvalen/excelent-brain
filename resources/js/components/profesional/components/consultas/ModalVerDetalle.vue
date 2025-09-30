@@ -16,7 +16,13 @@
 						</div>
 						<p><strong>Fecha:</strong> <span class="text-capitalize">{{fechaLectura(miniRespuesta.fecha)}}</span></p>
 						<p><strong>Profesional:</strong> <span>{{miniRespuesta.nombre}}</span></p>
-						<p><strong>Diagnóstico:</strong> <span>{{miniRespuesta.contenido}}</span></p>
+						<p><strong>Evolución:</strong> <span>{{miniRespuesta.contenido}}</span></p>
+						<p><strong>Diagnóstico:</strong></p>
+						<p v-for="diag in miniRespuesta.diagnostic">
+							<span >{{ diag.code }} - {{diag.description}}</span> 
+						</p>
+						<p ><strong>Tratamiento:</strong> {{miniRespuesta.treatment}}</p>
+
 						<div v-if="miniRespuesta.comentarios.length>0">
 							<p>Comentarios extras:</p>
 							<ul class="list-group mb-2">

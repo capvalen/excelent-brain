@@ -1,3 +1,7 @@
+@php
+//echo $historia; die();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,125 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Pdf para el paciente</title>
-  <style>
-    *{
-      margin: 0px;
-      padding: 0px;
-    }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: auto;
-      background: #2F4A99;
-    }
-
-    ul, ul li{
-      list-style: decimal-leading-zero inside;
-    }
-
-    .d-block { display: block }
-    p {font-size: 14px; font-family:'Montserrat-Light'; color: #495057}
-
-    .position-absolute {position: absolute;}
-    .position-relative {position: relative;}
-
-    .top-0 {top: 0;}
-    .left-0 {left: 0;}
-    .right-0 {right: 0;}
-
-    /* .lh-30 { line-height: 30px }
-    .lh-25 { line-height: 25px }
-    .lh-15 { line-height: 15px } */
-
-    .title-h1 {font-size: 22px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h2 {font-size: 20px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h3 {font-size: 19px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h4 {font-size: 18px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h5 {font-size: 16px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h6 {font-size: 14px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-
-    .purple-color { color: #6b61a6; }
-    .black-color { color: #495057; }
-
-    .my-25 {padding-top: 20px; padding-bottom: 20px }
-
-    .py-50 {padding-top: 40px; padding-bottom: 40px }
-    .py-30 {padding-top: 10px; padding-bottom: 10px }
-    .py-25 {padding-top: 20px; padding-bottom: 20px }
-    .py-15 {padding-top: 10px; padding-bottom: 10px }
-    .py-5  {padding-top: 5px ; padding-bottom: 5px}
-    .py-0  {padding-top: 0px ; padding-bottom: 0px}
-
-    .px-50 {padding-left: 50px; padding-right: 50px}
-    .px-25 {padding-left: 25px; padding-right: 25px}
-    .px-15 {padding-left: 15px; padding-right: 15px}
-    .px-5  {padding-left: 5px; padding-right: 5px}
-    
-    .pr-50  {padding-right: 50px}
-    .pr-25  {padding-right: 25px}
-    .pr-15  {padding-right: 15px}
-    .pr-5  {padding-right: 5px}
-
-    .pt-50  {padding-top: 40px}
-    .pt-25  {padding-top: 20px}
-    .pt-15  {padding-top: 10px}
-    .pt-5  {padding-top: 5px}
-   
-    .pb-50  {padding-bottom: 40px}
-    .pb-25  {padding-bottom: 20px}
-    .pb-15  {padding-bottom: 10px}
-    .pb-5  {padding-bottom: 5px}
-
-
-
-    .text-center  {text-align: center}
-    .text-justify {text-align: justify}
-    .text-start   {text-align: start}
-
-    /* body */
-    .pdf {
-      width: 100%;
-      min-height: 100vh;
-      background: #F2B201;
-      border-radius: 0 150px 0 150px;
-      position: relative;
-      top: 0;
-      /* padding-bottom: 50px;  */
-      bottom: 0;
-    }
-
-    .pdf-content {
-      width: 100%;
-      min-height: 100vh;
-      background: #fff;
-      border-radius: 0 180px 0 180px;
-      position: relative;
-    }
-
-    .logotipo {
-      width: 90%;
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      margin: auto;
-      z-index: -10;
-      opacity: .15;
-    }
-
-    /* header */
-    .logotipo-header {
-      width: 350px;
-      margin: 25px 0;
-    }
-
-    .date {
-      transform: translateY(5px)
-    }
-
-    
-  </style>
+  
 </head>
 <body>
   <div class="pdf">
@@ -424,9 +310,16 @@
               <ul class="px-15">
                 @foreach ($historia->medical_evolutions as $evolution)
                   <br>
-                  <li class="title-h4 px-15"> {{ $evolution->date }} </li>
+                  <li class="title-h4 px-15">Fecha de cita: {{ $evolution->date }} </li>
                   <div class="px-25">
-                    <p class="py-0"><span class="title-h6">Contenido:</span> <span class="text-justify">{{ $evolution->content }}</span></p>
+                    <p class="py-0"><span class="title-h6">Profesional:</span> <span class="text-justify">{{ $evolution->professional->name }}</span></p>
+                    <p class="py-0"><span class="title-h6">Evolución:</span> <span class="text-justify">{{ $evolution->content }}</span></p>
+                    <p class="py-0"><span class="title-h6">Diagnóstico:</span></p>
+										@foreach($evolution->diagnostic as $diag)
+										<p>{{$diag['code']}} - {{$diag['description']}}</p>
+										@endforeach
+                    <p class="py-0"><span class="title-h6">Tratamiento:</span> <span class="text-justify">{{ $evolution->treatment }}</span></p>
+
                   </div>
                 @endforeach
               </ul>
@@ -441,5 +334,124 @@
 
     </div>
   </div>
+	<style>
+    *{
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: auto;
+      background: #2F4A99;
+    }
+
+    ul, ul li{
+      list-style: decimal-leading-zero inside;
+    }
+
+    .d-block { display: block }
+    p {font-size: 14px; font-family:'Montserrat-Light'; color: #495057}
+
+    .position-absolute {position: absolute;}
+    .position-relative {position: relative;}
+
+    .top-0 {top: 0;}
+    .left-0 {left: 0;}
+    .right-0 {right: 0;}
+
+    /* .lh-30 { line-height: 30px }
+    .lh-25 { line-height: 25px }
+    .lh-15 { line-height: 15px } */
+
+    .title-h1 {font-size: 22px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h2 {font-size: 20px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h3 {font-size: 19px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h4 {font-size: 18px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h5 {font-size: 16px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h6 {font-size: 14px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+
+    .purple-color { color: #6b61a6; }
+    .black-color { color: #495057; }
+
+    .my-25 {padding-top: 20px; padding-bottom: 20px }
+
+    .py-50 {padding-top: 40px; padding-bottom: 40px }
+    .py-30 {padding-top: 10px; padding-bottom: 10px }
+    .py-25 {padding-top: 20px; padding-bottom: 20px }
+    .py-15 {padding-top: 10px; padding-bottom: 10px }
+    .py-5  {padding-top: 5px ; padding-bottom: 5px}
+    .py-0  {padding-top: 0px ; padding-bottom: 0px}
+
+    .px-50 {padding-left: 50px; padding-right: 50px}
+    .px-25 {padding-left: 25px; padding-right: 25px}
+    .px-15 {padding-left: 15px; padding-right: 15px}
+    .px-5  {padding-left: 5px; padding-right: 5px}
+    
+    .pr-50  {padding-right: 50px}
+    .pr-25  {padding-right: 25px}
+    .pr-15  {padding-right: 15px}
+    .pr-5  {padding-right: 5px}
+
+    .pt-50  {padding-top: 40px}
+    .pt-25  {padding-top: 20px}
+    .pt-15  {padding-top: 10px}
+    .pt-5  {padding-top: 5px}
+   
+    .pb-50  {padding-bottom: 40px}
+    .pb-25  {padding-bottom: 20px}
+    .pb-15  {padding-bottom: 10px}
+    .pb-5  {padding-bottom: 5px}
+
+
+
+    .text-center  {text-align: center}
+    .text-justify {text-align: justify}
+    .text-start   {text-align: start}
+
+    /* body */
+    .pdf {
+      width: 100%;
+      min-height: 100vh;
+      background: #F2B201;
+      border-radius: 0 150px 0 150px;
+      position: relative;
+      top: 0;
+      /* padding-bottom: 50px;  */
+      bottom: 0;
+    }
+
+    .pdf-content {
+      width: 100%;
+      min-height: 100vh;
+      background: #fff;
+      border-radius: 0 180px 0 180px;
+      position: relative;
+    }
+
+    .logotipo {
+      width: 90%;
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: auto;
+      z-index: -10;
+      opacity: .15;
+    }
+
+    /* header */
+    .logotipo-header {
+      width: 350px;
+      margin: 25px 0;
+    }
+
+    .date {
+      transform: translateY(5px)
+    }
+
+    
+  </style>
 </body>
 </html>

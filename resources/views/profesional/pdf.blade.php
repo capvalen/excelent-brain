@@ -11,8 +11,8 @@
     use Carbon\Carbon;
     
     // Aseguramos que el ID del profesional sea consistente a lo largo del documento
-    $professionalId = $professional ? $professional->id : null;
-    $professionalName = $professional ? $professional->name : 'CENTRO PSICOLOGICO EXCELENTEMENTE';
+    $professionalId = $receta->professional_id;
+    $professionalName = $professionalId ? $receta->professional->name : 'CENTRO PSICOLOGICO EXCELENTEMENTE';
     @endphp
     
     <div class="pdf">
@@ -87,23 +87,22 @@
                 <div class="body__paciente">
                     <div class="paciente__name">
                         <span class="paciente__title">Paciente:</span>
-                        <small class="font-size-small text-capitalize">{{$receta[0]->patient->name}} {{$receta[0]->patient->nombres}} </small>
+                        <small class="font-size-small text-capitalize">{{$receta->patient->name}} {{$receta->patient->nombres}} </small>
                         <span class="paciente__title">DNI:</span>
-                        <small class="font-size-small">{{$receta[0]->patient->dni}} </small>
+                        <small class="font-size-small">{{$receta->patient->dni}} </small>
                         <span class="paciente__title">Edad:</span>
                         <small class="font-size-small">@php
-                            $fecha_nacimiento = Carbon::parse($receta[0]->patient->birth_date ?? Carbon::now());
+                            $fecha_nacimiento = Carbon::parse($receta->patient->birth_date ?? Carbon::now());
                             $edad = $fecha_nacimiento->diffInYears(Carbon::now());
                             echo "$edad años";
                         @endphp</small>
 
                         <span class="paciente__title">Diagnóstico:</span>
-												<small class="font-size-small">{{count($receta[0]->patient->cies) >0 ? $receta[0]->patient->cies[0]->code :'-' }}</small>
-                        <!-- @foreach ($receta[0]->patient->cies as $cie)
+                        @foreach ($receta->patient->cies as $cie)
                             <small class="font-size-small">
                                {{ $cie->code }}
                             </small>
-                        @endforeach -->
+                        @endforeach
                     </div>
                 </div>
 
@@ -126,7 +125,7 @@
                         </thead>
 
                         <tbody class="table__body">
-                            @foreach($receta[0]->kairos as $kairo)
+                            @foreach($receta->kairos as $kairo)
                                 <tr>
                                     <td class="columna celda-center border-table-right">
                                         {{ $kairo->pivot->amount }}
@@ -160,11 +159,11 @@
                         <table class="contact__recipe" cellspacing="10">
                             <tr>
                                 <td class="contact__recipe-item1">
-                                    <p>Fecha: {{date('d/m/Y',strtotime($receta[0]->attention_date))}}</p>
+                                    <p>Fecha: {{date('d/m/Y',strtotime($receta->attention_date))}}</p>
                                 </td>
                                 <td class="contact__recipe-item2">
-                                    @if ($receta[0]->effective_date)
-                                    <p>Fecha de su próxima visita: {{ date('d/m/Y',strtotime($receta[0]->effective_date)) }}</p>
+                                    @if ($receta->effective_date)
+                                    <p>Fecha de su próxima visita: {{ date('d/m/Y',strtotime($receta->effective_date)) }}</p>
                                     @else
                                     <p>Fecha de su próxima visita: Sin fecha</p>
                                     @endif
@@ -206,10 +205,10 @@
 
                     <div class="footer__firma">
                         @php
-                            $showSignature = isset($receta[0]) && $receta[0]->signature == 1;
+                            $showSignature = isset($receta) && $receta->signature == 1;
                         @endphp
                         
-                        @if($showSignature && in_array($professionalId, [5, 24, 27, 32, 34]))
+                        @if($showSignature && in_array($professionalId, [5, 24, 27]))
                             @switch($professionalId)
                                 @case(24)
                                     <img src="{{ public_path('img/firma-dra-grecia.png') }}" alt="Firma" class="img-firma">
@@ -219,12 +218,6 @@
                                     @break
                                 @case(27)
                                     <img src="{{ public_path('img/firma-dra-nancy.jpg') }}" alt="Firma" class="img-firma">
-                                    @break
-                                @case(32)
-                                    <img src="{{ public_path('img/firma_wendy.jpg') }}" alt="Firma" class="img-firma">
-                                    @break
-                                @case(34)
-                                    <img src="{{ public_path('img/firma_ursula.jpg') }}" alt="Firma" class="img-firma">
                                     @break
                             @endswitch
                         @endif

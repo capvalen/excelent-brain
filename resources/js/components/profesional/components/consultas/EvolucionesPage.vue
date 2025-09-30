@@ -1245,6 +1245,8 @@ export default {
 				this.miniRespuesta.foto = this.datosConsulta.medical_evolutions[index].professional.photo;
 				this.miniRespuesta.fecha = this.datosConsulta.medical_evolutions[index].date;
 				this.miniRespuesta.comentarios = this.datosConsulta.medical_evolutions[index].comentarios;
+				this.miniRespuesta.treatment = this.datosConsulta.medical_evolutions[index].treatment;
+				this.miniRespuesta.diagnostic = this.datosConsulta.medical_evolutions[index].diagnostic;
 				if (this.miniRespuesta.firma == '-') {
 					this.miniRespuesta.firma = '';
 				}

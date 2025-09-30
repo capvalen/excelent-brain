@@ -129,25 +129,21 @@ class PrescriptionController extends Controller
 
 	public function createPDF($id){
 		$receta = Prescription::where('id',$id)
-		->with('patient')
-		->with([
-			'patient.cies' => function($q1) { $q1->orderBy('id','desc');},
-			'kairos' => function($q2) { $q2->withPivot('amount','way','indications');}
-		])
-		->get();
+		->with('patient', 'professional')
+		->with(['patient.cies', 'kairos' => function($q2) { $q2->withPivot('amount','way','indications');}])
+		->first();
+ 
+		$id_paciente = $receta->patient->id;
 
-		$id_paciente = $receta[0]->patient->id;
+		$appointment = Appointment::where('patient_id', $id_paciente)->where('date', $receta->attention_date)->where('clasification',1)->get();
 
-		$appointment = Appointment::where('patient_id', $id_paciente)->where('date', $receta[0]->attention_date)->where('clasification',1)->get();
-
-				if(count($appointment) > 0){
+		/* if(count($appointment)  0){
 					$professional = Professional::find($appointment[0]->professional_id);
 		}else{
 					$professional = Professional::find($receta[0]->professional_id);
-		}
-		
+		} */
 				
-		$pdf = PDF::loadView('profesional.pdf', compact('receta', 'professional'));
+		$pdf = PDF::loadView('profesional.pdf', compact('receta'));
 		$pdf->setPaper('a4', 'landscape');
 		return $pdf->stream('receta.pdf');
 	}
