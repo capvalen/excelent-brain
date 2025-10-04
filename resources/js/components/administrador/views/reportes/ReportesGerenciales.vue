@@ -78,12 +78,14 @@
 					</table>
 				</div>
 				<div v-if="idReporte==2">
+					<p><strong>Conteo por profesionales</strong></p>
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<td>N°</td>
-								<td>Profesional</td>
-								<td>N° Pacientes atendidos</td>
+								<th>N°</th>
+								<th>Profesional</th>
+								<th>N° Pacientes atendidos</th>
+								<th>Porcentaje</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -91,6 +93,58 @@
 								<td>{{indice+1}}</td>
 								<td>{{doctor.nombre}}</td>
 								<td>{{doctor.conteo}}</td>
+								<td>{{(doctor.conteo/resultados.total*100).toFixed(1)}}%</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan=2 class="">Total</td>
+								<td>{{resultados.total}}</td>
+								<td>100%</td>
+							</tr>
+						</tfoot>
+					</table>
+					<p><strong>Conteo por continuidad</strong></p>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Condición</th>
+								<th>Cantidad</th>
+								<th>Porcentaje</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>Nuevos</td>
+								<td>{{resultados.nuevos}}</td>
+								<td>{{(resultados.nuevos/resultados.total*100).toFixed(1)}}%</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Contínuos</td>
+								<td>{{resultados.continuos}}</td>
+								<td>{{(resultados.continuos/resultados.total*100).toFixed(1)}}%</td>
+							</tr>
+						</tbody>
+					</table>
+					<p><strong>Conteo por especialidad</strong></p>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Especialidad</th>
+								<th>Cantidad</th>
+								<th>Porcentaje</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(especialidad, clave, index) in resultados.especialidades">
+								<td>{{index+1}}</td>
+								<td>{{clave}}</td>
+								<td>{{especialidad.length}}</td>
+								<td>{{(especialidad.length/resultados.total*100).toFixed(1)}}%</td>
 							</tr>
 						</tbody>
 					</table>
@@ -99,18 +153,21 @@
 						<thead>
 							<tr>
 								<th>N°</th>
-								<th>Professional</th>
+								<th>Profesional</th>
 								<th>Paciente</th>
+								<th>Especialidad</th>
 								<th>Servicio</th>
 								<th>Fecha y Hora</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(cita, index) in resultados" >
+							<tr v-for="(cita, index) in resultados.cartera" >
 								<td>{{index+1}}</td>
-								<td v-if="cita.professional">{{cita.professional.name}}</td>
+								<td v-if="cita.professional">{{cita.professional.name}} {{cita.professional.nombres}}</td>
 								<td v-else></td>
 								<td v-if="cita.patient">{{cita.patient.name}}</td>
+								<td v-else></td>
+								<td v-if="cita.patient">{{cita.professional.profession}}</td>
 								<td v-else></td>
 								<td v-if="cita.precio">{{cita.precio.descripcion}}</td>
 								<td v-else></td>
@@ -121,16 +178,34 @@
 					</table>
 				</div>
 				<div v-if="idReporte==3">
+					<p><strong>Reporte agrupado</strong></p>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Profesión</th>
+								<th>N° Pacientes atendidos</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(aux, clave, index ) in auxiliares">
+								<td>{{index+1}}</td>
+								<td>{{clave}}</td>
+								<td>{{aux}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<p><strong>Reporte detallado</strong></p>
 					<table class="table table-hover">
 						<thead>
 							<tr>
 								<td>N°</td>
 								<td>Profesión</td>
 								<td>Profesional</td>
-								<td>N° Pacientes atendidos</td>
+								<!-- <td>N° Pacientes atendidos</td> -->
 								<td>N° Pacientes nuevos</td>
 								<td>N° Pacientes continuos</td>
-								<td>N° Pacientes Anulados</td>
+								<!-- <td>N° Pacientes Anulados</td> -->
 								<td>N° Reevaluaciones</td>
 								<td>N° Certificados</td>
 							</tr>
@@ -140,10 +215,10 @@
 								<td>{{indice+1}}</td>
 								<td>{{doctor.profesion}}</td>
 								<td>{{doctor.nombre}}</td>
-								<td>{{doctor.conteo}}</td>
+								<!-- <td>{{doctor.conteo}}</td> -->
 								<td>{{doctor.nuevo}}</td>
 								<td>{{doctor.continuo}}</td>
-								<td>{{doctor.anulado}}</td>
+								<!-- <td>{{doctor.anulado}}</td> -->
 								<td>{{doctor.revaluaciones}}</td>
 								<td>{{doctor.certificados}}</td>
 							</tr>
@@ -161,13 +236,13 @@
 								<th>Monto</th>
 							</tr>
 						</thead>
-						<tbody v-for="(doctor, indice) in conteoR2">
+						<tbody v-for="(doctor, clave, indice) in resultados.profesionales">
 							<tr>
 								<td>{{indice+1}}</td>
 								<td>{{doctor.profesion}}</td>
-								<td>{{doctor.nombre}}</td>
-								<td>{{doctor.conteo}}</td>
-								<td>{{doctor.ganancia.toFixed(2)}}</td>
+								<td>{{clave}}</td>
+								<td>{{doctor.citas.length}}</td>
+								<td>{{doctor.suma.toFixed(2)}}</td>
 							</tr>
 						</tbody>
 						<tfoot>
@@ -354,6 +429,7 @@
 							<tr>
 								<th>N°</th>
 								<th>Comprobante</th>
+								<th>Cantidad</th>
 								<th>Monto recaudado</th>
 							</tr>
 						</thead>
@@ -361,6 +437,7 @@
 							<tr v-for="(pago, key, indice) in resultados"" :key="key">
 								<td>{{indice+1}}</td>
 								<td>{{key}}</td>
+								<td>{{pago.length}}</td>
 								<td>S/ {{ sumaTipoComprobante(key) }}</td>
 							</tr>
 						</tbody>
@@ -376,19 +453,23 @@
 								</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(pago, indice) in resultados.pagos">
-								<td>{{indice+1}}</td>
-								<td>{{pago.descripcion}}</td>
-								<td>{{pago.suma}}</td>
-							</tr>
-						</tbody>
-						<tfoot>
 							<tr>
-								<td></td>
-								<td>Total</td>
-								<td>{{sumaRecaudadoMedios}}</td>
+								<td>1</td>
+								<td>Psicología</td>
+								<td>{{resultados.psicologia.total}}</td>
 							</tr>
-						</tfoot>
+							<tr>
+								<td>2</td>
+								<td>Psiquiatría</td>
+								<td>{{resultados.psiquiatria.total}}</td>
+							</tr>
+							<tr v-for="(pago, clave, indice) in resultados.extras">
+								<td>{{indice+3}}</td>
+								<td>{{clave.replace('Pago de membresía', 'Pago de paquetes')}}</td>
+								<td>{{pago.total.toFixed(2)}}</td>
+							</tr>
+							
+						</tbody>
 					</table>
 				</div>
 				<div v-if="idReporte==12">
@@ -397,6 +478,7 @@
 							<tr>
 								<th>N°</th>
 								<th>Medio de pago</th>
+								<th>N° Registros</th>
 								<th>Monto recaudado</th>
 								</tr>
 						</thead>
@@ -404,7 +486,62 @@
 							<tr v-for="(pago, key, indice) in resultados" :key="key">
 								<td>{{indice+1}}</td>
 								<td>{{key}}</td>
+								<td>{{pago.length}}</td>
 								<td>{{sumaMedios(key)}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div v-if="idReporte==13">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Especialidad</th>
+								<th>Estado</th>
+								<th>Conteo</th>
+								<th>Porcentaje</th>
+								</tr>
+						</thead>
+						<tbody>
+							<template v-for="(especialidad, clave) in resultados.especialidades">
+								<tr>
+									<td>{{clave}}</td>
+									<td>Nuevos</td>
+									<td>{{especialidad.nuevos}}</td>
+									<td>{{ parseFloat(especialidad.nuevos/resultados.total*100).toFixed(2) }}%</td>
+
+								</tr>
+								<tr>
+									<td>{{clave}}</td>
+									<td>Contínuos</td>
+									<td>{{especialidad.continuos}}</td>
+									<td>{{ parseFloat(especialidad.continuos/resultados.total*100).toFixed(2) }}%</td>
+								</tr>
+							</template>
+						</tbody>
+						<tfoot v-if="resultados.especialidades">
+							<tr>
+								<td></td>
+								<td>Total</td>
+								<td>{{resultados.total}}</td>
+								<td>100%</td></tr>
+						</tfoot>
+					</table>
+				</div>
+				<div v-if="idReporte==14">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Medicamento</th>
+								<th>Cantidad</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(medicamento, clave, indice) in resultados">
+								<td>{{indice+1}}</td>
+								<td>{{clave}}</td>
+								<td>{{medicamento}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -422,7 +559,7 @@ export default {
 	data() {
 		return {
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-			idReporte:0, resultados:[], ocultarFechas:false, conteo:{total:0, psiquiatria:{nuevo:0, continuo:0}, psicologia: {nuevo:0, continuo:0}},
+			idReporte:0, resultados:[], ocultarFechas:false, conteo:{total:0, psiquiatria:{nuevo:0, continuo:0}, psicologia: {nuevo:0, continuo:0}}, auxiliares:[],
 			fecha:{ año: moment().format('YYYY'), mes: moment().format('M'), inicio:moment().format('YYYY-MM-DD'), fin:moment().format('YYYY-MM-DD') }, conteoR2:[],
 			reportes:[
 				{id: 1, nombrado: 'Tipos de pacientes'},
@@ -437,7 +574,8 @@ export default {
 				{id: 10, nombrado: 'Comprobantes emitidos'},
 				{id: 11, nombrado: 'Ingresos'},
 				{id: 12, nombrado: 'Medios de pago'},
-
+				{id: 13, nombrado: 'Estado de pacientes'},
+				{id: 14, nombrado: 'Medicamentos más recetados'},
 			],
 			filtroAnual:false, filtro:-1,
 		}
@@ -489,8 +627,8 @@ export default {
 		},
 		contarReporte2(){
 			this.conteoR2=[];
-			this.conteoR2.push({idProfesional:this.resultados[0].professional_id, conteo:0, nombre: this.resultados[0].professional.name})
-			this.resultados.forEach(cita=>{
+			this.conteoR2.push({idProfesional:this.resultados.cartera[0].professional_id, conteo:0, nombre: this.resultados.cartera[0].professional.name})
+			this.resultados.cartera.forEach(cita=>{
 				
 				if(cita.professional_id !== this.conteoR2[this.conteoR2.length-1].idProfesional ){
 					this.conteoR2.push({idProfesional: cita.professional_id, conteo:1, nombre: cita.professional.name})
@@ -500,6 +638,7 @@ export default {
 		},
 		contarProduccion(){
 			this.conteoR2=[];
+			this.auxiliares=[];
 			this.conteoR2.push({idProfesional:this.resultados[0].professional_id, nombre: this.resultados[0].professional.name, profesion: this.resultados[0].professional.profession,
 				nuevo:0, continuo:0, revaluaciones:0,certificados:0, conteo:0, anulado:0
 			})
@@ -515,14 +654,23 @@ export default {
 					default: break;
 				}
 				
-				if(cita.status == '4' ) this.conteoR2[this.conteoR2.length-1].revaluaciones++
+				//if(cita.status == '4' ) this.conteoR2[this.conteoR2.length-1].revaluaciones++
 				if(cita.status == '3' ) this.conteoR2[this.conteoR2.length-1].anulado++
 				
-				if(cita.precio.id == 17 || cita.stauts==4 )
+				if(cita.precio.id == 17 || cita.precio.id==45 || cita.precio.id==52) //|| cita.stauts==4
 					this.conteoR2[this.conteoR2.length-1].revaluaciones++
 				if(cita.precio.idClasificacion == 3)
 					this.conteoR2[this.conteoR2.length-1].certificados++
 			})
+			this.auxiliares  = this.resultados.reduce((acumulador, cita) => {
+				const profession = cita.professional?.profession; // Usa optional chaining por seguridad
+				
+				if (profession) 
+					acumulador[profession] = (acumulador[profession] || 0) + 1;
+				
+				return acumulador;
+			}, {});
+
 		},
 		contarMontosRegistrados(){
 			this.conteoR2=[];
