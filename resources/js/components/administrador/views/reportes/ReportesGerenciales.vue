@@ -26,7 +26,7 @@
 							<option class="text-capitalize" v-for="(mes, index) in meses" :value="index+1">{{ mes }}</option>
 						</select> -->
 					</div>
-					<div class="col-12 col-md-2">
+					<div class="col-12 col-md-2" v-show="!ocultarSede">
 						<label for="">Sede</label>
 						<select class="form-select" id="sltSede" v-model="fecha.idSede">
 							<option value="1">Sede El Tambo</option>
@@ -464,12 +464,12 @@
 							<tr>
 								<td>1</td>
 								<td>Psicología</td>
-								<td>{{resultados.psicologia.total}}</td>
+								<td>{{resultados.psicologia?.total}}</td>
 							</tr>
 							<tr>
 								<td>2</td>
 								<td>Psiquiatría</td>
-								<td>{{resultados.psiquiatria.total}}</td>
+								<td>{{resultados.psiquiatria?.total}}</td>
 							</tr>
 							<tr v-for="(pago, clave, indice) in resultados.extras">
 								<td>{{indice+3}}</td>
@@ -567,21 +567,21 @@ export default {
 	data() {
 		return {
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-			idReporte:0, resultados:[], ocultarFechas:false, conteo:{total:0, psiquiatria:{nuevo:0, continuo:0}, psicologia: {nuevo:0, continuo:0}}, auxiliares:[],
+			idReporte:0, resultados:[], ocultarFechas:false, ocultarSede:true, conteo:{total:0, psiquiatria:{nuevo:0, continuo:0}, psicologia: {nuevo:0, continuo:0}}, auxiliares:[],
 			fecha:{ año: moment().format('YYYY'), mes: moment().format('M'), inicio:moment().format('YYYY-MM-DD'), fin:moment().format('YYYY-MM-DD'), idSede:1 }, conteoR2:[],
 			reportes:[
 				{id: 1, nombrado: 'Tipos de pacientes'},
 				{id: 2, nombrado: 'Cartera de clientes'},
 				{id: 3, nombrado: 'Producción mes'},
-				{id: 4, nombrado: 'Montos registrados'}, //
+				{id: 4, nombrado: 'Montos registrados'},
 				{id: 5, nombrado: 'Reprogramaciones por profesional'},
 				{id: 6, nombrado: 'Pacientes dados de alta'},
 				{id: 7, nombrado: 'Recetas por profesional'},
 				{id: 8, nombrado: 'Diagnósticos más frecuentes'},
 				{id: 9, nombrado: 'Reporte demográfico por clientes'},
 				{id: 10, nombrado: 'Comprobantes emitidos'},
-				{id: 11, nombrado: 'Ingresos'}, //
-				{id: 12, nombrado: 'Medios de pago'}, //
+				{id: 11, nombrado: 'Ingresos'},
+				{id: 12, nombrado: 'Medios de pago'},
 				{id: 13, nombrado: 'Estado de pacientes'},
 				{id: 14, nombrado: 'Medicamentos más recetados'},
 			],
@@ -737,7 +737,9 @@ export default {
 		configurarVista(){
 			this.resultados=[];
 			this.ocultarFechas=false;
+			this.ocultarSede = true;
 			this.filtroAnual = this.idReporte==12 ? true : false;
+			if( [4,11,12].includes(this.idReporte) ) this.ocultarSede = false;
 			switch(this.idReporte){
 				case 0:
 					this.ocultarFechas=true;
