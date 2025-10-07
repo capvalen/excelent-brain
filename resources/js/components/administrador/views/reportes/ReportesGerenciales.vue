@@ -10,14 +10,14 @@
 							<option v-for="reporte in reportes" :value="reporte.id">{{ reporte.nombrado }}</option>
 						</select>
 					</div>
-					<div class="col-12 col-md-3" v-show="!ocultarFechas">
+					<div class="col-12 col-md-2" v-show="!ocultarFechas">
 						<label for="">Fecha Inicial</label>
 						<input type="date" class="form-control" v-model="fecha.inicio">
 						<!-- <select class="form-select" v-model="fecha.año">
 							<option v-for="año in años" :value="año">{{ año }}</option>
 						</select> -->
 					</div>
-					<div class="col-12 col-md-3" v-show="!ocultarFechas">
+					<div class="col-12 col-md-2" v-show="!ocultarFechas">
 						<label for="">Fecha Final</label>
 						<input type="date" class="form-control" v-model="fecha.fin">
 						<!-- <label for="">Mes</label>
@@ -25,6 +25,14 @@
 							<option v-if="filtroAnual" value="-1" class="text-capitalize">Todo el año</option>
 							<option class="text-capitalize" v-for="(mes, index) in meses" :value="index+1">{{ mes }}</option>
 						</select> -->
+					</div>
+					<div class="col-12 col-md-2">
+						<label for="">Sede</label>
+						<select class="form-select" id="sltSede" v-model="fecha.idSede">
+							<option value="1">Sede El Tambo</option>
+							<option value="2">Sede San Carlos</option>
+						</select>
+
 					</div>
 					<div class="col-12 col-md-3 d-flex align-items-end">
 						<button class="btn btn-outline-primary" @click="pedirReporte()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
@@ -165,7 +173,7 @@
 								<td>{{index+1}}</td>
 								<td v-if="cita.professional">{{cita.professional.name}} {{cita.professional.nombres}}</td>
 								<td v-else></td>
-								<td v-if="cita.patient">{{cita.patient.name}}</td>
+								<td v-if="cita.patient">{{cita.patient.name}} {{cita.patient.nombres}}</td>
 								<td v-else></td>
 								<td v-if="cita.patient">{{cita.professional.profession}}</td>
 								<td v-else></td>
@@ -371,16 +379,16 @@
 								<th>Porcentajes</th>
 							</tr>
 						</thead>
-						<tbody v-for="(edad, key, indice) in resultados.sexos" :key='key'>
+						<tbody v-for="(edad, key, indice) in resultados.sexos" >
 							<tr>
 								<td>{{indice+1}}</td>
 								<td>
 									<span v-if="key==0">Femenino</span>
 									<span v-if="key==3">LGTB+</span>
 									<span v-if="key==1">Masculino</span>
-									<span v-if="key==2">Sin Definir</span>
+									<span v-if="key==2">No indicó</span>
 									<span v-if="key==null">No data</span>
-									<span v-if="key=='sin_dato'">Sin definir</span>
+									<span v-if="key=='sin_dato'">No data</span>
 								</td>
 								<td>{{edad.length}}</td>
 								<td>{{ parseFloat(edad.length/resultados.total*100).toFixed(2) }}%</td>
@@ -410,7 +418,7 @@
 								<td>{{indice+1}}</td>
 								<td>{{reco.recomendation}}</td>
 								<td>{{reco.contador}}</td>
-								<td>{{ parseFloat(reco.contador/contarRecomendados*100).toFixed(2) }}%</td>
+								<td>{{ parseFloat(parseInt(reco.contador)/parseInt(contarRecomendados)*100).toFixed(2) }}%</td>
 							</tr>
 						</tbody>
 						<tfoot>
@@ -560,20 +568,20 @@ export default {
 		return {
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
 			idReporte:0, resultados:[], ocultarFechas:false, conteo:{total:0, psiquiatria:{nuevo:0, continuo:0}, psicologia: {nuevo:0, continuo:0}}, auxiliares:[],
-			fecha:{ año: moment().format('YYYY'), mes: moment().format('M'), inicio:moment().format('YYYY-MM-DD'), fin:moment().format('YYYY-MM-DD') }, conteoR2:[],
+			fecha:{ año: moment().format('YYYY'), mes: moment().format('M'), inicio:moment().format('YYYY-MM-DD'), fin:moment().format('YYYY-MM-DD'), idSede:1 }, conteoR2:[],
 			reportes:[
 				{id: 1, nombrado: 'Tipos de pacientes'},
 				{id: 2, nombrado: 'Cartera de clientes'},
 				{id: 3, nombrado: 'Producción mes'},
-				{id: 4, nombrado: 'Montos registrados'},
+				{id: 4, nombrado: 'Montos registrados'}, //
 				{id: 5, nombrado: 'Reprogramaciones por profesional'},
 				{id: 6, nombrado: 'Pacientes dados de alta'},
 				{id: 7, nombrado: 'Recetas por profesional'},
 				{id: 8, nombrado: 'Diagnósticos más frecuentes'},
 				{id: 9, nombrado: 'Reporte demográfico por clientes'},
 				{id: 10, nombrado: 'Comprobantes emitidos'},
-				{id: 11, nombrado: 'Ingresos'},
-				{id: 12, nombrado: 'Medios de pago'},
+				{id: 11, nombrado: 'Ingresos'}, //
+				{id: 12, nombrado: 'Medios de pago'}, //
 				{id: 13, nombrado: 'Estado de pacientes'},
 				{id: 14, nombrado: 'Medicamentos más recetados'},
 			],
@@ -591,7 +599,7 @@ export default {
 			this.resultados=[];
 			this.axios.post('/api/pedirReporteGerencial/'+this.idReporte,{
 				/* año: this.fecha.año, mes: this.fecha.mes */
-				inicio: this.fecha.inicio, fin: this.fecha.fin
+				inicio: this.fecha.inicio, fin: this.fecha.fin, idSede:this.fecha.idSede
 			})
 			.then(serv=> { console.log(serv.data);
 				this.resultados=serv.data;
@@ -755,7 +763,7 @@ export default {
 			let contador =0
 			
 			this.resultados.recomendados.forEach(item=>{
-				contador += item.contador
+				contador += parseInt(item.contador)
 			})
 			return contador;
 		},

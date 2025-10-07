@@ -1139,7 +1139,7 @@ class ExtrasController extends Controller
 					$query->whereBetween('date', [$request->get('inicio'), $request->get('fin')]);
 				}])
 				->with('appointment.professional')
-				->where('idSede', 1)
+				->where('idSede', $request->get('idSede'))
 				->where('activo', 1)
 				->whereIn('type', [5,8,16])
 				->get();
@@ -1209,10 +1209,14 @@ class ExtrasController extends Controller
 				order by contador desc;");
 				return response()->json($diagnosticos); break;
 			case '9':
-				$pacientes = Appointment::
-				/* whereYear('date', $request->get('año'))
-				->whereMonth('date', $request->get('mes')) */
-				whereBetween('created_at', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
+				$ids = Appointment::whereBetween('date', [
+					$request->get('inicio'),
+					$request->get('fin')
+				])
+				->selectRaw('MIN(id) as id')
+				->groupBy('patient_id')
+				->pluck('id');
+				$pacientes = Appointment::whereIn('id', $ids)
 				->with('patient')
 				->get();
 				$contador = count($pacientes);
@@ -1285,7 +1289,7 @@ class ExtrasController extends Controller
 				LEFT JOIN tipo_pagos ON extra_payments.type = tipo_pagos.id
 				LEFT JOIN precios ON appointments.type = precios.id
 				WHERE 
-						extra_payments.idsede = 1 
+						extra_payments.idsede = {$request->get('idSede')}
 						AND extra_payments.activo = 1 
 						AND extra_payments.type IN (5, 8, 16)
 						AND extra_payments.date BETWEEN '{$request->get('inicio')}' AND '{$request->get('fin')}' 
@@ -1301,7 +1305,7 @@ class ExtrasController extends Controller
 				LEFT JOIN tipo_pagos ON extra_payments.type = tipo_pagos.id
 				LEFT JOIN precios ON appointments.type = precios.id
 				WHERE 
-						extra_payments.idsede = 1 
+						extra_payments.idsede = {$request->get('idSede')} 
 						AND extra_payments.activo = 1 
 						AND extra_payments.type IN (5, 8, 16)
 						AND extra_payments.date BETWEEN '{$request->get('inicio')}' AND '{$request->get('fin')}' 
@@ -1310,6 +1314,7 @@ class ExtrasController extends Controller
 				$extras = Extra_payment::
 				whereIn('type', [0,1,2,3,4,7,15])
 				->whereBetween('date', [ $request->get('inicio'), $request->get('fin') ])
+				->where('idSede', $request->get('idSede'))
 				->where('activo', 1)
 				->with('tipo_pagos')
 				->get();
@@ -1330,6 +1335,7 @@ class ExtrasController extends Controller
 				$pagos = Extra_payment::
 				whereBetween('date', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
 				->where('type', '!=', 6)
+				->where('idSede', $request->get('idSede'))
 				->with('method_payment')
 				->get();
 				$agrupados = $pagos->groupBy(function ($item){
