@@ -1,7 +1,7 @@
 <template>
 	<div @click="clickOutside">
 		<div class="row">
-			<div class="col-12 col-lg-auto">
+			<div class="col-12">
 				<h4>Historia clínica del paciente</h4>
 			</div>
 			<div class="col-12 col-lg-auto" style="background-color: white; border-radius: 5px;">

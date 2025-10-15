@@ -15,6 +15,7 @@ use App\Models\Prescription;
 use App\Models\Professional;
 use App\Models\Reschedule;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -1063,26 +1064,34 @@ class ExtrasController extends Controller
 		switch ($id) {
 			case '1': //Reporte de tipo de paciente
 				$nuevos = Appointment::
-				/*whereYear('created_at', $request->get('año'))
-				 ->whereMonth('created_at', $request->get('mes'))*/
 				whereBetween('date', [$request->get('inicio'), $request->get('fin')] )
 				->where('patient_condition', 1) 
+				->whereIn('status', [3]) //5
 				->with('precio')
 				->get();
-				$continuos = Appointment::whereYear('created_at', $request->get('año'))
-				->whereMonth('date', $request->get('mes'))
+				$continuos = Appointment::
+				whereBetween('date', [$request->get('inicio'), $request->get('fin')] )
 				->where('patient_condition', 2)
+				->whereIn('status', [3])
+
 				->with('precio')
 				->get();
-				return response()->json(array('nuevos'=>$nuevos, 'continuos'=> $continuos)); break;
+				$sinRepetir = Appointment::whereBetween('date', [$request->get('inicio'), $request->get('fin')])
+				->whereIn('status', [3])
+				->with('precio')
+				->get()
+				->groupBy('patient_id')
+				->map(function ($group) {
+						return $group->first(); // O ->last() según necesites
+				})
+				->values();
+			
+				return response()->json(array('nuevos'=>$nuevos, 'continuos'=> $continuos, 'sinRepetir' => $sinRepetir)); break;
 
 			case '2':
 				$cartera = Appointment::
-				/* whereYear('created_at', $request->get('año'))
-				->whereMonth('created_at', $request->get('mes')) */
-				//whereBetween('created_at', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
 				whereBetween('date', [ $request->get('inicio'), $request->get('fin') ])
-				->where('status', 2)
+				->whereIn('status', [1,2])
 				->with('professional')
 				->with('precio')
 				->with('schedule')
@@ -1092,13 +1101,30 @@ class ExtrasController extends Controller
 				$total = count($cartera);
 				$nuevos = $cartera->where('patient_condition', 1)->count();
 				$continuos = $cartera->where('patient_condition', 2)->count();
+				$continuosSin = $cartera->whereIn('patient_condition', [1,2])
+				->groupBy('patient_id')
+				->map(function ($group) {
+						return $group->first(); // O ->last() según necesites
+				})
+				//->values();
+				->count();
+				$sinRepetir = $cartera->groupBy('patient_id')
+				->map(function ($group) {
+						return $group->first();
+				})
+				->values();
 				$especialidades = $cartera->groupBy('professional.profession');
+				$especialidadesSinRepetir = $sinRepetir->groupBy('professional.profession');
+				
 				return response()->json(array(
 					'cartera'=> $cartera,
 					'total' => $total,
 					'nuevos' => $nuevos,
 					'continuos' => $continuos,
-					'especialidades'=>$especialidades
+					'continuosSin' => $continuosSin,
+					'especialidades'=>$especialidades,
+					'carteraSinRepetir' => $sinRepetir,
+					'sinRepetir' => $especialidadesSinRepetir
 				)); break;
 			case '3':
 				$cartera = Appointment::
@@ -1106,7 +1132,7 @@ class ExtrasController extends Controller
 				->whereMonth('created_at', $request->get('mes')) */
 				//whereBetween('created_at', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
 				whereBetween('date', [ $request->get('inicio'), $request->get('fin') ])
-				->whereBetween('status', [2,3,4])
+				->whereBetween('status', [1,	2]) //,3,4
 				->where('type', '!=', null)
 				->with('professional')
 				->with('precio')
@@ -1114,7 +1140,18 @@ class ExtrasController extends Controller
 				->with('patient')
 				->orderBy('professional_id', 'asc')
 				->get();
-				return response()->json($cartera); break;
+				$sinRepetir = $cartera->groupBy('patient_id')
+				->map(function ($group) {
+						return $group->first();
+				})
+				->values();
+				$profSin = $sinRepetir->groupBy('professional.profession');
+				
+				return response()->json(array(
+					'cartera'=> $cartera,
+					'sinRepetir' => $sinRepetir,
+					'profSin' => $profSin
+				)); break;
 
 			case '4': 
 				$cartera = [];
@@ -1179,7 +1216,7 @@ class ExtrasController extends Controller
 				/* whereYear('registro', $request->get('año'))
 				->whereMonth('registro', $request->get('mes')) */
 				whereBetween('registro', [$request->get('inicio') . " 00:00:00", $request->get('fin')." 23:59:59"] )
-				->whereIn('idSeguimiento', [4, 7])
+				->whereIn('idSeguimiento', [7])
 				->where('activo', 1)
 				->with('patient')
 				->with('user')
@@ -1214,6 +1251,7 @@ class ExtrasController extends Controller
 					$request->get('fin')
 				])
 				->selectRaw('MIN(id) as id')
+				->where('status', 2)
 				->groupBy('patient_id')
 				->pluck('id');
 				$pacientes = Appointment::whereIn('id', $ids)
@@ -1233,16 +1271,20 @@ class ExtrasController extends Controller
 					$sexo = $item->patient->gender ?? 'sin_dato';
 					return $sexo;
 				});
+				$ids = str_replace(['[', ']'], ['(', ')'], $ids);
 
-				$recomendados = DB::select("SELECT recomendation, count(recomendation) as contador FROM `appointments`
+				$recomendados = DB::select("SELECT recomendation, count(recomendation) as contador
+				FROM `appointments`
 				where recomendation is not null
-				/* and year(date) = {$request->get('año')}
-				and month(date) = {$request->get('mes')} */
+				and recomendation <> 'null'
 				and date_format(`date`, '%Y-%m-%d') between '{$request->get('inicio')}' and '{$request->get('fin')}'
+				and id in {$ids}
 				group by recomendation
 				order by contador desc;");
 			
-				return response()->json(array( 'edades'=> $edades, 'sexos'=> $sexos, 'recomendados' => $recomendados, 'total'=>$contador )); break;
+				return response()->json(array( 'edades'=> $edades, 'sexos'=> $sexos, 'recomendados' => $recomendados, 'total'=>$contador )); 
+				
+				break;
 
 			case '10':
 				$pagos = Extra_payment::
@@ -1291,6 +1333,7 @@ class ExtrasController extends Controller
 				WHERE 
 						extra_payments.idsede = {$request->get('idSede')}
 						AND extra_payments.activo = 1 
+						AND professional_id <> 18 
 						AND extra_payments.type IN (5, 8, 16)
 						AND extra_payments.date BETWEEN '{$request->get('inicio')}' AND '{$request->get('fin')}' 
 						AND appointments.date BETWEEN '{$request->get('inicio')}' AND '{$request->get('fin')}' 
@@ -1307,12 +1350,30 @@ class ExtrasController extends Controller
 				WHERE 
 						extra_payments.idsede = {$request->get('idSede')} 
 						AND extra_payments.activo = 1 
+						AND professional_id <> 18 
 						AND extra_payments.type IN (5, 8, 16)
 						AND extra_payments.date BETWEEN '{$request->get('inicio')}' AND '{$request->get('fin')}' 
 						AND appointments.date BETWEEN '{$request->get('inicio')}' AND '{$request->get('fin')}' 
 						AND professionals.profession = 'psiquiatra'"));
+
+				$sumaCertificados = DB::selectOne(DB::raw("SELECT 
+						SUM(extra_payments.price) AS total
+				FROM 
+				extra_payments 
+				LEFT JOIN appointments ON extra_payments.appointment_id = appointments.id
+				LEFT JOIN professionals ON appointments.professional_id = professionals.id
+				LEFT JOIN tipo_pagos ON extra_payments.type = tipo_pagos.id
+				LEFT JOIN precios ON appointments.type = precios.id
+				WHERE 
+					extra_payments.idsede = {$request->get('idSede')} 
+					AND extra_payments.activo = 1 
+					AND professional_id = 18 
+					AND extra_payments.date BETWEEN '{$request->get('inicio')}' AND '{$request->get('fin')}' 
+					AND appointments.date BETWEEN '{$request->get('inicio')}' AND '{$request->get('fin')}' 
+				"));
+				
 				$extras = Extra_payment::
-				whereIn('type', [0,1,2,3,4,7,15])
+				whereIn('type', [0,2,3,4]) //1,7,15 <= membresías
 				->whereBetween('date', [ $request->get('inicio'), $request->get('fin') ])
 				->where('idSede', $request->get('idSede'))
 				->where('activo', 1)
@@ -1328,6 +1389,7 @@ class ExtrasController extends Controller
 				return response()->json(array(
 					'psicologia' => $sumaPsicologia,
 					'psiquiatria' => $sumaPsiquiatria,
+					'certificados' => $sumaCertificados,
 					'extras' => $extrasAgrupado
 				));
 				break;
@@ -1386,14 +1448,45 @@ class ExtrasController extends Controller
 				->with('kairos')
 				->with('patient')
 				->with('professional')
-				->orderBy('professional_id', 'asc')
 				->get();
+				
+				/* $medicamentos = $recetas
+				->flatMap(fn ($receta) => $receta->kairos) // obtiene todos los medicamentos en una sola colección
+				->groupBy('id')                        // agrupa por el campo que identifica al medicamento
+				->map(fn ($grupo) => $grupo->count())      // cuenta cuántos hay en cada grupo
+				->sortDesc(); */
 				$medicamentos = $recetas
 				->flatMap(fn ($receta) => $receta->kairos) // obtiene todos los medicamentos en una sola colección
-				->groupBy('name')                        // agrupa por el campo que identifica al medicamento
-				->map(fn ($grupo) => $grupo->count())      // cuenta cuántos hay en cada grupo
-				->sortDesc();
+				->groupBy('id')                            // agrupa por id del medicamento
+				->map(function ($grupo) {
+						$primerMedicamento = $grupo->first();  // obtenemos un representante del grupo
+						return [
+								'nombre' => $primerMedicamento->name . ' ' .$primerMedicamento->concentration,
+								'presentacion' => $primerMedicamento->presentation,
+								'cantidad' => $grupo->count(),
+						];
+				})
+				->sortByDesc('cantidad') // o sortDesc() si usas Collection y quieres orden descendente
+				->values() ;// opcional: reindexa el array si no necesitas las keys por id
+
 				return response()->json($medicamentos);
+			break;
+			case '15':
+				$citas = Appointment::
+				whereBetween('date', [$request->get('inicio'), $request->get('fin')] )
+				->whereIn('status', [1,2])
+				->with('precio')
+				->with('patient')
+				->with('pagosExtras')
+				->with('professional')
+				->with('schedule')
+				->with('payment')
+				->orderBy('professional_id', 'asc')
+				->get()
+				->sortBy('schedule.check_time')
+				;
+				$citaAgrup = $citas->groupBy('professional.name');
+				return response()->json($citaAgrup);
 			break;
 				
 		}

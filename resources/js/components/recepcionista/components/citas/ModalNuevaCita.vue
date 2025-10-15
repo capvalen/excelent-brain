@@ -271,7 +271,7 @@
 										</select>
 									</div>
 									<div class="col-sm-8">
-										<input type="text" class="form-control text-capitalize" v-model="cita.recomendacion_comentario" placeholder="¿Comentario extra sobre la recomendación?">
+										<input type="text" class="form-control text-capitalize" v-model="cita.recomendacion_comentario" placeholder="¿Comentario extra sobre la recomendación?" autocomplete="off">
 									</div>
 								</div>
 								<div class="col-sm-12 my-1" v-if="!esPresencial">
