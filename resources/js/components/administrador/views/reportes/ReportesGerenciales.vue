@@ -507,6 +507,11 @@
 								<td>{{clave.replace('Pago de membresía', 'Pago de paquetes')}}</td>
 								<td>{{pago.total.toFixed(2)}}</td>
 							</tr>
+							<tr v-for="(pago, clave, indice) in resultados.membresias">
+								<td></td>
+								<td>Pago de paquete: {{clave}}</td>
+								<td>{{pago.total.toFixed(2)}}</td>
+							</tr>
 						</tbody>
 						<tfoot>
 							<tr>
@@ -870,13 +875,19 @@ export default {
 				case 11:
 					let psiq = parseFloat(this.resultados.psiquiatria?.total ?? 0)
 					let psic = parseFloat(this.resultados.psicologia?.total ?? 0)
+					let cert = parseFloat(this.resultados.certificados?.total ?? 0)
 					
 					let extras = this.resultados.extras
+					let membresias = this.resultados.membresias
 					let otros =0
+					let sumMe =0
 					for(const clave in extras){
 						otros += extras[clave].total
 					}
-					acumulador = psiq+psic+otros
+					for(const clave in membresias){
+						sumMe += membresias[clave].total
+					}
+					acumulador = psiq+psic+cert+otros+sumMe
 				break;
 				case 12:
 					Object.keys(this.resultados).forEach(clave =>{

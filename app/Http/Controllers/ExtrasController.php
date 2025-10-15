@@ -1385,12 +1385,27 @@ class ExtrasController extends Controller
             'total' => $group->sum('price')
         	];
     		});
+				$membresias = Extra_payment::
+				whereIn('type', [1,7,15]) //1,7,15 <= membresías
+				->whereBetween('date', [ $request->get('inicio'), $request->get('fin') ])
+				->where('idSede', $request->get('idSede'))
+				->where('activo', 1)
+				->with('tipo_pagos')
+				->with('quePrecio')
+				->get();
+				$membresiasAgrupado = $membresias->groupBy('quePrecio.descripcion')
+				->map(function ($group) {
+        return [
+            'total' => $group->sum('price')
+        	];
+    		});
 
 				return response()->json(array(
 					'psicologia' => $sumaPsicologia,
 					'psiquiatria' => $sumaPsiquiatria,
 					'certificados' => $sumaCertificados,
-					'extras' => $extrasAgrupado
+					'extras' => $extrasAgrupado,
+					'membresias' => $membresiasAgrupado,
 				));
 				break;
 			case '12':
