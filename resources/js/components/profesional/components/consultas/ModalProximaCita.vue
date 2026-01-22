@@ -98,11 +98,13 @@ export default{
 		},
 		async listarHorario() {
 			
-			await this.axios.get(`/api/horario/${this.idProfesional}`)
+			await this.axios.get(`/api/horarioLibre/${this.idProfesional}/${this.fecha}`)
 			.then(res => { 
-				this.horarios = res.data.schedulesInvalid;       
+				//this.horarios = res.data.schedulesInvalid;
+				this.horarios = res.data;
 				console.log('horarios', this.horarios)
-				this.horariosAll = res.data.schedules;       
+				return false;
+				this.horariosAll = res.data;       
 				this.hoursProfessional = this.horarios;
 
 				this.emitSchedule(this.fecha);

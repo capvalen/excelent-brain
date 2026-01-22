@@ -636,9 +636,9 @@
 										<span v-if="cita.status=='2'">Confirmado</span>
 									</td>
 									<td>
-										<span v-if="cita.payment.pay_status=='1' && cita.payment.adelanto>0">Con adelanto</span>
-										<span v-if="cita.payment.pay_status=='1'">Pendiente</span>
-										<span v-if="cita.payment.pay_status=='2'">Pagado</span>
+										<span v-if="cita.payment?.pay_status=='1' && cita.payment?.adelanto>0">Con adelanto</span>
+										<span v-if="cita.payment?.pay_status=='1'">Pendiente</span>
+										<span v-if="cita.payment?.pay_status=='2'">Pagado</span>
 									</td>
 								</tr>
 							</tbody>

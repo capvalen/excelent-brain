@@ -119,6 +119,7 @@ Route::get('buscarPacienteDB/{dni}', [PatientController::class,'buscarPaciente']
 Route::get('updateFaults/{id}/{faults}', [PatientController::class, 'updateFaults']);
 Route::get('profesional',[AppointmentController::class,'getprof']);
 Route::get('horario/{id}',[ScheduleController::class,'getschedules']);
+Route::get('horarioLibre/{id}/{fecha}',[ScheduleController::class,'horarioLibre']);
 Route::get('horarioOcupado/{id}/{fecha}',[ScheduleController::class,'horarioOcupado']);
 Route::get('horarioCuadernoOcupado/{fecha}/{dia}',[ScheduleController::class,'horarioCuadernoOcupado']);
 Route::resource('schedule', ScheduleController::class)->only(['index', 'store', 'update', 'show', 'destroy']);

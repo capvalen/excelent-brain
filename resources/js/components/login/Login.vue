@@ -52,7 +52,7 @@ export default {
 				device_name: 'browser'
 			},
 			errors: {},
-			version: '5.32 Build 25.0611'
+			version: '5.48 Build 26.0121'
 		}
 	},
 	methods: {

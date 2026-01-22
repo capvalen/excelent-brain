@@ -6,8 +6,10 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\Schedule;
 use App\Models\Professional;
+use Illuminate\Support\Carbon;
 use App\Models\Patient;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 use stdClass;
 
 class ScheduleController extends Controller
@@ -68,6 +70,28 @@ class ScheduleController extends Controller
 				'solos' => $solos,
 			]);
     }
+		public function horarioLibre($id, $fecha){
+			$dias = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+			$carbonFecha = Carbon::parse(	$fecha);
+			$indice = $carbonFecha->dayOfWeek; // Retorna 0=domingo, 1=lunes...
+			$dia = $dias[$indice];
+
+			//Lista el día y el id de profesional, luego compara con appointments y saca los que NO estan en appointments
+			$citasLibres = Schedule::where('day', $dia)
+			->where('professional_id', $id)
+			->whereNotExists(function ($query) use ($fecha) {
+				$query->select(DB::raw(1)) //lo mismo que select *
+				->from('appointments')
+				->whereColumn('appointments.professional_id', 'schedules.professional_id')
+				->whereDate('appointments.date', $fecha)
+				->whereColumn('appointments.schedule_id', 'schedules.id');
+			})
+			->get();
+
+			return $citasLibres;
+
+			
+		}
     public function horarioCuadernoOcupado($fecha, $dia){
 			       
         $appointment = Appointment::whereDate('appointments.date', '=', $fecha)

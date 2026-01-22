@@ -73,8 +73,7 @@
             </span>
           </p>
         </div>
-
-        <br>
+				<br>
 
         {{-- Historia Psquiátrica --}}
         <div>
@@ -97,7 +96,7 @@
               <div class="px-15">
                 <div>
                   <p class="title-h4">1. Antecedentes generales y familiares</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->general_antecedent }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -105,14 +104,14 @@
 
                 <div>
                   <p class="title-h4">2. Signos y síntomas principales</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->main_signs_symptoms }}
                   </p>
                 </div>
 
                 <div>
                   <p class="title-h4">3. Problema actual</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->illness }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -120,7 +119,7 @@
 
                 <div>
                   <p class="title-h4">4. APC</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->apc }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -128,7 +127,7 @@
 
                 <div>
                   <p class="title-h4">5. Lenguaje</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->languaje }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -136,7 +135,7 @@
 
                 <div>
                   <p class="title-h4">6. Pensamiento</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->thought }}  
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -144,7 +143,7 @@
 
                 <div>
                   <p class="title-h4">7. Afecto</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->affect }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -152,7 +151,7 @@
                 
                 <div>
                   <p class="title-h4">8. Percepción</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->percetion }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -160,7 +159,7 @@
                
                 <div>
                   <p class="title-h4">9. Función superior</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->superior_function }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -168,7 +167,7 @@
               
                 <div>
                   <p class="title-h4">10. Abstracción</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->abstraction }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -176,7 +175,7 @@
               
                 <div>
                   <p class="title-h4">11. Conciencia</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->conscience }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -184,7 +183,7 @@
               
                 <div>
                   <p class="title-h4">12. Conciencia</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->conscience }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -192,7 +191,7 @@
               
                 <div>
                   <p class="title-h4">13. Insight</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->insight }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -200,7 +199,7 @@
               
                 <div>
                   <p class="title-h4">14. Problemas Diagnóstico</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->diagnostic_problems }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -208,7 +207,7 @@
               
                 <div>
                   <p class="title-h4">15. Diagnóstico</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->diagnostic }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -216,7 +215,7 @@
               
                 <div>
                   <p class="title-h4">16. Plan</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->plan }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -226,7 +225,6 @@
           @endif
         </div>
         
-        <br>
 
         {{-- Historia Psicológica --}}
         <div>
@@ -249,7 +247,7 @@
               <div class="px-15">
                 <div>
                   <p class="title-h4">1. Problema actual</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->illness }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -257,7 +255,7 @@
 
                 <div>
                   <p class="title-h4">2. Antecedentes</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->antecedent }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -265,7 +263,7 @@
 
                 <div>
                   <p class="title-h4">3. Dinámica</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->dynamic }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -273,7 +271,7 @@
 
                 <div>
                   <p class="title-h4">4. Actitud actual</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->attitude }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -281,7 +279,7 @@
               
                 <div>
                   <p class="title-h4">5. Dx</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->dx }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -289,7 +287,7 @@
 
                 <div>
                   <p class="title-h4">6. Plan</p>
-                  <p class="py-0 d-block lh-30">
+                  <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->plan }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
@@ -299,18 +297,17 @@
           @endif
         </div>
 
-        <br>
         
-        {{-- Evolcuiones --}}
+        
+        {{-- Evoluciones --}}
         <div>
           @if ( $historia->medical_evolutions ) 
             <div>
-              <p class="title-h3 py-0">Evoluciones</p>
+              <p class="title-h3 py-0 ">Evoluciones</p>
               
               <ul class="px-15">
                 @foreach ($historia->medical_evolutions as $evolution)
-                  <br>
-                  <li class="title-h4 px-15">Fecha de cita: {{ $evolution->date }} </li>
+                  <li class="title-h5 px-15">Fecha de cita: {{ $evolution->date }} </li>
                   <div class="px-25">
                     <p class="py-0"><span class="title-h6">Profesional:</span> <span class="text-justify">{{ $evolution->professional->name }}</span></p>
                     <p class="py-0"><span class="title-h6">Evolución:</span> <span class="text-justify">{{ $evolution->content }}</span></p>
@@ -319,7 +316,8 @@
 										<p>{{$diag['code']}} - {{$diag['description']}}</p>
 										@endforeach
                     <p class="py-0"><span class="title-h6">Tratamiento:</span> <span class="text-justify">{{ $evolution->treatment }}</span></p>
-
+										<div><img  class="firmaProfesional" src="{{public_path('/img/'. $evolution->professional->signing )}}" alt=""></div>
+										
                   </div>
                 @endforeach
               </ul>
@@ -351,7 +349,7 @@
     }
 
     .d-block { display: block }
-    p {font-size: 14px; font-family:'Montserrat-Light'; color: #495057}
+    p {font-size: 11px; font-family:'Montserrat-Light'; color: #495057}
 
     .position-absolute {position: absolute;}
     .position-relative {position: relative;}
@@ -364,22 +362,22 @@
     .lh-25 { line-height: 25px }
     .lh-15 { line-height: 15px } */
 
-    .title-h1 {font-size: 22px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h2 {font-size: 20px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h3 {font-size: 19px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h4 {font-size: 18px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h5 {font-size: 16px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
-    .title-h6 {font-size: 14px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h1 {font-size: 20px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h2 {font-size: 18px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h3 {font-size: 17px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h4 {font-size: 16px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h5 {font-size: 13px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
+    .title-h6 {font-size: 12px; font-family:'Montserrat-Bold'; color: #6b61a6; padding-bottom: 0px; margin-bottom: 0px;}
 
     .purple-color { color: #6b61a6; }
     .black-color { color: #495057; }
 
-    .my-25 {padding-top: 20px; padding-bottom: 20px }
+    .my-25 {padding-top: 18px; padding-bottom: 18px }
 
-    .py-50 {padding-top: 40px; padding-bottom: 40px }
-    .py-30 {padding-top: 10px; padding-bottom: 10px }
+    .py-50 {padding-top: 35px; padding-bottom: 35px }
+    .py-30 {padding-top: 5px; padding-bottom: 5px }
     .py-25 {padding-top: 20px; padding-bottom: 20px }
-    .py-15 {padding-top: 10px; padding-bottom: 10px }
+    .py-15 {padding-top: 5px; padding-bottom: 5px }
     .py-5  {padding-top: 5px ; padding-bottom: 5px}
     .py-0  {padding-top: 0px ; padding-bottom: 0px}
 
@@ -450,6 +448,7 @@
     .date {
       transform: translateY(5px)
     }
+		.firmaProfesional{width: 200px;}
 
     
   </style>
