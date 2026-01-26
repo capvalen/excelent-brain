@@ -74,7 +74,7 @@ class Medical_evolutionController extends Controller
 
 	public function pdfEvolutionCompleto ($id){
 		$historia = Patient::where('id', $id)
-		->with('initial_psychiatric_history', 'initial_psychological_history', 'medical_evolutions','medical_evolutions.professional')
+		->with('initial_psychiatric_history.professional', 'initial_psychological_history', 'medical_evolutions','medical_evolutions.professional')
 		->first();
 		
 		$age = date("Y",strtotime(date('d-m-Y'))) - date("Y",strtotime($historia->birth_date));
@@ -94,10 +94,10 @@ class Medical_evolutionController extends Controller
 	}
 
 	public function pdfEvolutionRestringido ($id){
-		$threeMonthsAgo = now()->subMonths(3);
+		$threeMonthsAgo = now()->subMonths(6);
 
 		$historia = Patient::where('id', $id)
-		->with('initial_psychiatric_history', 'initial_psychological_history','medical_evolutions.professional')
+		->with('initial_psychiatric_history.professional', 'initial_psychological_history','medical_evolutions.professional')
 		->with(['medical_evolutions'=> function($query) use($threeMonthsAgo) {
 			$query->where('activo','=', 1)
 			->whereBetween('date', [ $threeMonthsAgo, now() ]);

@@ -16,7 +16,6 @@
     <div class="pdf-content">
       <img src="{{public_path('/img/logoem.png')}}" alt="Excelentemente" class="logotipo">
 
-
       {{-- contenido --}}
       <div class="header text-center">
         <img 
@@ -76,11 +75,11 @@
 				<br>
 
         {{-- Historia Psquiátrica --}}
-        <div>
+        <div class="subir ">
           @if ( $historia->initial_psychiatric_history )
             <div class="py-30">
               <div class="position-relative">
-                <p class="title-h2 text-center">Historia Psquiátrica</p>
+                <p class="title-h4 text-center">Historia Psquiátrica</p>
                 @if ($historia->initial_psychiatric_history->created_at) 
                   <p class="title-h5 date position-absolute right-0 top-0">Fecha {{ date('d-m-Y',strtotime($historia->initial_psychiatric_history->created_at)) }}</p>
                 @else
@@ -91,11 +90,11 @@
 
            {{-- Diagnostico --}}
             <div>
-              <p class="title-h3 py-15">Diagnóstico</p>
+              <p class="title-h5 py-15">Diagnóstico</p>
 
               <div class="px-15">
                 <div>
-                  <p class="title-h4">1. Antecedentes generales y familiares</p>
+                  <p class="title-h5">1. Antecedentes generales y familiares</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->general_antecedent }}
                   </p>
@@ -103,14 +102,14 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">2. Signos y síntomas principales</p>
+                  <p class="title-h5">2. Signos y síntomas principales</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->main_signs_symptoms }}
                   </p>
                 </div>
 
                 <div>
-                  <p class="title-h4">3. Problema actual</p>
+                  <p class="title-h5">3. Problema actual</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->illness }}
                   </p>
@@ -118,7 +117,7 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">4. APC</p>
+                  <p class="title-h5">4. APC</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->apc }}
                   </p>
@@ -126,7 +125,7 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">5. Lenguaje</p>
+                  <p class="title-h5">5. Lenguaje</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->languaje }}
                   </p>
@@ -134,7 +133,7 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">6. Pensamiento</p>
+                  <p class="title-h5">6. Pensamiento</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->thought }}  
                   </p>
@@ -142,7 +141,7 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">7. Afecto</p>
+                  <p class="title-h5">7. Afecto</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->affect }}
                   </p>
@@ -150,7 +149,7 @@
                 </div>
                 
                 <div>
-                  <p class="title-h4">8. Percepción</p>
+                  <p class="title-h5">8. Percepción</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->percetion }}
                   </p>
@@ -158,7 +157,7 @@
                 </div>
                
                 <div>
-                  <p class="title-h4">9. Función superior</p>
+                  <p class="title-h5">9. Función superior</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->superior_function }}
                   </p>
@@ -166,7 +165,7 @@
                 </div>
               
                 <div>
-                  <p class="title-h4">10. Abstracción</p>
+                  <p class="title-h5">10. Abstracción</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->abstraction }}
                   </p>
@@ -174,7 +173,7 @@
                 </div>
               
                 <div>
-                  <p class="title-h4">11. Conciencia</p>
+                  <p class="title-h5">11. Conciencia</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->conscience }}
                   </p>
@@ -182,7 +181,7 @@
                 </div>
               
                 <div>
-                  <p class="title-h4">12. Conciencia</p>
+                  <p class="title-h5">12. Conciencia</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->conscience }}
                   </p>
@@ -190,7 +189,7 @@
                 </div>
               
                 <div>
-                  <p class="title-h4">13. Insight</p>
+                  <p class="title-h5">13. Insight</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->insight }}
                   </p>
@@ -198,7 +197,7 @@
                 </div>
               
                 <div>
-                  <p class="title-h4">14. Problemas Diagnóstico</p>
+                  <p class="title-h5">14. Problemas Diagnóstico</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->diagnostic_problems }}
                   </p>
@@ -206,7 +205,7 @@
                 </div>
               
                 <div>
-                  <p class="title-h4">15. Diagnóstico</p>
+                  <p class="title-h5">15. Diagnóstico</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->diagnostic }}
                   </p>
@@ -214,12 +213,13 @@
                 </div>
               
                 <div>
-                  <p class="title-h4">16. Plan</p>
+                  <p class="title-h5">16. Plan</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychiatric_history->plan }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
                 </div>
+								<div style="text-align: right;"><img  class="firmaProfesional" src="{{public_path('storage/'. $historia->initial_psychiatric_history->professional->signing )}}" alt=""></div>
               </div> 
             </div>
           @endif
@@ -229,9 +229,9 @@
         {{-- Historia Psicológica --}}
         <div>
           @if ( $historia->initial_psychological_history )
-            <div class="py-30">
+            <div class="py-30 new-page">
               <div class="position-relative ">
-                <p class="title-h2 text-center">Historia Psicológica</p>
+                <p class="title-h4 text-center">Historia Psicológica</p>
                 @if ($historia->initial_psychological_history->created_at)
                 <p class="title-h5 date position-absolute right-0 top-0">Fecha {{ date('d-m-Y',strtotime($historia->initial_psychological_history->created_at)) }} </p>
                 @else
@@ -242,11 +242,11 @@
 
             {{-- Diagnostico --}}
             <div>
-              <p class="title-h3 py-15">Diagnóstico</p>
+              <p class="title-h5 py-15">Diagnóstico</p>
 
               <div class="px-15">
                 <div>
-                  <p class="title-h4">1. Problema actual</p>
+                  <p class="title-h5">1. Problema actual</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->illness }}
                   </p>
@@ -254,7 +254,7 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">2. Antecedentes</p>
+                  <p class="title-h5">2. Antecedentes</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->antecedent }}
                   </p>
@@ -262,7 +262,7 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">3. Dinámica</p>
+                  <p class="title-h5">3. Dinámica</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->dynamic }}
                   </p>
@@ -270,7 +270,7 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">4. Actitud actual</p>
+                  <p class="title-h5">4. Actitud actual</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->attitude }}
                   </p>
@@ -278,7 +278,7 @@
                 </div>
               
                 <div>
-                  <p class="title-h4">5. Dx</p>
+                  <p class="title-h5">5. Dx</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->dx }}
                   </p>
@@ -286,12 +286,14 @@
                 </div>
 
                 <div>
-                  <p class="title-h4">6. Plan</p>
+                  <p class="title-h5">6. Plan</p>
                   <p class="py-0 d-block">
                     {{ $historia->initial_psychological_history->plan }}
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
                 </div>
+								<div style="text-align: right;"><img  class="firmaProfesional" src="{{public_path('storage/'. $historia->initial_psychological_history->professional->signing )}}" alt=""></div>
+
               </div> 
             </div>
           @endif
@@ -316,8 +318,7 @@
 										<p>{{$diag['code']}} - {{$diag['description']}}</p>
 										@endforeach
                     <p class="py-0"><span class="title-h6">Tratamiento:</span> <span class="text-justify">{{ $evolution->treatment }}</span></p>
-										<div><img  class="firmaProfesional" src="{{public_path('/img/'. $evolution->professional->signing )}}" alt=""></div>
-										
+										<div style="text-align: right;"><img  class="firmaProfesional" src="{{public_path('storage/'. $evolution->professional->signing )}}" alt=""></div>
                   </div>
                 @endforeach
               </ul>
@@ -336,8 +337,8 @@
     *{
       margin: 0px;
       padding: 0px;
+			/* outline: 1px solid red !important; */
     }
-
     body {
       font-family: 'Roboto', sans-serif;
       margin: auto;
@@ -441,16 +442,19 @@
 
     /* header */
     .logotipo-header {
-      width: 350px;
-      margin: 25px 0;
+      width: 300px;
+      margin: 5px 0;
+			padding:0;
     }
 
     .date {
       transform: translateY(5px)
     }
 		.firmaProfesional{width: 200px;}
-
-    
+		.subir{margin-top:-25px}
+    .new-page {
+			page-break-before: always;
+		}
   </style>
 </body>
 </html>

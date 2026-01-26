@@ -12,7 +12,7 @@ class Initial_psychiatric_history extends Model
     //Relacion inversa de uno a uno Initial_psychiatric-Professional
     public function professional()
     {
-        return $this->hasOne("App\Models\Professional");
+        return $this->hasOne("App\Models\Professional", 'id', 'professional_id');
     }
     //Relacion inversa de uno a uno Initial_psychiatric-Patient
     public function patient()
