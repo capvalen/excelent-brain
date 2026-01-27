@@ -126,6 +126,8 @@
 										<span v-if="cita.status==1">Sin Confirmar</span>
 										<span class="text-primary" v-if="cita.status==2">Cita Confirmada </span>
 										<span class="text-danger" v-if="cita.status==3">Cita Anulada </span>
+										<span class="text-danger" v-if="cita.status==4">Cita Reprogramada </span>
+										<span class="text-danger" v-if="cita.status==5">Cita eliminada </span>
 									</td>
 								</tr>
 							</tbody>
@@ -296,7 +298,7 @@ export default{
 
 		},
 		contarCitasActivas(){
-			let contador = this.citas.filter(x=> x.status != '3').length
+			let contador = this.citas.filter(x=> x.status == '1' || x.status == '2').length
 			return contador
 		},
 		tipoMembresia(membresia){

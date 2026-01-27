@@ -179,6 +179,9 @@
 										<button data-bs-toggle="modal" @click="buscarRecetas(horasMalas[hora.indexOcupado].patient.id)" data-bs-target="#recetasModal" class="btn btn-info btn-circle btn-sm" title="Ver recetas">
 											<i class="fas fa-file"></i>
 										</button>
+										<button @click="citaTemp = horasMalas[hora.indexOcupado]" data-bs-toggle="modal" data-bs-target="#modalTiemposEspera" class="btn btn-warning btn-circle btn-sm" title="Tiempos de espera" >
+											<i class="fa-regular fa-clock"></i>
+										</button>
 									</td>
 									<td v-else></td>
 								
@@ -204,6 +207,7 @@
 		<ModalIntercambio :posibles="posibles" :primero="primero" @actualizar="actualizarListadoCitas"></ModalIntercambio>
 		
 		<modalVerRecetas :prescriptions="recetas"></modalVerRecetas>
+		<modalTiemposEspera :cita="citaTemp" @actualizar="actualizarListadoCitas"></modalTiemposEspera>
 
 	</div>
 </template>
@@ -218,6 +222,7 @@
 	import ModalSearchPatient from './ModalSearchPatient.vue'
 	import ModalIntercambio from './ModalIntercambio.vue'
 	import modalVerRecetas from './ModalVerRecetas.vue'
+	import modalTiemposEspera from './ModalTiemposEspera.vue'
 		
 	import alertify from 'alertifyjs'
 	
@@ -229,10 +234,10 @@
 			cita: {
 				address:{patient:{address:{}}, patient:[]},
 				patient:{address:[], relative:[]}
-			}, posibles:[], primero:{patient:[]}
+			}, posibles:[], primero:{patient:[]}, citaTemp:[]
 		}},
 		props:[ 'nombreUser', 'idSede'],
-		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio, modalVerRecetas },
+		components: { PagoModal, ModalEstadoCita, ModalNuevaCita, ModalPatient, InfoModal, ReprogModal, ModalSearchPatient, ModalIntercambio, modalVerRecetas, modalTiemposEspera },
 		methods:{
 			dayWeek (day) {
 				switch (day) {

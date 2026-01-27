@@ -798,9 +798,7 @@ class AppointmentController extends Controller
 		if($limbo) $limbo->delete();
 
 		$cita = Appointment::find($request->get('id'));
-		$cita->update([
-			'status' => 4
-		]);
+		
 		//return var_dump( $cita->id ); die();
 
 		$nuevaCita = Appointment::create([
@@ -815,7 +813,13 @@ class AppointmentController extends Controller
 			'link'=>$request->get('link'),
 			'status'=> 1,
 			'patient_id' =>$request->get('patient_id'),
+			'idMembresia' =>$request->get('idMembresia'),
+			'num_sesion' =>$request->get('num_sesion'),
 			'formato_nuevo' => 1
+		]);
+		$cita->update([
+			'status' => 4,
+			'num_sesion' => null
 		]);
 
 		$fechado = Carbon::create($cita->payment->created_at);
@@ -1346,6 +1350,14 @@ class AppointmentController extends Controller
 		return $pdf->stream('cupon_membresia.pdf');
 	}
 
+	public function registrarHora(Request $request){
+		$cita = Appointment::where('id', $request->input('idCita'));
+		$cita->update([
+			'entrance' => $request->input('entrance'),
+			'attention' => $request->input('attention'),
+		]);
+		return response()->json(['mensaje' => 'Ok']);
+	}
 }
 
 

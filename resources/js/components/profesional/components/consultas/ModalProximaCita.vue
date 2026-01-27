@@ -68,7 +68,7 @@ export default{
 					mode: this.esPresencial ? 1: 2,
 					status:1,// sin confirmar
 					clasification: queProfesional?.idProfesion,
-					recomendation: 'Auto Generado por Profesional '+ queProfesional.name,
+					recomendation: this.paciente.recomendation,//+ queProfesional.name,
 					professional_id: this.idProfesional,
 					patient_id: this.paciente.id,
 					schedule_id: this.cita.idHora,

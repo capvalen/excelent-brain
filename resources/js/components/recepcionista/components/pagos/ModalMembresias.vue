@@ -343,7 +343,7 @@ export default {
 				alertify.notify('<i class="fa-solid fa-bomb"></i> Debe agregar un motivo por el descuento', 'danger', 10);
 				return false;
 			}else{
-				this.comentarios = 'Descuento por: S/ ' + this.membresia.descuento + ' '+ this.comentarios
+				this.comentarios = (this.membresia.descuento >0) ? 'Descuento por: S/ ' + this.membresia.descuento + ' '+ this.comentarios: this.comentarios
 			}
 				
 			var mem = document.getElementById("sltMembresia");

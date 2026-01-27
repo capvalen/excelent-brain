@@ -512,9 +512,10 @@ class ExtrasController extends Controller
         'tipo' => $membresia['tipo'],
         'user_id' => $request->input('user_id'),
         'cuotas' => count($fechas),
-        'monto' => $membresia['precio'],
+				'descuento' => $membresia['descuento'],
+        'monto' => $membresia['precio'] - $membresia['descuento'],
 				'estado' => 2,
-        'comentarios' => $request->input('comentarios')
+        'comentarios' => $request->input('comentarios'),
     ]);
 
     // Crear citas para las fechas de la membresía
