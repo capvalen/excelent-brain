@@ -206,7 +206,7 @@ export default{
 			}
 		},
 		queSeguimiento(item){ if(item) return this.seguimientos.find(x=> x.id == item).seguimiento },
-		queColor(item){ if(item)  return this.seguimientos.find(x=> x.id == item).color },
+		queColor(item){ if(item)  return this.seguimientos.find(x=> x.id == item)?.color },
 		cambiarItem(item){ this.citasResumidas[this.indexGlobal].patient.seguimiento = item },
 		ultimaCita(id){
 			moment.locale('es')
