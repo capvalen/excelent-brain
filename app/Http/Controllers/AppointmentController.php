@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Resources\AppointmentResource;
 use Carbon\Carbon;
 
 use App\Models\Address;
@@ -36,8 +37,9 @@ class AppointmentController extends Controller
 
 	public function index()
 	{
-		return Appointment::with('professional','patient', 'payment','schedule','patient.address','patient.relative','reschedule','precio')
-		->get();
+		$appointments = Appointment::with('professional','patient', 'payment','schedule','patient.address','patient.relative','reschedule','precio')
+			->get();
+		return AppointmentResource::collection($appointments);
 	}
 
 	/**

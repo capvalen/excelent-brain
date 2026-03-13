@@ -46,12 +46,16 @@ class AuthController extends Controller
     }
 
     public function updateUser($id, Request $request){
-        User::find($id)->update([
-            'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password'))
+        $request->validate([
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'password' => 'required|string|min:8',
+        ]);
+        User::findOrFail($id)->update([
+            'email'    => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
         ]);
         return response()->json([
-            'mensaje'=>'Accesos actualizados'
+            'mensaje' => 'Accesos actualizados',
         ]);
     }
 }

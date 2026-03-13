@@ -34,8 +34,15 @@ Vue.component('modal-patient', require('./components/recepcionista/components/ci
 Vue.component('modal-estado', require('./components/recepcionista/components/citas/ModalEstadoCita.vue').default);
 // Vue.component('storie-modal', require('./components/profesional/components/historia/StorieModal.vue').default);
 
+// Purge any corrupted token stored as the literal string "undefined" or "null"
+const _rawToken = localStorage.getItem('token')
+if (_rawToken === 'undefined' || _rawToken === 'null') {
+    localStorage.removeItem('token')
+}
+
 function loggedIn(){
-    return localStorage.getItem('token')
+    const t = localStorage.getItem('token')
+    return t && t !== 'undefined' && t !== 'null' ? t : null
 }
 
 const router = new VueRouter ({

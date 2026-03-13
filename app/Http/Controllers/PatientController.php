@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Resources\PatientResource;
 use Carbon\Carbon;
 
 use App\Models\Address;
@@ -32,7 +33,7 @@ class PatientController extends Controller
 		->with('initial_psychiatric_history', 'initial_psychological_history', 'semaforo')
 		->whereNotNull('dni')
 		->limit(50)->get();
-		return response()->json($patient);
+		return PatientResource::collection($patient);
 	}
 
 	public function patientMine($id)
@@ -265,8 +266,8 @@ class PatientController extends Controller
 	 */
 	public function show($id)
 	{
-		$patient = Patient::find($id);
-		return response()->json($patient);
+		$patient = Patient::findOrFail($id);
+		return new PatientResource($patient);
 	}
 
 	/**
@@ -705,24 +706,32 @@ class PatientController extends Controller
 		}
 
 		public function subirArchivo(Request $request){
-		
-			if ($request->file('file')->isValid()) {
-				$file = $request->file('file');
-				$fileName = time() . '.' . $file->getClientOriginalExtension();
-				$file->move(public_path('storage/archivos'), $fileName);
 
-				$archivo = DB::table('archivos')->insertGetId([
-					'patient_id' => $request->get('idPaciente'),
-					'nombre' => $file->getClientOriginalName(),
-					'archivo' => $fileName,
-					'user_id' => $request->get('idProfesional')
-				]);
+			$request->validate([
+				'file'          => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
+				'idPaciente'    => 'required|integer',
+				'idProfesional' => 'required|integer',
+			]);
 
-				return response()->json(['archivo' =>$fileName, 'fecha'=>Carbon::now(), 'nombre' => $file->getClientOriginalName(), 'id'=> $archivo ]);
-			}
+			$file     = $request->file('file');
+			// Use mime-detected extension — do NOT trust client-supplied name/extension
+			$fileName = time() . '_' . uniqid() . '.' . $file->extension();
+			// Store outside public/ so files are not directly accessible via URL
+			$file->storeAs('archivos', $fileName, 'private');
 
-			return response()->json(['error' => 'Error al subir el archivo.'], 400);
+			$archivo = DB::table('archivos')->insertGetId([
+				'patient_id' => $request->get('idPaciente'),
+				'nombre'     => $file->getClientOriginalName(),
+				'archivo'    => $fileName,
+				'user_id'    => $request->get('idProfesional'),
+			]);
 
+			return response()->json([
+				'archivo' => $fileName,
+				'fecha'   => Carbon::now(),
+				'nombre'  => $file->getClientOriginalName(),
+				'id'      => $archivo,
+			]);
 		}
 
 		public function pedirArchivos(Request $request){

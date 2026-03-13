@@ -57,14 +57,19 @@ export default {
 	},
 	methods: {
 		login() {
-			this.axios.post('api/login', this.formData)
+			this.axios.post('/api/login', this.formData)
 				.then((res) => {
-					localStorage.setItem('token', res.data.token)
-					//console.log(res.data.rol);
-					this.$router.push({ path: `${res.data.rol}/home` })
+					const token = res.data.token
+					const rol   = res.data.rol
+					if (!token || !rol) {
+						console.error('Respuesta de login inesperada:', res.data)
+						return
+					}
+					localStorage.setItem('token', token)
+					this.$router.push({ path: `/${rol}/home` })
 				}).catch((err) => {
 					console.log(err)
-					this.errors = err.response.data.errors
+					this.errors = err.response?.data?.errors ?? {}
 				});
 		}
 	}

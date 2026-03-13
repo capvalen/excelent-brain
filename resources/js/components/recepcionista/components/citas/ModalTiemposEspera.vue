@@ -67,14 +67,14 @@ export default{
 		},
 	},
 	computed:{
-		calcularFaltante(){
-			//if(this.cita){
-				moment.locale('es')
-				let horaCita = moment(this.cita.date + ' ' + this.cita.schedule.check_time)
-				//console.log(horaCita)
-				return horaCita.fromNow();
-			//}
-		},
+			calcularFaltante(){
+					if(!this.cita || !this.cita.schedule || !this.cita.schedule.check_time){
+							return '---'
+					}
+					moment.locale('es')
+					let horaCita = moment(this.cita.date + ' ' + this.cita.schedule.check_time)
+					return horaCita.fromNow();
+			},
 	}
 }
 </script>
