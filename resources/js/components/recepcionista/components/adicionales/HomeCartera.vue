@@ -74,7 +74,7 @@
 							<td class="puntero" data-bs-toggle="modal" data-bs-target="#modalCitasPreview" @click="cargarCitas('reprogramados', cita.patient.id)">{{ cita.reprogramados }}</td>
 							<td>{{ cita.actual }}</td>
 							<!-- Estoy agregando -->
-							<td><a :href="'../api/pdfEvolution/restricted/'+cita.patient.id" target="_blank" class="btn btn-outline-success" title="Ver Historia"><i class="fa-regular fa-note-sticky"></i></a></td>
+							<td><a :href="'../api/pdfEvolution/restricted/'+cita.patient.id+'?token='+$token" target="_blank" class="btn btn-outline-success" title="Ver Historia"><i class="fa-regular fa-note-sticky"></i></a></td>
 							<!-- Estoy agregando -->
 							<td v-if="cita.patient.vivo==1" class="puntero" @click="idGlobal = cita.patient_id; indexGlobal = index" data-bs-toggle="modal" data-bs-target="#modalCambiarSeguimiento">
 								<span v-if="cita.patient.seguimiento==1" title="Sin acción"><i class="fa-regular fa-circle"></i></span>

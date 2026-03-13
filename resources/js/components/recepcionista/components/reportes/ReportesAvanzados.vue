@@ -49,7 +49,7 @@
 							<td class="text-capitalize">{{ resultado.name }}</td>
 							<td class="text-capitalize">{{ resultado.nombre}}</td>
 							<td>{{ fechaLatam(resultado.attention_date) }}</td>
-							<td><a class="btn btn-outline-primary btn-sm" :href="'/api/pdf/'+resultado.id" target="_blank"><i class="fa-solid fa-file-pdf"></i> Ver PDF</a></td>
+							<td><a class="btn btn-outline-primary btn-sm" :href="'/api/pdf/'+resultado.id+'?token='+$token" target="_blank"><i class="fa-solid fa-file-pdf"></i> Ver PDF</a></td>
 						</tr>
 						<tr v-if="resultados.length==0">
 						<td colspan="4">No hay registros</td></tr>

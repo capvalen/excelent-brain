@@ -68,7 +68,7 @@
 
                 <!-- generar pdf para histoia -->
                 <a 
-                :href="`/api/pdfEvolution/restricted/${dataConsult.patient_id}`"
+                :href="`/api/pdfEvolution/restricted/${dataConsult.patient_id}?token=${$token}`"
                 target="_blank"
                 class="btn btn-consult btn-action"
                 title="Generar PDF de historia"

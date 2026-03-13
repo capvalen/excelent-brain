@@ -89,8 +89,8 @@
 									<i class="fa-solid fa-user-doctor"></i>
 								</router-link>
 
-								<a v-if="dataUser.id==5 || dataUser.id==18" :href="`/api/pdfEvolution/thorough/${historia.id}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
-								<a v-else :href="`/api/pdfEvolution/restricted/${historia.id}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
+								<a v-if="dataUser.id==5 || dataUser.id==18" :href="`/api/pdfEvolution/thorough/${historia.id}?token=${$token}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
+								<a v-else :href="`/api/pdfEvolution/restricted/${historia.id}?token=${$token}`" class="btn btn-primary btn-circle" title="Generar PDF para evoluciones" target="_blank"> <i class="fas fa-file-pdf"></i> </a>
 								<a v-if="dataUser.profession!='Psicólogo'" :href="`/profesional/recetas/${historia.id}`" class="btn btn-primary btn-circle" title="Generar receta"><i class="fa-solid fa-vial"></i></a>
 								<button 
                 @click="prepararPaciente(historia)" class="btn btn-info btn-circle" title="Agregar triaje" >

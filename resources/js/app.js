@@ -45,6 +45,12 @@ function loggedIn(){
     return t && t !== 'undefined' && t !== 'null' ? t : null
 }
 
+// Expose the Sanctum token so Vue templates can append ?token=$token to PDF URLs.
+// Defined as a getter so it reads localStorage fresh on every access (not frozen at load time).
+Object.defineProperty(Vue.prototype, '$token', {
+    get() { return localStorage.getItem('token') }
+})
+
 const router = new VueRouter ({
   mode: 'history',
   routes: routes,

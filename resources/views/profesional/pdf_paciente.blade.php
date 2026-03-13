@@ -14,12 +14,12 @@
 <body>
   <div class="pdf">
     <div class="pdf-content">
-      <img src="{{public_path('/img/logoem.png')}}" alt="Excelentemente" class="logotipo">
+      <img src="{{str_replace('/', DIRECTORY_SEPARATOR, base_path('public/img/logoem.png'))}}" alt="Excelentemente" class="logotipo">
 
       {{-- contenido --}}
       <div class="header text-center">
         <img 
-        src="{{public_path('/img/logoem.png')}}" 
+        src="{{str_replace('/', DIRECTORY_SEPARATOR, base_path('public/img/logoem.png'))}}"
         alt="Logotipo Excelentemente"
         class="logotipo-header"
         >
@@ -219,7 +219,9 @@
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
                 </div>
-								<div style="text-align: right;"><img  class="firmaProfesional" src="{{public_path('storage/'. $historia->initial_psychiatric_history->professional->signing )}}" alt=""></div>
+								@if($historia->initial_psychiatric_history->professional && $historia->initial_psychiatric_history->professional->signing && $historia->initial_psychiatric_history->professional->signing !== '-' && $historia->initial_psychiatric_history->professional->signing !== '')
+								<div style="text-align: right;"><img class="firmaProfesional" src="{{str_replace('/', DIRECTORY_SEPARATOR, base_path('storage/app/public/'.$historia->initial_psychiatric_history->professional->signing))}}" alt=""></div>
+								@endif
               </div> 
             </div>
           @endif
@@ -292,7 +294,9 @@
                   </p>
                   {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
                 </div>
-								<div style="text-align: right;"><img  class="firmaProfesional" src="{{public_path('storage/'. $historia->initial_psychological_history->professional->signing )}}" alt=""></div>
+								@if($historia->initial_psychological_history->professional && $historia->initial_psychological_history->professional->signing && $historia->initial_psychological_history->professional->signing !== '-' && $historia->initial_psychological_history->professional->signing !== '')
+								<div style="text-align: right;"><img class="firmaProfesional" src="{{str_replace('/', DIRECTORY_SEPARATOR, base_path('storage/app/public/'.$historia->initial_psychological_history->professional->signing))}}" alt=""></div>
+								@endif
 
               </div> 
             </div>
@@ -311,14 +315,16 @@
                 @foreach ($historia->medical_evolutions as $evolution)
                   <li class="title-h5 px-15">Fecha de cita: {{ $evolution->date }} </li>
                   <div class="px-25">
-                    <p class="py-0"><span class="title-h6">Profesional:</span> <span class="text-justify">{{ $evolution->professional->name }}</span></p>
+                    <p class="py-0"><span class="title-h6">Profesional:</span> <span class="text-justify">{{ $evolution->professional->name ?? '' }}</span></p>
                     <p class="py-0"><span class="title-h6">Evolución:</span> <span class="text-justify">{{ $evolution->content }}</span></p>
                     <p class="py-0"><span class="title-h6">Diagnóstico:</span></p>
 										@foreach($evolution->diagnostic as $diag)
 										<p>{{$diag['code']}} - {{$diag['description']}}</p>
 										@endforeach
                     <p class="py-0"><span class="title-h6">Tratamiento:</span> <span class="text-justify">{{ $evolution->treatment }}</span></p>
-										<div style="text-align: right;"><img  class="firmaProfesional" src="{{public_path('storage/'. $evolution->professional->signing )}}" alt=""></div>
+										@if($evolution->professional && $evolution->professional->signing && $evolution->professional->signing !== '-' && $evolution->professional->signing !== '')
+										<div style="text-align: right;"><img class="firmaProfesional" src="{{str_replace('/', DIRECTORY_SEPARATOR, base_path('storage/app/public/'.$evolution->professional->signing))}}" alt=""></div>
+										@endif
                   </div>
                 @endforeach
               </ul>

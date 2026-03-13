@@ -21,7 +21,7 @@
 									<td>{{ index+1 }}</td>
 									<td>{{fechaLatam(triaje.fecha)}}</td>
 									<td class="text-capitalize">{{triaje.responsable}}</td>
-									<td><a class="btn btn-success btn-sm" :href="`/api/triajePDF/${triaje.id}`" target="_blank">Ver PDF</a></td>
+									<td><a class="btn btn-success btn-sm" :href="`/api/triajePDF/${triaje.id}?token=${$token}`" target="_blank">Ver PDF</a></td>
 								</tr>
 							</tbody>
 						</table>

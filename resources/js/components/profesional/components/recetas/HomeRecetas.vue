@@ -231,7 +231,7 @@ export default{
 					});
         },
         print(){
-            window.open('/api/pdf/'+this.id_receta)
+            window.open('/api/pdf/'+this.id_receta+'?token='+localStorage.getItem('token'))
         },
 				queUsuario(){
 					this.axios.get('/api/user')

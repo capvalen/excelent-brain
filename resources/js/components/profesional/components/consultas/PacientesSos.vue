@@ -28,7 +28,7 @@
 					</td>
 					<td>{{ fechaLatam(paciente.registro) }}</td>
 					<td>
-						<a :href="'../api/pdfEvolution/restricted/'+paciente.id" target="_blank" class="btn btn-outline-success" title="Ver Historia"><i class="fa-regular fa-note-sticky"></i></a>
+						<a :href="'../api/pdfEvolution/restricted/'+paciente.id+'?token='+$token" target="_blank" class="btn btn-outline-success" title="Ver Historia"><i class="fa-regular fa-note-sticky"></i></a>
 						<button class="btn btn-outline-primary" title="Nuevo Seguimiento" data-bs-toggle="modal" data-bs-target="#modalNuevo" @click="idSos=paciente.idSos"><i class="fa-solid fa-plus"></i></button>
 						<button class="btn btn-outline-secondary" title="Ver Seguimientos" data-bs-toggle="modal" data-bs-target="#modalVer" @click="listarComentarios(paciente.idSos)"><i class="fa-solid fa-eye"></i></button>
 					</td>

@@ -22,7 +22,7 @@
 									<td>{{ index + 1 }}</td>
 									<td>{{ prescription ? fechaLatam(prescription.attention_date) : '...' }}</td>
 									<td>
-										<a v-if="prescription" class="btn btn-outline-success btn-sm" :href="`/api/pdf/${prescription.id}`"
+										<a v-if="prescription" class="btn btn-outline-success btn-sm" :href="`/api/pdf/${prescription.id}?token=${$token}`"
 											target="_blank"><i class="fa-regular fa-file-pdf"></i> Ver en PDF</a>
 									</td>
 								</tr>

@@ -32,7 +32,7 @@
 							<td>{{index+1}}</td>
 							<td>{{persona.id}} </td>
 							<td class="text-uppercase">{{persona.name}} {{persona.nombres}} </td>
-							<td> <a :href="'/api/pdfEvolution/thorough/'+persona.id" target="_blank"><i class="fas fa-file"></i> Ver</a> </td>
+							<td> <a :href="'/api/pdfEvolution/thorough/'+persona.id+'?token='+$token" target="_blank"><i class="fas fa-file"></i> Ver</a> </td>
 							<td>{{calcularEdad(persona.birth_date)}}</td>
 							<td class="puntero" @click="cambiarMuerte(persona)">
 								<span v-if="persona.vivo==1" class="badge text-bg-primary"><i class="far fa-heart"></i> Vivo </span>

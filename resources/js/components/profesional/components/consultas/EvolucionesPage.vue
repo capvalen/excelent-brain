@@ -644,7 +644,7 @@
 									<td>{{ index + 1 }}</td>
 									<td>{{ prescription ? prescription.attention_date : '...' }}</td>
 									<td>
-										<a v-if="prescription" class="btn btn-success" :href="`/api/pdf/${prescription.id}`"
+										<a v-if="prescription" class="btn btn-success" :href="`/api/pdf/${prescription.id}?token=${$token}`"
 											target="_blank">Ver PDF</a>
 									</td>
 								</tr>

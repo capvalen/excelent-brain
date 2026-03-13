@@ -21,7 +21,7 @@
                   <td>{{ index + 1 }}</td>
                   <td>{{ prescription ? prescription.attention_date : '...' }}</td>
                   <td>
-                    <a v-if="prescription" class="btn btn-success" :href="`/api/pdf/${prescription.id}`" target="_blank"><i class="fa-solid fa-file-pdf"></i> Ver PDF</a>
+                    <a v-if="prescription" class="btn btn-success" :href="`/api/pdf/${prescription.id}?token=${$token}`" target="_blank"><i class="fa-solid fa-file-pdf"></i> Ver PDF</a>
                   </td>
                 </tr>
 								<tr v-if="dataPatient.prescriptions.length==0">

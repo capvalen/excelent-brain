@@ -187,7 +187,7 @@ export default {
 					}).then((result) => {
 						if (result.isConfirmed) {
 							//abrir en una nueva ventana el PDF
-							window.open("/api/triajePDF/"+res.data['mensaje'], "_blank");
+							window.open("/api/triajePDF/"+res.data['mensaje']+"?token="+localStorage.getItem('token'), "_blank");
 						}
 					})
 				}else{
