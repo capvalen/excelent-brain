@@ -400,7 +400,7 @@ class PatientController extends Controller
 			->first();
 			$evoluciones->maximo=0;
 		}else{
-			$threeMonthsAgo = now()->subMonths(3);
+			$threeMonthsAgo = now()->subMonths(6);
 	
 			$evoluciones = Patient::where('id',$idPaciente)
 			->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'appointments', 'prescriptions')

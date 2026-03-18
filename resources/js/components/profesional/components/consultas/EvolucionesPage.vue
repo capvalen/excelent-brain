@@ -525,7 +525,7 @@
 				<div class="d-flex justify-content-between">
 					<p :class="{'text-success': datosConsulta.maximo==0, 'text-danger' : datosConsulta.maximo>0}"><i class="far fa-bell"></i>
 						<span v-if="datosConsulta.maximo==0">Está apreciando <strong>todos</strong> los registros de evoluciones.</span>
-						<span v-if="datosConsulta.maximo>0">Los registros están limitados a 3 meses, están <strong>pendientes {{ datosConsulta.maximo }}</strong> evoluciones más.</span>
+						<span v-if="datosConsulta.maximo>0">Los registros están limitados a 6 meses, están <strong>pendientes {{ datosConsulta.maximo }}</strong> evoluciones más.</span>
 					</p>
 					<!-- <h4>Evoluciones del paciente</h4> -->
 					<!-- <button

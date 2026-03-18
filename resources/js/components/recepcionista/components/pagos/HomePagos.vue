@@ -22,100 +22,103 @@
 			
 		</div>
 
-		<table class="table table-hover mt-1 " id="table_export">
-			<thead class="">
-				<tr class="">
-					<th class="text-primary" colspan="15"><i class="fas fa-angle-right"></i> Cuadro de entradas de dinero</th>
-				</tr>
-				<tr >
-					<td class="text-primaryd-print-none" v-if="tienePrivilegios=='1'">@</td>
-					<td class="text-primary">N°</td>
-					<td class="text-primary"><i class="far fa-user"></i> | Registro</td>
-					<td class="text-primary">Fact. Bol.</td>
-					<td class="text-primary">Ticket</td>
-					<td class="text-primary">Cliente</td>
-					<td class="text-primary">Tipo</td>
-					<td class="text-primary">Obs.</td>
-					<td class="text-primary">Monto</td>
-					<td class="text-primary">Motivo</td>
-					<td class="text-primary">Medio de pago</td>
-					<td class="text-primary">N° Op.</td>
-					<td class="text-primary">Prof.</td>
-					<td class="text-primary">Fecha y Hora</td>
-					<td class="text-primary d-print-none" style="white-space: nowrap">@</td>
-				</tr>
-			</thead>
-			<tbody>
-					<tr v-for="(payment, index) in payments" >
-						<td class="d-print-none" v-if="tienePrivilegios=='1'">
-							<button class="btn btn-sm btn-outline-danger" @click="mostrarModalBorrar(payment.id, index)" data-bs-toggle="modal" data-bs-target="#modalMotivoBorrar" ><i class="fa-solid fa-xmark"></i></button>
-						</td>
-						<td>
-							<span>{{index+1}}</span>
-						</td>
-						<td v-if="payment.usuario" style="white-space: nowrap;" :title="payment.usuario.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.usuario.nombre" ><i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
-						<td v-else style="white-space: nowrap;" :title="payment.user.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.user.nombre"> <i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
-						<td>{{payment.voucher}}</td>
-						<td>{{ payment.id}}</td>
-						<td class="text-capitalize">{{ payment.customer }} <span v-if="payment.observation!=''"></span></td>
-						<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
-							<td v-else-if="payment.pay_status == 2">Cancelado</td> -->
-						<td>
-							<span v-if="payment.continuo=='1'">N</span>
-							<span v-else-if="payment.continuo=='2'">C</span>
-							<span v-else-if="payment.continuo=='3'">M</span>
-							<span v-else>
-								<span v-if="payment.continuo=='-1'">X</span>
-								<span v-if="payment.continuo==null">X</span>
-							</span>
-						</td>
-						<td class="text-capitalize">
-							<span> {{ payment.observation }} </span>
-							<span v-if="payment.descuento>0" > {{ payment.motivoDescuento }} S/ {{ parseFloat(payment.descuento).toFixed(2) }} </span>
-							<span v-if="payment.rebaja>0" > {{ payment.motivoRebaja }} S/ {{ parseFloat(payment.rebaja).toFixed(2) }} </span>
-						</td>
-						<td :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{ retornarFloat(payment.price)}}</td>
-						<td>
-							<span v-if="payment.type==8">Adelanto de cita</span>
-							<span v-if="payment.type==7">Pago de membresía</span>
-							<span v-if="payment.type==5">Pago de cita</span>
-							<span v-if="payment.type==4">Otros</span>
-							<span v-if="payment.type==3">Informe</span>
-							<span v-if="payment.type==2">Paquete Kurame</span>
-							<span v-if="payment.type==1">Paquete Membresía</span>
-							<span v-if="payment.type==0">Certificado</span>
-							<span v-if="payment.type==15">Pago de membresía</span>
-							<span v-if="payment.type==16">Revaluación gratuita</span>
-							<small v-if="payment.type!=4"><br>{{ payment.detalle }}</small>
-						</td>
-						<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
-						<td>{{ payment.voucher_issued }} </td>
-						<td>{{ payment.profesional_name }}</td>
-						<td>{{ fechaLatam(payment.fechaCita) }} {{ payment.horario }}</td>
-						<td class="d-print-none" style="white-space: nowrap">
-							<button class="btn btn-sm btn-outline-warning" v-if="esAdmin" @click="pagoSeleccionado = payment" title="Dividir pago" data-bs-toggle="modal" data-bs-target="#modalDividirPago" ><i class="fas fa-divide"></i></button>
-							<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
-							<button class="btn btn-outline-primary btn-sm" title="Editar pago" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
-							<!-- <a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a> -->
-							<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" title="Ver PDF" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-						</td>
+		<div class="table-responsive">
+			<table class="table table-hover mt-1 " id="table_export">
+				<thead class="">
+					<tr class="">
+						<th class="text-primary" colspan="15"><i class="fas fa-angle-right"></i> Cuadro de entradas de dinero</th>
 					</tr>
-			</tbody>
-			<tfoot>
-				<tr v-for="tipo in sumaTipos">
-					<th colspan="7"></th>
-					<th>{{ tipo.moneda }}</th>
-					<th>S/ {{ tipo.suma.toFixed(2) }}</th>
-					<th></th>
-				</tr>
-				<tr>
-					<th colspan="7"></th>
-					<th>Total</th>
-					<th>S/ {{ parseFloat(suma).toFixed(2) }}</th>
-					<th></th>
-				</tr>
-			</tfoot>
-		</table>
+					<tr >
+						<td class="text-primaryd-print-none" v-if="tienePrivilegios=='1'">@</td>
+						<td class="text-primary">N°</td>
+						<td class="text-primary"><i class="far fa-user"></i> | Registro</td>
+						<td class="text-primary">Fact. Bol.</td>
+						<td class="text-primary">Ticket</td>
+						<td class="text-primary">Cliente</td>
+						<td class="text-primary">Tipo</td>
+						<td class="text-primary">Obs.</td>
+						<td class="text-primary">Monto</td>
+						<td class="text-primary">Motivo</td>
+						<td class="text-primary">Medio de pago</td>
+						<td class="text-primary">N° Op.</td>
+						<td class="text-primary">Prof.</td>
+						<td class="text-primary">Fecha y Hora</td>
+						<td class="text-primary d-print-none" style="white-space: nowrap">@</td>
+					</tr>
+				</thead>
+				<tbody>
+						<tr v-for="(payment, index) in payments" >
+							<td class="d-print-none" v-if="tienePrivilegios=='1'">
+								<button class="btn btn-sm btn-outline-danger" @click="mostrarModalBorrar(payment.id, index)" data-bs-toggle="modal" data-bs-target="#modalMotivoBorrar" ><i class="fa-solid fa-xmark"></i></button>
+							</td>
+							<td>
+								<span>{{index+1}}</span>
+							</td>
+							<td class="text-nowrap" v-if="payment.usuario" :title="payment.usuario.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.usuario.nombre" ><i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
+							<td class="text-nowrap" v-else  :title="payment.user.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.user.nombre"> <i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
+							<td>{{payment.voucher}}</td>
+							<td>{{ payment.id}}</td>
+							<td class="text-capitalize text-nowrap">{{ payment.customer }} <span v-if="payment.observation!=''"></span></td>
+							<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
+								<td v-else-if="payment.pay_status == 2">Cancelado</td> -->
+							<td>
+								<span v-if="payment.continuo=='1'">N</span>
+								<span v-else-if="payment.continuo=='2'">C</span>
+								<span v-else-if="payment.continuo=='3'">M</span>
+								<span v-else>
+									<span v-if="payment.continuo=='-1'">X</span>
+									<span v-if="payment.continuo==null">X</span>
+								</span>
+							</td>
+							<td class="text-capitalize ">
+								<span> {{ payment.observation }} </span>
+								<span v-if="payment.descuento>0" > {{ payment.motivoDescuento }} S/ {{ parseFloat(payment.descuento).toFixed(2) }} </span>
+								<span v-if="payment.rebaja>0" > {{ payment.motivoRebaja }} S/ {{ parseFloat(payment.rebaja).toFixed(2) }} </span>
+							</td>
+							<td class="text-nowrap" :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{ retornarFloat(payment.price)}}</td>
+							<td class="text-nowrap">
+								<span v-if="payment.type==8">Adelanto de cita</span>
+								<span v-if="payment.type==7">Pago de membresía</span>
+								<span v-if="payment.type==5">Pago de cita</span>
+								<span v-if="payment.type==4">Otros</span>
+								<span v-if="payment.type==3">Informe</span>
+								<span v-if="payment.type==2">Paquete Kurame</span>
+								<span v-if="payment.type==1">Paquete Membresía</span>
+								<span v-if="payment.type==0">Certificado</span>
+								<span v-if="payment.type==15">Pago de membresía</span>
+								<span v-if="payment.type==16">Revaluación gratuita</span>
+								<small v-if="payment.type!=4"><br>{{ payment.detalle }}</small>
+							</td>
+							<td class="text-capitalize"> <span>{{queMoneda(payment.moneda)}}</span> </td>
+							<td>{{ payment.voucher_issued }} </td>
+							<td>{{ payment.profesional_name }}</td>
+							<td>{{ fechaLatam(payment.fechaCita) }} {{ payment.horario }}</td>
+							<td class="d-print-none" style="white-space: nowrap">
+								<button class="btn btn-sm btn-outline-warning" v-if="esAdmin" @click="pagoSeleccionado = payment" title="Dividir pago" data-bs-toggle="modal" data-bs-target="#modalDividirPago" ><i class="fas fa-divide"></i></button>
+								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
+								<button class="btn btn-outline-primary btn-sm" title="Editar pago" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
+								<!-- <a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a> -->
+								<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" title="Ver PDF" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+								<button class="btn btn-outline-primary btn-sm" title="Facturación Electrónica" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
+							</td>
+						</tr>
+				</tbody>
+				<tfoot>
+					<tr v-for="tipo in sumaTipos">
+						<th colspan="7"></th>
+						<th>{{ tipo.moneda }}</th>
+						<th class="text-nowrap">S/ {{ tipo.suma.toFixed(2) }}</th>
+						<th></th>
+					</tr>
+					<tr>
+						<th colspan="7"></th>
+						<th>Total</th>
+						<th class="text-nowrap">S/ {{ parseFloat(suma).toFixed(2) }}</th>
+						<th></th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
 		<table class="table table-hover w-100 mt-1" id="table_export2">
 			<thead class="">
 				<tr class="">
@@ -556,4 +559,5 @@ export default{
 }
 </script>
 <style>
+
 </style>
