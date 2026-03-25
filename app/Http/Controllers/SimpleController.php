@@ -75,20 +75,51 @@ class SimpleController extends Controller
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // Opcional: desactivar verificación SSL (no recomendado en producción)
 
 		$response = curl_exec($curl);
-
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
-		// Datos listos para usar
-		$persona = json_decode($response, true);
-		//formateamos si no ubica
-		$persona['apellidoPaterno'] = $persona['apellidoPaterno'] == 'UNDEFINED' ? '' : $persona['apellidoPaterno'];
-		$persona['apellidoMaterno'] = $persona['apellidoMaterno'] == 'UNDEFINED' ? '' : $persona['apellidoMaterno'];
-		$persona['nombres'] = $persona['nombres'] == 'UNDEFINED' ? '' : $persona['nombres'];
 
-		//var_dump($persona);
-		if( !isset($persona['message']) )
-			return json_encode( array('apellido_paterno' => $persona['apellidoPaterno'], 'apellido_materno' => $persona['apellidoMaterno'], 'nombres' => $persona['nombres']) );
-		else
-			return array();
+		$persona = json_decode($response, true);
+		// Si la respuesta es null o no es un array, retornar estructura vacía
+    if (!is_array($persona) || empty($persona)) {
+			return [
+				'apellidoPaterno' => '',
+				'apellidoMaterno' => '',
+				'nombres' => '',
+				'dni' => $dni,
+				'error' => true,
+				'message' => 'No se encontraron datos para el DNI ingresado'
+			];
+    }
+
+		// Si la API devolvió un error
+    if (isset($persona['error']) || $httpCode !== 200) {
+			return [
+				'apellidoPaterno' => '',
+				'apellidoMaterno' => '',
+				'nombres' => '',
+				'dni' => $dni,
+				'error' => true,
+				'message' => $persona['message'] ?? 'Error al consultar el DNI'
+			];
+    }
+
+		// Formatear datos usando null coalescing operator
+    $apellidoPaterno = $persona['apellidoPaterno'] ?? '';
+    $apellidoMaterno = $persona['apellidoMaterno'] ?? '';
+    $nombres = $persona['nombres'] ?? '';
+    
+    // Limpiar valores UNDEFINED
+    $apellidoPaterno = ($apellidoPaterno === 'UNDEFINED') ? '' : $apellidoPaterno;
+    $apellidoMaterno = ($apellidoMaterno === 'UNDEFINED') ? '' : $apellidoMaterno;
+    $nombres = ($nombres === 'UNDEFINED') ? '' : $nombres;
+
+		return [
+        'apellido_paterno' => $apellidoPaterno,
+        'apellido_materno' => $apellidoMaterno,
+        'nombres' => $nombres,
+        'dni' => $persona['dni'] ?? $dni,
+        'error' => false
+    ];
 	}
 	public function buscarRUC($ruc){
 		
