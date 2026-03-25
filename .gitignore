@@ -24,3 +24,4 @@ storage/fonts/*
 .env.nube2
 .env.laptop
 .env.local
+.github/copilot-instructions.md

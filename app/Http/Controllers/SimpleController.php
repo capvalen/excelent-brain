@@ -61,7 +61,6 @@ class SimpleController extends Controller
 	}
 
 	public function buscarDni($dni){
-
 		$token = env('RENIEC_TOKEN');
 		$url = "https://dniruc.apisperu.com/api/v1/dni/" . urlencode($dni).'?token='.$token;
 				
@@ -80,9 +79,46 @@ class SimpleController extends Controller
 		curl_close($curl);
 		// Datos listos para usar
 		$persona = json_decode($response, true);
+		//formateamos si no ubica
+		$persona['apellidoPaterno'] = $persona['apellidoPaterno'] == 'UNDEFINED' ? '' : $persona['apellidoPaterno'];
+		$persona['apellidoMaterno'] = $persona['apellidoMaterno'] == 'UNDEFINED' ? '' : $persona['apellidoMaterno'];
+		$persona['nombres'] = $persona['nombres'] == 'UNDEFINED' ? '' : $persona['nombres'];
+
 		//var_dump($persona);
 		if( !isset($persona['message']) )
 			return json_encode( array('apellido_paterno' => $persona['apellidoPaterno'], 'apellido_materno' => $persona['apellidoMaterno'], 'nombres' => $persona['nombres']) );
+		else
+			return array();
+	}
+	public function buscarRUC($ruc){
+		
+		$token = env('RENIEC_TOKEN');
+		$url = "https://dniruc.apisperu.com/api/v1/ruc/" . urlencode($ruc).'?token='.$token;
+		
+				
+		$curl = curl_init();
+		// Configurar opciones de cURL
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); // Devuelve el resultado como string
+    curl_setopt($curl, CURLOPT_TIMEOUT, 30);          // Tiempo máximo de espera
+    curl_setopt($curl, CURLOPT_HTTPHEADER, [
+        'Accept: application/json'
+    ]);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // Opcional: desactivar verificación SSL (no recomendado en producción)
+
+		$response = curl_exec($curl);
+
+		curl_close($curl);
+		// Datos listos para usar
+		$empresa = json_decode($response, true);
+		//formateamos si no ubica
+		$empresa['razonSocial'] = $empresa['razonSocial'] == 'UNDEFINED' ? '' : $empresa['razonSocial'];
+		$empresa['direccion'] = $empresa['direccion'] == 'UNDEFINED' ? '' : $empresa['direccion'];
+		
+
+		//var_dump($empresa);
+		if( !isset($empresa['message']) )
+			return json_encode( array('ruc'=>$empresa['ruc'], 'razonSocial' => $empresa['razonSocial'], 'direccion' => $empresa['direccion']) );
 		else
 			return array();
 	}

@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('getLast10Patients', [PatientController::class, 'getLast10Patients']);
         Route::get('buscar/{dni}', [PatientController::class, 'buscarPaciente']);
         Route::get('buscarPacienteDB/{dni}', [PatientController::class, 'buscarPaciente']);
+        Route::get('buscarPacienteSoloDNI/{dni}', [PatientController::class, 'buscarPacienteSoloDNI']);
         Route::get('searchPatientByNameDni/{nombre}', [PatientController::class, 'searchPatientByNameDni']);
         Route::get('getNamePatient/{id}', [PatientController::class, 'getNamePatient']);
         Route::get('getNameExam/{id}', [PatientController::class, 'getNameExam']);
@@ -277,6 +278,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/guardarSeguimiento', [SimpleController::class, 'guardarSeguimiento']);
     Route::post('/pedirResultadosExamen', [SimpleController::class, 'pedirResultadosExamen']);
     Route::get('/buscarDni/{dni}', [SimpleController::class, 'buscarDni']);
+    Route::get('/buscarRUC/{ruc}', [SimpleController::class, 'buscarRUC']);
     Route::post('/crearNutricionPrimera', [SimpleController::class, 'crearNutricionPrimera']);
     Route::post('/listarNutriciones', [SimpleController::class, 'listarNutriciones']);
 });

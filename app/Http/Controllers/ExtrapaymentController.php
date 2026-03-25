@@ -8,6 +8,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Calculation\TextData\Extract;
 
 class ExtrapaymentController extends Controller
 {
@@ -73,8 +74,10 @@ class ExtrapaymentController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, $id)
-	{
-		//
+	{	
+		Extra_payment::where('id', $id)->update($request->all());
+		
+		return response()->json('Se actualizó con éxito');
 	}
 
 	/**

@@ -66,7 +66,7 @@
 				<div class="modal-footer border-0">
 					<!-- <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button> -->
 					<button v-if="dataCita.payment.pay_status==1" @click="update()" type="button" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar pago</button>
-					<a target="_blank" :href="`/api/pdfCupon/${dataCita.id}`" v-if="dataCita.payment.pay_status != 1" class="btn btn-outline-success">Cupón</a>
+					<a target="_blank" :href="`/api/pdfCupon/${dataCita.id}?token=${token}`" v-if="dataCita.payment.pay_status != 1" class="btn btn-outline-success">Cupón</a>
 				</div>
 			</div>
 		</div>
@@ -134,7 +134,7 @@ import moment from 'moment'
 				})
 			},
 			abrirCupon(){
-				window.open(`/api/pdfCupon/${this.dataCita.id}`, '_blank');
+				window.open(`/api/pdfCupon/${this.dataCita.id}?token=${localStorage.getItem('token')}`, '_blank');
 			},
 			closeModal() {
 				document.getElementById('cerrModal').click();
@@ -165,7 +165,10 @@ import moment from 'moment'
 		computed:{
 			pedirObservaciones(){
 				return  this.caso.motivoRebaja??''
-			}
+			},
+			token() {
+					return localStorage.getItem('token');
+			},
 		},
 	
 		watch:{

@@ -1,12 +1,10 @@
 <template>
 	<div class="modal fade" id="modalEditarPago"  tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog" role="document">
+		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content modal-sm">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Editar Pago</h5>
-					<button type="button" id="cerrModal" class="close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
+					<button type="button" id="cerrModalEstado" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 
 				<div class="modal-body">
@@ -92,7 +90,7 @@
 				})
 			},
 			abrirCupon(){
-				window.open(`/api/pdfCupon/${this.dataCita.id}`, '_blank');
+				window.open(`/api/pdfCupon/${this.dataCita.id}?token=${localStorage.getItem('token')}`, '_blank');
 			},
 			closeModal() {
 				document.getElementById('cerrModal').click();
@@ -123,9 +121,12 @@
 			this.caso.moneda = this.dataCita.payment.payment_method == undefined ? 1:this.dataCita.payment.payment_method ;
 			this.caso.continuo = this.dataCita.payment.continuo;
 			this.caso.user_id = this.idUsuario
-
-
 		},
+		computed:{
+			token() {
+					return localStorage.getItem('token');
+			},
+		}
 	}
 </script>
 

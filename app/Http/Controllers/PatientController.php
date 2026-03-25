@@ -388,6 +388,11 @@ class PatientController extends Controller
 			return response()->json([ 'patient'=>$paciente ]);
 		}
 	}
+	public function buscarPacienteSoloDNI($dni)
+	{
+	  $paciente = Patient::where('dni',$dni)->with('address')->first();
+		return $paciente;
+	}
 
 	public function showEvolution ($idPaciente, $idUsuario=-1) {
 		if($idUsuario==10){

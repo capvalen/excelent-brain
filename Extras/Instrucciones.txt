@@ -113,9 +113,10 @@ php artisan view:clear
 php artisan config:clear
 php artisan route:clear
 php artisan optimize:clear
-composer dump-autoload
-//Limpiar el .env
 
-//$2y$10$2GrwlhsRV7BK1293Nzr0EuxNeu1DVFHvA0mP6Fby.eUZMLobD3Wk2
+limpiar solo el .env para token: 
+php artisan config:clear
+php artisan cache:clear
+
 
 */

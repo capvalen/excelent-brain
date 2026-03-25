@@ -56,7 +56,7 @@
 							</td>
 							<td class="text-nowrap" v-if="payment.usuario" :title="payment.usuario.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.usuario.nombre" ><i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
 							<td class="text-nowrap" v-else  :title="payment.user.nombre" data-bs-toggle="tooltip" data-bs-placement="top" :data-bs-title="payment.user.nombre"> <i class="far fa-user"></i> {{payment.created_at | formatedDate}}</td>
-							<td>{{payment.voucher}}</td>
+							<td class="comprobante-sunat">{{payment.voucher}}</td>
 							<td>{{ payment.id}}</td>
 							<td class="text-capitalize text-nowrap">{{ payment.customer }} <span v-if="payment.observation!=''"></span></td>
 							<!-- <td v-if="payment.pay_status == 1">Sin cancelar</td>
@@ -98,8 +98,8 @@
 								<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 								<button class="btn btn-outline-primary btn-sm" title="Editar pago" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
 								<!-- <a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a> -->
-								<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" title="Ver PDF" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-								<button class="btn btn-outline-primary btn-sm" title="Facturación Electrónica" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)" v-if="consultarFecha()"><i class="fa-solid fa-pen-to-square"></i></button>
+								<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" title="Ver PDF" class="btn btn-danger btn-sm d-none"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+								<button class="btn btn-outline-primary btn-sm" title="Facturación Electrónica" @click="pagoSeleccionado = payment" data-bs-toggle="modal" data-bs-target="#modalFacturacion"><img :src="require('/img/sunat_logo.webp')" style="width: 15px" alt=""></button>
 							</td>
 						</tr>
 				</tbody>
@@ -172,8 +172,8 @@
 						<td class="d-print-none" style="white-space: nowrap">
 							<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
 							<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarPago" @click="editar(index)"><i class="fa-solid fa-pen-to-square"></i></button>
-							<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-							<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+							<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}?token=${token}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+							<a target="_blank" :href="`/api/pdfExtraCupon/${payment.id}?token=${token}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 						</td>
 					</tr>
 			</tbody>
@@ -253,8 +253,8 @@
 					<td>{{ horaLatam(payment.created_at) }}</td>
 					<td class="d-print-none" style="white-space: nowrap">
 							<button class="btn btn-outline-success btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offAdjunto"  @click="verAdjunto(payment.id)" title="Adjuntar archivo"><i class="far fa-file"></i></button>
-						<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-						<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+						<a v-if="payment.appointment_id!==0" target="_blank" :href="`/api/pdfCupon/${payment.appointment_id}?token=${token}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+						<a v-else target="_blank" :href="`/api/pdfExtraCupon/${payment.id}?token=${token}`" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-pdf"></i> PDF</a>
 					</td>
 				</tr>
 			</tbody>
@@ -336,6 +336,7 @@
 	<modal-egresos-extras :idUsuario="$attrs.idUser" :nombreUser="$attrs.nombreUser" :idSede="$attrs.idSede"/>
 	<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto" :habilitarEliminado="habilitarEliminado" ></OffcanvasAdjuntos>
 	<ModalDividirPago :pago="pagoSeleccionado" :idUsuario="$attrs.idUser"></ModalDividirPago>
+	<ModalFacturacion :idSede="$attrs.idSede" :pago="pagoSeleccionado" ></ModalFacturacion>
 </div>
 </template>
 
@@ -345,6 +346,7 @@ import ModalPagosExtras from './../citas/ModalPagosExtras.vue'
 import ModalEgresosExtras from './../citas/ModalEgresosExtras.vue'
 import OffcanvasAdjuntos from './OffcanvasAdjuntos.vue'
 import ModalDividirPago from "./ModalDividirPago.vue"
+import ModalFacturacion from "./ModalFacturacion.vue"
 import moment from 'moment'
 
 export default{
@@ -357,7 +359,7 @@ export default{
 	},
 	name: 'HomePagos',
 	props:{},
-	components:{ ModalMembresias, ModalPagosExtras, ModalEgresosExtras, OffcanvasAdjuntos, ModalDividirPago },
+	components:{ ModalMembresias, ModalPagosExtras, ModalEgresosExtras, OffcanvasAdjuntos, ModalDividirPago, ModalFacturacion },
 	methods:{
 		verAdjunto(id){
 			this.idSeleccionado=id;
@@ -463,7 +465,7 @@ export default{
 				const sede = this.idSede; // La IdSede del usuario
 
 				// Generar el enlace dinámico
-				const url = `/api/ticketCierreCaja/${fecha}/${this.$attrs.nombreUser}/${sede}`;
+				const url = `/api/ticketCierreCaja/${fecha}/${this.$attrs.nombreUser}/${sede}?token=${localStorage.getItem('token')}`;
 				// Redirigir a la URL generada
 				window.open(url, '_blank');
 			},

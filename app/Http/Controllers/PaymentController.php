@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Extra_payment;
 use App\Models\Professional;
 use App\Models\Payment;
+use App\Models\Patient;
 use App\Models\Precio;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
@@ -108,6 +109,8 @@ class PaymentController extends Controller
 						$payment->professional_id= $profesional->professional_id ?? 0;
 						$payment->profesional_name= $profesional->nombre ?? '';
 						$payment->fechaCita = $appointment->date;
+						$cliente  = Patient::find($appointment->patient_id);
+						$payment->dniCliente = $cliente->dni ?? '';
 						if( $appointment->schedule_id ):
 							$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
 							$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
@@ -125,6 +128,7 @@ class PaymentController extends Controller
 					$payment->horario = '';
 					$payment->servicio='';
 					$payment->fechaCita = '';
+					$payment->dniCliente = '';
 				}
 				$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->first();
 			}
