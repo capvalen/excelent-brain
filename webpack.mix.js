@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const webpack = require('webpack');
 /*
 mix.browserSync({
     proxy:'http://127.0.0.1:8000'
@@ -17,7 +18,16 @@ mix.browserSync({
  mix.setPublicPath('public')
 
 mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]).vue();
+	.postCss('resources/css/app.css', 'public/css', [
+			//
+	]).vue()
+.webpackConfig({  // ← Agrega esta configuración
+	plugins: [
+			new webpack.DefinePlugin({
+					'process.env': {
+							FACTURACION_TOKEN: JSON.stringify(process.env.FACTURACION_TOKEN)
+					}
+			})
+	]
+});
  

@@ -16,7 +16,7 @@
 										<div class="text-center">
 											<img class="mx-auto" :src="require('/img/pdf_logo.jpg')" style="width: 35px" alt="">
 											<p class="mb-0">Ticket Interno</p>
-											<p class="mb-0"><small>Impresión PDF</small></p>
+											<p class="mb-0"><small>Impresión en PDF</small></p>
 										</div>
 									</div>
 								</div>
@@ -124,6 +124,9 @@
 							<button class="btn btn-block btn-primary" @click="generarComprobante()"><img :src="require('/img/sunat_logo.webp')" style="width: 15px" alt=""> Generar comprobante</button>
 						</div>
 					
+					</div>
+					<div class="mt-3 d-flex justify-content-center" v-if="pago?.voucher" @click="irPanelBaja()">
+						<button class="btn btn-outline-danger"><i class="fa-solid fa-download"></i> ¿Dar de baja al comprobante?</button>
 					</div>
 				</div>
 
@@ -429,6 +432,12 @@ export default{
 			.catch(error => {
 				console.error('Error en impresión:', error);
 			});
+		},
+		irPanelBaja(){
+			let sede = this.idSede == 1 ? 'eltambo' : 'sancarlos'
+			
+
+			window.open('https://apps.infocatsoluciones.com/excelentemente/'+sede+'/php/accesoFast.php?token='+process.env.FACTURACION_TOKEN, '_blank');
 		}
 	},
 	watch:{
