@@ -360,9 +360,12 @@ export default {
 			datos.append('comentarios', this.comentarios )
 			datos.append('meses', this.cantMeses )
 			datos.append('num_sesion', 0 )
+			datos.append('descuento', this.membresia.descuento )
 
 			const servidor = await fetch('/api/guardarMembresia', {
-				method: 'POST', body: datos
+							method: 'POST',
+							body: datos,
+							headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
 			})
 			
 			const respuesta = await servidor.json();

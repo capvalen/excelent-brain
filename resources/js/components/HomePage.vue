@@ -1,7 +1,7 @@
 <template>
 <main>
     <div id="wrapper">
-        <side-bar :rolUser="this.currentUser.rol"></side-bar>
+        <side-bar :rolUser="this.currentUser.rol" :idSede="currentUser.idSede"></side-bar>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <nav-bar 

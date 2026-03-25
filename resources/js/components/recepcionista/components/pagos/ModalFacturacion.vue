@@ -435,8 +435,6 @@ export default{
 		},
 		irPanelBaja(){
 			let sede = this.idSede == 1 ? 'eltambo' : 'sancarlos'
-			
-
 			window.open('https://apps.infocatsoluciones.com/excelentemente/'+sede+'/php/accesoFast.php?token='+process.env.FACTURACION_TOKEN, '_blank');
 		}
 	},

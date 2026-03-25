@@ -321,6 +321,12 @@
 										<span>Limbo</span>
 								</router-link>
 						</li>
+						<li class="nav-item nav__list" @click="irPanelBaja()">
+							<a href="#!" class="nav-link">
+									<img  :src="require('/img/sunat_blanco.png')" style="width:18px">
+										<span>Facturación Electrónica</span>
+							</a>
+						</li>
 						
 				</div>
 
@@ -352,7 +358,11 @@ export default {
 								document.querySelector(".nav__list.active").classList.remove("active")
 								event.target.closest(".nav__list").classList.toggle("active");
 						}
-				}
+				},
+		irPanelBaja(){
+			let sede = this.$attrs.idSede == 1 ? 'eltambo' : 'sancarlos'
+			window.open('https://apps.infocatsoluciones.com/excelentemente/'+sede+'/php/accesoFast.php?token='+process.env.FACTURACION_TOKEN, '_blank');
+		}
 		}
 }
 </script>
