@@ -1353,7 +1353,7 @@ class AppointmentController extends Controller
 	}
 
 	public function registrarHora(Request $request){
-		$cita = Appointment::where('id', $request->input('idCita'));
+		$cita = Appointment::where('id', $request->input('idCita'))->first();
 		$cita->update([
 			'entrance' => $request->input('entrance'),
 			'attention' => $request->input('attention'),
@@ -1361,7 +1361,6 @@ class AppointmentController extends Controller
 		return response()->json(['mensaje' => 'Ok']);
 	}
 }
-
 
 function object_sorter($clave,$orden=null) {
 	return function ($a, $b) use ($clave,$orden) {

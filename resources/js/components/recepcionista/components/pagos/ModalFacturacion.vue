@@ -44,7 +44,7 @@
 								<option value="03">Boleta electrónica</option>
 							</select>
 						</div>
-						<div class="mb-2">
+						<div class="mb-2 d-none">
 							<label class="form-label">Fecha del documento</label>
 							<input type="date" class="form-control" disabled :value="hoy" >
 						</div>
@@ -52,7 +52,7 @@
 						<div class="row g-2 mb-2">
 							<div class="col-8">
 								<label class="form-label">Tipo de documento</label>
-								<select class="form-select" v-model="facturacion.tipoDocumento" @click="cambioCliente()">
+								<select class="form-select" v-model="facturacion.tipoDocumento" @change="cambioCliente()">
 									<option value="1">DNI</option>
 									<option value="6">RUC</option>
 									<option value="0">Cliente Simple</option>
@@ -192,7 +192,11 @@ export default{
         event.preventDefault(); // Evita que se ingrese el espacio
       }
     },
-		async buscarReniec(){	
+		async buscarReniec(){
+			if(this.facturacion.ruc == ''){
+				alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Campo DNI/RUC está vacío', 'danger', 10);
+				return
+			}
 			this.$swal.fire({
 				title: 'Buscando paciente',
 				timer: 1000, //1 seg
@@ -215,6 +219,9 @@ export default{
 					this.facturacion.direccion = '-'
 					return
 				}else{
+					this.facturacion.ruc = ''
+					this.facturacion.razonSocial = ''
+					this.facturacion.direccion = ''
 					this.$swal.fire({
 						title: 'DNI no ubicado',
 						timer: 1000, //1 seg
@@ -281,6 +288,7 @@ export default{
         this.facturacion.monto = valor;
     },
 		generarComprobante(){
+			if( !this.validaciones() ) return
 			let sede = this.idSede == 1 ? 'eltambo' : 'sancarlos' //1= el tambo, 2 = san carlos
 			let url = null
 			let empresa = null
@@ -360,6 +368,31 @@ export default{
 			})
 
 		},
+		validaciones(){
+			let valor = true
+
+			//validaciones generales:
+			if( this.facturacion.ruc == '' || this.facturacion.razonSocial == '' ){
+				alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Falta rellenar datos: DNI, Razón Social', 'danger', 10);
+				valor = false
+			}
+			if( this.facturacion.monto <= 0 ){
+				alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Monto incorrecto', 'danger', 10);
+				valor = false
+			}
+
+			if( this.facturacion.tipoEmision == '01' ){ //facturas
+
+			}
+			if( this.facturacion.tipoEmision == '03' ){ //boletas
+				//if( (this.facturacion.tipoDocumento == 1 || this.facturacion.tipoDocumento == 6) )
+			
+
+					//
+
+			}
+			return valor
+		},
 		registrarSerie(serie){
 			//registrar en pagos de BD consultorio
 			this.pago.voucher = serie
@@ -371,7 +404,7 @@ export default{
 			let url = null
 			if( process.env.NODE_ENV === 'production' ){
 				url = 'https://apps.infocatsoluciones.com/excelentemente/'+sede+'/php/apiComprobantePorCorrelativo.php'}
-			else url = 'http://localhost/pluginSunat/php/apiComprobantePorCorrelativo.php'
+			else url = 'http://127.0.0.1/pluginSunat/php/apiComprobantePorCorrelativo.php'
 
 			
 			let resp = await this.axios.post( url , {correlativo:this.pago.voucher })
@@ -422,7 +455,7 @@ export default{
 				monedas: datos.cabecera.desLeyenda
 			}
 
-			fetch('http://localhost/pluginSunat/printComprobante.php',{
+			fetch('http://127.0.0.1/pluginSunat/printComprobante.php',{
 				method:'POST', headers: { 'Content-Type': 'application/json'},
 				body: JSON.stringify(cuerpo)
 			})

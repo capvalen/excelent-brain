@@ -229,7 +229,7 @@ export default {
         
         print () {
             this.exam.medical_exams = this.selected
-            window.open('/api/pdf_exam/'+[JSON.stringify(this.exam).split('/').join('-')])
+            window.open('/api/pdf_exam/'+[JSON.stringify(this.exam).split('/').join('-')]+'?token='+localStorage.getItem('token'))
         },
         
         deleteSelected(key){

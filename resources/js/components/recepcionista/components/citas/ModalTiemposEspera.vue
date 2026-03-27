@@ -46,7 +46,7 @@ export default{
 				case 'atención': this.cita.attention = moment().format('HH:mm:ss'); break;
 				default: break;
 			}
-			await this.axios.post('/api/registrarHora/',{
+			await this.axios.post('/api/registrarHora',{
 				tipo,
 				idCita: this.cita.id,
 				entrance: this.cita.entrance,
