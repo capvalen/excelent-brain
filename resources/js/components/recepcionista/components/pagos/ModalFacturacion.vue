@@ -208,14 +208,15 @@ export default{
 			})
 			
 			let resp = await this.axios.get("/api/buscarPacienteSoloDNI/"+this.facturacion.ruc+'?token='+localStorage.getItem('token'))
-			if(resp.data.name){ //esta en la BD local
+			if(resp.data && resp.data !== ""){ //esta en la BD local
 				this.facturacion.ruc = resp.data.dni.trim()
 				this.facturacion.razonSocial = resp.data.name.trim() + ' '+ resp.data.nombres.trim()
 				this.facturacion.direccion = resp.data.address?.address.trim().replace('null', '-')
 			}else{ //Busca en la BD externa (RENIEC)
-				let respReniec = await this.axios.get("/api/buscarDni/"+this.cita.dni)
-				if(respReniec.status === 200 && respReniec.data.nombre){
-					this.facturacion.razonSocial = respReniec.data.apellidoPaterno.trim() + ' ' + respReniec.data.apellidoMaterno.trim() + ' ' + respReniec.data.nombres.trim()
+				let respReniec = await this.axios.get("/api/buscarDni/"+this.facturacion.ruc+'?token='+localStorage.getItem('token'))
+				//console.log('se entrega', respReniec.status === 200,respReniec.data)
+				if(respReniec.status === 200 && respReniec.data){
+					this.facturacion.razonSocial = respReniec.data.apellido_paterno.trim() + ' ' + respReniec.data.apellido_materno.trim() + ' ' + respReniec.data.nombres.trim()
 					this.facturacion.direccion = '-'
 					return
 				}else{
