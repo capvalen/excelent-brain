@@ -98,6 +98,7 @@ class PaymentController extends Controller
 				->where('activo', 1)
 				->where('type', '!=', 6)
 				->where('idSede', '=', $request->get('idSede'))
+				->with('patient')
 				->get();
 			foreach ($payments as $payment) {
 				if($payment->appointment_id!=0){

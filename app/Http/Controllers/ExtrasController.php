@@ -562,6 +562,7 @@ class ExtrasController extends Controller
             $pagoExtra->moneda = 1;
             $pagoExtra->voucher = '';
             $pagoExtra->appointment_id = 0;
+            $pagoExtra->patient_id =$request->input('idPaciente');
             $pagoExtra->type = 7; // pago de membresía
             $pagoExtra->observation = '';
             $pagoExtra->continuo = 3;

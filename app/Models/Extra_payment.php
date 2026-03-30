@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Extra_payment extends Model
 {
-    protected $fillable=['customer','date','price','type','observation', 'voucher', 'voucher_issued', 'continuo', 'moneda', 'user_id', 'appointment_id', 'activo', 'razon', 'rebaja', 'motivoRebaja', 'descuento', 'motivoDescuento', 'razonAdelanto', 'idMembresia', 'tipo', 'idSede', 'correlativo'];
+    protected $fillable=['customer','date','price','type','observation', 'voucher', 'voucher_issued', 'continuo', 'moneda', 'user_id', 'appointment_id', 'patient_id', 'activo', 'razon', 'rebaja', 'motivoRebaja', 'descuento', 'motivoDescuento', 'razonAdelanto', 'idMembresia', 'tipo', 'idSede', 'correlativo'];
     use HasFactory;
 
     public function appointment() {
@@ -32,6 +32,9 @@ class Extra_payment extends Model
 
     public function tipo_pagos(){
         return $this->hasOne("App\Models\TipoPago", 'id', 'type');
+    }
+    public function patient(){
+        return $this->belongsTo( Patient::class, 'patient_id' );
     }
 
     public function user(){

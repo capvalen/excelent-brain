@@ -39,7 +39,7 @@
 						<p >Datos principales para facturación:</p>
 						<div class="mb-2">
 							<label class="form-label">Tipo de Comprobante</label>
-							<select class="form-select" id="sltTipo" v-model="facturacion.tipoEmision">
+							<select class="form-select" id="sltTipo" v-model="facturacion.tipoEmision" @change="cambiarEmision()">
 								<option value="01">Factura electrónica</option>
 								<option value="03">Boleta electrónica</option>
 							</select>
@@ -88,7 +88,7 @@
 							<input type="text" class="form-control" placeholder="" v-model="facturacion.monto" @input="soloNumeros($event)">
 						</div>
 
-						<div class="mb-2">
+						<div class="mb-2" v-show="facturacion.tipoEmision=='01'">
 							<label class="form-label">Tipo de pago</label>
 							<select class="form-select" v-model="facturacion.tipoPago" @change="cambiarContado()">
 								<option>Contado</option>
@@ -96,7 +96,7 @@
 							</select>
 						</div>
 
-						<div v-if="facturacion.tipoPago === 'Crédito'">
+						<div v-if="facturacion.tipoPago === 'Crédito' && facturacion.tipoEmision=='01'"> <!-- solo facturas pueden programar fechas -->
 							<div class="d-flex justify-content-between mt-3">
 								<p class="mb-1 ">Cronograma de fechas y montos</p>
 								<button class="btn btn-outline-secondary btn-sm" @click="agregarMontoFecha()"><i class="fa-solid fa-plus"></i></button>
@@ -381,6 +381,10 @@ export default{
 				alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Monto incorrecto', 'danger', 10);
 				valor = false
 			}
+			if( this.facturacion.conceptoPago == '' ){
+				alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Se debe rellenar un concepto', 'danger', 10);
+				valor = false
+			}
 
 			if( this.facturacion.tipoEmision == '01' ){ //facturas
 
@@ -470,15 +474,24 @@ export default{
 		irPanelBaja(){
 			let sede = this.idSede == 1 ? 'eltambo' : 'sancarlos'
 			window.open('https://apps.infocatsoluciones.com/excelentemente/'+sede+'/php/accesoFast.php?token='+process.env.FACTURACION_TOKEN, '_blank');
+		},
+		cambiarEmision(){
+			if( this.facturacion.tipoEmision == '03'){ //boletas, seteamos al contado
+				this.facturacion.tipoPago = 'Contado'
+			}
+
 		}
 	},
 	watch:{
 		'pago': function(newVal){
 			if(newVal){
 				if(newVal.voucher) return;
-				this.facturacion.ruc = newVal.dniCliente
+				this.facturacion.ruc = newVal.patient.dni
 				this.buscarReniec()
-				this.facturacion.conceptoPago = newVal.servicio.replace(/\//g, '-');
+				if( parseInt(newVal.idMembresia) >0 )
+					this.facturacion.conceptoPago = 'Pago de membresía'
+				else
+					this.facturacion.conceptoPago = newVal.servicio.replace(/\//g, '-');
 				this.facturacion.monto = newVal.price
 			}
 		}

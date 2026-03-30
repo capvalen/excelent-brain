@@ -701,6 +701,7 @@ class AppointmentController extends Controller
 			$pagoExtra->moneda = $request->input('caso.moneda');
 			$pagoExtra->voucher_issued = $request->input('caso.comprobante');
 			$pagoExtra->appointment_id = $request->input('dataCita.id');
+			$pagoExtra->patient_id = $request->input('dataCita.patient_id');
 			$pagoExtra->type = 8;
 			$pagoExtra->observation = $request->input('dataCita.payment.observation');
 			$pagoExtra->continuo = $request->input('caso.continuo');
@@ -720,6 +721,7 @@ class AppointmentController extends Controller
 				$pagoExtra->moneda = $request->input('caso.moneda');
 				$pagoExtra->voucher_issued = $request->input('caso.comprobante');
 				$pagoExtra->appointment_id = $request->input('dataCita.id');
+				$pagoExtra->patient_id = $request->input('dataCita.patient_id');
 				$pagoExtra->type =5;
 				$pagoExtra->observation = $request->input('dataCita.payment.observation');
 				$pagoExtra->continuo = $request->input('caso.continuo');
