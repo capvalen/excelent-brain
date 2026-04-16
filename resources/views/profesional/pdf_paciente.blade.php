@@ -41,7 +41,12 @@
           </p>
 
           <p>
-            <span class="title-h5">Número: </span>
+            <span class="title-h5">DNI: </span>
+            <span>{{ $historia->dni }}</span>
+          </p>
+
+          <p>
+            <span class="title-h5">Celular: </span>
             <span>{{ $historia->phone }}</span>
           </p>
           
@@ -206,10 +211,15 @@
               
                 <div>
                   <p class="title-h5">15. Diagnóstico</p>
-                  <p class="py-0 d-block">
-                    {{ $historia->initial_psychiatric_history->diagnostic }}
-                  </p>
-                  {{-- <p class="title-h6 >Fecha: <span class="">15/12/12</span></p> --}}
+                  @php
+                    $diagnosticos = json_decode($historia->initial_psychiatric_history->diagnostic, true) ?? [];
+                  @endphp
+                  @foreach($diagnosticos as $diagId)
+                    @php $cie = \App\Models\Cie::find($diagId); @endphp
+                    @if($cie)
+                      <p class="py-0 d-block">{{ $cie->code }} - {{ $cie->description }}</p>
+                    @endif
+                  @endforeach
                 </div>
               
                 <div>

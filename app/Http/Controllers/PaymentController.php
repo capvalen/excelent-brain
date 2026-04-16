@@ -101,7 +101,7 @@ class PaymentController extends Controller
 				->with('patient')
 				->get();
 			foreach ($payments as $payment) {
-				if($payment->appointment_id!=0){
+				if($payment->appointment_id > 0){ //solo para citas
 					$appointment = Appointment::with('precio')->find($payment->appointment_id);
 					if( isset($appointment->professional_id) ){
 						$servicio = Precio::find($appointment->type)->first();
@@ -121,6 +121,16 @@ class PaymentController extends Controller
 							$payment->horar = '';
 							$payment->detalle= '';
 						endif;
+					}
+				}
+				else if($payment->idMembresia > 0 ){ //si son membresías
+					$resultado  = DB::table('membresias as m')
+					->join('patients as p', 'p.id', '=', 'm.patient_id')
+					->where('m.id', $payment->idMembresia)
+					->select('p.dni', 'p.id')->first();
+					if ($resultado) {
+						$payment->patient_id = $resultado->id ?? '';
+						$payment->dniCliente = $resultado->dni ?? '';
 					}
 				}else{
 					$payment->professional_id= 0;

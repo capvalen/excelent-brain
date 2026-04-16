@@ -395,47 +395,47 @@ class PatientController extends Controller
 	}
 
 	public function showEvolution ($idPaciente, $idUsuario=-1) {
-		if($idUsuario==10){
-			$evoluciones = Patient::where('id',$idPaciente)
-			->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'appointments', 'prescriptions')
-			->with('medical_evolutions.professional','medical_evolutions.comentarios')
-			->with(['medical_evolutions'=> function($query) {
-				$query->where('activo','=', 1);
-			}])
-			->first();
-			$evoluciones->maximo=0;
-		}else{
-			$threeMonthsAgo = now()->subMonths(6);
-	
-			$evoluciones = Patient::where('id',$idPaciente)
-			->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'appointments', 'prescriptions')
-			->with('medical_evolutions.professional','medical_evolutions.comentarios')
-			->with(['medical_evolutions'=> function($query) use($threeMonthsAgo) {
-				$query->where('activo','=', 1)
-				->whereBetween('date', [ $threeMonthsAgo, now() ]);
-			}])
-			->first();
-			$evoluciones->maximo = Medical_evolution::where('date', '<', $threeMonthsAgo)
-			->where('patient_id', $idPaciente)
-			->count();
-		}
+			if($idUsuario==10){
+				$evoluciones = Patient::where('id',$idPaciente)
+				->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'appointments', 'prescriptions')
+				->with('medical_evolutions.professional','medical_evolutions.comentarios', 'medical_evolutions.typeEvolution')
+				->with(['medical_evolutions'=> function($query) {
+					$query->where('activo','=', 1);
+				}])
+				->first();
+				$evoluciones->maximo=0;
+			}else{
+				$threeMonthsAgo = now()->subMonths(6);
 		
-		//return response()->json([$evoluciones]); die();
-		
-		$triaje = DB::table('triaje')->where('patient_id', $evoluciones->id)->get();
-		$evoluciones->triajes = $triaje ;
-		$examenes = DB::table('exams')->where('patient_id', $evoluciones->id)->get();
-		$evoluciones->examenes_basicos = $examenes;
-		//$evoluciones->examenes->push( $examenes );
-		$burns = DB::table('burns')->where('patient_id', $evoluciones->id)->get();
-		$gads = DB::table('gads')->where('patient_id', $evoluciones->id)->get();
-		$scrs = DB::table('scrs')->where('patient_id', $evoluciones->id)->get();
-		$zung_anxieties = DB::table('zung_anxieties')->where('patient_id', $evoluciones->id)->get();
-		$zung_depressions = DB::table('zung_depressions')->where('patient_id', $evoluciones->id)->get();
-		$evoluciones->examenes_personalizados =  array( 'scrs' => $scrs, 'burns' => $burns, 'gads' => $gads, 'zung_anxieties' => $zung_anxieties, 'zung_depressions' => $zung_depressions);
+				$evoluciones = Patient::where('id',$idPaciente)
+				->with('cies', 'initial_psychiatric_history', 'initial_psychological_history', 'relative', 'appointments', 'prescriptions')
+				->with('medical_evolutions.professional','medical_evolutions.comentarios', 'medical_evolutions.typeEvolution')
+				->with(['medical_evolutions'=> function($query) use($threeMonthsAgo) {
+					$query->where('activo','=', 1)
+					->whereBetween('date', [ $threeMonthsAgo, now() ]);
+				}])
+				->first();
+				$evoluciones->maximo = Medical_evolution::where('date', '<', $threeMonthsAgo)
+				->where('patient_id', $idPaciente)
+				->count();
+			}
+			
+			//return response()->json([$evoluciones]); die();
+			
+			$triaje = DB::table('triaje')->where('patient_id', $evoluciones->id)->get();
+			$evoluciones->triajes = $triaje ;
+			$examenes = DB::table('exams')->where('patient_id', $evoluciones->id)->get();
+			$evoluciones->examenes_basicos = $examenes;
+			//$evoluciones->examenes->push( $examenes );
+			$burns = DB::table('burns')->where('patient_id', $evoluciones->id)->get();
+			$gads = DB::table('gads')->where('patient_id', $evoluciones->id)->get();
+			$scrs = DB::table('scrs')->where('patient_id', $evoluciones->id)->get();
+			$zung_anxieties = DB::table('zung_anxieties')->where('patient_id', $evoluciones->id)->get();
+			$zung_depressions = DB::table('zung_depressions')->where('patient_id', $evoluciones->id)->get();
+			$evoluciones->examenes_personalizados =  array( 'scrs' => $scrs, 'burns' => $burns, 'gads' => $gads, 'zung_anxieties' => $zung_anxieties, 'zung_depressions' => $zung_depressions);
 
-		return response()->json($evoluciones);
-	}
+			return response()->json($evoluciones);
+		}
 
 	public function getNamePatient($id){
 		$patient = Patient::find($id);

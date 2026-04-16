@@ -101,8 +101,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('searchPatientByNameDniAdmin/{nombre}', [PatientController::class, 'searchPatientByNameDniAdmin']);
             Route::get('returnTotalPatients', [PatientController::class, 'returnTotalPatients']);
             Route::get('xlsx_admin/{date}', [PatientController::class, 'monthXlsx']);
-            Route::get('discharge/{id}/{idProfesional}', [PatientController::class, 'discharge']);
+            //Route::get('discharge/{id}/{idProfesional}', [PatientController::class, 'discharge']);
             Route::get('agePerMonth/{month}', [PatientController::class, 'agePerMonth']);
+        });
+
+        // Admin-only patient routes
+        Route::middleware('role:administrador,recepcionista,profesional')->group(function () {
+            Route::get('discharge/{id}/{idProfesional}', [PatientController::class, 'discharge']);
         });
     });
 
@@ -186,12 +191,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('getPatientsPsiq/{date}', [Medical_evolutionController::class, 'getPatientsPsiq']);
         Route::post('pedirReporte/{idReporte}', [ExtrasController::class, 'pedirReporte']);
         Route::post('pedirReporteGerencial/{idReporte}', [ExtrasController::class, 'pedirReporteGerencial']);
-        Route::post('buscarCartera', [ExtrasController::class, 'buscarCartera']);
+        //Route::post('buscarCartera', [ExtrasController::class, 'buscarCartera']);
         Route::post('actualizarPrecioAdmin', [ExtrasController::class, 'actualizarPrecioAdmin']);
         Route::post('crearPrecioNuevo', [ExtrasController::class, 'crearPrecioNuevo']);
         Route::get('listarPreciosTodos', [ExtrasController::class, 'listarPreciosTodos']);
         Route::post('reportsJimmy', [SimpleController::class, 'reportsJimmy']);
     });
+
+    // ── REPORTS (incluyendo profesional) ──────────────────────────────────────────────────
+    Route::middleware('role:administrador,recepcionista,profesional')->group(function () {
+        Route::post('buscarCartera', [ExtrasController::class, 'buscarCartera']);
+    }); 
 
     // ── EXTRAS ────────────────────────────────────────────────────────────────
     Route::group([], function () {

@@ -551,7 +551,7 @@
 							<div class="card-body">
 								<div class="card-evolution">
 									<div class="historia-info">
-										<p><b>Clase:</b> {{ dondeEsta2(evolution.type) }}</p>
+										<p><b>Clase:</b> {{ evolution.type_evolution ? evolution.type_evolution.clasificacion : 'Sin asignar' }}</p>
 										<p><b>Profesional:</b> {{ evolution.professional ? evolution.professional.name : 'Sin asignar' }} </p>
 										<p><b>Diagnóstico: </b> {{ evolution ? maxStringCharacter(evolution.content, 50) : '...' }} </p>
 									</div>
@@ -875,7 +875,7 @@ export default {
 				.then(res => {
 					this.datosConsulta = res.data;
 					this.misHobbies = JSON.parse(this.datosConsulta.hobbies)
-					//console.log(this.datosConsulta)
+					console.log(this.datosConsulta)
 					this.datosConsulta.medical_evolutions = this.datosConsulta.medical_evolutions.sort(function (a, b) {
 						if (a.date < b.date) {
 							return -1;

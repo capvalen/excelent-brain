@@ -25,4 +25,10 @@ class Medical_evolution extends Model
     public function comentarios(){
         return $this->hasMany("App\Models\Medical_comment", 'idMedical', 'id');
     }
+
+    //Obtener tipo de evolution en la tabla precios_clasificacion referenciando con type.
+    public function typeEvolution(){
+        return $this->belongsTo("App\Models\PrecioClasificacion", 'type', 'id');
+    }
+
 }
