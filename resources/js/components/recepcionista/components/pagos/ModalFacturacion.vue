@@ -77,7 +77,10 @@
 							<label class="form-label">Dirección</label>
 							<input type="text" class="form-control" placeholder="" v-model="facturacion.direccion">
 						</div>
-
+						<div class="mb-2">
+							<label class="form-label">Apoderado</label>
+							<input type="text" class="form-control" placeholder="" v-model="facturacion.apoderado">
+						</div>
 						<div class="mb-2">
 							<label class="form-label">Concepto del pago</label>
 							<input type="text" class="form-control" placeholder="" v-model="facturacion.conceptoPago">
@@ -154,6 +157,7 @@ export default{
 			conceptoPago: '',
 			monto:0,
 			tipoPago: 'Contado',
+			apoderado: '',
 			montosFechas: [
 			]
 		}
@@ -326,7 +330,8 @@ export default{
 				fechaCredito : this.facturacion.montosFechas,
 				adelanto: 0,
 				montoCredito: this.facturacion.montosFechas.reduce((acc, item) => acc+item.monto, 0 ),
-				descuentos: 0
+				descuentos: 0,
+				observaciones: this.facturacion.apoderado
 			}
 			
 			jsonProductos.push({
@@ -344,7 +349,7 @@ export default{
 			let cabecera = { tipo: this.facturacion.tipoEmision, serie: comprobantes[this.facturacion.tipoEmision], fecha: this.hoy }
 
 			this.$swal.fire({
-				title: 'Enviando Comprobante Electrónico',				
+				title: 'Enviando Comprobante Electrónico',
 				timerProgressBar: true,
 				didOpen: () => {
 					timerProgressBar: true,

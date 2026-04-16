@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/Archivador.zip
 /public/storage
 /storage/*.key
 /storage/fonts/*
@@ -10,6 +11,7 @@
 /vendor
 .env
 .phpunit.result.cache
+Archivador.zip
 docker-compose.override.yml
 Homestead.json
 Homestead.yaml
