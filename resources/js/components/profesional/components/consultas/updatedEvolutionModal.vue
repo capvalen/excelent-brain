@@ -156,6 +156,7 @@
 						title: 'Evolución guardada exitosamente',
 						icon: 'success'
 					})
+          this.$emit('evolutionUpdated', this.datosModal)
         })
         .catch(err => {
           if(err.response.status == 500){
@@ -194,6 +195,7 @@
     props: {
       datosModal: Object
     },
+    emits: ['evolutionUpdated'],
 
     computed: {
       updatedData () {

@@ -260,9 +260,12 @@
 			asignar(dato){
 				this.cita = dato;
 			},
-			actualizarAdelanto(adelanto){
-				this.horasMalas[this.indexElegido].payment.price = parseFloat(this.horasMalas[this.indexElegido].payment.price) - parseFloat(adelanto)
-				this.horasMalas[this.indexElegido].payment.adelanto = parseFloat(this.horasMalas[this.indexElegido].payment.adelanto) + parseFloat(adelanto)
+			actualizarAdelanto(adelanto, citaId){
+				const cita = this.horasMalas.find(h => h.id === citaId || h.payment?.id === citaId);
+				if(cita && cita.payment){
+					cita.payment.price = parseFloat(cita.payment.price) - parseFloat(adelanto)
+					cita.payment.adelanto = parseFloat(cita.payment.adelanto || 0) + parseFloat(adelanto)
+				}
 			},
 			async eliminar(id){
       this.$swal({

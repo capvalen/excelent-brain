@@ -36,11 +36,13 @@
         props: {
             datosModal: Object
         },
+        emits: ['evolutionUpdated'],
         methods:{
             editEvolution(){
                 this.axios.post('/api/editEvolution', this.datosModal)
                 .then((res)=>{
                     this.$swal(res.data.msg)
+                    this.$emit('evolutionUpdated', this.datosModal)
                 })
             }
         }

@@ -124,9 +124,10 @@ import moment from 'moment'
 					}
 					if(this.caso.pago == '3' || this.caso.pago==3){
 						this.caso.pago = 1
-						this.cita.payment.pay_status = this.caso.pago
-						this.cita.payment.adelanto = this.caso.monto_adelanto
-						//this.$emit('actualizarAdelanto', this.caso.monto_adelanto)
+						this.dataCita.payment.pay_status = this.caso.pago
+						this.dataCita.payment.adelanto = parseFloat(this.dataCita.payment.adelanto || 0) + parseFloat(this.caso.monto_adelanto);
+						this.dataCita.payment.price = parseFloat(this.dataCita.payment.price) - parseFloat(this.caso.monto_adelanto);
+						this.$emit('actualizarAdelanto', this.caso.monto_adelanto, this.dataCita.id)
 					}
 				})
 				.catch(err => {

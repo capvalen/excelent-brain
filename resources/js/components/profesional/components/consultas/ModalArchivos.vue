@@ -48,6 +48,9 @@ export default{
     };
   },
 	props:['idPaciente', 'idProfesional'],
+	mounted(){
+		this.pedirArchivos();
+	},
 	watch:{
 		idPaciente(){
 			this.pedirArchivos();

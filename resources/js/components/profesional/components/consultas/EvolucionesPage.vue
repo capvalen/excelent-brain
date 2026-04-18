@@ -551,7 +551,7 @@
 							<div class="card-body">
 								<div class="card-evolution">
 									<div class="historia-info">
-										<p><b>Clase:</b> {{ evolution.type_evolution ? evolution.type_evolution.clasificacion : 'Sin asignar' }}</p>
+										<p><b>Clase:</b> {{ evolution.clasificacion_combinada || (evolution.type_evolution ? evolution.type_evolution.clasificacion : 'Sin asignar') }}</p>
 										<p><b>Profesional:</b> {{ evolution.professional ? evolution.professional.name : 'Sin asignar' }} </p>
 										<p><b>Diagnóstico: </b> {{ evolution ? maxStringCharacter(evolution.content, 50) : '...' }} </p>
 									</div>
@@ -656,10 +656,10 @@
 		</div>
 
 		<!-- Modal de actualizar -->
-		<updated-modal :datosModal="dataModal"></updated-modal>
+		<updated-modal :datosModal="dataModal" @evolutionUpdated="refreshEvoluciones"></updated-modal>
 
 		<!-- Modal editar -->
-		<edit-modal :datosModal="dataModal"></edit-modal>
+		<edit-modal :datosModal="dataModal" @evolutionUpdated="refreshEvoluciones"></edit-modal>
 		<modalVerDetalle :miniRespuesta="miniRespuesta"></modalVerDetalle>
 		<modal-ver-triajes-viejos :triajes = "datosConsulta.triajes"></modal-ver-triajes-viejos>
 		<modal-editar-paciente :dataPatient="dato1" ></modal-editar-paciente>
@@ -1121,6 +1121,10 @@ export default {
 				this.evolution.professional_id = this.dataUser.id
 		},
 
+		refreshEvoluciones() {
+			this.getHistories();
+		},
+
 		addCie() {
 			let verify = true;
 
@@ -1276,6 +1280,19 @@ export default {
 			}) 
 		},
 		dondeEsta(tips){
+			const tipoColores = {
+				1: 'evolucionPsiquiatria',
+				2: 'evolucionPsicologia',
+				3: 'evolucionTipo3',
+				4: 'evolucionTipo4',
+				5: 'evolucionTipo5',
+				6: 'evolucionTipo6',
+				7: 'evolucionTerapista',
+				8: 'evolucionTipo8'
+			};
+			
+			if (tipoColores[tips]) return tipoColores[tips];
+			
 			let valor = null
 			if (valor = this.evolucionPsiquiatria.indexOf(tips)>-1) return 'evolucionPsiquiatria'
 			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'evolucionPsicologia'
@@ -1285,6 +1302,19 @@ export default {
 			else return 'evoOtro'
 		},
 		dondeEsta2(tips){
+			const tipoNombres = {
+				1: 'Psiquiatría',
+				2: 'Psicología',
+				3: 'Certificado',
+				4: 'Kurame',
+				5: 'Membresía',
+				6: 'Nutrición',
+				7: 'Terapista',
+				8: 'Otro'
+			};
+			
+			if (tipoNombres[tips]) return tipoNombres[tips];
+			
 			let valor = null
 			if (valor = this.evolucionPsiquiatria.indexOf(tips)>-1) return 'Psiquiatría'
 			else if (valor = this.evolucionPsicologia.indexOf(tips)>-1) return 'Psicología'
@@ -1344,11 +1374,14 @@ export default {
 </script>
 
 <style scoped>
-.evolucionPsiquiatria .card-header{ background: #e74a3b }
-.evolucionPsicologia .card-header{ background: #4e73df }
-.evolucionTerapista .card-header{ background: #46fd83 }
-.evolucionTecnologo .card-header{ background: #ff8c4a }
-.evolucionNutricion .card-header{ background: #ffde4a }
+.evolucionPsiquiatria .card-header, .evolucionTipo1 .card-header{ background: #e74a3b }
+.evolucionPsicologia .card-header, .evolucionTipo2 .card-header{ background: #4e73df }
+.evolucionTerapista .card-header, .evolucionTipo7 .card-header{ background: #9b59b6 }
+.evolucionTecnologo .card-header, .evolucionTipo3 .card-header{ background: #2ecc71 }
+.evolucionTipo4 .card-header{ background: #808000 }
+.evolucionTipo5 .card-header{ background: #ff8c00 }
+.evolucionTipo6 .card-header{ background: #f1c40f }
+.evolucionTipo8 .card-header{ background: #ff69b4 }
 .evoOtro .card-header{ background: rgb(88, 88, 107)}
 .tarjeta .card-header:hover {
 	cursor: pointer;

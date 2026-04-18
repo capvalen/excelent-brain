@@ -224,7 +224,7 @@
 
     </div>
 
-    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario"></pago-modal>
+    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario" @actualizarAdelanto="actualizarAdelantoTable"></pago-modal>
     <modal-estado  v-if="cita" :dataCit="cita"></modal-estado>
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>
@@ -413,6 +413,13 @@ export default {
         this.hoursProfessional = []
         this.schedulesInvalid = []
         this.horariosAll = []
+      }
+    },
+    actualizarAdelantoTable(adelanto, citaId){
+      const cita = this.citas.find(c => c.id === citaId || c.payment?.id === citaId);
+      if(cita && cita.payment){
+        cita.payment.price = parseFloat(cita.payment.price) - parseFloat(adelanto)
+        cita.payment.adelanto = parseFloat(cita.payment.adelanto || 0) + parseFloat(adelanto)
       }
     },
     changeMode(id){

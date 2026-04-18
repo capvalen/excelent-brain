@@ -420,6 +420,51 @@ class PatientController extends Controller
 				->count();
 			}
 			
+			// Verificar si la evolución viene de una cita con membresía (idMembresia > 0)
+			$citasConMembresia = Appointment::where('patient_id', $idPaciente)
+				->where('idMembresia', '>', 0)
+				->pluck('date', 'id')
+				->toArray();
+			
+			// Obtener la clasificación de membresía (tipo 5)
+			$clasificacionMembresia = DB::table('precios_clasificacion')->where('id', 5)->first();
+			
+			if ($evoluciones && $evoluciones->medical_evolutions) {
+				foreach ($evoluciones->medical_evolutions as $evol) {
+					$tipoOriginal = $evol->type;
+					$esMembresia = false;
+					
+					// Buscar si hay una cita en la misma fecha para este paciente
+					foreach ($citasConMembresia as $appointmentId => $citaDate) {
+						if ($citaDate == $evol->date) {
+							// Verificar que el profesional sea el mismo
+							$appointment = Appointment::find($appointmentId);
+							if ($appointment && $appointment->professional_id == $evol->professional_id) {
+								$esMembresia = true;
+								break;
+							}
+						}
+					}
+					
+					if ($esMembresia) {
+						// Obtener la clasificación original si existe
+						$clasificacionOriginal = '';
+						if ($evol->typeEvolution) {
+							$clasificacionOriginal = $evol->typeEvolution->clasificacion;
+						}
+						
+						// Crear clasificación combinada
+						if ($clasificacionOriginal) {
+							$evol->clasificacion_combinada = $clasificacionOriginal . ' - ' . ($clasificacionMembresia->clasificacion ?? 'Membresía');
+						} else {
+							$evol->clasificacion_combinada = $clasificacionMembresia->clasificacion ?? 'Membresía';
+						}
+						
+						$evol->type = 5; // Membresía
+					}
+				}
+			}
+			
 			//return response()->json([$evoluciones]); die();
 			
 			$triaje = DB::table('triaje')->where('patient_id', $evoluciones->id)->get();
@@ -722,7 +767,7 @@ class PatientController extends Controller
 			// Use mime-detected extension — do NOT trust client-supplied name/extension
 			$fileName = time() . '_' . uniqid() . '.' . $file->extension();
 			// Store outside public/ so files are not directly accessible via URL
-			$file->storeAs('archivos', $fileName, 'private');
+			$file->storeAs('archivos', $fileName);
 
 			$archivo = DB::table('archivos')->insertGetId([
 				'patient_id' => $request->get('idPaciente'),
