@@ -434,6 +434,7 @@ export default{
 				docClient: datos.cabecera.dniRUC,
 				cliente: datos.cabecera.razonSocial,
 				direccion: '-',
+				observaciones: datos.cabecera.observaciones,
 				esServicio: 1,                   // 1=Servicio, 0=Producto (cambia el header)
 				
 				// Tipo de documento
