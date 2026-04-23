@@ -28,3 +28,4 @@ storage/fonts/*
 .env.local
 .github/copilot-instructions.md
 /public/mix-manifest.json
+public/mix-manifest.json
