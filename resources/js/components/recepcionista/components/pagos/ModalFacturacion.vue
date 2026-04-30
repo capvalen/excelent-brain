@@ -1,6 +1,6 @@
 <template>
 	<div class="modal fade" id="modalFacturacion" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" >
+		<div class="modal-dialog modal-dialog-centered " :class="{'modal-lg': pago?.voucher}" >
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Facturación Electrónica</h5>
@@ -8,7 +8,7 @@
 				</div>
 
 				<div class="modal-body">
-					<div class="row row-cols-2">
+					<div class="row row-cols-3">
 						<div class="col">
 							<div class="card impresionComprobante" @click="imprimirTicket()">
 								<div class="card-body">
@@ -23,12 +23,23 @@
 							</div>
 						</div>
 						<div class="col">
-							<div class="card impresionComprobante" id="imprimirSunat" v-if="pago?.voucher" @click="imprimirComprobante()">
+							<div class="card impresionComprobante" id="imprimirSunat" v-if="pago?.voucher" @click="imprimirComprobante('fisico')">
 								<div class="card-body">
 									<div class="text-center">
 										<img class="mx-auto" :src="require('/img/sunat_logo.webp')" style="width: 35px" alt="">
-										<p class="mb-0">Comprobante SUNAT</p>
-										<p class="mb-0"><small>Impresión Física</small></p>
+										<p class="mb-0">Impresión Física</p>
+										<p class="mb-0"><small>Comprobante SUNAT</small></p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col">
+							<div class="card impresionComprobante" id="imprimirSunat" v-if="pago?.voucher" @click="imprimirComprobante('pdf')">
+								<div class="card-body">
+									<div class="text-center">
+										<img class="mx-auto" :src="require('/img/sunat_pdf.webp')" style="width: 35px" alt="">
+										<p class="mb-0">Documento PDF</p>
+										<p class="mb-0"><small>Comprobante SUNAT</small></p>
 									</div>
 								</div>
 							</div>
@@ -128,7 +139,7 @@
 						</div>
 					
 					</div>
-					<div class="mt-3 d-flex justify-content-center" v-if="pago?.voucher" @click="irPanelBaja()">
+					<div class="mt-3 d-none justify-content-center " v-if="pago?.voucher" @click="irPanelBaja()">
 						<button class="btn btn-outline-danger"><i class="fa-solid fa-download"></i> ¿Dar de baja al comprobante?</button>
 					</div>
 				</div>
@@ -409,7 +420,7 @@ export default{
 			this.axios.patch('/api/paymentExtra/'+this.pago.id, {voucher: this.pago.voucher})
 			alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Comprobante registrado exitosamente', 'success', 10);
 		},
-		async imprimirComprobante(){
+		async imprimirComprobante(tipo){
 			let sede = this.idSede == 1 ? 'eltambo' : 'sancarlos'
 			let url = null
 			if( process.env.NODE_ENV === 'production' ){
@@ -434,6 +445,7 @@ export default{
 				docClient: datos.cabecera.dniRUC,
 				cliente: datos.cabecera.razonSocial,
 				direccion: '-',
+				observaciones: datos.cabecera.observaciones,
 				esServicio: 1,                   // 1=Servicio, 0=Producto (cambia el header)
 				
 				// Tipo de documento
@@ -465,16 +477,22 @@ export default{
 				monedas: datos.cabecera.desLeyenda
 			}
 
-			fetch('http://127.0.0.1/pluginSunat/printComprobante.php',{
-				method:'POST', headers: { 'Content-Type': 'application/json'},
-				body: JSON.stringify(cuerpo)
-			})
-			.then(response =>{
-				console.log('Impresión exitosa:', response.text());
-			})
-			.catch(error => {
-				console.error('Error en impresión:', error);
-			});
+			if(tipo == 'fisico'){
+				fetch('http://127.0.0.1/pluginSunat/printComprobante.php',{
+					method:'POST', headers: { 'Content-Type': 'application/json'},
+					body: JSON.stringify(cuerpo)
+				})
+				.then(response =>{
+					console.log('Impresión exitosa:', response.text());
+				})
+				.catch(error => {
+					console.error('Error en impresión:', error);
+				});
+			}
+			if(tipo=='pdf'){
+				let token = btoa( cuerpo.serie+'-'+cuerpo.correlativo )
+				window.open('https://apps.infocatsoluciones.com/excelentemente/' + sede + `/ticket.php?serie=${cuerpo.serie}&correlativo=${cuerpo.correlativo}&token=${token}`, '_blank');
+			}
 		},
 		irPanelBaja(){
 			let sede = this.idSede == 1 ? 'eltambo' : 'sancarlos'
