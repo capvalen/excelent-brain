@@ -335,8 +335,8 @@
 	<modal-pagos-extras :idUsuario="$attrs.idUser" :idSede="$attrs.idSede" />
 	<modal-egresos-extras :idUsuario="$attrs.idUser" :nombreUser="$attrs.nombreUser" :idSede="$attrs.idSede"/>
 	<OffcanvasAdjuntos :id="idSeleccionado" :foto="foto" :habilitarEliminado="habilitarEliminado" ></OffcanvasAdjuntos>
-	<ModalDividirPago :pago="pagoSeleccionado" :idUsuario="$attrs.idUser"></ModalDividirPago>
-	<ModalFacturacion :idSede="$attrs.idSede" :pago="pagoSeleccionado" ></ModalFacturacion>
+	<ModalDividirPago v-if="pagoSeleccionado" :pago="pagoSeleccionado" :idUsuario="$attrs.idUser"></ModalDividirPago>
+	<ModalFacturacion v-if="pagoSeleccionado" :idSede="$attrs.idSede" :pago="pagoSeleccionado" ></ModalFacturacion>
 </div>
 </template>
 

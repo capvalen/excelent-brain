@@ -204,7 +204,7 @@ export default {
 		moverProvincias(borrar){
 			let idDepa= this.dataPatient.address.department ;
 			this.provincias = this.ubigeo.provincias.filter(provincia=> provincia.idDepa == idDepa)
-			if(borrar) this.dataPatient.patient.address.district=-1;
+			if(borrar) this.dataPatient.address.district=-1;
 		},
 		moverDistritos(){
 			let idProv= this.dataPatient.address.province;
@@ -222,20 +222,24 @@ export default {
 		//this.$parent.$on('cambioDato', this.capturaSeñal);
 	},
 
-  computed: {
-    updateValues () {      
-      return this.datos = this.dataPatient
+  watch: {
+    dataPatient: {
+      handler() {
+        if (!this.dataPatient) return;
+        if (!this.dataPatient.address || Array.isArray(this.dataPatient.address)) {
+          this.dataPatient.address = { department: -1, province: -1, district: -1, address: '' };
+        }
+        if (!this.dataPatient.relative || this.dataPatient.relative.length === 0) {
+          this.dataPatient.relative = [{ name: '', phone: '', kinship: '' }, { name: '', phone: '', kinship: '' }];
+        }
+        this.datos = this.dataPatient;
+      },
+      immediate: true
     }
   },
 
-  updated() {    
-    this.updateValues;
-  },
-
   created () {
-    this.updateValues;
 		this.listarDepartamentos();
-
   },
 } 
 </script>

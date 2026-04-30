@@ -137,11 +137,15 @@
               <span class="text-danger" v-if="appointment.status==4">Reprogramado</span>
             </td>
             <td>
-              <button v-if="appointment.patient.medical_evolutions[0] && appointment.patient.medical_evolutions[0].content === null" class="btn btn-outline-secondary btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])" data-contenido="noRellenado">No rellenado</button>
-              <button v-else-if="!appointment.patient.medical_evolutions[0]" class="btn btn-outline-danger btnRellenado" data-contenido="noConfirmado">No confirmado</button>
-              <button v-else class="btn btn-outline-success btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(appointment.patient.medical_evolutions[0])"  data-contenido="siRellenado">Rellenado</button>
-              <button v-if="appointment.patient.medical_evolutions[0]" @click="deleteEvolution(appointment.patient.medical_evolutions[0])" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-              <p v-if="!appointment.patient.medical_evolutions[0]" class="text-danger">Evolución no generada o eliminada</p>
+              <template v-if="getEvolutionForAppointment(appointment)">
+                <button v-if="!getEvolutionForAppointment(appointment).content" class="btn btn-outline-secondary btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(getEvolutionForAppointment(appointment))" data-contenido="noRellenado">No rellenado</button>
+                <button v-else class="btn btn-outline-success btnRellenado" data-bs-toggle="modal" data-bs-target="#evolutionModal" @click="getEvolutions(getEvolutionForAppointment(appointment))"  data-contenido="siRellenado">Rellenado</button>
+                <button @click="deleteEvolution(getEvolutionForAppointment(appointment))" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+              </template>
+              <template v-else>
+                <button class="btn btn-outline-danger btnRellenado" data-contenido="noConfirmado">No confirmado</button>
+                <p class="text-danger">Evolución no generada o eliminada</p>
+              </template>
             </td>
           </tr>
         </tbody>
@@ -225,7 +229,35 @@ export default {
     dataEvolution: Array,
   },
 
-  methods:{
+methods:{
+		getEvolutionForAppointment(appointment){
+			const appointmentId = Number(appointment.id);
+			
+			// Buscar por appointment_id directamente
+			if(appointment.medical_evolutions && appointment.medical_evolutions.length > 0){
+				const evolution = appointment.medical_evolutions.find(e => Number(e.appointment_id) === appointmentId);
+				if(evolution) return evolution;
+			}
+			// Buscar por fecha si no hay appointment_id
+			if(appointment.patient?.medical_evolutions?.length > 0){
+				const evolution = appointment.patient.medical_evolutions.find(e => e.date && e.date.startsWith(appointment.date));
+				if(evolution) return evolution;
+			}
+			return null;
+		},
+		empezarFiltro(tipo){
+			const filas = document.querySelectorAll('#bodyConsultas tr')
+			
+			filas.forEach(fila=>{
+				let contiene = fila.querySelector('.btnRellenado').getAttribute('data-contenido')
+				if( tipo=='todos')
+					fila.classList.remove('d-none')
+				else if(contiene == tipo )
+					fila.classList.remove('d-none')
+				else
+					fila.classList.add('d-none')
+			})
+		},
 		empezarFiltro(tipo){
 			const filas = document.querySelectorAll('#bodyConsultas tr')
 			
@@ -287,70 +319,69 @@ export default {
         console.error(err)
       });
     },
-    async getPatientsPerMonth(e){
+async getPatientsPerMonth(e){
       this.$swal({
         title: 'Cargando...',
         showConfirmButton: false,
         icon:'info',
         isDismissed: false
       })
+      // Limpiar datos anteriores
       this.total_price = 0
+      this.confirmed = 0
+      this.no_confirmed = 0
+      this.cancelled = 0
+      this.reprogramed = 0
+      this.appointments = []
+      this.extra_payments = []
+      
       this.fecha = e.target.value;
-      this.axios.get(`/api/getPatientsPerMonth/${this.fecha}/${this.profesional.id}`)
-      .then((res)=>{
-        console.log(res.data)
-        this.per_month = res.data.patientsPerMonth,
-        this.appointments = res.data.appointments,
-        this.appointments.forEach(cita => {
-          //if(cita.status == 3 || cita.status == 4) this.cancelled++
-          this.total_price += parseFloat(cita.payment ? cita.payment.price : 0 )
-        });
-        this.totalCitas = this.appointments.length
-        this.extra_payments = res.data.extra_payments
-        this.extra_payments.forEach(pay =>{
-          this.total_price += parseFloat(!pay.price ? 0 : pay.price)
-        });
-        let num = Math.round(this.total_price * 10) / 10;
-        this.total_price = num.toFixed(2)
+		this.axios.get(`/api/getPatientsPerMonth/${this.fecha}/${this.profesional.id}`)
+		.then((res)=>{
+			console.log(res.data)
+			this.per_month = res.data.patientsPerMonth,
+			this.appointments = res.data.appointments,
+			this.totalCitas = this.appointments.length
+			
+			// Calcular resumen desde appointments
+			let confirmed = 0
+			let no_confirmed = 0
+			let cancelled = 0
+			let reprogramed = 0
+			let total_price = 0
+			
+			this.appointments.forEach(cita => {
+				// Contar por status de cita
+				if(cita.status == 2) confirmed++
+				else if(cita.status == 1) no_confirmed++
+				else if(cita.status == 3) cancelled++
+				else if(cita.status == 4) reprogramed++
+				
+				// Sumar precios solo cuando: Estado pago = Pagado (2) Y Estado cita = Asistido (2)
+				if(cita.payment && cita.payment.pay_status == 2 && cita.status == 2){
+					total_price += parseFloat(cita.payment.price || 0)
+				}
+			});
+			
+			// Asignar valores calculados
+			this.confirmed = confirmed
+			this.no_confirmed = no_confirmed
+			this.cancelled = cancelled
+			this.reprogramed = reprogramed
+			
+			console.log('Total appointments price:', total_price)
+			
+			this.extra_payments = res.data.extra_payments
+			console.log('Extra payments:', this.extra_payments)
 
-        this.$swal.close()
-      }).catch((err) => {
-        console.error(err)
-      })
-      this.getSummaryAppointments()
+			let num = Math.round(total_price * 10) / 10;
+			this.total_price = num.toFixed(2)
 
-    },
-    async getPatientsPerDay(e){
-      this.$swal({
-        title: 'Cargando...',
-        showConfirmButton: false,
-        icon:'info',
-        isDismissed: false
-      })
-      console.log(e.target.value)
-      this.total_price = 0
-      this.fecha = e.target.value
-      this.axios.get(`/api/getPatientsPerDay/${this.fecha}/${this.profesional.id}`)
-      .then((res)=>{
-        console.log(res.data)
-        this.per_month = res.data.patientsPerMonth,
-        this.appointments = res.data.appointments,
-        this.appointments.forEach(appo => {
-          this.total_price += parseFloat(appo.payment ? appo.payment.price : 0 )
-        });
-        this.totalCitas = this.appointments.length
-        this.extra_payments = res.data.extra_payments
-        this.extra_payments.forEach(pay =>{
-          this.total_price += parseFloat(!pay.price ? 0 : pay.price)
-        });
-        let num = Math.round(this.total_price * 10) / 10;
-        this.total_price = num.toFixed(2)
-
-        this.$swal.close()
-      }).catch((err) => {
-        console.error(err)
-      })
-      this.getSummaryAppointments()
+			this.$swal.close()
+			this.per_month = this.totalCitas;
+		}).catch((err) => {
+			console.error(err)
+		})
     },
 
     getEvolutions (evolution) {

@@ -8,19 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class Medical_evolution extends Model
 {
     use HasFactory;
-    protected $fillable=['type','date','schedule','content','auth','patient_id', 'professional_id', 'diagnostic', 'treatment'];
+    protected $fillable=['type','date','schedule','content','auth','patient_id', 'professional_id', 'diagnostic', 'treatment', 'appointment_id'];
 		protected $casts = [
         'diagnostic' => 'array',
     ];
-    //Relacion INVERSA uno a uno Appoinment-Medical_evolution
+    //Relacion uno a muchos Appointment-Medical_evolution
     public function patient()
     {
         return $this->belongsTo("App\Models\Patient");
     }
-    //Relacion INVERSA uno a uno Appoinment-Medical_evolution
+    //Relacion uno a muchos Professional-Medical_evolution
     public function professional()
     {
         return $this->belongsTo("App\Models\Professional");
+    }
+    //Relacion con Appointment
+    public function appointment()
+    {
+        return $this->belongsTo("App\Models\Appointment", 'appointment_id');
     }
     public function comentarios(){
         return $this->hasMany("App\Models\Medical_comment", 'idMedical', 'id');

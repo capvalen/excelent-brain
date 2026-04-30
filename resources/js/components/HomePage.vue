@@ -86,7 +86,7 @@ export default {
 			window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
 			this.axios.get('/api/user')
 			.then((res) => {
-					console.log('home page', res.data.user)
+					// console.log('home page', res.data.user)
 					const {id, email, rol, idSede} = res.data.user
 
 					this.datosUsuario = res.data.user.professional

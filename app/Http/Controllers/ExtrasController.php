@@ -899,14 +899,18 @@ class ExtrasController extends Controller
 	}
 
 	public function pagarDeudaMembresia(Request $request){
-		 // Obtener la IdSede del usuario
 		$idSede = DB::table('users')->where('id', $request->input('user_id'))->value('IdSede'); 
+		$deuda = DB::table('deudas')->where('id', $request->input('idDeuda'))->first();
+		$idMembresia = $request->input('idMembresia') ?: ($deuda ? $deuda->idMembresia : null);
+		$idPaciente = $request->input('idPaciente') ?: ($deuda ? $deuda->patient_id : null);
+		$observacion = $request->input('observacion') ?: $request->input('observación');
+
 		DB::table('deudas')->where('id', $request->input('idDeuda'))
 		->update([
 			'idActualiza' => $request->input('user_id'),
 			'fechaActualiza' => Carbon::now(),
 			'estado' => $request->input('estado'),
-			'observaciones' => $request->input('observacion')
+			'observaciones' => $observacion
 		]);
 		if($request->input('estado')=='2'){//realizó el pago
 			$pagoExtra = new Extra_payment;
@@ -918,15 +922,18 @@ class ExtrasController extends Controller
 				$pagoExtra->type = $request->input('tipo');
 				$pagoExtra->observation = 'Cancelación de deuda';
 				$pagoExtra->continuo = 3;
-				$pagoExtra->idMembresia = $request->input('idMembresia');
+				$pagoExtra->idMembresia = $idMembresia;
 				$pagoExtra->user_id = $request->input('user_id');
 				// Asignar la IdSede que corresponde al usuario
 				$pagoExtra->idSede = $idSede;
+				$pagoExtra->patient_id = $idPaciente;
 				$pagoExtra->save();
-			Membresia::where('id', $request->input('idMembresia'))
-			->update([
-				'estado' => 2
-			]);
+			if ($idMembresia) {
+				Membresia::where('id', $idMembresia)
+				->update([
+					'estado' => 2
+				]);
+			}
 		}
 		return response()->json(['mensaje' => 'Actualizado con éxito']);		
 	}

@@ -93,46 +93,57 @@ import moment from 'moment'
 		},
 		methods:{
 			async update() {
-				await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {dataCita: this.dataCita, caso: this.caso, idSede:this.idSede})
-				.then(res => {
-					//console.log(res.data)
-					this.dataCita.payment.pay_status = this.caso.pago;
-					this.closeModal()
-					//this.$swal('Pago actualizado con éxito')
-					if( this.caso.pago ==2){
-						this.$swal.fire({
-							title: 'Pago actualizado con éxito',
-							icon: 'info',
-							showCancelButton: true,
-							confirmButtonText:
-								`<span>Ver Cupón</span>`,
-							cancelButtonText:
-								'Salir'
-						}).then(result=>{
-							if(result.isConfirmed){
-								this.abrirCupon();
+					await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {
+							dataCita: this.dataCita, caso: this.caso, idSede: this.idSede
+					})
+					.then(res => {
+
+							// 👇 1. Primero actualiza los datos locales
+							if (this.caso.pago == 2) {
+									this.dataCita.payment.pay_status = 2
+
+							} else if (this.caso.pago == 3) {
+									const montoAdelanto = parseFloat(this.caso.monto_adelanto) || 0
+									const adelantoAnterior = parseFloat(this.dataCita.payment.adelanto) || 0
+									const precioActual = parseFloat(this.dataCita.payment.price) || 0
+
+									this.dataCita.payment.adelanto = adelantoAnterior + montoAdelanto
+									this.dataCita.payment.price    = precioActual - montoAdelanto
+									this.dataCita.payment.pay_status = 1  // sigue "sin pagar" pero con adelanto
+
+									// Avisa al padre
+									this.$emit('actualizarAdelanto', {
+											id:         this.dataCita.id,
+											adelanto:   this.dataCita.payment.adelanto,
+											pay_status: 1
+									})
+
+									this.caso.pago = 1
 							}
-						})
-					}else{
-						this.$swal.fire({
-							title: 'Pago actualizado con éxito',
-							icon: 'info',
-							showCancelButton: true,
-							cancelButtonText:
-								'Salir'
-						})
-					}
-					if(this.caso.pago == '3' || this.caso.pago==3){
-						this.caso.pago = 1
-						this.dataCita.payment.pay_status = this.caso.pago
-						this.dataCita.payment.adelanto = parseFloat(this.dataCita.payment.adelanto || 0) + parseFloat(this.caso.monto_adelanto);
-						this.dataCita.payment.price = parseFloat(this.dataCita.payment.price) - parseFloat(this.caso.monto_adelanto);
-						this.$emit('actualizarAdelanto', this.caso.monto_adelanto, this.dataCita.id)
-					}
-				})
-				.catch(err => {
-					console.error(err)
-				})
+
+							// 👇 2. Luego cierra y muestra el swal
+							this.closeModal()
+
+							if (this.caso.pago == 2) {
+									this.$swal.fire({
+											title: 'Pago actualizado con éxito',
+											icon: 'info',
+											showCancelButton: true,
+											confirmButtonText: '<span>Ver Cupón</span>',
+											cancelButtonText: 'Salir'
+									}).then(result => {
+											if (result.isConfirmed) this.abrirCupon()
+									})
+							} else {
+									this.$swal.fire({
+											title: 'Pago actualizado con éxito',
+											icon: 'info',
+											showCancelButton: false,
+											cancelButtonText: 'Salir'
+									})
+							}
+					})
+					.catch(err => console.error(err))
 			},
 			abrirCupon(){
 				window.open(`/api/pdfCupon/${this.dataCita.id}?token=${localStorage.getItem('token')}`, '_blank');
@@ -179,7 +190,7 @@ import moment from 'moment'
 				this.caso.moneda = this.dataCita.payment?.payment_method == undefined ? 1:this.dataCita.payment?.payment_method ;
 				this.caso.continuo = this.dataCita.payment?.continuo;
 				this.caso.user_id = this.idUsuario
-				this.neto = parseFloat(this.dataCita.payment?.price)
+				this.neto = parseFloat(this.dataCita.payment?.price) || 0
 			}
 		},
 		created () {
@@ -188,6 +199,7 @@ import moment from 'moment'
 			this.caso.moneda = this.dataCita.payment?.payment_method == undefined ? 1:this.dataCita?.payment.payment_method ;
 			this.caso.continuo = this.dataCita.payment?.continuo;
 			this.caso.user_id = this.idUsuario
+			this.neto = parseFloat(this.dataCita.payment?.price) || 0
 
 
 		},

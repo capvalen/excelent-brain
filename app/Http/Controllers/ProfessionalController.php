@@ -62,7 +62,11 @@ class ProfessionalController extends Controller
                 'cv_description' => $request->get('cv_description'),
                 'photo'=> $urlPhoto,
                 'signing' => $urlFirma,
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'especialidad_receta' => $request->get('especialidad_receta'),
+                'cmp' => $request->get('cmp'),
+                'rne' => $request->get('rne'),
+                'cpsp' => $request->get('cpsp')
             ]);
         }else if($request->file('photo')){
             $urlPhoto = $request->file('photo')->store('img_profesionales','public');
@@ -73,7 +77,11 @@ class ProfessionalController extends Controller
                 'cv_description' => $request->get('cv_description'),
                 'photo'=> $urlPhoto,
                 'signing' => '-',
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'especialidad_receta' => $request->get('especialidad_receta'),
+                'cmp' => $request->get('cmp'),
+                'rne' => $request->get('rne'),
+                'cpsp' => $request->get('cpsp')
             ]);
         }else if($request->file('signing')){
             $urlFirma = $request->file('signing')->store('firmas','public');
@@ -84,7 +92,11 @@ class ProfessionalController extends Controller
                 'cv_description' => $request->get('cv_description'),
                 'photo'=> '-',
                 'signing' => $urlFirma,
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'especialidad_receta' => $request->get('especialidad_receta'),
+                'cmp' => $request->get('cmp'),
+                'rne' => $request->get('rne'),
+                'cpsp' => $request->get('cpsp')
             ]);
         }else{
             switch ($request->get('profession')) {
@@ -103,7 +115,11 @@ class ProfessionalController extends Controller
                 'cv_description' => $request->get('cv_description'),
                 'photo'=> '-',
                 'signing' => '-',
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'especialidad_receta' => $request->get('especialidad_receta'),
+                'cmp' => $request->get('cmp'),
+                'rne' => $request->get('rne'),
+                'cpsp' => $request->get('cpsp')
             ]);
         }
 
@@ -161,7 +177,11 @@ class ProfessionalController extends Controller
                 'profession' => $request->get('profession'),
                 'cv_description' => $request->get('cv_description'),
                 'photo'=> 'img_profesionales/'. $fotoNombre,
-                'signing'=> 'firmas/'.$firmaNombre
+                'signing'=> 'firmas/'.$firmaNombre,
+                'especialidad_receta' => $request->get('especialidad_receta'),
+                'cmp' => $request->get('cmp'),
+                'rne' => $request->get('rne'),
+                'cpsp' => $request->get('cpsp')
             ]);
         }
         else if($request->file('photo')){
@@ -174,7 +194,11 @@ class ProfessionalController extends Controller
                 'phone' => $request->get('phone'),
                 'profession' => $request->get('profession'),
                 'cv_description' => $request->get('cv_description'),
-                'photo'=> 'img_profesionales'. $fotoNombre
+                'photo'=> 'img_profesionales/'. $fotoNombre,
+                'especialidad_receta' => $request->get('especialidad_receta'),
+                'cmp' => $request->get('cmp'),
+                'rne' => $request->get('rne'),
+                'cpsp' => $request->get('cpsp')
             ]);
         }else if($request->file('signing')){
 					$firma = $request->file('signing');
@@ -186,7 +210,11 @@ class ProfessionalController extends Controller
                 'phone' => $request->get('phone'),
                 'profession' => $request->get('profession'),
                 'cv_description' => $request->get('cv_description'),
-                'signing'=> 'firmas'.$firmaNombre
+                'signing'=> 'firmas/'.$firmaNombre,
+                'especialidad_receta' => $request->get('especialidad_receta'),
+                'cmp' => $request->get('cmp'),
+                'rne' => $request->get('rne'),
+                'cpsp' => $request->get('cpsp')
             ]);
         }
         else{
@@ -194,7 +222,11 @@ class ProfessionalController extends Controller
                 'name' => $request->get('name'),
                 'phone' => $request->get('phone'),
                 'profession' => $request->get('profession'),
-                'cv_description' => $request->get('cv_description')
+                'cv_description' => $request->get('cv_description'),
+                'especialidad_receta' => $request->get('especialidad_receta'),
+                'cmp' => $request->get('cmp'),
+                'rne' => $request->get('rne'),
+                'cpsp' => $request->get('cpsp')
             ]);
         }
 

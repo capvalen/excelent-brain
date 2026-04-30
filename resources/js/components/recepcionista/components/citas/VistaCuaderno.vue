@@ -199,7 +199,7 @@
 		</div>
 		<ModalNuevaCita :profesionalElegido="profesionalElegido" :horaElegida="horaElegida" :idUsuario="idUsuario" :fechaElegida='fecha' @actualizarListadoCitas="actualizarListadoCitas" :idSede="idSede"></ModalNuevaCita>
     <modal-estado v-if="cita" :dataCit="cita" :idUsuario="idUsuario"></modal-estado>
-    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario" :idSede="idSede" @actualizarAdelanto="actualizarAdelanto"></pago-modal>
+    <pago-modal v-if="cita && cita.payment" :cita="cita" :idUsuario="idUsuario" :idSede="idSede" @actualizarAdelanto="actualizarAdelanto"></pago-modal>
 		<modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <reprog-modal v-if="cita" :dataCit="cita" :idUsuario="idUsuario" @ocultarCita="actualizarListadoCitas"></reprog-modal>
 		<info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>
@@ -300,29 +300,30 @@
 					this.horasSolas = res.data.solos;
 					this.horasMalas = res.data.invalidos;
 
-					this.doctores.forEach(profesional =>{
-						/* let hora = this.horasSolas.findIndex( horaSola => horaSola.professional_id === profesional.id)
-						//console.log('hora', hora);
-						if(hora>-1)
-							profesional.horarios.push(this.horasSolas[hora]) */
-						profesional.horarios = this.horasSolas
-						.filter( horaSola => parseInt(horaSola.professional_id) == parseInt(profesional.id) )
-						.map(horaSola=> ({...horaSola, libre:1, indexOcupado:-1}) )
+					const horariosPorProf = new Map();
+					this.horasSolas.forEach(horaSola => {
+						const profId = parseInt(horaSola.professional_id);
+						if (!horariosPorProf.has(profId)) {
+							horariosPorProf.set(profId, []);
+						}
+						horariosPorProf.get(profId).push({ ...horaSola, libre: 1, indexOcupado: -1 });
 					});
 
-					let ocupado = false;
-					this.doctores.forEach(profesional=>{
-						profesional.horarios.forEach(horario=>{
-							ocupado = this.horasMalas.findIndex(hora => hora.schedule_id == horario.id)
-							if(ocupado>-1){
-								horario.libre=0;
-								horario.indexOcupado=ocupado;
-							}/* else{
-								horario.libre=1;
-								horario.indexOcupado=-1
-							} */
-						})
-					})
+					const ocupadosMap = new Map();
+					this.horasMalas.forEach((hora, index) => {
+						ocupadosMap.set(hora.schedule_id, index);
+					});
+
+					this.doctores.forEach(profesional => {
+						const profId = parseInt(profesional.id);
+						profesional.horarios = horariosPorProf.get(profId) || [];
+						profesional.horarios.forEach(horario => {
+							if (ocupadosMap.has(horario.id)) {
+								horario.libre = 0;
+								horario.indexOcupado = ocupadosMap.get(horario.id);
+							}
+						});
+					});
 				})
 			},
 			horaLatam1(horita){ return moment(horita, 'HH:mm:ss').format('h:mm') },

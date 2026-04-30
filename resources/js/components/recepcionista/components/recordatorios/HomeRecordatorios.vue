@@ -417,7 +417,7 @@
 		<ModalNuevoInteresado :usuario="idUsuario" @actualizarInteresados="cargarDatos('interesados')"></ModalNuevoInteresado>
 		<ModalEditarPaciente v-if="data" :dataPatient="data"></ModalEditarPaciente>
 		<ModalResponderInteresado :queInteresado="queInteresado"></ModalResponderInteresado>
-		<ModalPagarDeuda :deuda="queDeuda" :usuario="idUsuario"></ModalPagarDeuda>
+		<ModalPagarDeuda v-if="queDeuda" :deuda="queDeuda" :usuario="idUsuario"></ModalPagarDeuda>
 		<ModalCambiarSeguimiento :seguimientos="seguimientos" :idPaciente="queId" :idUsuario="$attrs.idUser" :idRegistro="idRegistro" @cambiar="actualizar()"></ModalCambiarSeguimiento>
 		<ModalCambiarDeudas :seguimientos="seguimientos" :idPaciente="queId" :idUsuario="$attrs.idUser" :idRegistro="idRegistro" @cambiar="actualizar()"></ModalCambiarDeudas>
 		

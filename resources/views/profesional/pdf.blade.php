@@ -10,70 +10,42 @@
     @php
     use Carbon\Carbon;
     
-    // Aseguramos que el ID del profesional sea consistente a lo largo del documento
-    $professionalId = $receta->professional_id;
-    $professionalName = $professionalId ? $receta->professional->name : 'CENTRO PSICOLOGICO EXCELENTEMENTE';
+    $professional = $receta->professional;
+    $puedeEmitirRecetas = $professional && $professional->puedeEmitirRecetas();
+    $puedeMostrarFirma = $professional && $professional->puedeMostrarFirma();
+    $mostrarFirma = $receta->signature == 1 && $puedeMostrarFirma;
     @endphp
     
     <div class="pdf">
         <div class="pdf-content">
             <div class="header__content" style="margin-top:10px">
-                
-                @if (in_array($professionalId, [32, 33, 34]))
-                    <img src="{{ public_path('img/logo-reportee.png') }}" alt="Excelentemente" class="header-logo-big">
-                @else
-                    <img src="{{ public_path('img/logo-reportee.png') }}" alt="Excelentemente" class="header-logo">
-                @endif
+                <img src="{{ public_path('img/logo-reportee.png') }}" alt="Excelentemente" class="header-logo">
 
                 <div class="header" style="margin-top:50px">
-                    @if (!in_array($professionalId, [32, 33, 34]))
-                        <p class="header__name">{{ $professionalName }}</p>
+                    @if($puedeEmitirRecetas)
+                        <p class="header__name">{{ $professional->name }}</p>
                         <p class="header__sub">MÉDICO PSIQUIATRA</p>
+
+                        @if($professional->especialidad_receta)
+                            <p class="header__sub">{{ $professional->especialidad_receta }}</p>
+                        @endif
+
+                        @if($professional->cmp || $professional->rne)
+                            <p class="header__sub">
+                                @if($professional->cmp)
+                                    CMP N° {{ $professional->cmp }}
+                                @endif
+
+                                @if($professional->rne)
+                                    @if($professional->cmp) | @endif
+                                    RNE N° {{ $professional->rne }}
+                                @endif
+                            </p>
+                        @endif
+                    @else
+                        <p class="header__name">CENTRO PSICOLÓGICO EXCELENTEMENTE</p>
                     @endif
-                
-                    @switch($professionalId)
-                        @case(null)
-                            @if (!in_array($professionalId, [32, 33, 34]))
-                                <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
-                            @endif
-                            @break
-                        @case(5)
-                            <p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
-                            @if (!in_array($professionalId, [32, 33, 34]))
-                                <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
-                            @endif
-                            @break
-                        @case(15)
-                            @if (!in_array($professionalId, [32, 33, 34]))
-                                <p class="header__sub">CMP N° 74376 - RNE N° 43202</p>
-                            @endif
-                            @break
-                        @case(19)
-                            @if (!in_array($professionalId, [32, 33, 34]))
-                                <p class="header__sub">CMP N° 068076 - RNE N° 047621</p>
-                            @endif
-                            @break
-                        @case(24)
-                            @if (!in_array($professionalId, [32, 33, 34]))
-                                <p class="header__sub">CMP N° 67656 - RNE N° 48050</p>
-                            @endif
-                            @break
-                        @case(27)
-                            @if (!in_array($professionalId, [32, 33, 34]))
-                                <p class="header__sub">CMP N° 85900 - RNE ET</p>
-                            @endif
-                            @break
-                        @case(32)
-                        @case(33)
-                        @case(34)
-                            {{-- No se muestra CMP ni RNE --}}
-                            @break
-                        @default
-                            @if (!in_array($professionalId, [32, 33, 34]))
-                                <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
-                            @endif
-                    @endswitch
-                
+
                     <p class="header__sub">Consultas previa cita, llamar al celular: </p>
                     <p class="header__sub">Sede El Tambo: 996 644 350 | Sede San Carlos: 976 577 368 </p>
                 </div>
@@ -204,28 +176,8 @@
                     </div>
 
                     <div class="footer__firma">
-                        @php
-                            $showSignature = isset($receta) && $receta->signature == 1;
-                        @endphp
-                        
-                        @if($showSignature && in_array($professionalId, [5, 24, 27, 32, 34]))
-                            @switch($professionalId)
-                                @case(24)
-                                    <img src="{{ public_path('img/firma-dra-grecia.png') }}" alt="Firma" class="img-firma">
-                                    @break
-                                @case(5)
-                                    <img src="{{ public_path('img/firmadoc3.png') }}" alt="Firma" class="img-firma">
-                                    @break
-                                @case(27)
-                                    <img src="{{ public_path('img/firma-dra-nancy.jpg') }}" alt="Firma" class="img-firma">
-                                    @break
-																@case(32)
-                                    <img src="{{ public_path('img/firma_wendy.jpg') }}" alt="Firma" class="img-firma">
-                                    @break
-                                @case(34)
-                                    <img src="{{ public_path('img/firma_ursula.jpg') }}" alt="Firma" class="img-firma">
-                                    @break
-                            @endswitch
+                        @if($mostrarFirma)
+                            <img src="{{ public_path($professional->signing) }}" alt="Firma" class="img-firma">
                         @endif
                     </div>
                 </div>
@@ -239,7 +191,6 @@
 </html>
 
 <style>
-    /* Mantener los mismos estilos que tenías antes */
     *{
         margin: 0px;
         padding: 0px;
@@ -297,16 +248,6 @@
         top: 00px;
         left: -40px;
         position: absolute
-    }
-
-    .header-logo-big {
-    width: 400px !important;
-    position: relative !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    margin-bottom: -50px !important;
-    display: block !important;
-        
     }
     .header {
         text-align: center;
@@ -405,13 +346,9 @@
         font-size:13px;
     }
 
-    .table__body {
-        /* padding: 5px; */
-    }
     .table__body td {
         padding: 2px 12px;
         height: 20px !important;
-        /* border-bottom: 1px solid; */
         text-align: center;
         color: #495057;
         font-size: 12px;
@@ -425,7 +362,6 @@
     .columna-1 {
         text-align: left !important;
         padding-left: 25px;
-        /* margin-left: 15px !important; */
     }
 
     .celda-center {
@@ -436,15 +372,12 @@
         width: 100%;
         position: relative;
         transform: translateX(-10px);
-        /* top: 59%; */
-        /* left: 0; */
         margin: 25px auto 0;
     }
 
     .footer__contact {
         float: left;
         width: 70%;
-        /* padding-right: 15px; */
     }
 
 
@@ -468,10 +401,9 @@
         margin-left: 15px;
         color: #495057;
         background: #fafafa;
-
         border-radius: 5px;
         border: 1px solid;
-                    font-size: 12px;
+        font-size: 12px;
     }
     .botica__info{
         width: 80%;
@@ -486,21 +418,17 @@
         font-size: 12px;
     }
     
-    /* Datos de la siguiente consulta */
     .contact__recipe-item2 {
         width: 62%;
         padding: 7px 15px 7px 15px;
         background: #fafafa;
-
-        /* margin-left: 15px; */
         color: #495057;
         border-radius: 5px;
         border: 1px solid;
-                    font-size: 10px;
+        font-size: 10px;
     }
 
 
-    /* datos de contactos */
     .contact__datos {
         width: 100%;
         clear: both;
@@ -509,7 +437,6 @@
     }
 
     .contact__datos td{
-        /* padding-right: 15px; */
     }
 
     .contact__datos thead tr th {

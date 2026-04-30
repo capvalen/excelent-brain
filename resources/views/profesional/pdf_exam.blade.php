@@ -9,73 +9,40 @@
 </head>
     @foreach ($examsAll->value as $exam)
     <body>
-            @php
-                $professionalId = optional($professional)->id;
-                $professionalName = optional($professional)->name ?? 'CENTRO PSICOLOGICO EXCELENTEMENTE';
-            @endphp
-        
+        @php
+            $showProfessionalData = $professional 
+                && $professional->profession === 'Psiquiatra'
+                && !empty($professional->cmp) 
+                && !empty($professional->rne);
+        @endphp
+
         <div class="pdf">
             <div class="pdf-content">
-                 <div class="header__content" style="margin-top:10px">
-                    @if (in_array($professionalId, [32, 33, 34]))
-                            <img src="{{ public_path('img/logo-reportee.png') }}" alt="Excelentemente" class="header-logo-big">
-                    @else
-                            <img src="{{ public_path('img/logo-reportee.png') }}" alt="Excelentemente" class="header-logo">
-                    @endif
-    
+                <div class="header__content" style="margin-top:10px">
+                    <img src="{{ public_path('img/logo-reportee.png') }}" alt="Excelentemente" class="header-logo">
+
                     <div class="header" style="margin-top: 3rem;">
-                            @if (!in_array($professionalId, [32, 33, 34]))
-                                <p class="header__name">{{ $professionalName }}</p>
-                                <p class="header__sub">MÉDICO PSIQUIATRA</p>
+
+                        @if ($showProfessionalData)
+                            <p class="header__name">{{ $professional->name }}</p>
+                            <p class="header__sub">MÉDICO PSIQUIATRA</p>
+
+                            @if(!empty($professional->especialidad_receta))
+                                <p class="header__sub">{{ $professional->especialidad_receta }}</p>
                             @endif
-                        
-                            @switch($professionalId)
-                                @case(null)
-                                    @if (!in_array($professionalId, [32, 33, 34]))
-                                        <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
-                                    @endif
-                                    @break
-                                @case(5)
-                                    <p class="header__sub">TERAPEUTA DE FAMILIAS Y PAREJAS</p>
-                                    @if (!in_array($professionalId, [32, 33, 34]))
-                                        <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
-                                    @endif
-                                    @break
-                                @case(15)
-                                    @if (!in_array($professionalId, [32, 33, 34]))
-                                        <p class="header__sub">CMP N° 74376 - RNE N° 43202</p>
-                                    @endif
-                                    @break
-                                @case(19)
-                                    @if (!in_array($professionalId, [32, 33, 34]))
-                                        <p class="header__sub">CMP N° 068076 - RNE N° 047621</p>
-                                    @endif
-                                    @break
-                                @case(24)
-                                    @if (!in_array($professionalId, [32, 33, 34]))
-                                        <p class="header__sub">CMP N° 67656 - RNE N° 48050</p>
-                                    @endif
-                                    @break
-                                @case(27)
-                                    @if (!in_array($professionalId, [32, 33, 34]))
-                                        <p class="header__sub">CMP N° 85900 - RNE ET</p>
-                                    @endif
-                                    @break
-                                @case(32)
-                                @case(33)
-                                @case(34)
-                                    {{-- No se muestra CMP ni RNE --}}
-                                    @break
-                                @default
-                                    @if (!in_array($professionalId, [32, 33, 34]))
-                                        <p class="header__sub">CMP N° 45805 - RNE N° 23848</p>
-                                    @endif
-                            @endswitch
-                        
-                            <p class="header__sub">Consultas previa cita, llamar al celular: </p>
-                            <p class="header__sub">Sede El Tambo: 996 644 350 | Sede San Carlos: 976 577 368 </p>
+
+                            <p class="header__sub">
+                                CMP N° {{ $professional->cmp }} 
+                                @if(!empty($professional->rne)) - RNE N° {{ $professional->rne }} @endif
+                            </p>
+                        @else
+                            <p class="header__name">CENTRO PSICOLÓGICO EXCELENTEMENTE</p>
+                        @endif
+
+                        <p class="header__sub">Consultas previa cita, llamar al celular:</p>
+                        <p class="header__sub">Sede El Tambo: 996 644 350 | Sede San Carlos: 976 577 368</p>
                     </div>
-        
+
                     <br>
                     <div class="separate"></div>
                     <div class="separate"></div>
@@ -179,11 +146,11 @@
                             </table>
                         </div>
 
-                       @if($professionalId === 5)
-                            <div class="footer__firma">
-                                <img src="{{ public_path('img/firmadoc3.png') }}" alt="Firma Profesional" class="img-firma">
-                            </div>
-                        @endif
+@if($showProfessionalData && $professional->signing && $professional->signing !== '-')
+                             <div class="footer__firma">
+                                 <img src="{{ public_path($professional->signing) }}" alt="Firma Profesional" class="img-firma">
+                             </div>
+                         @endif
                     </div>
                 </div>
                 <div class="botica__info">
@@ -250,21 +217,12 @@
             position: relative;
             margin: 0 auto 0; 
         }
-        .header-logo {
-            width: 250px;
-            top: 00px;
-            left: -40px;
-            position: absolute
-        }
-
-          .header-logo-big {
-            width: 400px !important;
-            position: relative !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            margin-bottom: -50px !important;
-            display: block !important;
-        }
+.header-logo {
+             width: 250px;
+             top: 00px;
+             left: -40px;
+             position: absolute
+         }
 
         .header {
             text-align: center;

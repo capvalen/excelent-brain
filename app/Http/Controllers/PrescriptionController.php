@@ -37,6 +37,17 @@ class PrescriptionController extends Controller
 	}
 	public function agregarPrescription(Request $request){
 		try {
+			// Validar que el profesional pueda emitir recetas
+			$professionalId = $request->get('professional_id');
+			$professional = Professional::find($professionalId);
+			
+			if($professional && !$professional->puedeEmitirRecetas()){
+				return response()->json([
+					'id_receta' => -1,
+					'error' => 'Solo psiquiatras pueden crear recetas. El profesional debe tener CMP y RNE configurados.'
+				]);
+			}
+			
 			//return $request->all(); die();
 			if(intval($request->get('patient_id')) == 0){
 				$patient = Patient::create([

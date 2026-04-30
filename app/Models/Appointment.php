@@ -45,11 +45,15 @@ class Appointment extends Model
         return $this->hasOne('App\Models\Membresia', 'id', 'idMembresia')
 				->with('precio');
     }
-    public function pagosExtras(){
+public function pagosExtras(){
         return $this->hasMany("App\Models\Extra_payment",'appointment_id', 'id');
     }
     public function faltas(){
         return $this->hasMany("App\Models\Faltas",'idCita', 'id');
+    }
+    //Relación uno a muchos Appointment-Medical_evolution
+    public function medical_evolutions(){
+        return $this->hasMany("App\Models\Medical_evolution", 'appointment_id');
     }
    
 }

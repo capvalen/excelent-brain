@@ -129,10 +129,10 @@
     <modal-recetas v-if="data" :dataPatient="data"></modal-recetas>
     <modal-faltas v-if="data" :dataPatient="data"></modal-faltas>
     <modal-triaje v-if="data" :dataPatient="data" :profesionales="profesionales"></modal-triaje>
-		<modal-ver-triajes-viejos :triajes="dataTriajes"></modal-ver-triajes-viejos>
+		<modal-ver-triajes-viejos v-if="dataTriajes" :triajes="dataTriajes"></modal-ver-triajes-viejos>
 		<ModalVerReprogramacionesViejos :reprogramaciones="reprogramaciones"></ModalVerReprogramacionesViejos>
     <modal-new-patient @cargarPacienteSimpleNuevo="getPatients"></modal-new-patient>
-		<modal-ver-estados :dataPatient="data" :estados="estados"></modal-ver-estados>
+		<modal-ver-estados v-if="data" :dataPatient="data" :estados="estados"></modal-ver-estados>
 		<ModalCambiarLike :like="like" :id="id" @updateLike="Like"></ModalCambiarLike>
 		<ModalVerFaltas :queId="queId" :cantFaltas="cantFaltas"></ModalVerFaltas>
 		<ModalVerHobbies :hobbies="hobbies" :id="queId" :misHobbies="misHobbies" ></ModalVerHobbies>

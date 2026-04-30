@@ -181,6 +181,8 @@ class ExtrapaymentController extends Controller
 
 				$totalSalidas = $sumasSalidas->sum();
 
+				$salidaEfectivo = isset($sumasSalidas['Efectivo']) ? $sumasSalidas['Efectivo'] : 0;
+
 				// Filtrar anulados por sede
 				$anulados = Extra_payment::whereDate('created_at', $fecha)
 						->where('activo', 0)
@@ -201,7 +203,8 @@ class ExtrapaymentController extends Controller
 				// Generar PDF filtrado por sede
 				$pdf = PDF::loadView('recepcion.cupon_cierre', compact(
 						'sumas', 'total', 'hoy', 'usuario', 'totalEfectivo', 
-						'totalSalidas', 'sumasSalidas', 'totalAnulados', 'sumasAnulados', 'nombreSede'
+						'totalSalidas', 'sumasSalidas', 'totalAnulados', 'sumasAnulados', 
+						'nombreSede', 'salidaEfectivo'
 				));
 				
 				$pdf->setPaper('a7');

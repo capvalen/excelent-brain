@@ -224,7 +224,7 @@
 
     </div>
 
-    <pago-modal v-if="cita" :cita="cita" :idUsuario="idUsuario" @actualizarAdelanto="actualizarAdelantoTable"></pago-modal>
+    <pago-modal v-if="cita && cita.payment" :cita="cita" :idUsuario="idUsuario" :idSede="idSede" @actualizarAdelanto="actualizarAdelantoTable"></pago-modal>
     <modal-estado  v-if="cita" :dataCit="cita"></modal-estado>
     <modal-patient v-if="cita" :dataCit="cita"></modal-patient>
     <info-modal v-if="cita" :dataCit="cita" :precios="precios"></info-modal>

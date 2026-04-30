@@ -8,7 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Professional extends Model
 {
     use HasFactory;
-    protected $fillable=['name','lastname','phone','profession', 'idProfesion','cv_description','photo','signing','user_id', 'idProfesion', 'activo'];
+    protected $fillable=['name','lastname','phone','profession', 'idProfesion','cv_description','photo','signing','user_id', 'idProfesion', 'activo', 'especialidad_receta', 'cmp', 'rne', 'cpsp'];
+    
+    // Verificar si el profesional puede emitir recetas (debe ser Psiquiatra con CMP y RNE)
+    public function puedeEmitirRecetas(){
+        return $this->profession === 'Psiquiatra' && !empty($this->cmp) && !empty($this->rne);
+    }
+    
+    // Verificar si el profesional puede mostrar su firma en recetas
+    public function puedeMostrarFirma(){
+        return !empty($this->signing) && $this->signing !== '-';
+    }
+    
     //Relación de uno a muchos Professional-Schedule
     public function schedules() {
         return $this->hasMany("App\Models\Schedule");

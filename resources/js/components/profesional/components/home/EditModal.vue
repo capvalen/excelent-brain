@@ -26,6 +26,33 @@
                             <textarea rows="6" type="text" class="form-control" name="cv_description" id="cv_description" v-model="professional.cv_description" required>
                             </textarea>
                         </div>
+                        
+                        <hr>
+                        <h6>Datos para Recetas</h6>
+                        <div class="form-group">
+                            <label for="especialidad_receta">Especialidad para Recetas</label>
+                            <input type="text" class="form-control" v-model="professional.especialidad_receta" placeholder="Ej: TERAPEUTA DE FAMILIAS Y PAREJAS">
+                        </div>
+                        
+                        <!-- Solo para Psiquiatras -->
+                        <div v-if="professional.profession === 'Psiquiatra'">
+                            <div class="form-group">
+                                <label for="cmp">CMP (Colegio Médico del Perú)</label>
+                                <input type="text" class="form-control" v-model="professional.cmp" placeholder="Ej: 12345">
+                            </div>
+                            <div class="form-group">
+                                <label for="rne">RNE (Registro Nacional de Especialistas)</label>
+                                <input type="text" class="form-control" v-model="professional.rne" placeholder="Ej: 67890">
+                            </div>
+                        </div>
+                        
+                        <!-- Solo para Psicólogos -->
+                        <div v-if="professional.profession === 'Psicólogo'">
+                            <div class="form-group">
+                                <label for="cpsp">CPsP (Colegio de Psicólogos del Perú)</label>
+                                <input type="text" class="form-control" v-model="professional.cpsp" placeholder="Ej: 1234">
+                            </div>
+                        </div>
 
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Guardar cambios</button>

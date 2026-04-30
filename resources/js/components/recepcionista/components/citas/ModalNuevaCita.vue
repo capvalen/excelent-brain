@@ -398,7 +398,7 @@ export default {
 		}
 	},
 	mounted(){
-		this.$parent.$on('limpiarDescuentos', this.limpiarInputs(false) );
+		this.$parent.$on('limpiarDescuentos', () => this.limpiarInputs(false) );
 		this.pedirMonedas()
 	},
 	 

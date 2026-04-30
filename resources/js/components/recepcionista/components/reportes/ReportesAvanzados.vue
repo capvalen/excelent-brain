@@ -632,7 +632,7 @@
 			</div>
 		</div>
 		<ModalSeguimiento :profesionales="profesionales" :idProfesional="7" :elegido="elegido"></ModalSeguimiento>
-		<ModalEditPatients :dataPatient="dataPaciente"></ModalEditPatients>
+		<ModalEditPatients v-if="dataPaciente" :dataPatient="dataPaciente"></ModalEditPatients>
 	</div>
 	
 </template>
@@ -646,7 +646,7 @@ import moment from 'moment';
 		components:{ ModalSeguimiento, ModalEditPatients },
 		data(){ return{
 			años: [], meses:['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-			idReporte:0, resultados:[], ocultarFechas:false, dataPaciente:[],
+			idReporte:0, resultados:[], ocultarFechas:false, dataPaciente:null,
 			fecha:{ año: moment().format('YYYY'), mes: moment().format('M') },
 			dia: moment().format('YYYY-MM-DD'), verDias: false,
 			reportes:[

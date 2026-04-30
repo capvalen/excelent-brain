@@ -393,6 +393,7 @@ class AppointmentController extends Controller
 				'patient_id'=> $paciente_prueba->id,
 				'professional_id'=> $request->input('professional_id'),
 				'schedule' => $request->get('check_time'),
+				'appointment_id' => $appointment->id,
 			]);
 
 			//Agregar por defecto a extra payments
@@ -672,6 +673,7 @@ class AppointmentController extends Controller
 			'pay_status' => $request->input('caso.pago'),
 			//'payment_method' => $request->input('caso.moneda'),
 			'voucher_issued' => $request->input('caso.comprobante'),
+			'voucher' => $request->input('caso.comprobante'),
 			'bank' => $request->input('dataCita.payment.bank'),
 			'observation' => $request->input('dataCita.payment.observation'),
 			'user_id'=>$request->input('caso.user_id'),
@@ -679,7 +681,8 @@ class AppointmentController extends Controller
 			'motivoRebaja' => $request->input('caso.motivoRebaja'), */
 			'descuento' => $request->input('caso.rebaja'),
 			'motivoDescuento' => $request->input('caso.motivoDescuento'),
-			'payment_method'=> $request->input('caso.moneda')
+			'payment_method'=> $request->input('caso.moneda'),
+			'idSede' => $request->input('idSede')
 		]);
 
 		if( $request->input('caso.pago') == '3' ){ //en caso de adelantos por vista cuaderno
@@ -751,15 +754,16 @@ class AppointmentController extends Controller
 					$primera = count($medicalEvolutionExistents) == 0 ? 'Primera evolución -Sist-': '';
 					$tpago = Precio::where('id', $request->input('dataCita.type'))->first();
 
-					Medical_evolution::create([
-						'type' => $tpago->idClasificacion,
-						'date' => $request->input('dataCita.date'),
-						'auth' => 0,
-						'patient_id'=> $request->input('dataCita.patient.id'),
-						'professional_id'=> $request->input('dataCita.professional.id'),
-						'schedule' => $request->input('dataCita.schedule.check_time'),
-						'content' =>  $primera
-					]);
+Medical_evolution::create([
+					'type' => $tpago->idClasificacion,
+					'date' => $request->input('dataCita.date'),
+					'auth' => 0,
+					'patient_id'=> $request->input('dataCita.patient.id'),
+					'professional_id'=> $request->input('dataCita.professional.id'),
+					'schedule' => $request->input('dataCita.schedule.check_time'),
+					'content' =>  $primera,
+					'appointment_id' => $request->input('dataCita.id'),
+				]);
 					
 				}
 
@@ -903,10 +907,9 @@ class AppointmentController extends Controller
 			]);
 		}
 
-		if($valueStatus == 1 || $valueStatus==3){ //status cita sin confirmar, debe eliminar HC
-			$hc = Medical_evolution::latest()->first();
-			$hc->activo=0;
-			$hc->save();
+		if($valueStatus == 1 || $valueStatus==3){ //status cita sin confirmar/anulada, debe desactivar HC de ESA cita
+			Medical_evolution::where('appointment_id', $idAppointment)
+				->update(['activo' => 0]);
 		}
 
 		if($valueStatus == 3){ //status cita anulada
@@ -966,7 +969,8 @@ class AppointmentController extends Controller
 					'patient_id'=> $request->input('dataCit.patient.id'),
 					'professional_id'=> $request->input('dataCit.professional.id'),
 					'schedule' => $request->input('dataCit.schedule.check_time'),
-					'content' =>  $primera
+					'content' =>  $primera,
+					'appointment_id' => $request->input('dataCit.id'),
 				]);
 				//}
 				
@@ -1086,21 +1090,22 @@ class AppointmentController extends Controller
 		return response()->json($patients);
 	}
 
-	public function getPatientsPerMonth($date,$id){
+public function getPatientsPerMonth($date,$id){
 		$patientsPerMonth = Appointment::where('professional_id',$id)->where('date','like',$date.'%')->get()->count();
 		$appointments = Appointment::where('professional_id', $id)
 			->where('date','like',$date.'%')
 			->with('patient', 'precio', 'professional')
-			->with(['patient.medical_evolutions'=> function($query) use($id, $date){
+			->with('medical_evolutions')
+			->with(['patient.medical_evolutions'=> function($query) use($id){
 				$query->where('professional_id','=', $id)
-					  ->where('date','like',$date.'%');
+					  ->orderBy('date', 'desc');
 			}])
 			->with(['payment'=> function($query) {
 				$query->where('payments.price','!=', null);
 			}])
 			->orderBy('date')
 			->get();
-		$extra_payments = Extra_payment::where('date','=',$date.'%')
+		$extra_payments = Extra_payment::where('date','like',$date.'%')
 		->with(['appointment' => function($query) use($id) {
 			$query -> where('professional_id', '=', $id);
 		}])
@@ -1134,7 +1139,7 @@ class AppointmentController extends Controller
 			->where('date','=',$date)
 			->with('patient', 'precio', 'professional')
 			->with(['patient.medical_evolutions'=> function($query) use($id, $date){
-				$query->where('professional_id','like', $id)
+				$query->where('professional_id','=', $id)
 					  ->where('date','=',$date);
 			}])
 			->with(['payment'=> function($query) {

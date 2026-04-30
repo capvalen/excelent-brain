@@ -59,6 +59,33 @@
 									<textarea rows="8" type="text" class="form-control" name="cv_description" v-model="prof.cv_description" id="cv_description" required>
 									</textarea>
 								</div>
+								
+								<hr>
+								<h6>Datos para Recetas</h6>
+								<div class="form-group">
+									<label for="especialidad_receta">Especialidad para Recetas</label>
+									<input type="text" class="form-control" v-model="prof.especialidad_receta" placeholder="Ej: TERAPEUTA DE FAMILIAS Y PAREJAS">
+								</div>
+								
+								<!-- Solo para Psiquiatras -->
+								<div v-if="prof.profession === 'Psiquiatra'">
+									<div class="form-group">
+										<label for="cmp">CMP (Colegio Médico del Perú)</label>
+										<input type="text" class="form-control" v-model="prof.cmp" placeholder="Ej: 12345">
+									</div>
+									<div class="form-group">
+										<label for="rne">RNE (Registro Nacional de Especialistas)</label>
+										<input type="text" class="form-control" v-model="prof.rne" placeholder="Ej: 67890">
+									</div>
+								</div>
+								
+								<!-- Solo para Psicólogos -->
+								<div v-if="prof.profession === 'Psicólogo'">
+									<div class="form-group">
+										<label for="cpsp">CPsP (Colegio de Psicólogos del Perú)</label>
+										<input type="text" class="form-control" v-model="prof.cpsp" placeholder="Ej: 1234">
+									</div>
+								</div>
 							</div>
 							<div class="col-sm-4 d-flex flex-column align-items-center">
 									<img v-if="type=='Agregar'" id="imgProf" src="https://img.freepik.com/vector-gratis/fondo-personaje-doctor_1270-84.jpg" alt="Profesional Image" class="rounded-circle" width="150px" height="150px">
@@ -111,6 +138,10 @@ export default {
 				formData.append('cv_description', this.prof.cv_description);
 				formData.append('photo', this.profe.photo);
 				formData.append('signing', this.profe.signing);
+				formData.append('especialidad_receta', this.prof.especialidad_receta || '');
+				formData.append('cmp', this.prof.cmp || '');
+				formData.append('rne', this.prof.rne || '');
+				formData.append('cpsp', this.prof.cpsp || '');
 		   await this.axios.post('/api/professional', formData, config)
 		   .then(response => {
 			   console.log('rpta:'+response)
@@ -137,6 +168,10 @@ export default {
 				formData.append('cv_description', this.prof.cv_description)
 				formData.append('photo', this.profe.photo)
 				formData.append('signing', this.profe.signing)
+				formData.append('especialidad_receta', this.prof.especialidad_receta || '')
+				formData.append('cmp', this.prof.cmp || '')
+				formData.append('rne', this.prof.rne || '')
+				formData.append('cpsp', this.prof.cpsp || '')
 				formData.append('_method', 'PUT')
 
 		   await this.axios.post('/api/professional/'+this.prof.id, formData, config)

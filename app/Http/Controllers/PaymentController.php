@@ -205,6 +205,16 @@ class PaymentController extends Controller
 						}else{
 								$profesional= [];
 						}
+				}
+				else if($payment->idMembresia > 0 ){ //si son membresías
+					$resultado  = DB::table('membresias as m')
+					->join('patients as p', 'p.id', '=', 'm.patient_id')
+					->where('m.id', $payment->idMembresia)
+					->select('p.dni', 'p.id')->first();
+					if ($resultado) {
+						$payment->patient_id = $resultado->id ?? '';
+						$payment->dniCliente = $resultado->dni ?? '';
+					}
 				}else{
 					$payment->professional_id= 0;
 					$payment->profesional_name= '';
@@ -212,6 +222,7 @@ class PaymentController extends Controller
 					$payment->horario = '';
 					$payment->servicio='';
 					$payment->fechaCita = '';
+					$payment->dniCliente = '';
 				}
 				$payment->user = DB::table('users')->select('nombre')->where('id',$payment->user_id)->first();
 			}

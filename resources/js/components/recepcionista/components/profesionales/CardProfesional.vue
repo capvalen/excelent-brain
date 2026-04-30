@@ -18,18 +18,22 @@
 export default {
     data(){
         return{
-            profesional:{
-                id:this.prof.id,
-                name: this.prof.name,
-                profession: this.prof.profession,
-                phone: this.prof.phone,
-                cv_description: this.prof.cv_description,
-                photo: this.prof.photo,
-                signing:this.prof.signing,
-                user_id:this.prof.user_id,
-                email:this.prof.email,
-                password: this.prof.password
-            },
+profesional:{
+                 id:this.prof.id,
+                 name: this.prof.name,
+                 profession: this.prof.profession,
+                 phone: this.prof.phone,
+                 cv_description: this.prof.cv_description,
+                 photo: this.prof.photo,
+                 signing:this.prof.signing,
+                 user_id:this.prof.user_id,
+                 email:this.prof.email,
+                 password: this.prof.password,
+                 especialidad_receta: this.prof.especialidad_receta,
+                 cmp: this.prof.cmp,
+                 rne: this.prof.rne,
+                 cpsp: this.prof.cpsp
+             },
             type:''
         }
     },
