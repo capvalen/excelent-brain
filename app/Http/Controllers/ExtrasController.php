@@ -533,7 +533,8 @@ class ExtrasController extends Controller
             'formato_nuevo' => 1,
             'verAviso' => 1,
             'byDoctor' => 0,
-            'idMembresia' => $idMembresia
+            'idMembresia' => $idMembresia,
+            'active_slot' => 1
         ]);
 
         // Crear el pago extra
@@ -607,30 +608,51 @@ class ExtrasController extends Controller
 	}
 
 	public function reservarCitaDoctor(Request $request, Appointment $appointment){
-		//var_dump($request->all()); die();
-		$num_citas = $appointment::where('idMembresia', '=', $request->get('idMembresia') )->count();
-		$request->merge(['num_sesion' => $num_citas+1 ]);
+		try {
+			return DB::transaction(function () use ($request, $appointment) {
 
-		$appointment ->fill($request->all());
-		$appointment->save();
-		
+			// Verificar que el horario no esté ocupado (pessimistic lock)
+			$slotOcupado = Appointment::where('schedule_id', $request->get('schedule_id'))
+				->where('date', $request->get('date'))
+				->where('active_slot', 1)
+				->lockForUpdate()
+				->first();
 
-		Payment::create([
-			'observation'=>'',
-			'bank'=>'',
-			'voucher' => '',
-			'pay_status'=>2,
-			'price' => $request->get('precio'),
-			'appointment_id' => $appointment->id,
-			'continuo' => 2,
-			'user_id' => $request->get('professional_id'),
-			'rebaja' => 0,
-			'motivoRebaja' => '',
-			'descuento' => 0,
-			'motivoDescuento' => ''
-		]);
-		//return $appointment; // Ya contiene el ID
-		return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
+			if ($slotOcupado) {
+				return response()->json(['error' => 'El horario ya fue reservado por otro usuario'], 409);
+			}
+
+			$num_citas = Appointment::where('idMembresia', '=', $request->get('idMembresia') )->count();
+			$request->merge(['num_sesion' => $num_citas+1 ]);
+
+			$appointment->fill($request->all());
+			$appointment->active_slot = 1;
+			$appointment->save();
+
+			Payment::create([
+				'observation'=>'',
+				'bank'=>'',
+				'voucher' => '',
+				'pay_status'=>2,
+				'price' => $request->get('precio'),
+				'appointment_id' => $appointment->id,
+				'continuo' => 2,
+				'user_id' => $request->get('professional_id'),
+				'rebaja' => 0,
+				'motivoRebaja' => '',
+				'descuento' => 0,
+				'motivoDescuento' => ''
+			]);
+
+			return response()->json([ 'mensaje' => 'Actualizado exitoso' ]);
+
+			}); // end DB::transaction
+		} catch (\Illuminate\Database\QueryException $e) {
+			if ($e->errorInfo[1] == 1062) {
+				return response()->json(['error' => 'El horario ya fue reservado por otro usuario'], 409);
+			}
+			throw $e;
+		}
 	}
 
 	public function listRecomendation($id){

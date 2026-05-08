@@ -58,7 +58,9 @@
 					<div class="card-body">
 						<div class="historia-info">
 							<p class="text-capitalize">Paciente: <span class="fst-italic">{{ historia.name ? lowerCase(historia.name) +', '+ lowerCase(historia.nombres) : '...' }}</span></p>
-							<p v-if="historia.discharge == 1" class="text-success">Paciente dado de alta</p>
+							<p v-if="historia.alta_psicologica == 1 && historia.alta_psiquiatrica == 1" class="text-success fw-bold">Paciente con Alta Psicológica y Psiquiátrica</p>
+							<p v-else-if="historia.alta_psicologica == 1" class="text-info fw-bold">Paciente con Alta Psicológica</p>
+							<p v-else-if="historia.alta_psiquiatrica == 1" class="text-success fw-bold">Paciente con Alta Psiquiátrica</p>
 							<p v-if="!historia.initial_psychological_history
 								&& dataUser.profession === 'Psicólogo'" class="text-danger">
 								Sin historia inicial de psicología

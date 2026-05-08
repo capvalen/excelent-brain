@@ -126,9 +126,12 @@
             <td>{{ appointment.precio.descripcion }} </td>
             <td>{{appointment.payment ? `S/ ${appointment.payment.price}` : 'Sin pago' }}</td>
             <td>
-              <span class="text-muted" v-if="appointment.payment.pay_status==1">Pendiente</span>
-              <span class="text-success" v-else-if="appointment.payment.pay_status==2">Pagado</span>
-              <span class="text-danger" v-else-if="appointment.payment.pay_status==3">Anulado</span>
+              <template v-if="appointment.payment">
+                <span class="text-muted" v-if="appointment.payment.pay_status==1">Pendiente</span>
+                <span class="text-success" v-else-if="appointment.payment.pay_status==2">Pagado</span>
+                <span class="text-danger" v-else-if="appointment.payment.pay_status==3">Anulado</span>
+              </template>
+              <span class="text-muted" v-else>Sin registro</span>
             </td>
             <td>
               <span class="text-danger" v-if="appointment.status==1">Sin asistir</span>

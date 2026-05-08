@@ -8,6 +8,48 @@ import App from './components/App.vue'
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 
+// --- INICIO FIX 429 TOO MANY REQUESTS ---
+// Cache específico solo para /api/user para evitar error 429 (Too Many Requests)
+const originalGet = axios.get;
+let userPromise = null;
+let userCache = null;
+let userCacheTime = null;
+
+axios.get = function(url, config) {
+    if (url === '/api/user' || url.endsWith('/api/user')) {
+        // Si hay caché válido (menor a 60 segs), retornar clon para evitar mutaciones
+        if (userCache && (Date.now() - userCacheTime < 60000)) {
+            return Promise.resolve({ 
+                ...userCache, 
+                data: JSON.parse(JSON.stringify(userCache.data)) 
+            });
+        }
+        // Si ya hay una petición en curso, reutilizar la promesa
+        if (userPromise) {
+            return userPromise.then(res => ({
+                ...res,
+                data: JSON.parse(JSON.stringify(res.data))
+            }));
+        }
+        
+        userPromise = originalGet.call(this, url, config).then(response => {
+            userCache = { ...response, data: JSON.parse(JSON.stringify(response.data)) };
+            userCacheTime = Date.now();
+            userPromise = null;
+            return response;
+        }).catch(error => {
+            userPromise = null;
+            throw error;
+        });
+        
+        return userPromise;
+    }
+    
+    // Dejar pasar normalmente todas las demás peticiones GET
+    return originalGet.call(this, url, config);
+};
+// --- FIN FIX 429 TOO MANY REQUESTS ---
+
 // importamos y configuramos el router
 import VueRouter from 'vue-router'
 import { routes } from './routes'

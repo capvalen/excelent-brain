@@ -548,21 +548,59 @@ class PatientController extends Controller
 		return response()->json($cantTotal);
 	}
 
-	public function discharge($id, $idProfesional){
-		$patient = Patient::find($id);
-		$patient->update([
-			'discharge' => 1
+	public function discharge(Request $request){
+		$patient = Patient::find($request->id);
+		
+		if ($request->type == 1) {
+			$patient->alta_psicologica = 1;
+		} else if ($request->type == 2) {
+			$patient->alta_psiquiatrica = 1;
+		}
+		$patient->save();
+
+		\App\Models\Discharge::create([
+			'patient_id' => $request->id,
+			'professional_id' => $request->idProfesional,
+			'type' => $request->type,
+			'comments' => $request->comments,
+			'status' => 1
 		]);
-		Patient_seguimiento::insert([
-			'registro' => Carbon::now(),
-			'patient_id'=>$id,
-			'user_id' => $idProfesional,
-			'idSeguimiento' => 7,
-			'observaciones' => 'Dado de alta por un profesional',
-			'activo' => 1
-		]);
+
 		return response()->json([
 			'msg'=> 'Dado de alta exitósamente'
+		]);
+	}
+
+	public function listDischarges() {
+		$discharges = \App\Models\Discharge::with('patient', 'professional')->orderBy('created_at', 'desc')->get();
+		return response()->json($discharges);
+	}
+
+	public function updateDischargeStatus(Request $request, $id) {
+		$discharge = \App\Models\Discharge::find($id);
+		$discharge->status = $request->status;
+		$discharge->save();
+
+		if ($request->status != 1) { 
+			$patient = Patient::find($discharge->patient_id);
+			if ($discharge->type == 1) {
+				$patient->alta_psicologica = 0;
+			} else {
+				$patient->alta_psiquiatrica = 0;
+			}
+			$patient->save();
+		} else {
+			$patient = Patient::find($discharge->patient_id);
+			if ($discharge->type == 1) {
+				$patient->alta_psicologica = 1;
+			} else {
+				$patient->alta_psiquiatrica = 1;
+			}
+			$patient->save();
+		}
+
+		return response()->json([
+			'msg'=> 'Estado actualizado correctamente'
 		]);
 	}
 

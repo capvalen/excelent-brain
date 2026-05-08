@@ -134,9 +134,18 @@ class AppointmentController extends Controller
 	public function store(Request $request)
 	{
 		try {
-			//code...
-		
-			//var_dump($request->all());die();
+			return DB::transaction(function () use ($request) {
+
+			// Verificar que el horario no esté ocupado (pessimistic lock)
+			$slotOcupado = Appointment::where('schedule_id', $request->get('schedule_id'))
+				->where('date', $request->get('date'))
+				->where('active_slot', 1)
+				->lockForUpdate()
+				->first();
+
+			if ($slotOcupado) {
+				return response()->json(['error' => 'El horario ya fue reservado por otro usuario'], 409);
+			}
 
 			$paciente_prueba = Patient::where('dni',$request->get('dni'))->first();
 
@@ -169,6 +178,7 @@ class AppointmentController extends Controller
 					'phone' => $request->get('phone')?? '',
 					'birth_date'=>$request->get('birth_date'),
 					'occupation'=>$request->get('occupation'),
+					'gender' => $request->get('gender') ?? 2,
 					'instruction_degree'=>$request->get('instruction_degree'),
 					'marital_status'=> $request->get('marital_status')  ?? 0,
 					'type_dni'=>$request->get('type_dni'),
@@ -217,7 +227,8 @@ class AppointmentController extends Controller
 				'status'=> 1,
 				'patient_id' => $patient->id,
 				'formato_nuevo' => $request->get('formato_nuevo'),
-				'recomendacion_comentario' => $request->get('recomendacion_comentario')
+				'recomendacion_comentario' => $request->get('recomendacion_comentario'),
+				'active_slot' => 1
 			]);
 
 			$payment = Payment::create([
@@ -280,7 +291,8 @@ class AppointmentController extends Controller
 				'status'=> 1,
 				'patient_id' => $paciente_prueba->id,
 				'formato_nuevo' => $request->get('formato_nuevo'),
-				'recomendacion_comentario' => $request->get('recomendacion_comentario')
+				'recomendacion_comentario' => $request->get('recomendacion_comentario'),
+				'active_slot' => 1
 			]);
 
 			$payment = Payment::create([
@@ -420,6 +432,13 @@ class AppointmentController extends Controller
 
 				//echo 'nombre: '. trim(str_replace('  ', ' ' , $request->get('name')));
 		return response()->json([ 'cita'=>$appointment, 'estado' => $request->get('price') ]);
+
+		}); // end DB::transaction
+		} catch (\Illuminate\Database\QueryException $e) {
+			if ($e->errorInfo[1] == 1062) {
+				return response()->json(['error' => 'El horario ya fue reservado por otro usuario'], 409);
+			}
+			throw $e;
 		} catch (\Throwable $th) {
 			echo $th;
 		}
@@ -823,11 +842,13 @@ Medical_evolution::create([
 			'patient_id' =>$request->get('patient_id'),
 			'idMembresia' =>$request->get('idMembresia'),
 			'num_sesion' =>$request->get('num_sesion'),
-			'formato_nuevo' => 1
+			'formato_nuevo' => 1,
+			'active_slot' => 1
 		]);
 		$cita->update([
 			'status' => 4,
-			'num_sesion' => null
+			'num_sesion' => null,
+			'active_slot' => null
 		]);
 
 		$fechado = Carbon::create($cita->payment->created_at);
@@ -942,6 +963,7 @@ Medical_evolution::create([
 				'schedule_id' => null
 			]); */
 			updateFieldStatus($appointment, $valueStatus);
+			$appointment->update(['active_slot' => null]);
 			
 		}
 		if($valueStatus == 2){ //status = confirmado
@@ -1012,7 +1034,8 @@ Medical_evolution::create([
 
 		//$cita->delete();
 		$cita->update([
-			'status' => 5 //indicando que se elimina
+			'status' => 5, //indicando que se elimina
+			'active_slot' => null
 		]);
 		} catch (\Throwable $th) {
 			echo $th;
@@ -1330,16 +1353,17 @@ public function getPatientsPerMonth($date,$id){
 	}
 
 	public function intercambiar(Request $request){
-		$horaTemporal = $request->input('horaPrimero');
+		return DB::transaction(function () use ($request) {
+			$horaTemporal = $request->input('horaPrimero');
 
-		$cita = Appointment::find($request->input('idPrimero'));
-		$cita->update([ 'schedule_id' =>  $request->input('horaElegido') ]);
+			$cita = Appointment::where('id', $request->input('idPrimero'))->lockForUpdate()->first();
+			$cita2 = Appointment::where('id', $request->input('idElegido'))->lockForUpdate()->first();
 
-		$cita2 = Appointment::find($request->input('idElegido'));
-		$cita2->update([ 'schedule_id' => $horaTemporal ]);
+			$cita->update([ 'schedule_id' =>  $request->input('horaElegido') ]);
+			$cita2->update([ 'schedule_id' => $horaTemporal ]);
 
-		return response()->json(['mensaje' => 'se actualizó la cita']);
-
+			return response()->json(['mensaje' => 'se actualizó la cita']);
+		});
 	}
 
 	public function cuponMembresia ($id, $monto){

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     use HasFactory;
-    protected $fillable=['date','type','patient_condition','link','mode','status','clasification','recomendation','professional_id','patient_id','schedule_id', 'formato_nuevo', 'byDoctor', 'idMembresia', 'recomendacion_comentario', 'num_sesion', 'attention', 'entrance'];
+    protected $fillable=['date','type','patient_condition','link','mode','status','clasification','recomendation','professional_id','patient_id','schedule_id', 'formato_nuevo', 'byDoctor', 'idMembresia', 'recomendacion_comentario', 'num_sesion', 'attention', 'entrance', 'active_slot'];
 		
     //Relación inversa de uno a muchos Patient-Appointment
     public function patient() {

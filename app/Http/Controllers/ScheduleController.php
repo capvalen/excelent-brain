@@ -140,9 +140,8 @@ class ScheduleController extends Controller
         }
 
 
-        DB::statement("SET SQL_MODE=''");//this is the trick use it just before your query
-    
-        $solos = Schedule::where('day', '=', $dia)
+        $solos = Schedule::selectRaw('MIN(id) as id, professional_id, day, check_time, departure_date')
+        ->where('day', '=', $dia)
         ->whereNotNull('check_time')
         ->whereNotNull('departure_date')
         ->groupBy('professional_id', 'day', 'check_time', 'departure_date')

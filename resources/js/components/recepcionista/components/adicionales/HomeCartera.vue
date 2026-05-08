@@ -199,7 +199,9 @@ export default{
 							cita.anulados = this.citasCompletas.filter(item => item.patient_id === cita.patient_id && item.status==3 ).length;
 							cita.reprogramados = this.citasCompletas.filter(item => item.patient_id === cita.patient_id && item.status==4 ).length;
 							cita.fatas = cita.patient?.faults;
-							if(cita.patient?.discharge==1) cita.actual = 'De Alta'
+							if(cita.patient?.alta_psicologica == 1 && cita.patient?.alta_psiquiatrica == 1) cita.actual = 'Alta Psicológica y Psiquiátrica'
+							else if(cita.patient?.alta_psicologica == 1) cita.actual = 'Alta Psicológica'
+							else if(cita.patient?.alta_psiquiatrica == 1) cita.actual = 'Alta Psiquiátrica'
 							else{
 								const condicion = this.citasCompletas.filter(item => item.patient_id === cita.patient_id && item.patient_condition==2 ).length;
 								cita.actual = condicion > 0 ? 'Continuante' : 'Nuevo';

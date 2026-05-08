@@ -19,7 +19,7 @@
 						<button data-bs-toggle="modal" data-bs-target="#recetasModal" class="btn btn-outline-secondary my-1">
 							<i class="fa-solid fa-vial"></i> Ver recetas
 						</button>
-						<button v-if="datosConsulta.discharge != 1" class="btn btn-outline-success my-1" @click="toDischarge">
+						<button v-if="(dataUser.profession === 'Psiquiatra' && datosConsulta.alta_psiquiatrica != 1) || (dataUser.profession !== 'Psiquiatra' && datosConsulta.alta_psicologica != 1)" class="btn btn-outline-success my-1" @click="toDischarge">
 							<i class="fa-solid fa-circle-check"></i> Dar de alta
 						</button>
 						<button v-else class="btn btn-outline-success my-1" disabled>
@@ -39,9 +39,12 @@
 			</div>
 		</div>
 
-		<div class=" my-3" v-if="datosConsulta.discharge=='1'">
+		<div class=" my-3" v-if="datosConsulta.alta_psicologica == 1 || datosConsulta.alta_psiquiatrica == 1">
 			<div class="alert alert-success" role="alert">
-				<i class="fa-solid fa-thumbs-up"></i> <strong>Excelente!</strong> Paciente dado de alta
+				<i class="fa-solid fa-thumbs-up"></i> <strong>Excelente!</strong> 
+				<span v-if="datosConsulta.alta_psicologica == 1 && datosConsulta.alta_psiquiatrica == 1">Paciente con Alta Psicológica y Psiquiátrica</span>
+				<span v-else-if="datosConsulta.alta_psicologica == 1">Paciente con Alta Psicológica</span>
+				<span v-else-if="datosConsulta.alta_psiquiatrica == 1">Paciente con Alta Psiquiátrica</span>
 			</div>
 		</div>
 		<div class=" my-3" v-if="datosConsulta.sos=='1'">
@@ -841,16 +844,33 @@ export default {
 		},
 		toDischarge() {
 			this.$swal({
-				title: '¿Está seguro de dar de alta a este paciente?',
+				title: 'Dar de alta al paciente',
+				text: 'Ingrese un comentario sobre el alta:',
+				input: 'textarea',
+				inputPlaceholder: 'Comentarios...',
 				showDenyButton: true,
-				confirmButtonText: 'Si',
-				denyButtonText: 'No',
+				confirmButtonText: 'Dar de Alta',
+				denyButtonText: 'Cancelar',
+				preConfirm: (comentario) => {
+					if (!comentario) {
+						this.$swal.showValidationMessage('El comentario es obligatorio para dar de alta');
+					}
+					return comentario;
+				}
 			}).then((result) => {
 				if (result.isConfirmed) {
-					this.axios.get(`/api/discharge/${this.$route.params.idPaciente}/${this.$attrs.idUser}`)
-						.then((res) => {
-							this.$swal(res.data.msg)
-						});
+					let typeDischarge = this.dataUser.profession === 'Psiquiatra' ? 2 : 1;
+					
+					this.axios.post(`/api/discharge`, {
+						id: this.$route.params.idPaciente,
+						idProfesional: this.dataUser.id,
+						type: typeDischarge,
+						comments: result.value
+					})
+					.then((res) => {
+						this.$swal(res.data.msg)
+						this.getHistories()
+					});
 				}
 			})
 		},

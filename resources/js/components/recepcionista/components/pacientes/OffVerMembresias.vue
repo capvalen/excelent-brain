@@ -164,7 +164,7 @@
 
 		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha" tipo="tipo"></ModalAmpliarFechaMembresia>
 
-		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio" :membresia ='membresiaActiva' ></ModalProximaCita>
+		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio" :membresia ='membresiaActiva' @citaCreada="pedirCitasMembresia(membresiaActiva)"></ModalProximaCita>
 		<ModalPaqueteria :paciente="paciente" :profesionales="profesional"></ModalPaqueteria>
 		
 	</div>

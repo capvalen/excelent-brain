@@ -75,6 +75,12 @@
 									<span>Usuarios</span>
 							</router-link>
 						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
+							<router-link  to="/administrador/altas" class="nav-link">
+									<i class="fas fa-clipboard-check"></i>
+									<span>Altas de Pacientes</span>
+							</router-link>
+						</li>
 				</div>
 
 				<!-- Rol del profesional -->
@@ -149,6 +155,12 @@
 								<router-link to="/profesional/pacientes-sos" class="nav-link">
 									<i class="fa-solid fa-skull-crossbones"></i>
 										<span>Pacientes S.O.S.</span>
+								</router-link>
+						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
+								<router-link to="/profesional/altas" class="nav-link">
+									<i class="fas fa-clipboard-check"></i>
+										<span>Altas de Pacientes</span>
 								</router-link>
 						</li>
 
@@ -319,6 +331,12 @@
 								<router-link to="/recepcionista/limbo" class="nav-link">
 									<i class="fa-solid fa-satellite-dish"></i>
 										<span>Limbo</span>
+								</router-link>
+						</li>
+						<li class="nav-item nav__list" @click="activeSidebar()">
+								<router-link to="/recepcionista/altas" class="nav-link">
+									<i class="fas fa-clipboard-check"></i>
+										<span>Altas de Pacientes</span>
 								</router-link>
 						</li>
 						<li class="nav-item nav__list" @click="irPanelBaja()">
