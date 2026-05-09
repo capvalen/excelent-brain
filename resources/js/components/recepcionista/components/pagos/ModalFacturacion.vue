@@ -92,14 +92,24 @@
 							<label class="form-label">Apoderado</label>
 							<input type="text" class="form-control" placeholder="" v-model="facturacion.apoderado">
 						</div>
-						<div class="mb-2">
-							<label class="form-label">Concepto del pago</label>
-							<input type="text" class="form-control" placeholder="" v-model="facturacion.conceptoPago">
+						<div class="mb-2 text-end">
+							<button class="btn btn-sm btn-outline-primary" @click="addItem()"><i class="fa-solid fa-plus"></i> Nuevo item</button>
 						</div>
-
-						<div class="mb-2">
-							<label class="form-label">Monto total a pagar (S/.)</label>
-							<input type="text" class="form-control" placeholder="" v-model="facturacion.monto" @input="soloNumeros($event)">
+						<div class="mb-2" >
+							<div class="row">
+								<div class="col-2 fw-bold">Cant.</div>
+								<div class="col-7 fw-bold">Concepto</div>
+								<div class="col-3 fw-bold">SubTotal</div>
+							</div>
+							<div class="row mb-2" v-for="(item, index) in facturacion.conceptos">
+								<div class="col-2"><input class="form-control" type="number" step="1" min="1" v-model="item.cantidad" @input="soloNumeros($event)"></div>
+								<div class="col-7 d-flex">
+									<button v-if="index>0" class="btn-sm btn-outline-danger border-0" @click="facturacion.conceptos.splice(index,1)">
+									<i class="fa-solid fa-xmark"></i></button>
+									<input class="form-control" type="text" v-model="item.nombre">
+								</div>
+								<div class="col-3"><input class="form-control" type="number" step="1" min="1" v-model="item.precio" @input="soloNumeros($event)"></div>
+							</div>
 						</div>
 
 						<div class="mb-2" v-show="facturacion.tipoEmision=='01'">
@@ -165,6 +175,7 @@ export default{
 			ruc: '',
 			razonSocial: '',
 			direccion: '',
+			conceptos:[],
 			conceptoPago: '',
 			monto:0,
 			tipoPago: 'Contado',
@@ -222,12 +233,7 @@ export default{
 				},
 			})
 			
-			let resp = await this.axios.get("/api/buscarPacienteSoloDNI/"+this.facturacion.ruc+'?token='+localStorage.getItem('token'))
-			if(resp.data && resp.data !== ""){ //esta en la BD local
-				this.facturacion.ruc = resp.data.dni.trim()
-				this.facturacion.razonSocial = resp.data.name.trim() + ' '+ resp.data.nombres.trim()
-				this.facturacion.direccion = resp.data.address?.address.trim().replace('null', '-')
-			}else{ //Busca en la BD externa (RENIEC)
+			if(this.facturacion.ruc>0){ //Busca en la BD externa (RENIEC)
 				let respReniec = await this.axios.get("/api/buscarDni/"+this.facturacion.ruc+'?token='+localStorage.getItem('token'))
 				//console.log('se entrega', respReniec.status === 200,respReniec.data)
 				if(respReniec.status === 200 && respReniec.data){
@@ -344,18 +350,8 @@ export default{
 				descuentos: 0,
 				observaciones: this.facturacion.apoderado
 			}
-			
-			jsonProductos.push({
-				id: 1, //libre
-				nombre: this.facturacion.conceptoPago,
-				cantidad: 1, //es servicios
-				unidad: 'Und.',
-				unidadSunat: 'ZZ', //servicios
-				precio: this.facturacion.monto,
-				descuento: 0,
-				afecto: '1', //gravado
-				subTotal: this.facturacion.monto
-			})
+
+			jsonProductos = this.facturacion.conceptos
 			
 			let cabecera = { tipo: this.facturacion.tipoEmision, serie: comprobantes[this.facturacion.tipoEmision], fecha: this.hoy }
 
@@ -368,7 +364,7 @@ export default{
 				},
 			})
 
-			
+			console.log('psod',jsonProductos)
 			this.axios.post(url, { empresa, cliente, cabecera, jsonProductos })
 			.then(resp => {
 				console.log(resp.data)
@@ -392,26 +388,40 @@ export default{
 			if( this.facturacion.ruc == '' || this.facturacion.razonSocial == '' ){
 				alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Falta rellenar datos: DNI, Razón Social', 'danger', 10);
 				valor = false
+				return false
 			}
-			if( this.facturacion.monto <= 0 ){
+			/* if( this.facturacion.monto <= 0 ){
 				alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Monto incorrecto', 'danger', 10);
 				valor = false
 			}
 			if( this.facturacion.conceptoPago == '' ){
 				alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Se debe rellenar un concepto', 'danger', 10);
 				valor = false
-			}
+			} */
+			this.facturacion.conceptos.forEach(item=>{
+				if(item.nombre == ''){
+					alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'Se debe rellenar todos los conceptos', 'danger', 10);
+					valor = false
+					return false;
+				}
+				if(item.precio <= 0){
+					alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'No pueden haber precios con 0', 'danger', 10);
+					valor = false
+					return false;
+				}
+				if(item.cantidad <= 0){
+					alertify.notify('<i class="fa-solid fa-circle-check"></i> ' + 'No pueden haber cantidad con 0', 'danger', 10);
+					valor = false
+					return false;
+				}
+				item.subTotal = item.cantidad * item.precio
+			})
 
-			if( this.facturacion.tipoEmision == '01' ){ //facturas
+			/* if( this.facturacion.tipoEmision == '01' ){ //facturas
 
 			}
 			if( this.facturacion.tipoEmision == '03' ){ //boletas
-				//if( (this.facturacion.tipoDocumento == 1 || this.facturacion.tipoDocumento == 6) )
-			
-
-					//
-
-			}
+			} */
 			return valor
 		},
 		registrarSerie(serie){
@@ -502,23 +512,46 @@ export default{
 			if( this.facturacion.tipoEmision == '03'){ //boletas, seteamos al contado
 				this.facturacion.tipoPago = 'Contado'
 			}
-
+		},
+		addItem(){
+			this.facturacion.conceptos.push({
+				id: 1, //libre
+				nombre: '',
+				cantidad: 1, //es servicios
+				unidad: 'Und.',
+				unidadSunat: 'NIU', //servicios
+				precio: 0,
+				descuento: 0,
+				afecto: '1', //gravado
+				subTotal: 0
+			})
 		}
 	},
 	watch:{
 		'pago': function(newVal){
-			if(newVal){
+			if(this.pago.dniCliente){
 				if(newVal.voucher) return;
 				this.facturacion.ruc = newVal.dniCliente
 				this.buscarReniec()
+				let conceptoPago = '';
 				if( parseInt(newVal.idMembresia) >0 )
-					this.facturacion.conceptoPago = 'Pago de membresía'
+					conceptoPago = 'Pago de membresía'
 				else{
 					const servicio = {"0":"Certificado","1":"Paquete Membresía","2":"Paquete Kurame","3":"Informe","4":"Otros","5":"Pago de cita","7":"Pago de membresía","8":"Adelanto de cita","15":"Pago de membresía","16":"Revaluación gratuita"}
-					this.facturacion.conceptoPago = servicio[newVal.type]+' '+ newVal.detalle.replace(/\//g, '-');
-
+					conceptoPago = servicio[newVal.type]+' '+ newVal.detalle.replace(/\//g, '-');
 				}
-				this.facturacion.monto = newVal.price
+				this.facturacion.conceptos.push({
+					id: 1, //libre
+					nombre: conceptoPago,
+					cantidad: 1, //es servicios
+					unidad: 'Und.',
+					unidadSunat: 'ZZ', //servicios
+					precio: newVal.price,
+					descuento: 0,
+					afecto: '1', //gravado
+					subTotal: newVal.price
+				});
+				//this.facturacion.monto = newVal.price
 			}
 		}
 	}
