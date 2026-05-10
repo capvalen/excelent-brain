@@ -95,6 +95,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/pedirArchivosTriaje', [PatientController::class, 'pedirArchivosTriaje']);
         Route::get('xlsx_recep/{date}', [PatientController::class, 'createXlsx']);
 
+				Route::post('discharge', [PatientController::class, 'discharge']);
+				Route::get('discharges', [PatientController::class, 'listDischarges']);
+				Route::put('discharges/{id}', [PatientController::class, 'updateDischargeStatus']);
+
         // Admin-only patient routes
         Route::middleware('role:administrador,recepcionista')->group(function () {
             Route::get('getLast10PatientsAdmin', [PatientController::class, 'getLast10PatientsAdmin']);
@@ -107,9 +111,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Admin-only patient routes
         Route::middleware('role:administrador,recepcionista,profesional')->group(function () {
-            Route::post('discharge', [PatientController::class, 'discharge']);
-            Route::get('discharges', [PatientController::class, 'listDischarges']);
-            Route::put('discharges/{id}', [PatientController::class, 'updateDischargeStatus']);
+            
         });
     });
 
