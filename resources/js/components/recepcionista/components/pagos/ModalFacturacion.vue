@@ -531,7 +531,7 @@ export default{
 		'pago': function(newVal){
 			if(this.pago.dniCliente){
 				if(newVal.voucher) return;
-				this.facturacion.ruc = newVal.dniCliente
+				this.facturacion.ruc = newVal.dniCliente				
 				this.buscarReniec()
 				let conceptoPago = '';
 				if( parseInt(newVal.idMembresia) >0 )
@@ -540,6 +540,7 @@ export default{
 					const servicio = {"0":"Certificado","1":"Paquete Membresía","2":"Paquete Kurame","3":"Informe","4":"Otros","5":"Pago de cita","7":"Pago de membresía","8":"Adelanto de cita","15":"Pago de membresía","16":"Revaluación gratuita"}
 					conceptoPago = servicio[newVal.type]+' '+ newVal.detalle.replace(/\//g, '-');
 				}
+				this.facturacion.conceptos = []
 				this.facturacion.conceptos.push({
 					id: 1, //libre
 					nombre: conceptoPago,

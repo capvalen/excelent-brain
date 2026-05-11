@@ -182,9 +182,10 @@ class PaymentController extends Controller
 			->where('activo', 1)
 			->where('type', '!=', 6)
 			->where('idSede', $request->get('idSede'))
+			->with('patient')
 			->get();
 			foreach ($payments as $payment) {
-				if($payment->appointment_id!=0){
+				if($payment->appointment_id > 0){
 					$appointment = Appointment::with('precio')->find($payment->appointment_id);
 					if(isset($appointment->professional_id)){
 							$servicio = Precio::find($appointment->type)->first();
@@ -193,6 +194,8 @@ class PaymentController extends Controller
 							$payment->professional_id= $profesional->professional_id ?? 0;
 							$payment->profesional_name= $profesional->nombre ?? '';
 							$payment->fechaCita = $appointment->date;
+							$cliente = Patient::find($appointment->patient_id);
+							$payment->dniCliente = $cliente->dni ?? '';
 							if( $appointment->schedule_id ):
 								$payment->horario = \DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('h:i a');
 								$payment->horar = intval(\DateTime::createFromFormat('H:i:s', Schedule::find($appointment->schedule_id)->check_time)->format('H'));
@@ -204,6 +207,7 @@ class PaymentController extends Controller
 							endif;
 						}else{
 								$profesional= [];
+								$payment->dniCliente = ''; 
 						}
 				}
 				else if($payment->idMembresia > 0 ){ //si son membresías
