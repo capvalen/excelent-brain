@@ -159,7 +159,7 @@ class ExtrasController extends Controller
 			->whereNotIn('estado', [2,3]) //Ver la forma de disminuir la lista de hoy, porque se hará larga
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
-			->select( 'd.*', 'p.*', 'd.id as idDeuda')
+			->select( 'd.*', 'p.*', 'd.id as idDeuda', 'd.numero_cuota')
 			->get();
 			$cobrados = DB::table('deudas as d')->where('d.activo', 1)
 			->join('patients as p', 'p.id', '=', 'd.patient_id' )
@@ -167,7 +167,7 @@ class ExtrasController extends Controller
 			->whereIn('estado', [2,3])
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
-			->select( 'd.*', 'p.*', 'd.id as idDeuda')
+			->select( 'd.*', 'p.*', 'd.id as idDeuda', 'd.numero_cuota')
 			->get();
 		}else{
 			$resultados = DB::table('deudas as d')->where('d.activo', 1)
@@ -177,7 +177,7 @@ class ExtrasController extends Controller
 			->whereNotIn('estado', [2,3]) //Ver la forma de disminuir la lista de hoy, porque se hará larga
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
-			->select( 'd.*', 'p.*', 'd.id as idDeuda')
+			->select( 'd.*', 'p.*', 'd.id as idDeuda', 'd.numero_cuota')
 			->get();
 			$cobrados = DB::table('deudas as d')->where('d.activo', 1)
 			->join('patients as p', 'p.id', '=', 'd.patient_id' )
@@ -185,7 +185,7 @@ class ExtrasController extends Controller
 			->whereIn('estado', [2,3])
 			->orderBy('estado', 'asc')
 			->orderBy('d.fecha', 'asc')
-			->select( 'd.*', 'p.*', 'd.id as idDeuda')
+			->select( 'd.*', 'p.*', 'd.id as idDeuda', 'd.numero_cuota')
 			->get();
 
 		}
@@ -555,6 +555,7 @@ class ExtrasController extends Controller
     }
 
     // Guardar los pagos adicionales (cuando "pago" es true)
+    $numeroCuota = 1;
     foreach ($fechas as $fecha) {
         if ($fecha->pago) { // cuando es true
             $pagoExtra = new Extra_payment;
@@ -569,6 +570,7 @@ class ExtrasController extends Controller
             $pagoExtra->continuo = 3;
             $pagoExtra->idMembresia = $idMembresia;
             $pagoExtra->user_id = $request->input('user_id');
+            $pagoExtra->numero_cuota = $numeroCuota;
 
             // Asignar la IdSede que corresponde al usuario
             $pagoExtra->idSede = $idSede;
@@ -589,9 +591,11 @@ class ExtrasController extends Controller
                 'fecha' => $fecha->dia,
                 'monto' => $fecha->monto,
                 'idMembresia' => $idMembresia,
-                'idPago' => $membresia['tipo']
+                'idPago' => $membresia['tipo'],
+                'numero_cuota' => $numeroCuota
             ]);
         }
+        $numeroCuota++;
     }
 
     return response()->json(['mensaje' => 'Actualizado exitoso']);
@@ -927,6 +931,23 @@ class ExtrasController extends Controller
 		$idPaciente = $request->input('idPaciente') ?: ($deuda ? $deuda->patient_id : null);
 		$observacion = $request->input('observacion') ?: $request->input('observación');
 
+		// Validar pago secuencial: solo se puede pagar la cuota pendiente más antigua
+		if ($deuda && $idMembresia && $deuda->numero_cuota) {
+			$cuotaMasAntigua = DB::table('deudas')
+				->where('idMembresia', $idMembresia)
+				->where('estado', 1)
+				->where('activo', 1)
+				->whereNotNull('numero_cuota')
+				->orderBy('numero_cuota', 'asc')
+				->first();
+
+			if ($cuotaMasAntigua && $deuda->id != $cuotaMasAntigua->id) {
+				return response()->json([
+					'error' => 'Debe pagar primero la cuota #' . $cuotaMasAntigua->numero_cuota . ' antes de pagar esta cuota.'
+				], 422);
+			}
+		}
+
 		DB::table('deudas')->where('id', $request->input('idDeuda'))
 		->update([
 			'idActualiza' => $request->input('user_id'),
@@ -949,6 +970,8 @@ class ExtrasController extends Controller
 				// Asignar la IdSede que corresponde al usuario
 				$pagoExtra->idSede = $idSede;
 				$pagoExtra->patient_id = $idPaciente;
+				// Heredar el número de cuota de la deuda
+				$pagoExtra->numero_cuota = $deuda ? $deuda->numero_cuota : null;
 				$pagoExtra->save();
 			if ($idMembresia) {
 				Membresia::where('id', $idMembresia)
@@ -1038,8 +1061,9 @@ class ExtrasController extends Controller
 			
 			if($membresia->cuotas>0){
 				#buscar Pagos realizados y deudas
-				$membresia->pagados = Extra_payment::where('idMembresia', $membresia->id)->get();
-				$membresia->deudas = DB::table('deudas')->where('idMembresia', $membresia->id)->where('estado', 1)->where('activo', 1)->get();
+				$membresia->pagados = Extra_payment::where('idMembresia', $membresia->id)->orderBy('numero_cuota', 'asc')->get();
+				$membresia->deudas = DB::table('deudas')->where('idMembresia', $membresia->id)->where('estado', 1)->where('activo', 1)->orderBy('numero_cuota', 'asc')->get();
+				$membresia->cuota_dividida = $membresia->cuota_dividida ?? false;
 			}else{
 				$membresia->pagados=[];
 				$membresia->deudas=[];
@@ -1075,6 +1099,91 @@ class ExtrasController extends Controller
 		DB::table('deudas')->where('id', $request->get('id'))
 		->update(['fecha' => $request->get('fecha')]);
 		return response()->json(['mensaje' => 'Actualizdo con éxito']);
+	}
+
+	public function dividirPrimeraCuota(Request $request){
+		$idMembresia = $request->input('idMembresia');
+		$montoPrimera = $request->input('monto_primera');
+		$fechaSegunda = $request->input('fecha_segunda');
+		$userId = $request->input('user_id');
+
+		// Validar que la membresía existe y está activa
+		$membresia = Membresia::where('id', $idMembresia)->where('activo', 1)->first();
+		if (!$membresia) {
+			return response()->json(['error' => 'Membresía no encontrada o inactiva'], 404);
+		}
+
+		// Validar que no se haya dividido antes
+		if ($membresia->cuota_dividida) {
+			return response()->json(['error' => 'Esta membresía ya tuvo una cuota dividida anteriormente'], 422);
+		}
+
+		// Obtener la primera cuota pendiente (con numero_cuota más bajo)
+		$primeraCuota = DB::table('deudas')
+			->where('idMembresia', $idMembresia)
+			->where('estado', 1)
+			->where('activo', 1)
+			->whereNotNull('numero_cuota')
+			->orderBy('numero_cuota', 'asc')
+			->first();
+
+		if (!$primeraCuota) {
+			return response()->json(['error' => 'No hay cuotas pendientes para dividir'], 422);
+		}
+
+		// Validar montos
+		if ($montoPrimera >= $primeraCuota->monto || $montoPrimera <= 0) {
+			return response()->json(['error' => 'El monto de la primera parte debe ser mayor a 0 y menor al monto original de S/ ' . number_format($primeraCuota->monto, 2)], 422);
+		}
+
+		$montoSegunda = $primeraCuota->monto - $montoPrimera;
+		$numeroCuotaOriginal = $primeraCuota->numero_cuota;
+
+		DB::beginTransaction();
+		try {
+			// 1. Incrementar numero_cuota de todas las cuotas posteriores en deudas
+			DB::table('deudas')
+				->where('idMembresia', $idMembresia)
+				->where('activo', 1)
+				->where('numero_cuota', '>', $numeroCuotaOriginal)
+				->increment('numero_cuota');
+
+			// 2. Incrementar numero_cuota de pagos posteriores en extra_payments
+			DB::table('extra_payments')
+				->where('idMembresia', $idMembresia)
+				->whereNotNull('numero_cuota')
+				->where('numero_cuota', '>', $numeroCuotaOriginal)
+				->increment('numero_cuota');
+
+			// 3. Actualizar la cuota original con el monto reducido
+			DB::table('deudas')
+				->where('id', $primeraCuota->id)
+				->update(['monto' => $montoPrimera]);
+
+			// 4. Insertar la nueva cuota con numero_cuota = original + 1
+			DB::table('deudas')->insert([
+				'patient_id' => $primeraCuota->patient_id,
+				'motivo' => $primeraCuota->motivo,
+				'user_id' => $userId,
+				'fecha' => $fechaSegunda,
+				'monto' => $montoSegunda,
+				'idMembresia' => $idMembresia,
+				'idPago' => $primeraCuota->idPago,
+				'numero_cuota' => $numeroCuotaOriginal + 1
+			]);
+
+			// 5. Actualizar la membresía: incrementar cuotas y marcar como dividida
+			$membresia->update([
+				'cuotas' => $membresia->cuotas + 1,
+				'cuota_dividida' => true
+			]);
+
+			DB::commit();
+			return response()->json(['mensaje' => 'Cuota dividida exitosamente']);
+		} catch (\Exception $e) {
+			DB::rollBack();
+			return response()->json(['error' => 'Error al dividir la cuota: ' . $e->getMessage()], 500);
+		}
 	}
 
 	public function actualizarPrecioAdmin(Request $request){

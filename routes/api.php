@@ -224,6 +224,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('buscarMembresias/{id}', [ExtrasController::class, 'buscarMembresias']);
         Route::get('pedirCitasMembresia/{id}', [ExtrasController::class, 'pedirCitasMembresia']);
         Route::post('ampliarFechaMembresia', [ExtrasController::class, 'ampliarFechaMembresia']);
+        Route::post('dividirCuotaMembresia', [ExtrasController::class, 'dividirPrimeraCuota']);
         Route::post('crearAcontecimiento', [ExtrasController::class, 'crearAcontecimiento']);
         Route::get('cargarLineas/{id}', [ExtrasController::class, 'cargarLineas']);
         Route::get('cambiarEstadoMembresia/{id}/{estado}/{congelar}', [ExtrasController::class, 'cambiarEstadoMembresia']);

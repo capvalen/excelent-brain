@@ -43,7 +43,7 @@
 							<ol class="list-group mb-2">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="pagado in membresia.pagados">
 									<div class="ms-2 me-auto">
-										<div><span class="fw-bold">Pagado:</span> {{ fechaLatam(pagado.date) }} </div>
+										<div><span class="fw-bold">Cuota #{{ pagado.numero_cuota || '—' }} - Pagado:</span> {{ fechaLatam(pagado.date) }} </div>
 										<p class="mb-0">Monto: S/ {{ parseFloat(pagado.price).toFixed(2) }} </p>
 									</div>
 								</li>
@@ -53,11 +53,15 @@
 							<ol class="list-group mb-2">
 								<li class="list-group-item d-flex justify-content-between align-items-start" v-for="(deuda, indice) in membresia.deudas">
 									<div class="ms-2 me-auto">
-										<div><span class="fw-bold">Fecha de pago:</span> {{ fechaLatam(deuda.fecha) }} </div>
+										<div><span class="fw-bold">Cuota #{{ deuda.numero_cuota || '—' }} - Fecha de pago:</span> {{ fechaLatam(deuda.fecha) }} </div>
 										<p class="mb-0">Monto: S/ {{ parseFloat(deuda.monto).toFixed(2) }} </p>
 									</div>
 									<span title="Ampliar fecha" class="badge bg-primary rounded-pill p-2 ms-1" @click="ampliarFechaDeuda(deuda.id, ampliacion=deuda.fecha)" data-bs-toggle="modal" data-bs-target="#modalAmpliarFechaMembresia" style="cursor: pointer;"><i class="far fa-clock"></i></span>
-									<span title="Aplicar pago" class="badge bg-success rounded-pill p-2 ms-1" @click="pagarDeuda(index, indice)" style="cursor: pointer;"><i class="far fa-gem"></i></span>
+									<!-- Botón dividir: solo en la primera cuota pendiente y si no se ha dividido antes -->
+									<span v-if="indice === 0 && !membresia.cuota_dividida" title="Dividir cuota" class="badge bg-warning rounded-pill p-2 ms-1" @click="abrirDividirCuota(index, indice)" style="cursor: pointer;"><i class="fa-solid fa-scissors"></i> ✂️</span>
+									<!-- Botón pagar: solo en la cuota más antigua (indice 0) -->
+									<span v-if="indice === 0" title="Aplicar pago" class="badge bg-success rounded-pill p-2 ms-1" @click="pagarDeuda(index, indice)" style="cursor: pointer;"><i class="far fa-gem"></i></span>
+									<span v-else title="Pague primero la cuota anterior" class="badge bg-secondary rounded-pill p-2 ms-1" style="cursor: not-allowed;">🔒</span>
 								</li>
 							</ol>
 							<p v-if="membresia.deudas.length==0">No hay deudas pendientes</p>
@@ -138,7 +142,7 @@
 			</div>
 		</div>
 
-		<!-- Modal -->
+		<!-- Modal para cambiar estado -->
 		<div class="modal fade" id="modalEstado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -157,6 +161,30 @@
 							><i class="fa-solid fa-circle-notch"></i> Congelado</li>
 							<li class="list-group-item list-group-item-action puntero" data-bs-dismiss="modal" :class="{'active':queEstado=='6'}" @click="cambiarEstado(6,'Cancelado', $event)"><i class="fa-solid fa-circle-notch"></i> Cancelado</li>
 						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal para dividir cuota -->
+		<div class="modal fade" id="modalDividirCuota" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-sm">
+				<div class="modal-content">
+					<div class="modal-header border-0 pb-0">
+						<h5 class="modal-title">✂️ Dividir cuota</h5>
+						<button type="button" id="closeDividir" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body" v-if="dividirData.deuda">
+						<p class="mb-1">Cuota #{{ dividirData.deuda.numero_cuota }}</p>
+						<p class="mb-2">Monto original: <strong>S/ {{ parseFloat(dividirData.deuda.monto).toFixed(2) }}</strong></p>
+						<label>Monto de la primera parte:</label>
+						<input type="number" class="form-control mb-2" v-model.number="dividirData.montoPrimera" step="0.01" min="0.01" :max="dividirData.deuda.monto - 0.01">
+						<p class="text-muted mb-1"><small>Segunda parte: S/ {{ dividirData.deuda ? (parseFloat(dividirData.deuda.monto) - dividirData.montoPrimera).toFixed(2) : '0.00' }}</small></p>
+						<label>Fecha de pago de la segunda parte:</label>
+						<input type="date" class="form-control mb-2" v-model="dividirData.fechaSegunda">
+					</div>
+					<div class="modal-footer border-0">
+						<button type="button" class="btn btn-warning" @click="confirmarDividirCuota()">✂️ Dividir</button>
 					</div>
 				</div>
 			</div>
@@ -183,7 +211,8 @@ export default{
 	props:['queId', 'nombrePaciente', 'idUser', 'paciente', 'profesional'],
 	components:{ ModalAmpliarFechaMembresia, ModalProximaCita, ModalPaqueteria },
 	data(){return {
-		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null, membresiaActiva:[], queEstado:null, verDias:false, congelar:0
+		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null, membresiaActiva:[], queEstado:null, verDias:false, congelar:0,
+		dividirData: { indexMembresia: null, indexDeuda: null, deuda: null, montoPrimera: 0, fechaSegunda: moment().add(15, 'days').format('YYYY-MM-DD') }
 	}},
 	mounted(){
 		//this.buscarMembresias()
@@ -214,7 +243,7 @@ export default{
 			})
 
 			swalWithBootstrapButtons.fire({
-				title: `¿Deseas realizar un pago de la deuda de S/ ${this.membresias[index].deudas[indice].monto}?`,
+				title: `¿Deseas realizar un pago de la cuota #${this.membresias[index].deudas[indice].numero_cuota || '?'} por S/ ${this.membresias[index].deudas[indice].monto}?`,
 				text: "Se pondrá en caja automáticamente",
 				icon: 'warning',
 				showCancelButton: true,
@@ -235,10 +264,63 @@ export default{
 					
 					this.axios.post('/api/pagarDeudaMembresia', datos)
 					.then(res =>{
-						console.log(res.data)
-						this.buscarMembresias();
-						swalWithBootstrapButtons.fire( 'Deuda Pagada', '', 'success' )
+						if(res.data.error){
+							swalWithBootstrapButtons.fire('Error', res.data.error, 'error')
+						} else {
+							console.log(res.data)
+							this.buscarMembresias();
+							swalWithBootstrapButtons.fire( 'Deuda Pagada', '', 'success' )
+						}
 					})
+					.catch(err => {
+						if(err.response && err.response.data && err.response.data.error){
+							swalWithBootstrapButtons.fire('Error', err.response.data.error, 'error')
+						}
+					})
+				}
+			})
+		},
+		abrirDividirCuota(indexMembresia, indexDeuda){
+			const deuda = this.membresias[indexMembresia].deudas[indexDeuda];
+			this.dividirData = {
+				indexMembresia,
+				indexDeuda,
+				deuda,
+				montoPrimera: Math.floor(deuda.monto / 2 * 100) / 100,
+				fechaSegunda: moment().add(15, 'days').format('YYYY-MM-DD')
+			};
+			$('#modalDividirCuota').modal('show');
+		},
+		confirmarDividirCuota(){
+			const d = this.dividirData;
+			if(d.montoPrimera <= 0 || d.montoPrimera >= d.deuda.monto){
+				this.$swal({icon:'error', title:'El monto debe ser mayor a 0 y menor al monto original'});
+				return;
+			}
+			if(!d.fechaSegunda){
+				this.$swal({icon:'error', title:'Ingrese la fecha de la segunda cuota'});
+				return;
+			}
+
+			let datos = new FormData();
+			datos.append('idMembresia', this.membresias[d.indexMembresia].id);
+			datos.append('monto_primera', d.montoPrimera);
+			datos.append('fecha_segunda', d.fechaSegunda);
+			datos.append('user_id', this.idUser);
+
+			this.axios.post('/api/dividirCuotaMembresia', datos)
+			.then(res => {
+				if(res.data.mensaje){
+					document.querySelector('#modalDividirCuota #closeDividir').click();
+					this.buscarMembresias();
+					this.$swal({icon:'success', title: res.data.mensaje});
+				} else if(res.data.error){
+					this.$swal({icon:'error', title: res.data.error});
+				}
+			})
+			.catch(err => {
+				if(err.response && err.response.data && err.response.data.error){
+					this.$swal({icon:'error', title: err.response.data.error});
 				}
 			})
 		},

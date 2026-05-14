@@ -8,8 +8,9 @@
 					<button type="button" id="closeModal" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 				</div>
 				<div class="modal-body">
-					<p>A favor de <strong class="text-capitalize">{{ deuda.name }}</strong></p>
+				<p>A favor de <strong class="text-capitalize">{{ deuda.name }}</strong></p>
 					<p>Esta por hacer una modificación de la membresía <strong>{{ deuda.motivo }}</strong></p>
+					<p v-if="deuda.numero_cuota">Cuota <strong>#{{ deuda.numero_cuota }}</strong></p>
 					<p>Monto S/ <strong>{{ parseFloat(deuda.monto).toFixed(2) }}</strong></p>
 					<label for="">Opciones</label>
 					<select class="form-select" id="sltTipo" v-model="respuesta.estado">

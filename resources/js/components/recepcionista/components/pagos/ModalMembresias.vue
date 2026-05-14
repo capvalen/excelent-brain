@@ -94,6 +94,7 @@
 									<table class="table table-hover table-borderless " v-show="fechas.length > 0">
 										<thead>
 											<tr>
+												<th class="pb-1">N° Cuota</th>
 												<th class="pb-1">Fecha de pago</th>
 												<th class="pb-1">Monto</th>
 												<th class="pb-1">¿Paga?</th>
@@ -101,7 +102,8 @@
 										</thead>
 										<tbody id="tbodyFechas">
 												<tr v-for="(fecha, index) in fechas">
-														<td> <input type="date" class="form-control" v-model="fecha.dia"> </td>
+														<td><strong>#{{ index + 1 }}</strong></td>
+										<td> <input type="date" class="form-control" v-model="fecha.dia"> </td>
 														<td>
 																<!-- Si es una sola cuota, muestra el monto como texto -->
 																<span v-if="membresia.cuotas==1">{{ parseFloat(fecha.monto).toFixed(2) }}</span>

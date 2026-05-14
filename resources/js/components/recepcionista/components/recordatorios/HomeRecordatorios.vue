@@ -331,11 +331,12 @@
 						<div class="input-group mb-3 col-sm-4">
 							<span class="input-group-text" id="basic-addon1">Cambiar fecha:</span>
 							<input type="date" class="form-control" v-model="nFecha" id="fechaDeudas" @change="cargarDatos('deudas')">
-						</div>
+					</div>
 					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th>N°</th>
+								<th>Cuota</th>
 								<th>Nombre</th>
 								<th>Motivo</th>
 								<th>Monto</th>
@@ -347,9 +348,10 @@
 						<tbody>
 							<tr v-for="(deuda, index) in deudas">
 								<td>{{ index+1 }}</td>
+								<td><span v-if="deuda.numero_cuota">#{{ deuda.numero_cuota }}</span><span v-else>—</span></td>
 								<td class="text-capitalize" @click="dataProps(deuda)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ deuda.name }} {{ deuda.nombres }}</td>
 								<td class="text-capitalize">{{ deuda.motivo }}
-									<small v-if="deuda.observaciones || deuda.observaciones!=''"><br>{{deuda.observaciones}}</small>
+									<small v-if="deuda.observaciones || deuda.observaciones!=''">	<br>{{deuda.observaciones}}</small>
 								</td>
 								<td>S/ {{ parseFloat(deuda.monto).toFixed(2) }}</td>
 								<td>{{ fechaLatam(deuda.fecha) }} <small>({{ fechaFrom(deuda.fecha) }})</small></td>
@@ -357,25 +359,22 @@
 									<span class="puntero" :title="getEstadoDeuda(deuda.estado)" data-bs-target="#modalCambiarDeudas" data-bs-toggle="modal" @click="queId= deuda.patient_id; idRegistro = deuda.idDeuda"> 
 									{{ colorDeuda(deuda.estado) }}
 									</span>
-									<!-- <span v-if="deuda.estado == 1"><span title="Deuda pendiente">⚪</span></span>
-									<span v-if="deuda.estado == 2"><span title="Deuda cobrada">🟢</span></span>
-									<span v-if="deuda.estado == 3"><span title="Deuda perdida">🔴</span></span>
-									<span v-if="deuda.estado == 4"><span title="Deuda con plazo extendido">🟡</span></span> -->
 								</td>
 								<td >
-									<button v-if="deuda.estado!=2 && deuda.estado!=3" class="btn btn-outline-primary btn-sm" title="Cambiar pago" @click="queDeuda = deuda" data-bs-target="#modalPagarDeuda" data-bs-toggle="modal"><i class="fas fa-hand-holding-usd"></i></button>
+									<button v-if="deuda.estado!=2 && deuda.estado!=3 && puedepagarDeuda(deuda)" class="btn btn-outline-primary btn-sm" title="Cambiar pago" @click="queDeuda = deuda" data-bs-target="#modalPagarDeuda" data-bs-toggle="modal"><i class="fas fa-hand-holding-usd"></i></button>
+									<span v-else-if="deuda.estado!=2 && deuda.estado!=3 && !puedepagarDeuda(deuda)" class="badge bg-secondary" title="Pague primero la cuota anterior">🔒</span>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 					<p v-if="deudas.length==0">No hay datos</p>
 
-
 					<p class="lead">Deudas finalizadas</p>
 					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th>N°</th>
+								<th>Cuota</th>
 								<th>Nombre</th>
 								<th>Motivo y Comentarios</th>
 								<th>Monto</th>
@@ -387,9 +386,10 @@
 						<tbody>
 							<tr v-for="(deuda, index) in cobrados">
 								<td>{{ index+1 }}</td>
+								<td><span v-if="deuda.numero_cuota">#{{ deuda.numero_cuota }}</span><span v-else>—</span></td>
 								<td class="text-capitalize" @click="dataProps(deuda)" data-bs-toggle="modal" data-bs-target="#patientModal" style="cursor:pointer">{{ deuda.name }}</td>
 								<td class="text-capitalize">{{ deuda.motivo }}
-									<span v-if="deuda.observaciones!=''"><br>
+									<span v-if="deuda.observaciones!=''">	<br>
 										{{ deuda.observaciones }}
 									</span>
 								</td>
@@ -543,6 +543,15 @@ export default {
 				case 4: case '4': return '🟡';
 				default: break;
 			}	
+		},
+		puedepagarDeuda(deuda){
+			// Si no tiene numero_cuota (deuda antigua sin membresía), permitir siempre
+			if(!deuda.numero_cuota || !deuda.idMembresia) return true;
+			// Buscar si hay alguna deuda con numero_cuota menor para la misma membresía
+			const deudasMismaMembresia = this.deudas.filter(d => d.idMembresia == deuda.idMembresia && d.estado != 2 && d.estado != 3 && d.numero_cuota);
+			if(deudasMismaMembresia.length === 0) return true;
+			const menorCuota = Math.min(...deudasMismaMembresia.map(d => d.numero_cuota));
+			return deuda.numero_cuota === menorCuota;
 		},
 		getEstadoDeuda(estado){
 			switch (estado) {
