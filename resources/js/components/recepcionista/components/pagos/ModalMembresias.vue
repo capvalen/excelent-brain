@@ -1,7 +1,7 @@
 <template>
 	<!-- Modal -->
 	<div class="modal fade" id="modalMembresias" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered ">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<div class="modal-content">
 				<div class="modal-header border-0 pb-0">
 					<h1 class="modal-title fs-5" id="exampleModalLabel">Paquetes</h1>
@@ -90,14 +90,15 @@
 									<!-- <div class="d-grid col-8 ms-auto">
 									<button class="btn btn-outline-primary float-end mt-3" @click="calcularFechas()"><i class="fa-regular fa-handshake"></i> Calcular montos y fechas</button>
 								</div> -->
-
-									<table class="table table-hover table-borderless " v-show="fechas.length > 0">
+							<div style="overflow-x: auto;">
+									<table class="table table-hover table-borderless" v-show="fechas.length > 0">
 										<thead>
 											<tr>
 												<th class="pb-1">N° Cuota</th>
 												<th class="pb-1">Fecha de pago</th>
 												<th class="pb-1">Monto</th>
 												<th class="pb-1">¿Paga?</th>
+												<th class="pb-1">Detalles de pago</th>
 											</tr>
 										</thead>
 										<tbody id="tbodyFechas">
@@ -125,6 +126,14 @@
 																		</label>
 																</div>
 														</td>
+														<td style="width: 160px; word-break: break-word;">
+    														<div v-if="fecha.pago" class="d-flex flex-column gap-1" style="min-width: 0;">
+																		<select class="form-select form-select-sm" v-model="fecha.moneda">
+																				<option v-for="mon in monedas" :value="mon.id">{{mon.tipo}}</option>
+																		</select>
+																		<input type="text" class="form-control form-control-sm" placeholder="Motivo u observación" v-model="fecha.observacion">
+																</div>
+														</td>
 												</tr>
 										</tbody>
 										<tfoot>
@@ -142,6 +151,7 @@
 											</tr>
 										</tfoot>
 									</table>
+								</div>
 								<!-- Fin de tab de Pagos -->
 							</div>
 							<div class="tab-pane fade py-3" id="membresia-tab-pane" role="tabpanel" aria-labelledby="membresia-tab"
@@ -227,7 +237,7 @@ export default {
 			txtBusqueda: '', pacientes: [], indexGlobal: null, pacienteElegido: {}, precios: [],
 			membresia: { tipo: 15, cuotas: 1, precio: 0, fin: moment().add(1, 'month').format('YYYY-MM-DD'), descuento:0, conDescuento:false },
 			fechas: [], activaResultados: false, nuevaFecha: { fecha: moment().format('YYYY-MM-DD') },
-			doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:'', comentarios:'',
+			doctores: [], horarios: [], horariosAll: [], hoursProfessional: [], schedulesInvalid: {}, horasSolas: [], horasMalas: [], dayWeek: { 0: 'Lunes', 1: "Martes", 2: "Miercoles", 3: "Jueves", 4: "Viernes", 5: "Sabado", 6: "Domingo", }, doctorSeleccionado: -1, sesionesAcumuladas:[], idHorario:'', comentarios:'', monedas:[]
 		}
 	},
 	props: ['idUsuario', 'vista'],
@@ -288,7 +298,9 @@ export default {
 					dia: hoy.format('YYYY-MM-DD'),
 					monto: parseFloat(precioParcial).toFixed(2),
 					total: precioBase,
-					pago: false
+					pago: false,
+					moneda: 1,
+					observacion: ''
 				})
 				if(this.membresia.cuotas>1){ //this.membresia.tipo==71 &&
 					const firstTr = document.querySelector('#tbodyFechas tr:first-child');
@@ -337,7 +349,7 @@ export default {
 				return false;
 			}
 			if (!this.membresia.fin){
-				alertify.notify('<i class="fa-solid fa-bomb"></i> Ingrese el último día de la memebresía', 'danger', 10);
+				alertify.notify('<i class="fa-solid fa-bomb"></i> Ingrese el último día del paquete', 'danger', 10);
 				return false;
 			}
 
@@ -375,11 +387,11 @@ export default {
 				this.pacienteElegido = []
 				this.fechas = []
 				this.$swal({
-					title: 'Se guardó la membresía',
+					title: 'Se guardó el paquete',
 					showConfirmButton: false,
 					icon:'success'
 				})
-				alertify.notify('<i class="fa-regular fa-calendar-check"></i> Membresía guardada', 'success', 10);
+				alertify.notify('<i class="fa-regular fa-calendar-check"></i> Paquete guardado', 'success', 10);
 			} else
 				alertify.notify('<i class="fa-regular fa-bomb"></i> Hubo un error guardando', 'danger', 10);
 			
@@ -472,6 +484,7 @@ export default {
 	mounted() {
 		this.preciosMembresias();
 		this.listarProfesionales();
+		this.axios.get('/api/listarMonedas').then(res => this.monedas = res.data);
 		this.$on('alertaSimple', this.notifica())
 	}
 }

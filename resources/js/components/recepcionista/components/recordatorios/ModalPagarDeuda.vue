@@ -8,15 +8,25 @@
 					<button type="button" id="closeModal" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 				</div>
 				<div class="modal-body">
-				<p>A favor de <strong class="text-capitalize">{{ deuda.name }}</strong></p>
+				<p>A favor de <strong class="text-capitalize">{{ deuda.name }} {{ deuda.nombres }}</strong></p>
 					<p>Esta por hacer una modificación de la membresía <strong>{{ deuda.motivo }}</strong></p>
 					<p v-if="deuda.numero_cuota">Cuota <strong>#{{ deuda.numero_cuota }}</strong></p>
 					<p>Monto S/ <strong>{{ parseFloat(deuda.monto).toFixed(2) }}</strong></p>
 					<label for="">Opciones</label>
-					<select class="form-select" id="sltTipo" v-model="respuesta.estado">
+					<select class="form-select mb-3" id="sltTipo" v-model="respuesta.estado">
 						<option value="2">Realizó el pago</option>
 						<option value="3">No pagará</option>
 					</select>
+					<div v-if="respuesta.estado == '2'" class="mb-3">
+						<label for="">Método de pago</label>
+						<select class="form-select" v-model="respuesta.moneda">
+							<option v-for="mon in monedas" :value="mon.id">{{mon.tipo}}</option>
+						</select>
+					</div>
+					<div v-if="respuesta.estado == '2'" class="mb-3">
+						<label for="">Motivo a registrar (Opcional)</label>
+						<input type="text" class="form-control" v-model="respuesta.motivoNuevo" placeholder="Se enviará a caja">
+					</div>
 					<div>
 						<label for="">¿Alguna observación?</label>
 						<input type="text" class="form-control" id="txtRespuesta" v-model="respuesta.respuesta" autocomplete="off">
@@ -39,7 +49,8 @@
 		props:{ usuario: null, deuda:null},
 		data(){
 			return{
-				respuesta:{ estado:3, respuesta:'' }
+				respuesta:{ estado:3, respuesta:'', moneda: 1, motivoNuevo: '' },
+				monedas: []
 			}
 		},
 		methods:{
@@ -48,9 +59,11 @@
 				datos.append('idDeuda', this.deuda.idDeuda )
 				datos.append('idPaciente', this.deuda.id )
 				datos.append('estado', this.respuesta.estado )
-				datos.append('nombre', this.deuda.name )
+				datos.append('nombre', this.deuda.name + ' ' + this.deuda.nombres )
 				datos.append('precio', this.deuda.monto )
 				datos.append('motivo', 'Cuota de '+this.deuda.motivo )
+				datos.append('motivoNuevo', this.respuesta.motivoNuevo )
+				datos.append('moneda', this.respuesta.moneda )
 				datos.append('observacion', this.respuesta.respuesta )
 				datos.append('tipo', this.deuda.idPago )//tabla pagos
 				datos.append('user_id', this.usuario )
@@ -73,7 +86,15 @@
 			}
 		},
 		watch:{
-			
+			deuda(val) {
+				if(val) {
+					this.respuesta.motivoNuevo = 'Cuota de ' + val.motivo;
+					if(val.numero_cuota) this.respuesta.motivoNuevo += ' #' + val.numero_cuota;
+				}
+			}
+		},
+		mounted() {
+			axios.get('/api/listarMonedas').then(res => this.monedas = res.data);
 		}
 	}
 </script>

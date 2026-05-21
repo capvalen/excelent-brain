@@ -48,6 +48,16 @@ axios.get = function(url, config) {
     // Dejar pasar normalmente todas las demás peticiones GET
     return originalGet.call(this, url, config);
 };
+
+// Limpiar caché al cerrar sesión
+axios.interceptors.request.use(config => {
+    if (config.url === '/api/logout' || config.url?.endsWith('/api/logout')) {
+        userCache = null;
+        userCacheTime = null;
+        userPromise = null;
+    }
+    return config;
+});
 // --- FIN FIX 429 TOO MANY REQUESTS ---
 
 // importamos y configuramos el router

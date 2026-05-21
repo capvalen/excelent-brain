@@ -47,7 +47,7 @@
                         <tbody>
                             <tr>
                                 <td>
-																	Pago de membresía acumulada: 
+																	Pago de paquete acumulado: 
                                    {{$membresia->etiqueta}}
                                 </td>
                                 <td style="text-align: right;">

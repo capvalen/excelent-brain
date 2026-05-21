@@ -78,7 +78,7 @@
 							<td class="text-nowrap" :class="{'text-danger' : payment.type==6, 'text-primary': payment.type!=6}">S/ <span v-if="payment.type==6">-</span> {{ retornarFloat(payment.price)}}</td>
 							<td class="text-nowrap">
 								<span v-if="payment.type==8">Adelanto de cita</span>
-								<span v-if="payment.type==7">Pago de membresía</span>
+								<span v-if="payment.type==7">Pago de paquete</span>
 								<span v-if="payment.type==5">Pago de cita</span>
 								<span v-if="payment.type==4">Otros</span>
 								<span v-if="payment.type==3">Informe</span>

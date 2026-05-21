@@ -137,6 +137,11 @@ export const routes = [
         component: HomePacientes
       },
       {
+        path: 'pacientes-sos',
+        name: 'pacientesSosInterno',
+        component: PacientesSos
+      },
+      {
         path: 'recursos',
         name: 'recursosProfesional',
         component: HomeProfesionalRecursos

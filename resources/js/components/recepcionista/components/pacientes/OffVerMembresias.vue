@@ -190,6 +190,32 @@
 			</div>
 		</div>
 
+		<!-- Modal para aplicar pago -->
+		<div class="modal fade" id="modalAplicarPago" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-sm">
+				<div class="modal-content">
+					<div class="modal-header border-0 pb-0">
+						<h5 class="modal-title">💎 Aplicar pago</h5>
+						<button type="button" id="closeAplicarPago" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body" v-if="pagoData.deuda">
+						<p class="mb-1"><strong>{{ pagoData.membresia.descripcion }}</strong></p>
+						<p class="mb-1">Cuota #{{ pagoData.deuda.numero_cuota }}</p>
+						<p class="mb-2">Monto: <strong>S/ {{ parseFloat(pagoData.deuda.monto).toFixed(2) }}</strong></p>
+						<label>Método de pago:</label>
+						<select class="form-select mb-2" v-model="pagoData.moneda">
+							<option v-for="mon in monedas" :value="mon.id">{{mon.tipo}}</option>
+						</select>
+						<label>Motivo a registrar:</label>
+						<input type="text" class="form-control mb-2" v-model="pagoData.motivoNuevo">
+					</div>
+					<div class="modal-footer border-0">
+						<button type="button" class="btn btn-success" @click="confirmarPagarDeuda()">Confirmar Pago</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<ModalAmpliarFechaMembresia :queCita ="queCita" :fechaBase="queFecha" tipo="tipo"></ModalAmpliarFechaMembresia>
 
 		<ModalProximaCita :profesional="profesional" :paciente="paciente" :idMembresia="idMembresia" :idServicio="idServicio" :membresia ='membresiaActiva' @citaCreada="pedirCitasMembresia(membresiaActiva)"></ModalProximaCita>
@@ -212,10 +238,13 @@ export default{
 	components:{ ModalAmpliarFechaMembresia, ModalProximaCita, ModalPaqueteria },
 	data(){return {
 		membresias:[], ampliacion:null, queDeuda:null, citas:[], queFecha:null, queCita:null, activarFechas:false, idMembresia:null, idPrecio: null, idServicio:null, membresiaActiva:[], queEstado:null, verDias:false, congelar:0,
-		dividirData: { indexMembresia: null, indexDeuda: null, deuda: null, montoPrimera: 0, fechaSegunda: moment().add(15, 'days').format('YYYY-MM-DD') }
+		dividirData: { indexMembresia: null, indexDeuda: null, deuda: null, montoPrimera: 0, fechaSegunda: moment().add(15, 'days').format('YYYY-MM-DD') },
+		pagoData: { indexMembresia: null, indexDeuda: null, deuda: null, membresia: null, moneda: 1, motivoNuevo: '' },
+		monedas: []
 	}},
 	mounted(){
 		//this.buscarMembresias()
+		this.axios.get('/api/listarMonedas').then(res => this.monedas = res.data);
 	},
 	methods:{
 		buscarMembresias(){
@@ -234,49 +263,45 @@ export default{
 			}
 		},
 		pagarDeuda(index, indice){
-			const swalWithBootstrapButtons = this.$swal.mixin({
-				customClass: {
-					confirmButton: 'btn btn-success',
-					cancelButton: 'btn btn-danger mx-2'
-				},
-				buttonsStyling: false
-			})
+			const membresia = this.membresias[index];
+			const deuda = membresia.deudas[indice];
+			this.pagoData = {
+				indexMembresia: index,
+				indexDeuda: indice,
+				deuda: deuda,
+				membresia: membresia,
+				moneda: 1,
+				motivoNuevo: `Cuota de ${membresia.descripcion}` + (deuda.numero_cuota ? ` #${deuda.numero_cuota}` : '')
+			};
+			$('#modalAplicarPago').modal('show');
+		},
+		confirmarPagarDeuda(){
+			let datos = new FormData();
+			const d = this.pagoData;
+			datos.append('idDeuda', d.deuda.id)
+			datos.append('idMembresia', d.membresia.id)
+			datos.append('user_id', this.idUser)
+			datos.append('nombre', this.nombrePaciente)
+			datos.append('precio', d.deuda.monto)
+			datos.append('tipo', 7) // 7 = pago de membresía
+			datos.append('observación', d.membresia.motivo) // Goes to deudas.observaciones
+			datos.append('motivoNuevo', d.motivoNuevo) // Goes to extra_payments.observation
+			datos.append('moneda', d.moneda)
+			datos.append('estado', 2) // Realizó pago
 
-			swalWithBootstrapButtons.fire({
-				title: `¿Deseas realizar un pago de la cuota #${this.membresias[index].deudas[indice].numero_cuota || '?'} por S/ ${this.membresias[index].deudas[indice].monto}?`,
-				text: "Se pondrá en caja automáticamente",
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonText: 'Si, pagar deuda',
-				cancelButtonText: 'Cancelar',
-				reverseButtons: true
-			}).then((result) => {
-				if (result.isConfirmed){
-					let datos = new FormData();
-					datos.append('idDeuda', this.membresias[index].deudas[indice].id)
-					datos.append('idMembresia', this.membresias[index].id)
-					datos.append('user_id', this.idUser)
-					datos.append('nombre', this.nombrePaciente)
-					datos.append('precio', this.membresias[index].deudas[indice].monto)
-					datos.append('tipo', 7) //this.membresias[index].idClasificacion
-					datos.append('observación', this.membresias[index].motivo)
-					datos.append('estado', 2)
-					
-					this.axios.post('/api/pagarDeudaMembresia', datos)
-					.then(res =>{
-						if(res.data.error){
-							swalWithBootstrapButtons.fire('Error', res.data.error, 'error')
-						} else {
-							console.log(res.data)
-							this.buscarMembresias();
-							swalWithBootstrapButtons.fire( 'Deuda Pagada', '', 'success' )
-						}
-					})
-					.catch(err => {
-						if(err.response && err.response.data && err.response.data.error){
-							swalWithBootstrapButtons.fire('Error', err.response.data.error, 'error')
-						}
-					})
+			this.axios.post('/api/pagarDeudaMembresia', datos)
+			.then(res =>{
+				if(res.data.error){
+					this.$swal({icon:'error', title: res.data.error})
+				} else {
+					$('#modalAplicarPago').modal('hide');
+					this.buscarMembresias();
+					this.$swal({icon:'success', title: 'Deuda Pagada'})
+				}
+			})
+			.catch(err => {
+				if(err.response && err.response.data && err.response.data.error){
+					this.$swal({icon:'error', title: err.response.data.error})
 				}
 			})
 		},

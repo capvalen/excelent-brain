@@ -561,12 +561,12 @@ class ExtrasController extends Controller
             $pagoExtra = new Extra_payment;
             $pagoExtra->customer = $request->input('customer');
             $pagoExtra->price = $fecha->monto;
-            $pagoExtra->moneda = 1;
+            $pagoExtra->moneda = isset($fecha->moneda) ? $fecha->moneda : 1;
             $pagoExtra->voucher = '';
             $pagoExtra->appointment_id = 0;
             $pagoExtra->patient_id =$request->input('idPaciente');
             $pagoExtra->type = 7; // pago de membresía
-            $pagoExtra->observation = '';
+            $pagoExtra->observation = (isset($fecha->observacion) && trim($fecha->observacion) !== '') ? $fecha->observacion : 'Pago al adquirir membresía';
             $pagoExtra->continuo = 3;
             $pagoExtra->idMembresia = $idMembresia;
             $pagoExtra->user_id = $request->input('user_id');
@@ -959,11 +959,11 @@ class ExtrasController extends Controller
 			$pagoExtra = new Extra_payment;
 				$pagoExtra->customer = $request->input('nombre');
 				$pagoExtra->price = $request->input('precio');
-				$pagoExtra->moneda = 1;
+				$pagoExtra->moneda = $request->input('moneda') ?: 1;
 				$pagoExtra->voucher = '';
 				$pagoExtra->appointment_id = 0;
 				$pagoExtra->type = $request->input('tipo');
-				$pagoExtra->observation = 'Cancelación de deuda';
+				$pagoExtra->observation = $request->input('motivoNuevo') ?: 'Pago de paquete';
 				$pagoExtra->continuo = 3;
 				$pagoExtra->idMembresia = $idMembresia;
 				$pagoExtra->user_id = $request->input('user_id');
