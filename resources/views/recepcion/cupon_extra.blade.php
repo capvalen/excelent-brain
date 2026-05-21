@@ -118,7 +118,7 @@
 								<tr><td><strong>Serie-Correlativo:</strong> {{strtoupper($extra_payment->voucher_issued)}}</td></tr>
 								@endif
 								@if($extra_payment->type == 8 )
-								<tr><td><strong>Día de adelanto:</strong> {{$cita->date}}</td></tr>
+								<tr><td><strong>Día de adelanto:</strong> {{$extra_payment->date}}</td></tr>
 								@endif
 						</tbody>
 					</table>
