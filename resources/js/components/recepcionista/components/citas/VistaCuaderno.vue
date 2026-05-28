@@ -284,8 +284,17 @@
               .then((res) => {
 								console.log(res.data)
                 this.$swal('Cita eliminada con exito')
-              });
-            this.obtenerHorarios();
+								this.obtenerHorarios();
+              })
+							.catch((err) => {
+								console.error(err)
+								let errMsg = err.response?.data?.error || 'Error interno del servidor';
+								this.$swal({
+									icon: 'error',
+									title: 'Error al eliminar',
+									text: errMsg
+								});
+							});
           }
       })
    	 },

@@ -19,34 +19,86 @@ return new class extends Migration
             ->pluck('id');
 
         foreach ($membresias as $idMembresia) {
-            $contador = 1;
-
-            // Primero los pagos ya realizados (ordenados cronológicamente)
             $pagos = DB::table('extra_payments')
                 ->where('idMembresia', $idMembresia)
                 ->whereNull('numero_cuota')
                 ->orderBy('created_at', 'asc')
-                ->pluck('id');
+                ->get()
+                ->toArray();
 
-            foreach ($pagos as $idPago) {
-                DB::table('extra_payments')
-                    ->where('id', $idPago)
-                    ->update(['numero_cuota' => $contador]);
-                $contador++;
-            }
-
-            // Luego las deudas pendientes (ordenadas por fecha de pago)
             $deudas = DB::table('deudas')
                 ->where('idMembresia', $idMembresia)
                 ->where('activo', 1)
                 ->whereNull('numero_cuota')
                 ->orderBy('fecha', 'asc')
-                ->pluck('id');
+                ->get()
+                ->toArray();
 
-            foreach ($deudas as $idDeuda) {
-                DB::table('deudas')
-                    ->where('id', $idDeuda)
+            $pagosAsignados = [];
+            $deudaPagoMap = [];
+
+            // 1. Asociar deudas con estado=2 a sus extra_payments
+            foreach ($deudas as $deuda) {
+                if ($deuda->estado == 2 && $deuda->fechaActualiza) {
+                    $fechaAct = substr($deuda->fechaActualiza, 0, 10); // YYYY-MM-DD
+                    foreach ($pagos as $index => $pago) {
+                        if (!in_array($pago->id, $pagosAsignados)) {
+                            $fechaPago = substr($pago->created_at, 0, 10);
+                            // Criterio principal: mismo usuario y misma fecha
+                            if ($pago->user_id == $deuda->idActualiza && $fechaPago == $fechaAct) {
+                                $deudaPagoMap[$deuda->id] = $pago->id;
+                                $pagosAsignados[] = $pago->id;
+                                break;
+                            }
+                        }
+                    }
+                    // Si no lo encontramos por usuario y fecha, buscar solo por fecha
+                    if (!isset($deudaPagoMap[$deuda->id])) {
+                        foreach ($pagos as $index => $pago) {
+                            if (!in_array($pago->id, $pagosAsignados)) {
+                                $fechaPago = substr($pago->created_at, 0, 10);
+                                if ($fechaPago == $fechaAct) {
+                                    $deudaPagoMap[$deuda->id] = $pago->id;
+                                    $pagosAsignados[] = $pago->id;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Los pagos que no fueron asignados son "pagos iniciales" u otros extra_payments
+            $pagosIniciales = [];
+            foreach ($pagos as $pago) {
+                if (!in_array($pago->id, $pagosAsignados)) {
+                    $pagosIniciales[] = $pago;
+                }
+            }
+
+            $contador = 1;
+
+            // Numeramos los pagos iniciales
+            foreach ($pagosIniciales as $pago) {
+                DB::table('extra_payments')
+                    ->where('id', $pago->id)
                     ->update(['numero_cuota' => $contador]);
+                $contador++;
+            }
+
+            // Y luego secuenciamos las deudas (pendientes y pagadas)
+            foreach ($deudas as $deuda) {
+                DB::table('deudas')
+                    ->where('id', $deuda->id)
+                    ->update(['numero_cuota' => $contador]);
+                
+                // Si esta deuda tiene un pago asociado, le ponemos el mismo numero
+                if (isset($deudaPagoMap[$deuda->id])) {
+                    DB::table('extra_payments')
+                        ->where('id', $deudaPagoMap[$deuda->id])
+                        ->update(['numero_cuota' => $contador]);
+                }
+                
                 $contador++;
             }
         }

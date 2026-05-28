@@ -61,8 +61,8 @@ class SimpleController extends Controller
 	}
 
 	public function buscarDni($dni){
-		$token = env('RENIEC_TOKEN');
-		$url = "https://dniruc.apisperu.com/api/v1/dni/" . urlencode($dni).'?token='.$token;
+		$token = env('PERUAPI_TOKEN');
+		$url = "https://peruapi.com/api/dni/" . urlencode($dni).'?api_token='.$token;
 				
 		$curl = curl_init();
 		// Configurar opciones de cURL
@@ -82,8 +82,8 @@ class SimpleController extends Controller
 		// Si la respuesta es null o no es un array, retornar estructura vacía
     if (!is_array($persona) || empty($persona)) {
 			return [
-				'apellidoPaterno' => '',
-				'apellidoMaterno' => '',
+				'apellido_paterno' => '',
+				'apellido_materno' => '',
 				'nombres' => '',
 				'dni' => $dni,
 				'error' => true,
@@ -94,19 +94,22 @@ class SimpleController extends Controller
 		// Si la API devolvió un error
     if (isset($persona['error']) || $httpCode !== 200) {
 			return [
-				'apellidoPaterno' => '',
-				'apellidoMaterno' => '',
+				'apellido_paterno' => '',
+				'apellido_materno' => '',
 				'nombres' => '',
 				'dni' => $dni,
 				'error' => true,
-				'message' => $persona['message'] ?? 'Error al consultar el DNI'
+				'message' => $persona['mensaje'] ?? $persona['message'] ?? 'Error al consultar el DNI'
 			];
     }
 
+    // PeruAPI puede devolver los datos directamente o anidados en un nodo "data"
+    $data = (isset($persona['data']) && is_array($persona['data'])) ? $persona['data'] : $persona;
+
 		// Formatear datos usando null coalescing operator
-    $apellidoPaterno = $persona['apellidoPaterno'] ?? '';
-    $apellidoMaterno = $persona['apellidoMaterno'] ?? '';
-    $nombres = $persona['nombres'] ?? '';
+    $apellidoPaterno = $data['apellido_paterno'] ?? $data['apellidoPaterno'] ?? '';
+    $apellidoMaterno = $data['apellido_materno'] ?? $data['apellidoMaterno'] ?? '';
+    $nombres = $data['nombres'] ?? '';
     
     // Limpiar valores UNDEFINED
     $apellidoPaterno = ($apellidoPaterno === 'UNDEFINED') ? '' : $apellidoPaterno;
@@ -117,7 +120,7 @@ class SimpleController extends Controller
         'apellido_paterno' => $apellidoPaterno,
         'apellido_materno' => $apellidoMaterno,
         'nombres' => $nombres,
-        'dni' => $persona['dni'] ?? $dni,
+        'dni' => $data['dni'] ?? $dni,
         'error' => false
     ];
 	}

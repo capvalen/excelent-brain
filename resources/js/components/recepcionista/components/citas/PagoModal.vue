@@ -65,7 +65,7 @@
 
 				<div class="modal-footer border-0">
 					<!-- <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button> -->
-					<button v-if="dataCita.payment.pay_status==1" @click="update()" type="button" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar pago</button>
+					<button v-if="dataCita.payment.pay_status==1" @click="update()" :disabled="isSubmitting" type="button" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar pago</button>
 					<a target="_blank" :href="`/api/pdfCupon/${dataCita.id}?token=${token}`" v-if="dataCita.payment.pay_status != 1" class="btn btn-outline-success">Cupón</a>
 				</div>
 			</div>
@@ -80,7 +80,7 @@ import moment from 'moment'
 		
 		data() {
 			return{
-				dataCita: null,
+				dataCita: null, isSubmitting: false,
 				caso: {pago:1, moneda:1, comprobante:'', continuo: 1, user_id:-1, rebaja:0, motivoRebaja:''}, maximo:15, monedas:[], neto:0, monto_adelanto:0
 			}
 		},
@@ -93,11 +93,14 @@ import moment from 'moment'
 		},
 		methods:{
 			async update() {
+					if (this.isSubmitting) return;
+					this.isSubmitting = true;
+
 					await this.axios.put(`/api/pagarCita/${this.dataCita.id}`, {
 							dataCita: this.dataCita, caso: this.caso, idSede: this.idSede
 					})
 					.then(res => {
-
+							this.isSubmitting = false;
 							// 👇 1. Primero actualiza los datos locales
 							if (this.caso.pago == 2) {
 									this.dataCita.payment.pay_status = 2
@@ -143,7 +146,10 @@ import moment from 'moment'
 									})
 							}
 					})
-					.catch(err => console.error(err))
+					.catch(err => {
+							this.isSubmitting = false;
+							console.error(err);
+					})
 			},
 			abrirCupon(){
 				window.open(`/api/pdfCupon/${this.dataCita.id}?token=${localStorage.getItem('token')}`, '_blank');
@@ -185,6 +191,7 @@ import moment from 'moment'
 	
 		watch:{
 			cita: function (){
+				this.isSubmitting = false;
 				this.dataCita = this.cita;
 				this.caso.pago = this.dataCita.payment?.pay_status;
 				this.caso.moneda = this.dataCita.payment?.payment_method == undefined ? 1:this.dataCita.payment?.payment_method ;

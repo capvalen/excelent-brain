@@ -1037,8 +1037,9 @@ Medical_evolution::create([
 			'status' => 5, //indicando que se elimina
 			'active_slot' => null
 		]);
+		return response()->json(['mensaje' => 'eliminado']);
 		} catch (\Throwable $th) {
-			echo $th;
+			return response()->json(['error' => $th->getMessage()], 500);
 		}
 	}
 

@@ -108,6 +108,20 @@ const router = new VueRouter ({
   routes: routes,
 })
 
+// Interceptar respuestas para redirigir al login si la sesión expiró (401 o 419)
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && (error.response.status === 401 || error.response.status === 419)) {
+      localStorage.removeItem('token');
+      if (router.currentRoute.name !== 'login') {
+        router.push('/login');
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 
 router.beforeEach((to, from, next) => {
     var element = document.getElementsByClassName('modal-backdrop')
